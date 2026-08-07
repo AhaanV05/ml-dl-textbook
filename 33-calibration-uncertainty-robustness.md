@@ -106,9 +106,9 @@ $$\mathbb{P}\big(\hat y = y \ \big|\ \hat p = p\big) = p\qquad\forall p\in[0,1]$
 
 #### Why calibration is not a nicety — a decision you can only make with real probabilities
 
-Suppose a fraud model scores a transaction. A missed fraud costs $\$100$ in chargebacks; a manual review costs $\$2$ in analyst time. Reviewing is worth it exactly when
+Suppose a fraud model scores a transaction. A missed fraud costs 100 units of currency in chargebacks; a manual review costs 2 units in analyst time. Reviewing is worth it exactly when
 
-$$\hat p \times \$100 \;>\; \$2 \qquad\Longleftrightarrow\qquad \hat p > 0.02$$
+$$\hat p \times 100 \;>\; 2 \qquad\Longleftrightarrow\qquad \hat p > 0.02$$
 
 ▸ **That threshold, $0.02$, is derived entirely from the two costs — and it is only meaningful if $\hat p$ means what it says.** If the model's stated $0.03$ is really $0.15$, you are reviewing transactions you should be blocking outright, and the whole cost calculation is fiction. Every threshold anyone ever sets on a model output is secretly this computation, whether or not they write it down.
 

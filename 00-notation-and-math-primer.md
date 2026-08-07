@@ -203,7 +203,7 @@ $$\mathbb{E}[X] = \sum_x x \cdot p(x)$$
 
 Read: "for each possible value $x$, multiply the value by its probability, and add them all up."
 
-> **Analogy.** A lottery ticket pays \$0 with probability $0.999$ and \$1000 with probability $0.001$. The expectation is $0(0.999) + 1000(0.001) = \$1$. It is the *fair price* — what you'd get per ticket on average across a huge number of tickets. Note that you will never actually win \$1. **An expectation need not be a possible outcome.** It is a long-run average, not a prediction.
+> **Analogy.** A lottery ticket pays nothing with probability $0.999$, and pays 1000 pounds with probability $0.001$. The expectation is $0(0.999) + 1000(0.001) = 1$ pound. That is the *fair price* — what you'd collect per ticket on average across a huge number of tickets. Note that you will never actually win one pound: the only possible outcomes are nothing and a thousand. **An expectation need not be a possible outcome.** It is a long-run average, not a prediction.
 
 The subscript tells you *what is random*: $\mathbb{E}_{x \sim p}[f(x)]$ means "average $f(x)$ as $x$ is drawn from distribution $p$." When you see $\mathbb{E}_{q_\phi}$, it means "average over samples from $q_\phi$."
 
@@ -538,7 +538,7 @@ This section does that for the ideas the rest of the book leans on hardest.
 | Mean of the last 100 training losses | The model changed during those 100 steps — the distribution isn't fixed |
 | A running average with momentum | An **exponentially weighted** average; recent points count more |
 
-> **Common misconception.** *"The expected value is the value I should expect."* It frequently isn't a possible outcome at all. The expected number of children per family might be 1.8; no family has 1.8 children. A lottery ticket with expectation \$1 pays either \$0 or \$1000, never \$1. **Expectation is a long-run average, not a prediction.**
+> **Common misconception.** *"The expected value is the value I should expect."* It frequently isn't a possible outcome at all. The expected number of children per family might be 1.8; no family has 1.8 children. A lottery ticket with an expectation of one pound pays either nothing or a thousand, never one. **Expectation is a long-run average, not a prediction.**
 
 ### Does a bigger number mean a better model?
 

@@ -186,7 +186,7 @@ Compute the derivative of the loss with respect to every parameter by applying t
 
 ### The analogy
 
-Blame assignment in an organization. The CEO knows the company lost \$1M. Rather than each employee independently tracing their impact on the bottom line (forward mode: expensive, $p$ separate traces), the blame flows *down* the hierarchy: each manager receives their share of blame and splits it among reports in proportion to their contribution. One pass, everyone gets their number.
+Blame assignment in an organization. The CEO knows the company lost a million pounds. Rather than each employee independently tracing their impact on the bottom line (forward mode: expensive, $p$ separate traces), the blame flows *down* the hierarchy: each manager receives their share of blame and splits it among reports in proportion to their contribution. One pass, everyone gets their number.
 
 ### Setup and the key quantity
 
