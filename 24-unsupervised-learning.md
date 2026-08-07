@@ -12,21 +12,21 @@ Skim this once now; each entry is unpacked properly where it first appears.
 |---|---|---|
 | $\Sigma$ | "capital Sigma" | The **covariance matrix** — a grid saying how every pair of features moves together |
 | $\Sigma w = \lambda w$ | "Sigma w equals lambda w" | "$w$ is a direction the covariance only **stretches**, never turns" |
-| $\lambda_j$ | "lambda-j" | The **variance captured** along principal direction $j$ |
+| $`\lambda_j`$ | "lambda-j" | The **variance captured** along principal direction $j$ |
 | $\|w\|=1$ | "norm of w equals one" | "$w$ is a pure direction — an arrow of length one, no magnitude" |
 | $P$ | "P" | A **projection** — the operator that flattens points onto a subspace |
 | $z$ | "z" | A **latent variable**: unobserved coordinates presumed to have generated the data |
 | $\mathcal{N}(\mu,\Sigma)$ | "normal with mean mu, covariance Sigma" | The bell curve, in many dimensions at once |
-| $p_{j\mid i}$ | "p of j given i" | Probability that point $i$ would pick point $j$ as its neighbour |
-| $q_{ij}$ | "q-i-j" | The same neighbour probability, but computed in the 2-D picture |
+| $`p_{j\mid i}`$ | "p of j given i" | Probability that point $i$ would pick point $j$ as its neighbour |
+| $`q_{ij}`$ | "q-i-j" | The same neighbour probability, but computed in the 2-D picture |
 | $\mathrm{KL}(P\|Q)$ | "KL of P from Q" | How badly $Q$ fails as a stand-in for $P$ (Ch. 1 §1.4) |
-| $\mu_k$ | "mu-k" | The **centroid** — the average point of cluster $k$ |
-| $S_k$ | "S-k" | The **set** of data points currently assigned to cluster $k$ |
-| $\pi_k$ | "pi-k" | The **mixing weight**: what fraction of all data comes from component $k$ |
-| $\gamma_{ik}$ | "gamma-i-k" | The **responsibility**: probability that point $i$ came from component $k$ |
+| $`\mu_k`$ | "mu-k" | The **centroid** — the average point of cluster $k$ |
+| $`S_k`$ | "S-k" | The **set** of data points currently assigned to cluster $k$ |
+| $`\pi_k`$ | "pi-k" | The **mixing weight**: what fraction of all data comes from component $k$ |
+| $`\gamma_{ik}`$ | "gamma-i-k" | The **responsibility**: probability that point $i$ came from component $k$ |
 | $L = D - W$ | "L equals D minus W" | The **graph Laplacian** — a matrix encoding a graph's connectivity |
 | $\varepsilon$, `minPts` | "epsilon, min-points" | DBSCAN's radius, and how many neighbours make a point "core" |
-| $s_i$ | "s-i" | The **silhouette** of point $i$: how much better its own cluster fits than the next-best |
+| $`s_i`$ | "s-i" | The **silhouette** of point $i$: how much better its own cluster fits than the next-best |
 
 ### Full forms for the abbreviations in this chapter
 
@@ -70,18 +70,18 @@ A cloud of points shaped like a flattened, tilted pancake. There are three coord
 
 ### Three derivations, all giving the same answer
 
-Assume $X$ is centred ($\frac1n\sum_i x_i = 0$). **Centring is mandatory** — without it the first component points at the mean.
+Assume $X$ is centred ($`\frac1n\sum_i x_i = 0`$). **Centring is mandatory** — without it the first component points at the mean.
 
 **(1) Maximum variance.** Find the unit vector $w$ maximizing the variance of the projection:
 $$\max_{\|w\|=1}\ \frac1n\sum_i(w^\top x_i)^2 = \max_{\|w\|=1}\ w^\top \Sigma w,\qquad \Sigma=\tfrac1nX^\top X$$
 Lagrangian $w^\top\Sigma w - \lambda(w^\top w-1)$, stationarity gives
 ▸ $$\Sigma w = \lambda w$$
-The maximizer is the **top eigenvector of the covariance matrix**, with variance $\lambda_1$.
+The maximizer is the **top eigenvector of the covariance matrix**, with variance $`\lambda_1`$.
 
-**(2) Minimum reconstruction error.** Find the rank-$k$ projection $P$ minimizing $\sum_i\|x_i - Px_i\|^2$. Since $\|x\|^2 = \|Px\|^2+\|x-Px\|^2$, minimizing reconstruction error is *identical* to maximizing projected variance. Same answer.
+**(2) Minimum reconstruction error.** Find the rank-$k$ projection $P$ minimizing $`\sum_i\|x_i - Px_i\|^2`$. Since $\|x\|^2 = \|Px\|^2+\|x-Px\|^2$, minimizing reconstruction error is *identical* to maximizing projected variance. Same answer.
 
-**(3) SVD.** With $X = U\Sigma_{\text{sv}}V^\top$:
-▸ Principal directions = **columns of $V$** (right singular vectors); scores = $U\Sigma_{\text{sv}}$; explained variance of component $j$ = $\sigma_j^2/\sum_k\sigma_k^2$.
+**(3) SVD.** With $`X = U\Sigma_{\text{sv}}V^\top`$:
+▸ Principal directions = **columns of $V$** (right singular vectors); scores = $`U\Sigma_{\text{sv}}`$; explained variance of component $j$ = $`\sigma_j^2/\sum_k\sigma_k^2`$.
 
 **Always compute PCA via SVD of $X$, never by forming $X^\top X$** — the condition number squares (Ch. 22 §22.1).
 
@@ -92,20 +92,20 @@ First, the setup notation, because everything depends on it:
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $X$ | "X" | Your data as a grid: $n$ rows (points), $d$ columns (features) |
-| $x_i$ | "x-i" | One row — a single data point, a list of $d$ numbers |
+| $`x_i`$ | "x-i" | One row — a single data point, a list of $d$ numbers |
 | $w$ | "w" | A candidate **direction** in feature space, an arrow of length 1 |
 | $\|w\|=1$ | "norm of w equals one" | The constraint that $w$ is a pure direction with no magnitude of its own |
-| $w^\top x_i$ | "w-transpose x-i" | The **projection** of point $i$ onto direction $w$ — one number: how far along $w$ the point sits |
+| $`w^\top x_i`$ | "w-transpose x-i" | The **projection** of point $i$ onto direction $w$ — one number: how far along $w$ the point sits |
 | $\Sigma = \frac1nX^\top X$ | "Sigma equals one-over-n X-transpose X" | The **covariance matrix**: entry $(a,b)$ says how features $a$ and $b$ vary together |
 | $\lambda$ | "lambda" | The **variance** you get along the corresponding direction |
 
-**Why centring is mandatory, concretely.** Suppose every one of your points sits near $(100, 100)$ with a tiny spread. Uncentred, $\frac1n\sum_i(w^\top x_i)^2$ is dominated by the fact that all the points are 141 units from the origin, so the "direction of maximum variance" comes out pointing at $(100,100)$ — it has found where your data *is*, not how it *varies*. Subtract the mean and the origin sits inside the cloud, where the question becomes meaningful. ▸ **PCA measures spread about the mean, so if you forget to remove the mean, component 1 is the mean.**
+**Why centring is mandatory, concretely.** Suppose every one of your points sits near $(100, 100)$ with a tiny spread. Uncentred, $`\frac1n\sum_i(w^\top x_i)^2`$ is dominated by the fact that all the points are 141 units from the origin, so the "direction of maximum variance" comes out pointing at $(100,100)$ — it has found where your data *is*, not how it *varies*. Subtract the mean and the origin sits inside the cloud, where the question becomes meaningful. ▸ **PCA measures spread about the mean, so if you forget to remove the mean, component 1 is the mean.**
 
 **Derivation 1 — maximum variance, step by step.**
 
 $$\max_{\|w\|=1}\ \frac1n\sum_i(w^\top x_i)^2 = \max_{\|w\|=1}\ w^\top \Sigma w$$
 
-Read aloud: *"among all unit directions $w$, find the one that maximizes the average squared projection."* The equality is a rearrangement — $\sum_i (w^\top x_i)^2 = w^\top\big(\sum_i x_ix_i^\top\big)w$, and $\frac1n\sum_i x_ix_i^\top$ is the definition of $\Sigma$.
+Read aloud: *"among all unit directions $w$, find the one that maximizes the average squared projection."* The equality is a rearrangement — $`\sum_i (w^\top x_i)^2 = w^\top\big(\sum_i x_ix_i^\top\big)w`$, and $`\frac1n\sum_i x_ix_i^\top`$ is the definition of $\Sigma$.
 
 The constraint $\|w\|=1$ is doing real work: without it you would simply make $w$ enormous and the "variance" would be unbounded. **A Lagrangian** is the standard tool for optimizing under a constraint — you add a penalty term $-\lambda(w^\top w - 1)$ that is zero when the constraint holds and charges you otherwise, then optimize freely. Setting the derivative to zero gives
 
@@ -121,17 +121,17 @@ is **Pythagoras**. $Px$ is the shadow the point casts on your chosen plane; $x -
 
 > **Analogy.** You are choosing where to stand to photograph a flock of birds in flight. "Maximize the spread of the birds in my photo" and "minimize how much depth I'm losing" sound like two different goals; Pythagoras says they are one goal. The total is fixed by the flock; you are only deciding how to split it between what the photo captures and what it discards.
 
-**Derivation 3 — SVD, and the notation collision.** The text writes $X = U\Sigma_{\text{sv}}V^\top$ with a subscript because **$\Sigma$ is already being used for the covariance matrix.** This clash is universal in the literature and is worth naming out loud: capital sigma means "covariance matrix" in statistics and "the diagonal matrix of singular values" in linear algebra, and PCA is precisely where the two meet.
+**Derivation 3 — SVD, and the notation collision.** The text writes $`X = U\Sigma_{\text{sv}}V^\top`$ with a subscript because **$\Sigma$ is already being used for the covariance matrix.** This clash is universal in the literature and is worth naming out loud: capital sigma means "covariance matrix" in statistics and "the diagonal matrix of singular values" in linear algebra, and PCA is precisely where the two meet.
 
 - **Principal directions are the columns of $V$** — the right singular vectors, living in feature space ($\mathbb{R}^d$). These are the new axes.
-- **Scores are $U\Sigma_{\text{sv}}$** — where each data point lands in the new coordinate system. This is what you feed downstream.
-- **Explained variance of component $j$ is $\sigma_j^2/\sum_k\sigma_k^2$** — read: "this component's squared singular value as a fraction of the total." Since $\lambda_j = \sigma_j^2/n$, this is just "what share of the total spread does direction $j$ own."
+- **Scores are $`U\Sigma_{\text{sv}}`$** — where each data point lands in the new coordinate system. This is what you feed downstream.
+- **Explained variance of component $j$ is $`\sigma_j^2/\sum_k\sigma_k^2`$** — read: "this component's squared singular value as a fraction of the total." Since $`\lambda_j = \sigma_j^2/n`$, this is just "what share of the total spread does direction $j$ own."
 
 **Real numbers.** Take $n = 3$ points in 2-D, already centred: $(-2,-1)$, $(0,0)$, $(2,1)$. They lie exactly on the line $y = x/2$.
 
 $$\Sigma = \tfrac13\begin{pmatrix} 4+0+4 & 2+0+2 \\ 2+0+2 & 1+0+1\end{pmatrix} = \tfrac13\begin{pmatrix} 8 & 4 \\ 4 & 2\end{pmatrix}$$
 
-The direction $w = \frac{1}{\sqrt5}(2,1)$ gives $\Sigma w = \frac13\frac{1}{\sqrt5}(20, 10) = \frac{10}{3}w$. So $\lambda_1 = 10/3 \approx 3.33$. The perpendicular direction $\frac1{\sqrt5}(-1,2)$ gives $\Sigma w = 0$, so $\lambda_2 = 0$. ▸ **Two features, one nonzero eigenvalue: the data is  one-dimensional, and PCA has said so exactly.** The second component explains $0/(3.33) = 0\%$ of the variance and can be discarded with no loss whatsoever. Real data never gives an exact zero, but it routinely gives $0.001$, which is the same message with noise on top.
+The direction $w = \frac{1}{\sqrt5}(2,1)$ gives $\Sigma w = \frac13\frac{1}{\sqrt5}(20, 10) = \frac{10}{3}w$. So $`\lambda_1 = 10/3 \approx 3.33`$. The perpendicular direction $\frac1{\sqrt5}(-1,2)$ gives $\Sigma w = 0$, so $`\lambda_2 = 0`$. ▸ **Two features, one nonzero eigenvalue: the data is  one-dimensional, and PCA has said so exactly.** The second component explains $0/(3.33) = 0\%$ of the variance and can be discarded with no loss whatsoever. Real data never gives an exact zero, but it routinely gives $0.001$, which is the same message with noise on top.
 
 **Why never form $X^\top X$.** The condition number $\kappa$ measures how much a matrix amplifies small numerical errors. Squaring the matrix squares the condition number. If $X$ has $\kappa = 10^6$ — unremarkable for real data with mixed units — then $X^\top X$ has $\kappa = 10^{12}$, which exceeds the precision of a 64-bit float. **You would be computing eigenvectors of a matrix whose small entries are entirely rounding noise.** The SVD works on $X$ directly and never forms the square, which is why every serious implementation uses it.
 
@@ -143,7 +143,7 @@ The direction $w = \frac{1}{\sqrt5}(2,1)$ gives $\Sigma w = \frac13\frac{1}{\sqr
 
 - **Standardize** when features have different units; otherwise the largest-unit feature dominates. Standardizing means you're doing eigendecomposition of the *correlation* matrix.
 - **Choosing $k$:** cumulative explained variance (90–95%), the scree-plot elbow, or parallel analysis (compare eigenvalues against those from permuted data).
-- **Whitening:** divide scores by $\sigma_j$ so all components have unit variance. Useful as a preprocessing step; amplifies noise in small components.
+- **Whitening:** divide scores by $`\sigma_j`$ so all components have unit variance. Useful as a preprocessing step; amplifies noise in small components.
 - **Complexity:** $O(\min(n^2d, nd^2))$ exact; use randomized SVD for large $d$.
 
 ▸ **The limitation that matters:** PCA is linear. Data on a curved manifold (a Swiss roll) is not compressible by any linear projection. Also, **high variance is not the same as high information** — in a classification problem the discriminative direction may have small variance, which is why LDA (Ch. 22 §22.6) exists.
@@ -156,9 +156,9 @@ Standardizing (subtract each column's mean, divide by its standard deviation) fo
 
 ▸ **The rule: standardize whenever the columns have different units; do not standardize when they share units and the size differences are real.** Pixel intensities are all in the same units and a low-variance pixel  matters less — standardizing there would amplify the corners of the image, which are mostly noise, into principal components.
 
-**Choosing $k$, with the actual numbers.** Cumulative explained variance is the ratio $\frac{\sum_{j\le k}\sigma_j^2}{\sum_{\text{all }j}\sigma_j^2}$. A typical table:
+**Choosing $k$, with the actual numbers.** Cumulative explained variance is the ratio $`\frac{\sum_{j\le k}\sigma_j^2}{\sum_{\text{all }j}\sigma_j^2}`$. A typical table:
 
-| Component | $\sigma_j^2$ | Share | Cumulative |
+| Component | $`\sigma_j^2`$ | Share | Cumulative |
 |---|---|---|---|
 | 1 | $42.0$ | $52.5\%$ | $52.5\%$ |
 | 2 | $18.0$ | $22.5\%$ | $75.0\%$ |
@@ -168,7 +168,7 @@ Standardizing (subtract each column's mean, divide by its standard deviation) fo
 
 At $k=4$ you have 92.5% of the variance in 4 numbers instead of 80. **That is a 20× compression for a 7.5% loss of spread** — and the discarded 7.5% is spread thinly over 76 directions, which is exactly the signature of noise rather than structure.
 
-**Whitening, decoded.** After projecting, divide each score by $\sigma_j$ so every component has variance exactly 1. The result is a data cloud that is perfectly spherical: no direction is privileged. This helps any downstream method that assumes isotropy — including k-means (§24.4), whose objective is isotropic squared distance. ▸ **The danger is right there in the arithmetic: dividing by $\sigma_j$ means dividing by a small number for the last components, which multiplies their noise up to the same scale as your signal.** Whiten the top few components, not all of them.
+**Whitening, decoded.** After projecting, divide each score by $`\sigma_j`$ so every component has variance exactly 1. The result is a data cloud that is perfectly spherical: no direction is privileged. This helps any downstream method that assumes isotropy — including k-means (§24.4), whose objective is isotropic squared distance. ▸ **The danger is right there in the arithmetic: dividing by $`\sigma_j`$ means dividing by a small number for the last components, which multiplies their noise up to the same scale as your signal.** Whiten the top few components, not all of them.
 
 **Complexity, decoded.** $O(\min(n^2d,\,nd^2))$ reads: *"whichever of these two is smaller."* Two regimes:
 - **Many points, few features** ($n \gg d$): the $nd^2$ branch wins. With $n=10^6$, $d=100$: $10^{10}$ operations. Fine.
@@ -187,7 +187,7 @@ Model $x = Wz + \mu + \varepsilon$, $z\sim\mathcal{N}(0,I)$, $\varepsilon\sim\ma
 
 ### Kernel PCA
 
-Run PCA in an RKHS: centre the kernel matrix $\tilde K = K - \mathbf{1}_nK - K\mathbf{1}_n+\mathbf{1}_nK\mathbf{1}_n$, then eigendecompose $\tilde K$. Nonlinear components at $O(n^2)$–$O(n^3)$ cost. The out-of-sample projection requires the pre-image problem, which has no exact solution.
+Run PCA in an RKHS: centre the kernel matrix $`\tilde K = K - \mathbf{1}_nK - K\mathbf{1}_n+\mathbf{1}_nK\mathbf{1}_n`$, then eigendecompose $\tilde K$. Nonlinear components at $O(n^2)$–$O(n^3)$ cost. The out-of-sample projection requires the pre-image problem, which has no exact solution.
 
 #### Probabilistic PCA, decoded
 
@@ -222,9 +222,9 @@ Read aloud: *"a data point is a linear map $W$ applied to a hidden low-dimension
 
 **The idea in one line: if your data is not linearly separable where it lives, do PCA somewhere else.** The kernel trick (Ch. 22) lets you compute inner products in a vastly higher-dimensional feature space without ever constructing a point in it. Since PCA can be written entirely in terms of inner products between data points, it transplants directly.
 
-- $K$ — the **kernel matrix**, $n\times n$, where $K_{ij}$ is the similarity between points $i$ and $j$ in the implicit feature space. For the Gaussian kernel, $K_{ij} = \exp(-\|x_i-x_j\|^2/2\sigma^2)$.
+- $K$ — the **kernel matrix**, $n\times n$, where $`K_{ij}`$ is the similarity between points $i$ and $j$ in the implicit feature space. For the Gaussian kernel, $`K_{ij} = \exp(-\|x_i-x_j\|^2/2\sigma^2)`$.
 - **RKHS** stands for **reproducing kernel Hilbert space** — the name for the implicit space the kernel corresponds to. You never visit it; you only ever compute inner products in it.
-- $\mathbf{1}_n$ — the $n\times n$ matrix with every entry $1/n$. The four-term formula $\tilde K = K - \mathbf{1}_nK - K\mathbf{1}_n + \mathbf{1}_nK\mathbf{1}_n$ is **centring, done in the feature space you cannot see.** In ordinary PCA you centre by subtracting the mean from every point; here you cannot touch the points, so you subtract the row means, the column means, and add back the grand mean (which you subtracted twice). It is exactly the algebra of centring, expressed only through inner products.
+- $`\mathbf{1}_n`$ — the $n\times n$ matrix with every entry $1/n$. The four-term formula $`\tilde K = K - \mathbf{1}_nK - K\mathbf{1}_n + \mathbf{1}_nK\mathbf{1}_n`$ is **centring, done in the feature space you cannot see.** In ordinary PCA you centre by subtracting the mean from every point; here you cannot touch the points, so you subtract the row means, the column means, and add back the grand mean (which you subtracted twice). It is exactly the algebra of centring, expressed only through inner products.
 
 **The costs, honestly.** The matrix is $n\times n$ regardless of how many features you had, so memory is $O(n^2)$ and eigendecomposition is $O(n^3)$. At $n=50{,}000$ the kernel matrix alone is 20 GB in double precision. **Kernel PCA is a small-$n$ method, and that is why it lost ground to the neighbour-graph methods of §24.3, which only need each point's nearest few neighbours.**
 
@@ -238,7 +238,7 @@ Read aloud: *"a data point is a linear map $W$ applied to a hidden low-dimension
 
 PCA finds **uncorrelated** components; ICA finds **statistically independent** ones. Independence is strictly stronger than uncorrelatedness except for Gaussians.
 
-▸ **The central insight:** by the CLT, a mixture of independent sources is *more Gaussian* than the sources. So maximize **non-Gaussianity** to unmix. Measure it with negentropy $J(y)=H(y_{\text{gauss}})-H(y)$, approximated by $\left(\mathbb{E}[G(y)]-\mathbb{E}[G(\nu)]\right)^2$ with $G(u)=\log\cosh(u)$ or $-e^{-u^2/2}$; kurtosis is the simplest but is outlier-sensitive.
+▸ **The central insight:** by the CLT, a mixture of independent sources is *more Gaussian* than the sources. So maximize **non-Gaussianity** to unmix. Measure it with negentropy $`J(y)=H(y_{\text{gauss}})-H(y)`$, approximated by $\left(\mathbb{E}[G(y)]-\mathbb{E}[G(\nu)]\right)^2$ with $G(u)=\log\cosh(u)$ or $-e^{-u^2/2}$; kurtosis is the simplest but is outlier-sensitive.
 
 ▸ **ICA fails entirely if the sources are Gaussian** — a rotation of independent Gaussians is still independent Gaussians, so the model is unidentifiable. Also, sign, scale, and ordering of components are unidentifiable in general.
 
@@ -263,7 +263,7 @@ Independence implies uncorrelatedness. The converse fails. Concrete counterexamp
 
 > **Analogy.** Mix all your paints together and you get brown. Every mixture is browner than its ingredients. So if you are trying to recover the original colours from a set of muddy mixtures, the right search criterion is "find the combination that is as *un*-brown as possible." Gaussian is the brown of probability distributions — the thing everything tends toward when combined.
 
-**Negentropy, decoded.** $J(y) = H(y_{\text{gauss}}) - H(y)$ reads: *"the entropy of a Gaussian with the same variance, minus the entropy of $y$."* A foundational result of information theory is that **among all distributions with a given variance, the Gaussian has the largest entropy.** So $J(y) \ge 0$ always, with equality only when $y$ *is* Gaussian. **Negentropy is a distance from Gaussianity that is zero exactly at Gaussian and positive otherwise** — precisely the objective you want to maximize.
+**Negentropy, decoded.** $`J(y) = H(y_{\text{gauss}}) - H(y)`$ reads: *"the entropy of a Gaussian with the same variance, minus the entropy of $y$."* A foundational result of information theory is that **among all distributions with a given variance, the Gaussian has the largest entropy.** So $J(y) \ge 0$ always, with equality only when $y$ *is* Gaussian. **Negentropy is a distance from Gaussianity that is zero exactly at Gaussian and positive otherwise** — precisely the objective you want to maximize.
 
 Entropy is expensive to estimate from samples, so in practice one uses the approximation $\big(\mathbb{E}[G(y)] - \mathbb{E}[G(\nu)]\big)^2$ where $\nu$ is a standard Gaussian variable and $G$ is a nonlinear "contrast function." Reading the choices:
 
@@ -296,13 +296,13 @@ Concretely, with $X$ being $n\times d$ (documents × words), $W$ is $n\times k$ 
 
 - **Each row of $H$ is a "part"** — a pattern over the original features. In topic modelling, a row of $H$ is a topic: a non-negative weight for every word.
 - **Each row of $W$ says how much of each part is in that data point.** Document 17 is $0.6\times$ topic 3 plus $0.3\times$ topic 8.
-- **The reconstruction is $x_i \approx \sum_k W_{ik}H_{k:}$** — a **non-negatively weighted sum of parts.**
+- **The reconstruction is $`x_i \approx \sum_k W_{ik}H_{k:}`$** — a **non-negatively weighted sum of parts.**
 
 ▸ **The entire behavioural difference from PCA comes from one word: cancellation.** PCA's components can be negative, so it is free to build a face by saying "take this ghostly average face, then *subtract* 0.4 of this other ghostly face." Reconstruction by subtraction is extremely efficient — it is why PCA is optimal in reconstruction error (Ch. 1 §1.1.3) — but it means no individual component has to correspond to anything. NMF cannot subtract. **Every part must be something you would actually want to add**, and the only way to build a face by pure addition is to have parts that are nose-shaped, eye-shaped, mouth-shaped.
 
 > **Analogy.** PCA is a sculptor with a block of marble: it removes material, and no intermediate state resembles a body part. NMF is building with Lego: everything you place stays, so the pieces themselves have to look like things. **Additive-only construction forces interpretable components, and it costs you reconstruction accuracy** — the Lego model is a worse likeness than the sculpture.
 
-**Why it is harder to solve than PCA.** The objective $\|X - WH\|_F^2$ is convex in $W$ with $H$ fixed, and convex in $H$ with $W$ fixed — but **not convex in both together.** So there is no closed-form answer and no uniqueness: different initializations give different, equally valid decompositions. The standard solvers alternate — hold $H$, solve for $W$; hold $W$, solve for $H$ — either by multiplicative update rules (which preserve non-negativity automatically, since you only ever multiply by non-negative factors) or by non-negative least squares. ▸ **Run NMF twice with different seeds and compare: components that survive both runs are real, and components that do not are artifacts of the initialization.** This is the standard reliability check, and it has no analogue in PCA because PCA has a unique answer.
+**Why it is harder to solve than PCA.** The objective $`\|X - WH\|_F^2`$ is convex in $W$ with $H$ fixed, and convex in $H$ with $W$ fixed — but **not convex in both together.** So there is no closed-form answer and no uniqueness: different initializations give different, equally valid decompositions. The standard solvers alternate — hold $H$, solve for $W$; hold $W$, solve for $H$ — either by multiplicative update rules (which preserve non-negativity automatically, since you only ever multiply by non-negative factors) or by non-negative least squares. ▸ **Run NMF twice with different seeds and compare: components that survive both runs are real, and components that do not are artifacts of the initialization.** This is the standard reliability check, and it has no analogue in PCA because PCA has a unique answer.
 
 > **Where this came from.** NMF was published first by **Pentti Paatero and Unto Tapper** in 1994 under the name **positive matrix factorization**, in the environmental-science literature — they were doing *source apportionment* for atmospheric particulates: given chemical measurements at monitoring stations, work out which pollution sources contributed how much. The non-negativity was not a mathematical preference but a physical fact, since a smokestack cannot emit a negative quantity of sulphate. The method reached the machine-learning community through **Daniel Lee and H. Sebastian Seung**'s 1999 *Nature* paper, whose faces-decompose-into-facial-parts figure is one of the most reproduced images in the field. ▸ **A constraint imposed by chemistry turned out to be the mechanism that produces interpretability.**
 
@@ -330,7 +330,7 @@ And by Johnson–Lindenstrauss (Ch. 1 §1.1.5), all pairwise distances survive t
 
 1. In high-dim, define conditional similarities with a Gaussian kernel, symmetrize:
 $$p_{j|i}=\frac{\exp(-\|x_i-x_j\|^2/2\sigma_i^2)}{\sum_{k\ne i}\exp(-\|x_i-x_k\|^2/2\sigma_i^2)},\qquad p_{ij}=\frac{p_{j|i}+p_{i|j}}{2n}$$
-Each $\sigma_i$ is set by binary search so the perplexity $2^{H(P_i)}$ matches a target (5–50) — an adaptive bandwidth that handles varying density.
+Each $`\sigma_i`$ is set by binary search so the perplexity $`2^{H(P_i)}`$ matches a target (5–50) — an adaptive bandwidth that handles varying density.
 
 2. In low-dim, use a **Student-$t$ with one degree of freedom** (a Cauchy):
 ▸ $$q_{ij}=\frac{(1+\|y_i-y_j\|^2)^{-1}}{\sum_{k\ne l}(1+\|y_k-y_l\|^2)^{-1}}$$
@@ -339,10 +339,10 @@ Each $\sigma_i$ is set by binary search so the perplexity $2^{H(P_i)}$ matches a
 
 ▸ **Why the heavy tail matters (the "crowding problem"):** the volume of a ball grows as $r^d$, so a point in 50 dimensions can have far more roughly-equidistant neighbours than can fit at similar distance in 2-D. With a Gaussian in the low-dim space, moderate distances would be over-penalized and everything would collapse to the centre. The $t$-distribution's heavy tail lets moderately-dissimilar points sit far apart cheaply, which is exactly what creates the visible gaps between clusters.
 
-▸ **The forward-KL choice explains the failure mode.** $\mathrm{KL}(P\|Q)$ heavily penalizes $q_{ij}$ small where $p_{ij}$ is large (neighbours pushed apart) but barely penalizes $q_{ij}$ large where $p_{ij}$ is small (distant points placed nearby). **So local structure is faithful and global structure is not.**
+▸ **The forward-KL choice explains the failure mode.** $\mathrm{KL}(P\|Q)$ heavily penalizes $`q_{ij}`$ small where $`p_{ij}`$ is large (neighbours pushed apart) but barely penalizes $`q_{ij}`$ large where $`p_{ij}`$ is small (distant points placed nearby). **So local structure is faithful and global structure is not.**
 
 **What you must not read off a t-SNE plot:**
-- Cluster *sizes* — meaningless (density is equalized by the per-point $\sigma_i$).
+- Cluster *sizes* — meaningless (density is equalized by the per-point $`\sigma_i`$).
 - Distances *between* clusters — meaningless.
 - Apparent clusters at low perplexity — t-SNE will produce clusters in pure Gaussian noise.
 Always run several perplexities before believing anything.
@@ -355,15 +355,15 @@ Read aloud: *"p of j given i equals e-to-the-minus distance-squared over two sig
 
 | Piece | Read aloud | What it is |
 |---|---|---|
-| $\|x_i-x_j\|^2$ | "norm of x-i minus x-j, squared" | Squared distance between the two points in the **original** high-dimensional space |
-| $\exp(-\text{dist}^2/2\sigma_i^2)$ | "e to the minus…" | A **Gaussian bump** centred on point $i$: near points get a value near 1, far points near 0 |
-| $\sigma_i$ | "sigma-i" | The **bandwidth** — how wide $i$'s bump is. Note the subscript: **every point gets its own.** |
+| $`\|x_i-x_j\|^2`$ | "norm of x-i minus x-j, squared" | Squared distance between the two points in the **original** high-dimensional space |
+| $`\exp(-\text{dist}^2/2\sigma_i^2)`$ | "e to the minus…" | A **Gaussian bump** centred on point $i$: near points get a value near 1, far points near 0 |
+| $`\sigma_i`$ | "sigma-i" | The **bandwidth** — how wide $i$'s bump is. Note the subscript: **every point gets its own.** |
 | The denominator | "sum over k not equal to i" | Normalization, so the numbers for point $i$ add to 1 |
-| $p_{j\mid i}$ | "p of j given i" | **"If point $i$ had to pick one neighbour at random, weighted by closeness, the chance it picks $j$."** |
+| $`p_{j\mid i}`$ | "p of j given i" | **"If point $i$ had to pick one neighbour at random, weighted by closeness, the chance it picks $j$."** |
 
 ▸ **The conceptual move: distances are replaced by probabilities.** t-SNE never tries to preserve "these points are 4.7 units apart." It tries to preserve "if this point picked a friend, it would probably pick that one." That is a much weaker, much more achievable requirement — and it is why t-SNE preserves neighbourhoods while destroying distances.
 
-**Real numbers.** Point $i$ with $\sigma_i = 1$, and three candidate neighbours at distances $0.5$, $2$, and $5$:
+**Real numbers.** Point $i$ with $`\sigma_i = 1`$, and three candidate neighbours at distances $0.5$, $2$, and $5$:
 
 - $\exp(-0.25/2) = 0.882$
 - $\exp(-4/2) = 0.135$
@@ -371,16 +371,16 @@ Read aloud: *"p of j given i equals e-to-the-minus distance-squared over two sig
 
 Normalized: $0.867$, $0.133$, $0.0000036$. **The point at distance 5 is, for all purposes, invisible.** A Gaussian falls off so fast that beyond about $3\sigma$ nothing exists. This is exactly why the low-dimensional kernel has to be different, and why that choice is the whole method.
 
-**The symmetrization, $p_{ij} = \frac{p_{j|i}+p_{i|j}}{2n}$.** The conditional version is asymmetric: a lonely outlier's nearest neighbour might be a point deep inside a dense cluster, and that cluster point would never reciprocate. Averaging the two directions and dividing by $n$ produces a proper joint distribution over pairs. ▸ **The practical effect is that no point can be ignored: every point's total $p$ is guaranteed to be at least $\frac{1}{2n}$**, which prevents outliers from being placed arbitrarily since they still exert a pull on someone.
+**The symmetrization, $`p_{ij} = \frac{p_{j|i}+p_{i|j}}{2n}`$.** The conditional version is asymmetric: a lonely outlier's nearest neighbour might be a point deep inside a dense cluster, and that cluster point would never reciprocate. Averaging the two directions and dividing by $n$ produces a proper joint distribution over pairs. ▸ **The practical effect is that no point can be ignored: every point's total $p$ is guaranteed to be at least $\frac{1}{2n}$**, which prevents outliers from being placed arbitrarily since they still exert a pull on someone.
 
-**Perplexity, decoded.** $2^{H(P_i)}$ where $H$ is the entropy of point $i$'s neighbour distribution. Entropy measures how spread out that distribution is; $2^H$ converts it into a **count**:
+**Perplexity, decoded.** $`2^{H(P_i)}`$ where $H$ is the entropy of point $i$'s neighbour distribution. Entropy measures how spread out that distribution is; $2^H$ converts it into a **count**:
 
-- If $i$ splits its attention evenly over exactly 30 neighbours, $H = \log_2 30$ and $2^H = 30$.
+- If $i$ splits its attention evenly over exactly 30 neighbours, $`H = \log_2 30`$ and $2^H = 30$.
 - If $i$ puts everything on one neighbour, $H=0$ and $2^H = 1$.
 
 ▸ **So perplexity is "the effective number of neighbours each point is paying attention to"** — the same "effective count" construction as stable rank in Ch. 1 §1.1.3 and as perplexity in language modelling (Ch. 1 §1.4.2). It is the same formula each time, and it always means "how many things is this distribution really spread over."
 
-**Why the binary search for $\sigma_i$ matters more than it sounds.** You specify perplexity; the algorithm then solves for whatever $\sigma_i$ achieves it, separately for each point. In a dense region a small $\sigma$ already reaches 30 effective neighbours; in a sparse region $\sigma$ must be large. **The result is that density is equalized — every point ends up with the same number of effective neighbours regardless of how crowded its neighbourhood actually was.** This is what makes t-SNE robust to varying density, and it is *also* precisely why cluster sizes in the output are meaningless: the algorithm deliberately erased the density information that would have made them meaningful.
+**Why the binary search for $`\sigma_i`$ matters more than it sounds.** You specify perplexity; the algorithm then solves for whatever $`\sigma_i`$ achieves it, separately for each point. In a dense region a small $\sigma$ already reaches 30 effective neighbours; in a sparse region $\sigma$ must be large. **The result is that density is equalized — every point ends up with the same number of effective neighbours regardless of how crowded its neighbourhood actually was.** This is what makes t-SNE robust to varying density, and it is *also* precisely why cluster sizes in the output are meaningless: the algorithm deliberately erased the density information that would have made them meaningful.
 
 #### The crowding problem, and why the heavy tail solves it
 
@@ -390,11 +390,11 @@ Concretely: in **2 dimensions** you can place about 6 points around a centre suc
 
 ▸ **So a point with 50 equally-close neighbours in 50-D has no way to keep them all equally close in 2-D. There is simply not enough room.** Some of them must be placed further away. The question is what the loss function does about that.
 
-**With a Gaussian in the low-dimensional space:** placing a moderate-similarity neighbour at moderate distance produces a $q_{ij}$ that has already collapsed to near-zero (see the numbers above — $\exp(-12.5)$). The KL penalty for "$p$ is large but $q$ is tiny" is severe, so the optimizer responds by hauling everything inward, trying to fit all those neighbours close. **The result is the classic failure: one indistinguishable blob.**
+**With a Gaussian in the low-dimensional space:** placing a moderate-similarity neighbour at moderate distance produces a $`q_{ij}`$ that has already collapsed to near-zero (see the numbers above — $\exp(-12.5)$). The KL penalty for "$p$ is large but $q$ is tiny" is severe, so the optimizer responds by hauling everything inward, trying to fit all those neighbours close. **The result is the classic failure: one indistinguishable blob.**
 
-**With the Student-$t$ (Cauchy), $q_{ij} \propto (1+\|y_i-y_j\|^2)^{-1}$:**
+**With the Student-$t$ (Cauchy), $`q_{ij} \propto (1+\|y_i-y_j\|^2)^{-1}`$:**
 
-| Distance $\|y_i-y_j\|$ | Gaussian $\exp(-\text{d}^2/2)$ | Student-$t$ $(1+\text{d}^2)^{-1}$ | Ratio |
+| Distance $`\|y_i-y_j\|`$ | Gaussian $\exp(-\text{d}^2/2)$ | Student-$t$ $(1+\text{d}^2)^{-1}$ | Ratio |
 |---|---|---|---|
 | $1$ | $0.607$ | $0.500$ | $0.8\times$ |
 | $3$ | $0.011$ | $0.100$ | $9\times$ |
@@ -407,10 +407,10 @@ Concretely: in **2 dimensions** you can place about 6 points around a centre suc
 
 #### Why the KL direction determines the failure mode
 
-$\mathrm{KL}(P\|Q) = \sum_{ij}p_{ij}\log\frac{p_{ij}}{q_{ij}}$ — read: *"sum over all pairs of p times log p over q."* The weighting by $p_{ij}$ is the entire story:
+$`\mathrm{KL}(P\|Q) = \sum_{ij}p_{ij}\log\frac{p_{ij}}{q_{ij}}`$ — read: *"sum over all pairs of p times log p over q."* The weighting by $`p_{ij}`$ is the entire story:
 
-- **$p_{ij}$ large, $q_{ij}$ small** (true neighbours placed far apart): the term is $\text{large}\times\log(\text{large}) $ — **a huge penalty.**
-- **$p_{ij}$ small, $q_{ij}$ large** (distant points placed adjacent): the term is $\text{tiny}\times\log(\text{tiny})$ — **almost no penalty at all.**
+- **$`p_{ij}`$ large, $`q_{ij}`$ small** (true neighbours placed far apart): the term is $\text{large}\times\log(\text{large}) $ — **a huge penalty.**
+- **$`p_{ij}`$ small, $`q_{ij}`$ large** (distant points placed adjacent): the term is $\text{tiny}\times\log(\text{tiny})$ — **almost no penalty at all.**
 
 ▸ **The loss function only ever punishes you for separating things that belong together. It essentially never punishes you for joining things that don't.** So local structure is a hard constraint and global structure is free to be whatever the optimizer finds convenient. **Every documented misuse of a t-SNE plot is a consequence of this one asymmetry**, and it is the same forward-versus-reverse KL asymmetry that governs mode-covering versus mode-seeking behaviour in variational inference (Ch. 1 §1.4.3).
 
@@ -418,7 +418,7 @@ $\mathrm{KL}(P\|Q) = \sum_{ij}p_{ij}\log\frac{p_{ij}}{q_{ij}}$ — read: *"sum o
 
 | Do not read | Because |
 |---|---|
-| Cluster **sizes** | The per-point $\sigma_i$ binary search deliberately equalizes density |
+| Cluster **sizes** | The per-point $`\sigma_i`$ binary search deliberately equalizes density |
 | Distances **between** clusters | Reverse-direction KL errors are unpenalized, so between-cluster geometry is unconstrained |
 | Cluster **shapes** | The layout is a local optimum of a non-convex objective; shapes vary run to run |
 | Apparent clusters at low perplexity | At perplexity 5, t-SNE will produce crisp clusters from **pure Gaussian noise** |
@@ -439,7 +439,7 @@ Builds a fuzzy $k$-NN graph with a locally-adaptive metric (theoretically motiva
 
 #### UMAP, decoded
 
-**What "fuzzy k-NN graph with a locally-adaptive metric" means, stripped of the theory.** For each point, find its $k$ nearest neighbours. Rather than recording binary "is a neighbour / isn't," record a **membership strength** between 0 and 1 that decays with distance — that is the "fuzzy" part. The "locally-adaptive metric" is UMAP's counterpart of t-SNE's per-point $\sigma_i$: each point's distances are rescaled so that its nearest neighbour sits at distance 0, and the decay rate is set so the memberships sum to a target. **Same purpose, same effect: density is normalized away, point by point.**
+**What "fuzzy k-NN graph with a locally-adaptive metric" means, stripped of the theory.** For each point, find its $k$ nearest neighbours. Rather than recording binary "is a neighbour / isn't," record a **membership strength** between 0 and 1 that decays with distance — that is the "fuzzy" part. The "locally-adaptive metric" is UMAP's counterpart of t-SNE's per-point $`\sigma_i`$: each point's distances are rescaled so that its nearest neighbour sits at distance 0, and the decay rate is set so the memberships sum to a target. **Same purpose, same effect: density is normalized away, point by point.**
 
 Then you have two fuzzy graphs — the one from the high-dimensional data and the one implied by your current 2-D layout — and you move the 2-D points to make the graphs agree, using cross-entropy as the measure of agreement.
 
@@ -493,11 +493,11 @@ Read aloud: *"choose the K groups and the K centres that minimize the total squa
 | Piece | Read aloud | What it is |
 |---|---|---|
 | $K$ | "K" | How many clusters you decided to look for — **you must supply this** |
-| $S_k$ | "S-k" | The **set** of points assigned to cluster $k$ |
-| $\mu_k$ | "mu-k" | Cluster $k$'s **centre**, a point in the same space as the data |
-| $\{S_k\},\{\mu_k\}$ | "the S's and the mu's" | Curly braces mean "the whole collection of them" — we optimize over **both** at once |
-| $\sum_{x\in S_k}$ | "sum over x in S-k" | "Add this up over every point assigned to cluster $k$" |
-| $\|x-\mu_k\|^2$ | "norm of x minus mu-k, squared" | Squared straight-line distance from the point to its centre |
+| $`S_k`$ | "S-k" | The **set** of points assigned to cluster $k$ |
+| $`\mu_k`$ | "mu-k" | Cluster $k$'s **centre**, a point in the same space as the data |
+| $`\{S_k\},\{\mu_k\}`$ | "the S's and the mu's" | Curly braces mean "the whole collection of them" — we optimize over **both** at once |
+| $`\sum_{x\in S_k}`$ | "sum over x in S-k" | "Add this up over every point assigned to cluster $k$" |
+| $`\|x-\mu_k\|^2`$ | "norm of x minus mu-k, squared" | Squared straight-line distance from the point to its centre |
 
 The quantity being minimized has a name: **inertia**, or within-cluster sum of squares.
 
@@ -509,7 +509,7 @@ The quantity being minimized has a name: **inertia**, or within-cluster sum of s
 2. **Update:** each centre moves to the mean of its members. (Best centres given the assignments.)
 3. Repeat until nothing changes.
 
-**Why it always terminates.** Step 1 cannot increase the objective — moving a point to a *closer* centre reduces its contribution. Step 2 cannot increase it either, because the mean is provably the point minimizing the sum of squared distances to a set (differentiate $\sum_i (x_i - \mu)^2$ and you get $\mu = \bar x$). So the objective decreases or stays flat at every step. Since there are only finitely many possible assignments and the objective never goes back up, **you can never revisit a configuration, so you must stop.**
+**Why it always terminates.** Step 1 cannot increase the objective — moving a point to a *closer* centre reduces its contribution. Step 2 cannot increase it either, because the mean is provably the point minimizing the sum of squared distances to a set (differentiate $`\sum_i (x_i - \mu)^2`$ and you get $\mu = \bar x$). So the objective decreases or stays flat at every step. Since there are only finitely many possible assignments and the objective never goes back up, **you can never revisit a configuration, so you must stop.**
 
 ▸ **Note what this does and does not promise. It promises you will stop. It does not promise you stopped anywhere good.** Lloyd's algorithm reaches a *local* optimum, and the local optima can be arbitrarily bad. This is the single most important practical fact about k-means, and it is what §24.4's initialization discussion exists to address.
 
@@ -541,7 +541,7 @@ The quantity being minimized has a name: **inertia**, or within-cluster sum of s
 
 ▸ **All four failures are the same failure: the objective is a sum of squared Euclidean distances, and that formula encodes a specific belief about what a cluster is.** If your clusters are not round blobs of similar size, you have not found a bug — you have used a method whose definition of "cluster" disagrees with yours. **k-medoids / PAM** (Partitioning Around Medoids) fixes the robustness leg by using actual data points as centres and absolute rather than squared distance; §24.4's later methods fix the others.
 
-**Why $\sigma^2\to0$ turns a GMM into k-means.** In a Gaussian mixture with shared isotropic covariance $\sigma^2I$, the responsibility of component $k$ for point $i$ is proportional to $\exp(-\|x_i-\mu_k\|^2/2\sigma^2)$. As $\sigma^2$ shrinks, the exponent's denominator shrinks, so tiny differences in distance become enormous differences in the exponent. Numbers: two centres at distances $2.0$ and $2.1$.
+**Why $\sigma^2\to0$ turns a GMM into k-means.** In a Gaussian mixture with shared isotropic covariance $\sigma^2I$, the responsibility of component $k$ for point $i$ is proportional to $`\exp(-\|x_i-\mu_k\|^2/2\sigma^2)`$. As $\sigma^2$ shrinks, the exponent's denominator shrinks, so tiny differences in distance become enormous differences in the exponent. Numbers: two centres at distances $2.0$ and $2.1$.
 
 | $\sigma^2$ | Responsibility of the nearer centre |
 |---|---|
@@ -562,19 +562,19 @@ The quantity being minimized has a name: **inertia**, or within-cluster sum of s
 
 Direct maximum likelihood is intractable (a log of a sum). EM makes it tractable.
 
-**Derivation.** Introduce latent assignments $z_i\in\{1..K\}$. For any distribution $q(z)$, Jensen gives (Ch. 1 §1.4.4):
+**Derivation.** Introduce latent assignments $`z_i\in\{1..K\}`$. For any distribution $q(z)$, Jensen gives (Ch. 1 §1.4.4):
 $$\log p(x\mid\theta)\ \ge\ \mathbb{E}_{q}\big[\log p(x,z\mid\theta)\big] + H(q)$$
 with equality iff $q(z)=p(z\mid x,\theta)$.
 
 **E-step** — set $q$ to the exact posterior, closing the gap:
 ▸ $$\gamma_{ik} = p(z_i=k\mid x_i) = \frac{\pi_k\mathcal{N}(x_i\mid\mu_k,\Sigma_k)}{\sum_{j}\pi_j\mathcal{N}(x_i\mid\mu_j,\Sigma_j)}$$
 
-**M-step** — maximize the bound over $\theta$ with $\gamma$ fixed. Let $N_k=\sum_i\gamma_{ik}$:
+**M-step** — maximize the bound over $\theta$ with $\gamma$ fixed. Let $`N_k=\sum_i\gamma_{ik}`$:
 ▸ $$\pi_k = \frac{N_k}{n},\qquad \mu_k = \frac{1}{N_k}\sum_i\gamma_{ik}x_i,\qquad \Sigma_k = \frac{1}{N_k}\sum_i\gamma_{ik}(x_i-\mu_k)(x_i-\mu_k)^\top$$
 
 ▸ **Why EM never decreases the likelihood:** the E-step raises the bound to exactly equal the log-likelihood; the M-step then increases the bound. Since the log-likelihood is always ≥ the bound, it must have increased too. **Monotone convergence to a local optimum, guaranteed.** This proof is short and comes up often — learn it.
 
-**Failure modes:** ▸ **singularities.** A component that collapses onto a single point has $|\Sigma_k|\to0$ and likelihood $\to\infty$. The likelihood surface is  unbounded. Fix by adding $\epsilon I$ to covariances (a regularization/MAP prior) or restarting collapsed components. Also: local optima (many restarts), and $O(Kd^2)$ parameters per full covariance (use `diag` or `tied` when $d$ is large).
+**Failure modes:** ▸ **singularities.** A component that collapses onto a single point has $`|\Sigma_k|\to0`$ and likelihood $\to\infty$. The likelihood surface is  unbounded. Fix by adding $\epsilon I$ to covariances (a regularization/MAP prior) or restarting collapsed components. Also: local optima (many restarts), and $O(Kd^2)$ parameters per full covariance (use `diag` or `tied` when $d$ is large).
 
 #### Reading the mixture model in plain English
 
@@ -584,17 +584,17 @@ Read aloud: *"the probability of seeing point x is a weighted sum of K Gaussian 
 
 | Piece | Read aloud | What it is |
 |---|---|---|
-| $\pi_k$ | "pi-k" | The **mixing weight** — what fraction of the population belongs to group $k$. Nothing to do with 3.14159. |
-| $\mathcal{N}(x\mid\mu_k,\Sigma_k)$ | "normal of x, given mu-k and Sigma-k" | The **height of Gaussian bell $k$** at the location $x$ |
-| $\mu_k$ | "mu-k" | Where bell $k$ is centred |
-| $\Sigma_k$ | "Sigma-k" | Bell $k$'s **covariance** — its width, and crucially its *orientation and shape* |
-| $\sum_k\pi_k = 1$ | "the pi's sum to one" | The weights are proportions of a whole |
+| $`\pi_k`$ | "pi-k" | The **mixing weight** — what fraction of the population belongs to group $k$. Nothing to do with 3.14159. |
+| $`\mathcal{N}(x\mid\mu_k,\Sigma_k)`$ | "normal of x, given mu-k and Sigma-k" | The **height of Gaussian bell $k$** at the location $x$ |
+| $`\mu_k`$ | "mu-k" | Where bell $k$ is centred |
+| $`\Sigma_k`$ | "Sigma-k" | Bell $k$'s **covariance** — its width, and crucially its *orientation and shape* |
+| $`\sum_k\pi_k = 1`$ | "the pi's sum to one" | The weights are proportions of a whole |
 
-▸ **The generative story: to make a data point, first roll a weighted die to pick which group it belongs to, then draw from that group's Gaussian.** You observe the point; you do not observe the die roll. **That hidden die roll is the latent variable $z_i$, and everything about EM is a consequence of it being hidden.**
+▸ **The generative story: to make a data point, first roll a weighted die to pick which group it belongs to, then draw from that group's Gaussian.** You observe the point; you do not observe the die roll. **That hidden die roll is the latent variable $`z_i`$, and everything about EM is a consequence of it being hidden.**
 
-**Why a GMM is strictly more expressive than k-means.** k-means has one shared, isotropic, implicit covariance. A GMM gives each component its own full $\Sigma_k$, so a component can be a long thin diagonal ellipse while its neighbour is a small circle. It also has $\pi_k$, so a component may legitimately be small. **Elongated, differently sized, differently oriented clusters are all representable** — the first three of k-means's four failure modes are repaired in one stroke.
+**Why a GMM is strictly more expressive than k-means.** k-means has one shared, isotropic, implicit covariance. A GMM gives each component its own full $`\Sigma_k`$, so a component can be a long thin diagonal ellipse while its neighbour is a small circle. It also has $`\pi_k`$, so a component may legitimately be small. **Elongated, differently sized, differently oriented clusters are all representable** — the first three of k-means's four failure modes are repaired in one stroke.
 
-**Why direct maximum likelihood is intractable.** The log-likelihood is $\sum_i\log\sum_k \pi_k\mathcal{N}(x_i\mid\mu_k,\Sigma_k)$ — **a logarithm of a sum.** The log cannot be pushed inside, so the parameters of all $K$ components stay coupled inside one logarithm and the derivative has no closed-form root. If you *knew* which component generated each point, the sum would collapse to a single term, the log would land directly on the Gaussian, and you would just be fitting $K$ separate Gaussians — which is trivial. ▸ **The entire difficulty is the not-knowing, and EM's strategy is to guess.**
+**Why direct maximum likelihood is intractable.** The log-likelihood is $`\sum_i\log\sum_k \pi_k\mathcal{N}(x_i\mid\mu_k,\Sigma_k)`$ — **a logarithm of a sum.** The log cannot be pushed inside, so the parameters of all $K$ components stay coupled inside one logarithm and the derivative has no closed-form root. If you *knew* which component generated each point, the sum would collapse to a single term, the log would land directly on the Gaussian, and you would just be fitting $K$ separate Gaussians — which is trivial. ▸ **The entire difficulty is the not-knowing, and EM's strategy is to guess.**
 
 #### The EM derivation, decoded
 
@@ -604,10 +604,10 @@ Read aloud: *"the log-likelihood is at least the expected complete-data log-like
 
 | Piece | Read aloud | What it is |
 |---|---|---|
-| $\theta$ | "theta" | All the parameters: every $\pi_k$, $\mu_k$, $\Sigma_k$ |
+| $\theta$ | "theta" | All the parameters: every $`\pi_k`$, $`\mu_k`$, $`\Sigma_k`$ |
 | $z$ | "z" | The hidden assignments — which component made each point |
 | $q(z)$ | "q of z" | **Your current guess** about the hidden assignments. Any distribution at all. |
-| $\mathbb{E}_q[\cdot]$ | "expectation under q" | Average the thing inside, weighting by how likely $q$ says each $z$ is |
+| $`\mathbb{E}_q[\cdot]`$ | "expectation under q" | Average the thing inside, weighting by how likely $q$ says each $z$ is |
 | $H(q)$ | "entropy of q" | How uncertain your guess is (Ch. 1 §1.4) |
 | $\ge$ | "is at least" | **A bound, not an equation** — and this is the whole trick |
 
@@ -619,20 +619,20 @@ $$\gamma_{ik} = p(z_i=k\mid x_i) = \frac{\pi_k\mathcal{N}(x_i\mid\mu_k,\Sigma_k)
 
 This is **Bayes' rule**, nothing more. Numerator: prior probability of group $k$ times the likelihood of seeing this point under group $k$. Denominator: the same thing summed over all groups, so the answers add to 1.
 
-$\gamma_{ik}$ is called the **responsibility**: read it as *"how much of point $i$ does component $k$ own?"* A point sitting squarely in one cluster might have $\gamma = (0.99, 0.01, 0.00)$; a point between two might have $(0.48, 0.50, 0.02)$.
+$`\gamma_{ik}`$ is called the **responsibility**: read it as *"how much of point $i$ does component $k$ own?"* A point sitting squarely in one cluster might have $\gamma = (0.99, 0.01, 0.00)$; a point between two might have $(0.48, 0.50, 0.02)$.
 
 **Real numbers.** Two components, equal weights $\pi = 0.5$, both unit-variance 1-D Gaussians centred at $0$ and $4$. A point at $x = 1$:
 - Density under component 1: $\frac{1}{\sqrt{2\pi}}e^{-0.5} = 0.242$
 - Density under component 2: $\frac{1}{\sqrt{2\pi}}e^{-4.5} = 0.0044$
-- $\gamma_{i1} = \frac{0.5(0.242)}{0.5(0.242)+0.5(0.0044)} = \mathbf{0.982}$
+- $`\gamma_{i1} = \frac{0.5(0.242)}{0.5(0.242)+0.5(0.0044)} = \mathbf{0.982}`$
 
 **98% of that point belongs to component 1, and 2% to component 2** — and the 2% is not discarded, it  contributes to component 2's mean and covariance in the M-step. That is the difference between soft and hard assignment.
 
-**The M-step, decoded.** With $N_k = \sum_i\gamma_{ik}$ (read: *"the effective number of points owned by component $k$"* — a fractional count):
+**The M-step, decoded.** With $`N_k = \sum_i\gamma_{ik}`$ (read: *"the effective number of points owned by component $k$"* — a fractional count):
 
-- $\pi_k = N_k/n$ — **"what share of the total data does this component own?"**
-- $\mu_k = \frac{1}{N_k}\sum_i\gamma_{ik}x_i$ — **a weighted average**, where each point contributes in proportion to how much this component owns it.
-- $\Sigma_k = \frac{1}{N_k}\sum_i\gamma_{ik}(x_i-\mu_k)(x_i-\mu_k)^\top$ — the same weighted average, applied to outer products. The outer product $(x-\mu)(x-\mu)^\top$ is a $d\times d$ matrix (Ch. 0 §0.8) whose $(a,b)$ entry is how much feature $a$ and feature $b$ deviate together.
+- $`\pi_k = N_k/n`$ — **"what share of the total data does this component own?"**
+- $`\mu_k = \frac{1}{N_k}\sum_i\gamma_{ik}x_i`$ — **a weighted average**, where each point contributes in proportion to how much this component owns it.
+- $`\Sigma_k = \frac{1}{N_k}\sum_i\gamma_{ik}(x_i-\mu_k)(x_i-\mu_k)^\top`$ — the same weighted average, applied to outer products. The outer product $(x-\mu)(x-\mu)^\top$ is a $d\times d$ matrix (Ch. 0 §0.8) whose $(a,b)$ entry is how much feature $a$ and feature $b$ deviate together.
 
 ▸ **Every M-step formula is the ordinary maximum-likelihood formula for a single Gaussian, with each data point weighted by its responsibility.** If the responsibilities were all 0 or 1, these would be exactly "the mean and covariance of the points in this group." Soft assignment changes nothing except that the counts become fractional.
 
@@ -650,7 +650,7 @@ Numbers, in 1-D at the centre: $\sigma = 0.1$ gives density $3.99$; $\sigma = 0.
 
 **The fixes, and what each one really is:**
 - **Add $\epsilon I$ to every covariance.** This is `reg_covar` in most libraries. It puts a floor under the width of any component, so the density has a ceiling. Formally it is a MAP estimate under an inverse-Wishart prior — **a prior that says "I do not believe in clusters of literally zero width."**
-- **Restart collapsed components.** Detect a component whose $N_k$ has fallen below a threshold and re-seed it somewhere else.
+- **Restart collapsed components.** Detect a component whose $`N_k`$ has fallen below a threshold and re-seed it somewhere else.
 - **Constrain the covariance shape.** `spherical` ($\sigma^2 I$), `diag` (axis-aligned ellipse), `tied` (one shared $\Sigma$ for all components), `full` (unrestricted). Parameter counts per component in $d$ dimensions: $1$, $d$, and $d(d+1)/2$. ▸ **At $d = 100$, a full covariance costs 5,050 parameters per component — so a 10-component full-covariance GMM has 50,500 covariance parameters, and fitting that from a few thousand points is hopeless.** `diag` costs 100. **This is the single most common reason a GMM underperforms in high dimensions, and the fix is a one-word argument.**
 
 > **Where this came from.** The **EM algorithm** was named and unified by **Arthur Dempster, Nan Laird, and Donald Rubin** at Harvard in **1977** — a paper that has become one of the most cited in the history of statistics. Their contribution was largely one of recognition: a dozen apparently unrelated iterative procedures scattered across genetics, econometrics, and signal processing were all the same algorithm, and once you see that, the monotonicity proof applies to all of them at once. One of those special cases had been developed a decade earlier at the Institute for Defense Analyses in Princeton, where **Leonard Baum, Lloyd Welch** and colleagues worked out what is now called the **Baum–Welch algorithm** for fitting hidden Markov models — the classified applications were in cryptanalysis and signal analysis, and the same machinery later underpinned speech recognition for thirty years. ▸ **A tool that turned out to be a general principle of statistics was worked out first, in a specialized form, inside a defence research organization.**
@@ -679,7 +679,7 @@ The two parameters and the three point types:
 
 **The cluster-building rule:** start at any core point and repeatedly absorb everything within $\varepsilon$; whenever you absorb another core point, continue outward from it too. Stop when the frontier contains only border points. That connected blob is one cluster.
 
-▸ **Because the cluster grows by chaining from core point to core point, it can wander into any shape at all — a crescent, a spiral, two interlocking rings.** k-means cannot produce a crescent no matter how you set it, because "everything nearer to $\mu_1$ than to $\mu_2$" always carves space with straight lines. **DBSCAN never asks "which centre is nearest"; it only asks "can I walk there through crowded ground."**
+▸ **Because the cluster grows by chaining from core point to core point, it can wander into any shape at all — a crescent, a spiral, two interlocking rings.** k-means cannot produce a crescent no matter how you set it, because "everything nearer to $`\mu_1`$ than to $`\mu_2`$" always carves space with straight lines. **DBSCAN never asks "which centre is nearest"; it only asks "can I walk there through crowded ground."**
 
 > **Analogy.** A city at night seen from the air. k-means says "there are five cities; assign every light to its nearest city hall." DBSCAN says "wherever the lights are dense, keep walking; wherever they thin out, stop." The second finds a city shaped like a river valley. It also correctly identifies the isolated farmhouse as **not part of any city** — which is a category k-means does not possess, since k-means must assign every point to something.
 
@@ -704,11 +704,11 @@ The two parameters and the three point types:
 ### Spectral clustering
 
 1. Build a similarity graph $W$ (k-NN or Gaussian kernel).
-2. Form the Laplacian $L=D-W$, or the normalized $L_{\text{sym}}=I-D^{-1/2}WD^{-1/2}$.
+2. Form the Laplacian $L=D-W$, or the normalized $`L_{\text{sym}}=I-D^{-1/2}WD^{-1/2}`$.
 3. Take the eigenvectors of the $k$ smallest eigenvalues, stack as columns, row-normalize.
 4. Run k-means on those rows.
 
-▸ **Why it works:** $x^\top Lx = \frac12\sum_{ij}w_{ij}(x_i-x_j)^2$, so minimizing the Rayleigh quotient finds a soft assignment that is smooth over the graph — i.e. cuts few edges. It is a **continuous relaxation of the normalized-cut problem**, which is NP-hard. The **multiplicity of the eigenvalue 0 equals the number of connected components**, which is why the eigengap indicates $K$.
+▸ **Why it works:** $`x^\top Lx = \frac12\sum_{ij}w_{ij}(x_i-x_j)^2`$, so minimizing the Rayleigh quotient finds a soft assignment that is smooth over the graph — i.e. cuts few edges. It is a **continuous relaxation of the normalized-cut problem**, which is NP-hard. The **multiplicity of the eigenvalue 0 equals the number of connected components**, which is why the eigengap indicates $K$.
 
 Handles non-convex shapes; costs $O(n^3)$ for the eigendecomposition (use sparse graphs + Lanczos).
 
@@ -727,7 +727,7 @@ Output is a dendrogram — cut it at any height for any $K$. $O(n^2\log n)$ time
 
 ### Validity metrics
 
-- **Silhouette:** $s_i = \frac{b_i-a_i}{\max(a_i,b_i)}$ where $a_i$ is mean intra-cluster distance and $b_i$ the mean distance to the nearest other cluster. Range $[-1,1]$.
+- **Silhouette:** $`s_i = \frac{b_i-a_i}{\max(a_i,b_i)}`$ where $`a_i`$ is mean intra-cluster distance and $`b_i`$ the mean distance to the nearest other cluster. Range $[-1,1]$.
 - **Davies–Bouldin** (lower better), **Calinski–Harabasz** (higher better).
 - With labels: **Adjusted Rand Index**, **Normalized Mutual Information**, V-measure.
 

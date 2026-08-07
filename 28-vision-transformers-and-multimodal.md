@@ -14,16 +14,16 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | $P$ | "the patch size" | The side length of one square tile, usually 14 or 16 pixels |
 | $N = HW/P^2$ | "N equals H W over P squared" | **How many patches an image becomes.** For $224/16$: $14\times14 = 196$ |
 | `[CLS]` | "the class token" | An extra, learned, content-free token whose output vector stands for the whole image |
-| $I_i$ | "I-sub-i" | The embedding vector of the $i$-th **image** in the batch |
-| $T_j$ | "T-sub-j" | The embedding vector of the $j$-th **text** (caption) in the batch |
-| $I_iT_j^\top$ | "I-i times T-j transpose" | A **dot product** — one number saying how aligned image $i$ is with caption $j$ |
+| $`I_i`$ | "I-sub-i" | The embedding vector of the $i$-th **image** in the batch |
+| $`T_j`$ | "T-sub-j" | The embedding vector of the $j$-th **text** (caption) in the batch |
+| $`I_iT_j^\top`$ | "I-i times T-j transpose" | A **dot product** — one number saying how aligned image $i$ is with caption $j$ |
 | $\tau$ | "tau" | The **temperature** — a divisor that sharpens or flattens the similarity scores |
 | $\mathrm{diag}$ | "the diagonal" | The labels $(1,2,\dots,N)$: image $i$'s correct caption is caption $i$ |
 | $\sigma(\cdot)$ | "sigmoid" | $1/(1+e^{-x})$ — squashes any number into $(0,1)$ |
-| $z_{ij}$ | "z-i-j" | A $\pm1$ label: $+1$ if image $i$ and caption $j$ are a true pair, $-1$ otherwise |
+| $`z_{ij}`$ | "z-i-j" | A $\pm1$ label: $+1$ if image $i$ and caption $j$ are a true pair, $-1$ otherwise |
 | $O(T^2)$ | "order T squared" | Cost grows with the **square** of the number of tokens |
 | $T\times H\times W$ | "T by H by W" | A video's shape: frames × height × width |
-| $2595\log_{10}(1+f/700)$ | "the mel formula" | Converts a frequency in hertz to a *perceptual* pitch scale |
+| $`2595\log_{10}(1+f/700)`$ | "the mel formula" | Converts a frequency in hertz to a *perceptual* pitch scale |
 
 **Full forms of the abbreviations used in this chapter**
 
@@ -106,7 +106,7 @@ Why would a content-free token work? Because attention lets it *choose* what to 
 
 **Step 3 — positional embeddings.** Here is the crucial point, and the one beginners skip. Self-attention is **permutation-equivariant**: shuffle the input tokens and the outputs shuffle identically, but nothing else changes. To the raw attention mechanism, the 196 patches are a *bag*, not a grid. Sky patches and grass patches are unordered.
 
-So you add a learned vector $p_k \in \mathbb{R}^{d}$ to patch $k$'s embedding — 197 such vectors, learned by gradient descent like any other parameter. That is 197 × 768 ≈ 151,000 extra numbers, and it is the model's entire sense of geography.
+So you add a learned vector $`p_k \in \mathbb{R}^{d}`$ to patch $k$'s embedding — 197 such vectors, learned by gradient descent like any other parameter. That is 197 × 768 ≈ 151,000 extra numbers, and it is the model's entire sense of geography.
 
 ▸ **What would break without them.** Take a photo of a person standing on grass under sky, shuffle the 196 patches into a random order, and a ViT *without* positional embeddings gives **bit-for-bit the same output**. It cannot tell a portrait from a jigsaw puzzle poured out on a table. Empirically, removing positional embeddings costs several points of ImageNet accuracy — not catastrophic, because texture alone carries a lot of signal, but the model is  blind to layout.
 
@@ -187,7 +187,7 @@ Put the three datasets on one line so the scale gap is visible:
 | Max-pooling | "Small translations shouldn't change the answer" |
 | A recurrent network's hidden state | "The past matters only through a fixed-size summary" |
 | Causal masking in a language model | "Token $t$ cannot depend on token $t+1$" |
-| $\ell_2$ weight decay | "Small weights are more plausible than large ones" |
+| $`\ell_2`$ weight decay | "Small weights are more plausible than large ones" |
 | A graph neural network's message passing | "Only connected nodes influence each other" |
 
 **❌ Near-misses — often called inductive biases, but aren't**
@@ -274,7 +274,7 @@ Teaching two people, one who only sees and one who only reads, to point at the s
 
 ### The objective
 
-For a batch of $N$ pairs, compute image embeddings $I_i$ and text embeddings $T_j$, both L2-normalized. The logits are $\frac{I_iT_j^\top}{\tau}$, and the loss is **symmetric cross-entropy** over both axes:
+For a batch of $N$ pairs, compute image embeddings $`I_i`$ and text embeddings $`T_j`$, both L2-normalized. The logits are $`\frac{I_iT_j^\top}{\tau}`$, and the loss is **symmetric cross-entropy** over both axes:
 
 ▸ $$\mathcal{L}=\frac12\left[\underbrace{\mathrm{CE}\big(\tfrac{IT^\top}{\tau},\,\mathrm{diag}\big)}_{\text{image}\to\text{text}} + \underbrace{\mathrm{CE}\big(\tfrac{TI^\top}{\tau},\,\mathrm{diag}\big)}_{\text{text}\to\text{image}}\right]$$
 
@@ -291,10 +291,10 @@ Every symbol, then a worked example with actual arithmetic.
 | Piece | Read aloud | What it is |
 |---|---|---|
 | $N$ | "N" | The batch size — how many image–caption pairs are in flight at once |
-| $I_i$ | "I-sub-i" | Image $i$'s embedding, a vector of length $d$ (say 512) |
-| $T_j$ | "T-sub-j" | Caption $j$'s embedding, same length |
-| "L2-normalized" | — | Every vector has been divided by its own length, so $\lVert I_i\rVert = 1$ |
-| $I_iT_j^\top$ | "I-i T-j transpose" | Their **dot product** — a single number |
+| $`I_i`$ | "I-sub-i" | Image $i$'s embedding, a vector of length $d$ (say 512) |
+| $`T_j`$ | "T-sub-j" | Caption $j$'s embedding, same length |
+| "L2-normalized" | — | Every vector has been divided by its own length, so $`\lVert I_i\rVert = 1`$ |
+| $`I_iT_j^\top`$ | "I-i T-j transpose" | Their **dot product** — a single number |
 | $\tau$ | "tau" | Temperature. Divide by it before the softmax |
 | $\mathrm{CE}(\cdot,\ \mathrm{diag})$ | "cross-entropy against the diagonal" | Standard classification loss where the correct answer for row $i$ is column $i$ |
 | $\tfrac12[\cdots+\cdots]$ | — | Average the two directions so neither modality is privileged |
@@ -446,14 +446,14 @@ Read the formula aloud first: *"minus one over N, sum over i, sum over j, of the
 | $\sigma(x) = 1/(1+e^{-x})$ | The sigmoid. Turns any real number into a probability in $(0,1)$ |
 | $t$ | A learned **scale**, playing the role $1/\tau$ played in CLIP |
 | $b$ | A learned **bias** — new, and load-bearing (see below) |
-| $z_{ij} = \pm1$ | $+1$ for a true pair, $-1$ otherwise |
-| $\sum_i\sum_j$ | Over **all $N^2$ cells**, not just each row |
+| $`z_{ij} = \pm1`$ | $+1$ for a true pair, $-1$ otherwise |
+| $`\sum_i\sum_j`$ | Over **all $N^2$ cells**, not just each row |
 
 **The one structural change.** CLIP asks, for each row, *"which one of these $N$ captions is correct?"* — a single question with $N$ competing answers, which is why a softmax is needed and why every cell in the row must be known before any cell can be scored. SigLIP instead asks, for each of the $N^2$ cells independently, *"is this particular pair a match — yes or no?"*
 
 ▸ **One $N$-way question becomes $N^2$ independent yes/no questions.** That is the entire idea, and everything else follows from it.
 
-**Why $z_{ij}$ multiplies the logit.** It is a compact way to write "for a positive pair, push the score up; for a negative pair, push it down." If $z = +1$, you are maximizing $\log\sigma(\text{score})$, which grows as the score grows. If $z = -1$, you are maximizing $\log\sigma(-\text{score})$, which grows as the score *shrinks*. One line covers both cases — the same trick used in the hinge loss of a support vector machine.
+**Why $`z_{ij}`$ multiplies the logit.** It is a compact way to write "for a positive pair, push the score up; for a negative pair, push it down." If $z = +1$, you are maximizing $\log\sigma(\text{score})$, which grows as the score grows. If $z = -1$, you are maximizing $\log\sigma(-\text{score})$, which grows as the score *shrinks*. One line covers both cases — the same trick used in the hinge loss of a support vector machine.
 
 **Put numbers in it.** Take a partly-trained model with $t = 10$ and $b = -5$:
 
@@ -467,7 +467,7 @@ Read the formula aloud first: *"minus one over N, sum over i, sum over j, of the
 
 **Why the bias $b$ exists, and why it must start very negative.** Count the cells: $N^2$ total, of which exactly $N$ are positive. At $N = 32{,}768$ that is one positive per 32,768 cells — a $0.003\%$ positive rate. A binary classifier facing that imbalance and initialized neutrally will be swamped by the negatives on step one and simply learn to output "no" for everything. Initializing $b$ to a large negative value means the model *starts* predicting "no" everywhere, so the early gradient is dominated by the positives it is getting wrong, which is exactly the signal you want. **The bias is not a detail; without it, training at large $N$ is badly behaved from the first step.**
 
-**Why "the softmax requires a global normalization" is a systems problem.** To compute $\mathrm{softmax}$ across row $i$ you need $\sum_{j=1}^{N}e^{S_{ij}}$ — every entry in the row. Split a batch of 32,768 across 32 devices and each device holds only 1,024 text embeddings, so **no device can compute a single row of the loss on its own**. Every device must receive every other device's embeddings: an all-gather, on every step, with a synchronization barrier.
+**Why "the softmax requires a global normalization" is a systems problem.** To compute $\mathrm{softmax}$ across row $i$ you need $`\sum_{j=1}^{N}e^{S_{ij}}`$ — every entry in the row. Split a batch of 32,768 across 32 devices and each device holds only 1,024 text embeddings, so **no device can compute a single row of the loss on its own**. Every device must receive every other device's embeddings: an all-gather, on every step, with a synchronization barrier.
 
 ▸ **And the matrix itself is large.** $32{,}768^2 = 1.07$ billion similarity scores; in 32-bit floats that is **4.3 GB** for one intermediate tensor in one loss function.
 
@@ -731,7 +731,7 @@ $$\text{score} = \log p(\text{token}\mid \text{image}) - \alpha\log p(\text{toke
 
 ### Representations
 
-Raw waveform (16 kHz) → **mel spectrogram**: STFT with a ~25 ms window and 10 ms hop, magnitude, then a mel filterbank (spacing ~$2595\log_{10}(1+f/700)$, approximating human pitch perception), then log. ▸ **A spectrogram is an image, so every vision architecture applies** — which is exactly how the field developed.
+Raw waveform (16 kHz) → **mel spectrogram**: STFT with a ~25 ms window and 10 ms hop, magnitude, then a mel filterbank (spacing ~$`2595\log_{10}(1+f/700)`$, approximating human pitch perception), then log. ▸ **A spectrogram is an image, so every vision architecture applies** — which is exactly how the field developed.
 
 #### Building a mel spectrogram, one step at a time with numbers
 
@@ -760,7 +760,7 @@ So you do it in slices:
 
 **"Magnitude."** The Fourier transform returns complex numbers, each carrying an amplitude *and* a phase. Taking the magnitude throws the phase away. This is a real, deliberate information loss — it is why converting a spectrogram back to audio requires a phase-reconstruction algorithm or a learned vocoder — and it is done because phase is perceptually near-irrelevant for recognition while being extremely hard to model.
 
-**"Then a mel filterbank."** You now have maybe 201 frequency bins per frame, linearly spaced from 0 to 8,000 Hz. Human hearing is not linear in frequency, so you sum groups of bins into ~80 **mel** bands whose widths follow perception. Put actual numbers through the formula $m = 2595\log_{10}(1 + f/700)$:
+**"Then a mel filterbank."** You now have maybe 201 frequency bins per frame, linearly spaced from 0 to 8,000 Hz. Human hearing is not linear in frequency, so you sum groups of bins into ~80 **mel** bands whose widths follow perception. Put actual numbers through the formula $`m = 2595\log_{10}(1 + f/700)`$:
 
 | Frequency $f$ (Hz) | Mel value $m$ |
 |---|---|
@@ -778,7 +778,7 @@ So you do it in slices:
 
 > **Analogy.** A spectrogram is sheet music that a machine wrote by listening. The horizontal axis is time, the vertical axis is pitch, and darkness is loudness. Speech looks like horizontal stripes (the resonances of a vocal tract) that bend as the mouth changes shape; a hand clap looks like a single vertical line; a violin looks like an evenly spaced stack of horizontal lines. **Once you can read one, you can identify a great deal of audio with your eyes.**
 
-> **Where this came from.** The mel scale came out of a psychology experiment, not an engineering one. Stanley Smith Stevens, John Volkmann, and Edwin Newman at Harvard's Psycho-Acoustic Laboratory published it in 1937: they played listeners a reference tone and asked them to adjust a second tone until it sounded **half as high**, then built a scale from the answers. The name is short for *melody*. The particular formula $2595\log_{10}(1+f/700)$ is a later analytic fit to that curve rather than the original authors' equation, and several slightly different versions circulate — which is worth knowing, because two libraries can produce different mel spectrograms from identical audio and both be correct. Separately, the **sound spectrograph** — the machine that first drew audio as a picture — was developed at Bell Labs during the Second World War and declassified afterwards; one of its stated motivations was teaching deaf people to read speech visually, published as *Visible Speech* in 1947. The representation that every modern speech model consumes was designed to be looked at by human eyes.
+> **Where this came from.** The mel scale came out of a psychology experiment, not an engineering one. Stanley Smith Stevens, John Volkmann, and Edwin Newman at Harvard's Psycho-Acoustic Laboratory published it in 1937: they played listeners a reference tone and asked them to adjust a second tone until it sounded **half as high**, then built a scale from the answers. The name is short for *melody*. The particular formula $`2595\log_{10}(1+f/700)`$ is a later analytic fit to that curve rather than the original authors' equation, and several slightly different versions circulate — which is worth knowing, because two libraries can produce different mel spectrograms from identical audio and both be correct. Separately, the **sound spectrograph** — the machine that first drew audio as a picture — was developed at Bell Labs during the Second World War and declassified afterwards; one of its stated motivations was teaching deaf people to read speech visually, published as *Visible Speech* in 1947. The representation that every modern speech model consumes was designed to be looked at by human eyes.
 
 #### Examples and non-examples: "a spectrogram is an image"
 

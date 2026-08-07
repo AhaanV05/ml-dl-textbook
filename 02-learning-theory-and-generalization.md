@@ -16,8 +16,8 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 | $h \in \mathcal{H}$ | "h in script H" | One specific model, i.e. one particular setting of all the weights |
 | $\ell(h(x),y)$ | "ell of h-of-x and y" | The loss on **one** example. Script-$\ell$ is *per-example* |
 | $R(h)$ | "the risk of h" | Average loss over **all data that could ever arrive** — what you want |
-| $\hat R_n(h)$ | "R-hat-n of h" | Average loss over **the $n$ points you have** — what you can measure |
-| $R^*$ | "R-star" | The lowest risk **any** function could achieve. The Bayes risk. A floor |
+| $`\hat R_n(h)`$ | "R-hat-n of h" | Average loss over **the $n$ points you have** — what you can measure |
+| $`R^*`$ | "R-star" | The lowest risk **any** function could achieve. The Bayes risk. A floor |
 | $\hat h$ | "h-hat" | The model that empirical risk minimization actually picks |
 | $\inf$ | "infimum" | A careful $\min$: the smallest value, or the value it creeps down to |
 | $\sup$ | "supremum" | A careful $\max$: the largest value, or the value it creeps up to |
@@ -26,9 +26,9 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 | $\delta$ | "delta" | The **failure probability** you'll tolerate. $1-\delta$ is your confidence |
 | $\epsilon$ | "epsilon" | The **error tolerance** — how wrong you're willing to be |
 | $\mathbb{1}[\,\cdot\,]$ | "indicator" | 1 if the statement inside is true, 0 if false. A switch |
-| $d_{\mathrm{VC}}$ | "the VC dimension" | The most points the class can label in **every** possible way |
-| $\hat{\mathfrak{R}}_S(\mathcal{F})$ | "Rademacher complexity" | How well the class can fit **pure coin flips** |
-| $\sigma_i \in \{\pm1\}$ | "sigma-i" | A **Rademacher variable**: a fair coin flip, written $+1$ or $-1$ |
+| $`d_{\mathrm{VC}}`$ | "the VC dimension" | The most points the class can label in **every** possible way |
+| $`\hat{\mathfrak{R}}_S(\mathcal{F})`$ | "Rademacher complexity" | How well the class can fit **pure coin flips** |
+| $`\sigma_i \in \{\pm1\}`$ | "sigma-i" | A **Rademacher variable**: a fair coin flip, written $+1$ or $-1$ |
 | $\mathrm{KL}(Q\|P)$ | "KL of Q from P" | Extra bits to describe $Q$ when you had budgeted for $P$ |
 | $\binom{n}{i}$ | "n choose i" | The number of ways to pick $i$ items out of $n$ |
 | $\lesssim$ | "is at most, up to constants" | $\le$, ignoring factors nobody bothers to track |
@@ -38,8 +38,8 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 
 Three of these deserve a warning before you meet them.
 
-- **$\ell$ versus $R$ versus $\hat R$.** $\ell$ is the loss on one example, $R$ is its average over the whole world, $\hat R_n$ is its average over your sample. Nearly every equation in this chapter is a statement about how far apart the last two can be.
-- **$\sigma$ changes jobs mid-chapter.** In §2.2 it is a standard deviation ($\sigma^2$ = noise variance). In §2.5 it is a coin flip ($\sigma_i = \pm1$). Chapter 0's rule still works: squared means standard deviation, indexed-and-in-a-sum means something else.
+- **$\ell$ versus $R$ versus $\hat R$.** $\ell$ is the loss on one example, $R$ is its average over the whole world, $`\hat R_n`$ is its average over your sample. Nearly every equation in this chapter is a statement about how far apart the last two can be.
+- **$\sigma$ changes jobs mid-chapter.** In §2.2 it is a standard deviation ($\sigma^2$ = noise variance). In §2.5 it is a coin flip ($`\sigma_i = \pm1`$). Chapter 0's rule still works: squared means standard deviation, indexed-and-in-a-sum means something else.
 - **$\epsilon$ and $\varepsilon$ are different variables here.** Straight $\epsilon$ is an error tolerance you choose; curly $\varepsilon$ in §2.2 is the random noise in the data. The book keeps them typographically distinct on purpose.
 
 ### Full forms for this chapter's abbreviations
@@ -80,9 +80,9 @@ Data $(x,y) \sim \mathcal{D}$, unknown. Hypothesis class $\mathcal{H}$ (e.g., al
 
 $$\underbrace{R(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(h(x),y)]}_{\text{true / population risk}} \qquad \underbrace{\hat R_n(h) = \frac1n\sum_{i=1}^n \ell(h(x_i),y_i)}_{\text{empirical risk}}$$
 
-▸ ERM: $\hat h = \arg\min_{h\in\mathcal{H}} \hat R_n(h)$.
+▸ ERM: $`\hat h = \arg\min_{h\in\mathcal{H}} \hat R_n(h)`$.
 
-The **generalization gap** is $R(\hat h) - \hat R_n(\hat h)$. All of classical learning theory is the project of bounding this.
+The **generalization gap** is $`R(\hat h) - \hat R_n(\hat h)`$. All of classical learning theory is the project of bounding this.
 
 #### Reading the two risks in plain English
 
@@ -92,23 +92,23 @@ Two formulas, one idea. Take them symbol by symbol.
 
 **$\mathcal{H}$, the hypothesis class.** Read as *"the menu."* Fix an architecture — say a 3-layer network with a particular width — and $\mathcal{H}$ is the set of every function you get by choosing the weights differently. Each $h \in \mathcal{H}$ is one dish on the menu. Training is choosing a dish.
 
-**True risk, $R(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(h(x),y)]$.** Read aloud: *"R of h equals the expectation, over pairs $(x,y)$ drawn from $\mathcal{D}$, of the loss between what $h$ predicts and the truth."* In English: **the average mistake this model would make across every example the world will ever hand you.** It is a single number attached to a single model.
+**True risk, $`R(h) = \mathbb{E}_{(x,y)\sim\mathcal{D}}[\ell(h(x),y)]`$.** Read aloud: *"R of h equals the expectation, over pairs $(x,y)$ drawn from $\mathcal{D}$, of the loss between what $h$ predicts and the truth."* In English: **the average mistake this model would make across every example the world will ever hand you.** It is a single number attached to a single model.
 
-**Empirical risk, $\hat R_n(h) = \frac1n\sum_{i=1}^n \ell(h(x_i),y_i)$.** The hat means *estimated from data* (Chapter 0, §0.6); the subscript $n$ says how many points went into it. The $\sum_{i=1}^n$ is a `for` loop over your dataset and the $\frac1n$ turns the total into an average. In English: **the average mistake on the examples you happen to own.**
+**Empirical risk, $`\hat R_n(h) = \frac1n\sum_{i=1}^n \ell(h(x_i),y_i)`$.** The hat means *estimated from data* (Chapter 0, §0.6); the subscript $n$ says how many points went into it. The $`\sum_{i=1}^n`$ is a `for` loop over your dataset and the $\frac1n$ turns the total into an average. In English: **the average mistake on the examples you happen to own.**
 
 ▸ **The two formulas are identical except that $\mathbb{E}$ has been replaced by $\frac1n\sum$.** That single swap — a true average over the world, traded for an average over a sample — is the entire subject of this chapter, and arguably the entire subject of statistics.
 
-> **Analogy.** $R(h)$ is a restaurant's real quality, averaged over every meal it will ever serve. $\hat R_n(h)$ is the average of the $n$ reviews on the internet. The reviews are all you can read; the quality is all you care about. And the reviews are not a neutral sample — which is exactly the wrinkle that makes learning theory hard.
+> **Analogy.** $R(h)$ is a restaurant's real quality, averaged over every meal it will ever serve. $`\hat R_n(h)`$ is the average of the $n$ reviews on the internet. The reviews are all you can read; the quality is all you care about. And the reviews are not a neutral sample — which is exactly the wrinkle that makes learning theory hard.
 
-**Now the sting, and it is subtle.** For a *fixed* model chosen before you looked at the data, $\hat R_n(h)$ is an unbiased estimate of $R(h)$ — average of $n$ independent draws, no bias, error bar $\sigma/\sqrt n$. Straightforward. But $\hat h = \arg\min_{h\in\mathcal{H}}\hat R_n(h)$ was **chosen by looking at the data**, specifically by looking for whichever model the data flattered most.
+**Now the sting, and it is subtle.** For a *fixed* model chosen before you looked at the data, $`\hat R_n(h)`$ is an unbiased estimate of $R(h)$ — average of $n$ independent draws, no bias, error bar $\sigma/\sqrt n$. Straightforward. But $`\hat h = \arg\min_{h\in\mathcal{H}}\hat R_n(h)`$ was **chosen by looking at the data**, specifically by looking for whichever model the data flattered most.
 
 > **Analogy.** Roll 1,000 dice once each and keep the one that came up 6. That die is not a lucky die. Its measured average of 6.0 is not an estimate of its true average of 3.5 — it is an estimate of *the largest of a thousand noisy readings*. Picking the winner and then quoting the winner's score is a systematically optimistic procedure, and no amount of honesty in the individual measurements repairs it.
 
 **Put numbers on it.** Suppose every model in $\mathcal{H}$ is  equally bad, with true risk $0.50$, and your empirical estimate of each has a standard error of $0.02$. With $M = 1$ model, your reported training loss averages $0.50$. With $M = 1{,}000$ models to choose the best of, the minimum of 1,000 draws from $\mathcal{N}(0.50, 0.02^2)$ sits around $0.50 - 3.2\times0.02 = 0.436$. You will report a training loss of $0.44$ and a test loss of $0.50$, and call the $0.064$ difference "overfitting". **Nothing overfit. You took a minimum over noise.**
 
-▸ **The generalization gap $R(\hat h) - \hat R_n(\hat h)$ is the price of having searched.** The larger the menu you searched, the more the winner's score was flattered by luck, and the bigger the gap. Every bound in this chapter is a different way of charging you for the size of the search. (Chapter 3 §3.6 shows this same arithmetic wrecking a real validation curve, where the "search" is nothing more exotic than taking a minimum over epochs.)
+▸ **The generalization gap $`R(\hat h) - \hat R_n(\hat h)`$ is the price of having searched.** The larger the menu you searched, the more the winner's score was flattered by luck, and the bigger the gap. Every bound in this chapter is a different way of charging you for the size of the search. (Chapter 3 §3.6 shows this same arithmetic wrecking a real validation curve, where the "search" is nothing more exotic than taking a minimum over epochs.)
 
-**Why $\arg\min$ and not $\min$.** $\min_h \hat R_n(h)$ is the best *loss value* you achieved; $\arg\min_h \hat R_n(h)$ is the *model that achieved it*. You want the model — you cannot deploy a number. Chapter 0 §0.3 has the mountain-summit version of this distinction.
+**Why $\arg\min$ and not $\min$.** $`\min_h \hat R_n(h)`$ is the best *loss value* you achieved; $`\arg\min_h \hat R_n(h)`$ is the *model that achieved it*. You want the model — you cannot deploy a number. Chapter 0 §0.3 has the mountain-summit version of this distinction.
 
 ### The error decomposition
 
@@ -125,24 +125,24 @@ This equation looks like bookkeeping, and it *is* bookkeeping — but it is the 
 
 **Decoding the pieces:**
 
-- $R^*$ — the **Bayes risk**. The best any function whatsoever could do, including functions outside your architecture, including functions nobody could ever write down. It is not zero: if two identical-looking molecules have different measured energies, no function can get both right. $R^*$ is the world's own irreducible ambiguity.
-- $\inf_{h\in\mathcal{H}} R(h)$ — read *"the infimum over h in script H of R of h."* **The best true risk available anywhere on your menu.** Infimum rather than minimum because the best value may only be approached, never attained (as $\|w\|\to\infty$, say). For intuition, read $\inf$ as $\min$ and $\sup$ as $\max$; the distinction is a technicality that almost never changes the meaning.
-- The whole left side, $R(\hat h) - R^*$, is **your total regret**: how much worse your trained model is than the theoretical best possible.
+- $`R^*`$ — the **Bayes risk**. The best any function whatsoever could do, including functions outside your architecture, including functions nobody could ever write down. It is not zero: if two identical-looking molecules have different measured energies, no function can get both right. $`R^*`$ is the world's own irreducible ambiguity.
+- $`\inf_{h\in\mathcal{H}} R(h)`$ — read *"the infimum over h in script H of R of h."* **The best true risk available anywhere on your menu.** Infimum rather than minimum because the best value may only be approached, never attained (as $\|w\|\to\infty$, say). For intuition, read $\inf$ as $\min$ and $\sup$ as $\max$; the distinction is a technicality that almost never changes the meaning.
+- The whole left side, $`R(\hat h) - R^*`$, is **your total regret**: how much worse your trained model is than the theoretical best possible.
 
-**The trick used to build it — add and subtract the same thing.** Take $R(\hat h) - R^*$, insert $-\inf_h R(h) + \inf_h R(h)$ in the middle (which changes nothing, since it sums to zero), and regroup. That gives two differences instead of one. This "insert a zero, regroup" move appears again in §2.2's derivation, and it is the single most common manoeuvre in all of statistics.
+**The trick used to build it — add and subtract the same thing.** Take $`R(\hat h) - R^*`$, insert $`-\inf_h R(h) + \inf_h R(h)`$ in the middle (which changes nothing, since it sums to zero), and regroup. That gives two differences instead of one. This "insert a zero, regroup" move appears again in §2.2's derivation, and it is the single most common manoeuvre in all of statistics.
 
 **The two terms, in English:**
 
 | Term | The question it answers | How to fix it |
 |---|---|---|
-| **Approximation error** $\inf_h R(h) - R^*$ | "Is the right answer even *on* my menu?" | Bigger model, better architecture |
-| **Estimation error** $R(\hat h) - \inf_h R(h)$ | "Given that it's on the menu, did I find it?" | More data, better optimizer, regularization |
+| **Approximation error** $`\inf_h R(h) - R^*`$ | "Is the right answer even *on* my menu?" | Bigger model, better architecture |
+| **Estimation error** $`R(\hat h) - \inf_h R(h)`$ | "Given that it's on the menu, did I find it?" | More data, better optimizer, regularization |
 
 > **Analogy.** You want the best possible meal. **Approximation error** is how much worse the best dish on this restaurant's menu is than the best dish in the city — a fact about the restaurant, unaffected by how carefully you order. **Estimation error** is how much worse the dish you actually ordered is than the best dish on this menu — a fact about your ordering process, driven by how much information you had. Reading more reviews (more data) helps the second and does nothing at all for the first.
 
 ▸ **The two are fixed by opposite actions, which is why the trade-off exists.** Enlarge $\mathcal{H}$ and the approximation error can only go down — a bigger menu contains the old menu. But classically, enlarging $\mathcal{H}$ makes the estimation error go up, because a bigger menu is a bigger search, and a bigger search flatters its winner more (see the dice above). One term falls, one rises, so a minimum sits somewhere in the middle. **That is the entire content of "there is a sweet spot."**
 
-**Put a number on it.** Fitting $f^*(x)=\sin(2\pi x)$ with a straight line: the approximation error is large and *no amount of data removes it* — a million points still leaves a line unable to bend. Fitting it with a degree-19 polynomial on 20 points: the approximation error is essentially zero, and the estimation error is enormous. §2.2's table measures exactly these two quantities.
+**Put a number on it.** Fitting $`f^*(x)=\sin(2\pi x)`$ with a straight line: the approximation error is large and *no amount of data removes it* — a million points still leaves a line unable to bend. Fitting it with a degree-19 polynomial on 20 points: the approximation error is essentially zero, and the estimation error is enormous. §2.2's table measures exactly these two quantities.
 
 **Why the caveat "*classically*" is doing so much work.** The claim "estimation error grows with $\lvert\mathcal{H}\rvert$" is not a theorem. It is a theorem *about the worst case* — about the largest gap achievable by any hypothesis in the class. Real optimizers do not return the worst case. They return a very particular, non-random, heavily-biased-toward-simple solution, and Chapter 18 is what happens when you take that seriously.
 
@@ -189,25 +189,25 @@ For squared loss and a *fixed* test point $x$, with randomness over the draw of 
 
 ▸ $$\mathbb{E}_S\big[(y - \hat f_S(x))^2\big] = \underbrace{\big(\bar f(x) - f^*(x)\big)^2}_{\text{Bias}^2} + \underbrace{\mathbb{E}_S\big[(\hat f_S(x) - \bar f(x))^2\big]}_{\text{Variance}} + \underbrace{\sigma^2}_{\text{Noise}}$$
 
-where $\bar f(x) = \mathbb{E}_S[\hat f_S(x)]$ is the average prediction over training sets, $f^*$ is the true regression function, and $y = f^*(x)+\varepsilon$ with $\mathbb{E}[\varepsilon]=0$, $\mathrm{Var}(\varepsilon)=\sigma^2$.
+where $`\bar f(x) = \mathbb{E}_S[\hat f_S(x)]`$ is the average prediction over training sets, $`f^*`$ is the true regression function, and $`y = f^*(x)+\varepsilon`$ with $\mathbb{E}[\varepsilon]=0$, $\mathrm{Var}(\varepsilon)=\sigma^2$.
 
 #### Reading the bias–variance decomposition in plain English
 
 The hardest thing about this formula is not the algebra — it is understanding **what is random**. Get that right and the rest follows.
 
-**What is random here is the training set, not the test point.** The subscript on $\mathbb{E}_S$ says so: $S$ is the training set, and $\mathbb{E}_S[\cdot]$ means *"imagine collecting a fresh training set of the same size, retraining from scratch, and repeating that forever; average the result."* The test point $x$ is nailed down. You are asking: **at this one location, how much does my prediction wobble as the data I trained on changes?**
+**What is random here is the training set, not the test point.** The subscript on $`\mathbb{E}_S`$ says so: $S$ is the training set, and $`\mathbb{E}_S[\cdot]`$ means *"imagine collecting a fresh training set of the same size, retraining from scratch, and repeating that forever; average the result."* The test point $x$ is nailed down. You are asking: **at this one location, how much does my prediction wobble as the data I trained on changes?**
 
 **Every symbol:**
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $S$ | "S" | One training set — one draw of $n$ points from $\mathcal{D}$ |
-| $\hat f_S$ | "f-hat-sub-S" | The model you get **after training on $S$**. Different $S$, different model |
-| $f^*(x)$ | "f-star of x" | The truth at $x$. The best any function could say |
+| $`\hat f_S`$ | "f-hat-sub-S" | The model you get **after training on $S$**. Different $S$, different model |
+| $`f^*(x)`$ | "f-star of x" | The truth at $x$. The best any function could say |
 | $\bar f(x)$ | "f-bar of x" | The **average prediction across all possible training sets** |
-| $\varepsilon$ | "epsilon" | The noise in the label: $y = f^*(x) + \varepsilon$ |
+| $\varepsilon$ | "epsilon" | The noise in the label: $`y = f^*(x) + \varepsilon`$ |
 | $\sigma^2$ | "sigma squared" | How big that noise is, on average, squared |
-| $\mathbb{E}_S[\cdot]$ | "expectation over S" | Average over the infinity of training sets you could have had |
+| $`\mathbb{E}_S[\cdot]`$ | "expectation over S" | Average over the infinity of training sets you could have had |
 
 Note that $\bar f$ is a **thought experiment, not a model you can build.** Nobody has infinitely many training sets. It exists to make the algebra split cleanly, and the practical stand-in for it — retrain on resampled data and average — is exactly bagging (Chapter 23) and exactly the bootstrap (Chapter 3).
 
@@ -218,7 +218,7 @@ Note that $\bar f$ is a **thought experiment, not a model you can build.** Nobod
 >
 > **These are three  different failures, and they have three  different fixes.** That is the whole reason the decomposition is worth knowing.
 
-**Put real numbers in.** Fix a test point where the truth is $f^*(x) = 2.0$ and the label noise has $\sigma = 0.3$. You train on five different datasets and your model predicts $1.5,\ 1.7,\ 1.6,\ 1.4,\ 1.8$.
+**Put real numbers in.** Fix a test point where the truth is $`f^*(x) = 2.0`$ and the label noise has $\sigma = 0.3$. You train on five different datasets and your model predicts $1.5,\ 1.7,\ 1.6,\ 1.4,\ 1.8$.
 
 - $\bar f(x) = (1.5+1.7+1.6+1.4+1.8)/5 = 1.60$.
 - $\mathrm{Bias}^2 = (1.60 - 2.00)^2 = 0.16$.
@@ -228,11 +228,11 @@ Note that $\bar f$ is a **thought experiment, not a model you can build.** Nobod
 
 ▸ **Read that split as a to-do list.** Bias contributes $0.16$ — by far the largest piece — so this model is *systematically* low, and collecting more data will not fix it. You need a more expressive model. Had the numbers come out the other way, more data or an ensemble would be the move. **The decomposition converts "my model is bad" into "my model is bad *in this specific way*," which is the difference between debugging and guessing.**
 
-**Why squared, and why it splits at all.** Squaring is what makes the cross-term vanish. The middle term of every expansion below contains $\mathbb{E}_S[\bar f - \hat f]$, which is zero *by the definition of $\bar f$ as the average*. Squared loss is the unique loss where "deviation from the mean" and "the mean itself" are perfectly separable in this way — which is the same reason variances add for independent variables, and the same reason $\ell_2$ is the natural geometry of Pythagoras. Change to absolute error or cross-entropy and the clean split disappears.
+**Why squared, and why it splits at all.** Squaring is what makes the cross-term vanish. The middle term of every expansion below contains $`\mathbb{E}_S[\bar f - \hat f]`$, which is zero *by the definition of $\bar f$ as the average*. Squared loss is the unique loss where "deviation from the mean" and "the mean itself" are perfectly separable in this way — which is the same reason variances add for independent variables, and the same reason $`\ell_2`$ is the natural geometry of Pythagoras. Change to absolute error or cross-entropy and the clean split disappears.
 
 ### The derivation (do this once, it's short)
 
-Write $\hat f = \hat f_S(x)$, $f^* = f^*(x)$.
+Write $`\hat f = \hat f_S(x)`$, $`f^* = f^*(x)`$.
 
 $$
 \mathbb{E}_{S,\varepsilon}\big[(y-\hat f)^2\big] = \mathbb{E}\big[(f^* + \varepsilon - \hat f)^2\big]
@@ -252,23 +252,23 @@ $$= \mathrm{Bias}^2 + \mathrm{Variance}. \qquad \blacksquare$$
 
 Four lines, two tricks, and both tricks are used everywhere else in the book. Worth the ten minutes.
 
-**Notation first.** $\mathbb{E}_{S,\varepsilon}$ means *"average over both sources of randomness"* — which training set you drew, and which noise landed on this test label. $\varepsilon \perp \hat f$ reads *"epsilon is independent of f-hat"* — the noise on **this** test label had no influence on the model, because the model was fit on a *different* set of points. That independence is the load-bearing assumption of the whole derivation. (If your test point leaked into training, it fails, and so does everything downstream. This is the mathematics behind "never touch the test set.") $\blacksquare$ at the end is just a full stop meaning "proof over."
+**Notation first.** $`\mathbb{E}_{S,\varepsilon}`$ means *"average over both sources of randomness"* — which training set you drew, and which noise landed on this test label. $\varepsilon \perp \hat f$ reads *"epsilon is independent of f-hat"* — the noise on **this** test label had no influence on the model, because the model was fit on a *different* set of points. That independence is the load-bearing assumption of the whole derivation. (If your test point leaked into training, it fails, and so does everything downstream. This is the mathematics behind "never touch the test set.") $\blacksquare$ at the end is just a full stop meaning "proof over."
 
-**Line 1 — substitute the truth.** $y = f^* + \varepsilon$, so $(y - \hat f)^2 = (f^* + \varepsilon - \hat f)^2$. Nothing has happened yet; we have only written $y$ in terms of what generated it.
+**Line 1 — substitute the truth.** $`y = f^* + \varepsilon`$, so $`(y - \hat f)^2 = (f^* + \varepsilon - \hat f)^2`$. Nothing has happened yet; we have only written $y$ in terms of what generated it.
 
-**Line 2 — expand, and watch two of three terms simplify.** Group as $\big[(f^*-\hat f) + \varepsilon\big]^2 = (f^*-\hat f)^2 + 2\varepsilon(f^*-\hat f) + \varepsilon^2$. Take expectations of each piece:
+**Line 2 — expand, and watch two of three terms simplify.** Group as $`\big[(f^*-\hat f) + \varepsilon\big]^2 = (f^*-\hat f)^2 + 2\varepsilon(f^*-\hat f) + \varepsilon^2`$. Take expectations of each piece:
 
-- $\mathbb{E}[(f^*-\hat f)^2]$ — keep it.
-- $2\,\mathbb{E}[\varepsilon]\,\mathbb{E}[f^*-\hat f]$ — the factorization into two separate expectations is *only legal because of independence*, and then $\mathbb{E}[\varepsilon]=0$ kills it. **Zero.**
+- $`\mathbb{E}[(f^*-\hat f)^2]`$ — keep it.
+- $`2\,\mathbb{E}[\varepsilon]\,\mathbb{E}[f^*-\hat f]`$ — the factorization into two separate expectations is *only legal because of independence*, and then $\mathbb{E}[\varepsilon]=0$ kills it. **Zero.**
 - $\mathbb{E}[\varepsilon^2] = \mathrm{Var}(\varepsilon) = \sigma^2$, since $\mathbb{E}[\varepsilon]=0$ makes the variance and the mean square the same thing.
 
 ▸ **The noise term $\sigma^2$ has now detached itself and will never interact with anything again.** That is why it is called *irreducible*: the algebra sets it aside on line 2 and no later choice of model can reach it.
 
-**Line 3 — the add-and-subtract trick.** Write $f^* - \hat f = (f^* - \bar f) + (\bar f - \hat f)$. We inserted $-\bar f + \bar f$, which is zero, so the quantity is unchanged — but it is now split into *"how far the average model is from the truth"* plus *"how far this model is from the average model."* Square that sum and, again, three terms appear:
+**Line 3 — the add-and-subtract trick.** Write $`f^* - \hat f = (f^* - \bar f) + (\bar f - \hat f)`$. We inserted $-\bar f + \bar f$, which is zero, so the quantity is unchanged — but it is now split into *"how far the average model is from the truth"* plus *"how far this model is from the average model."* Square that sum and, again, three terms appear:
 
-- $(f^*-\bar f)^2$ — no $S$ in it at all, so the expectation passes straight through. This is $\mathrm{Bias}^2$.
-- $2(f^*-\bar f)\,\mathbb{E}_S[\bar f - \hat f]$ — and $\mathbb{E}_S[\hat f] = \bar f$ *by definition*, so the bracket is exactly zero. **This is the step the whole derivation is built around.**
-- $\mathbb{E}_S[(\bar f - \hat f)^2]$ — the average squared deviation of the model from its own average. This is $\mathrm{Variance}$.
+- $`(f^*-\bar f)^2`$ — no $S$ in it at all, so the expectation passes straight through. This is $\mathrm{Bias}^2$.
+- $`2(f^*-\bar f)\,\mathbb{E}_S[\bar f - \hat f]`$ — and $`\mathbb{E}_S[\hat f] = \bar f`$ *by definition*, so the bracket is exactly zero. **This is the step the whole derivation is built around.**
+- $`\mathbb{E}_S[(\bar f - \hat f)^2]`$ — the average squared deviation of the model from its own average. This is $\mathrm{Variance}$.
 
 ▸ **Both cross-terms died for the same reason: something averaged to zero.** Once you notice that, the derivation is not four lines of algebra, it is one idea applied twice — *split a difference around a convenient midpoint, and the cross-term evaporates because deviations from an average average to nothing.*
 
@@ -278,7 +278,7 @@ Four lines, two tricks, and both tricks are used everywhere else in the book. Wo
 
 - **Bias**: are you systematically wrong even with infinite data from this hypothesis class? A linear model fitting a sine wave has bias.
 - **Variance**: how much does your fitted function jiggle when you resample the training set? A degree-20 polynomial on 20 points has enormous variance.
-- **Noise $\sigma^2$**: irreducible. Also called the Bayes error. **In a diffusion model this is $H(p_{\text{data}}\mid t)$** — the part of the data that is  ambiguous at noise level $t$. No model reaches below it.
+- **Noise $\sigma^2$**: irreducible. Also called the Bayes error. **In a diffusion model this is $`H(p_{\text{data}}\mid t)`$** — the part of the data that is  ambiguous at noise level $t$. No model reaches below it.
 
 ### Important caveats people get wrong
 
@@ -300,7 +300,7 @@ Four lines, two tricks, and both tricks are used everywhere else in the book. Wo
 
 ### A number
 
-Consider fitting polynomials of degree $d$ to $n=20$ noisy points from $f^*(x)=\sin(2\pi x)$, $\sigma=0.3$.
+Consider fitting polynomials of degree $d$ to $n=20$ noisy points from $`f^*(x)=\sin(2\pi x)`$, $\sigma=0.3$.
 
 | $d$ | Bias² | Variance | Total (+ $\sigma^2 = 0.09$) |
 |---|---|---|---|
@@ -371,7 +371,7 @@ Both words are badly overloaded — "bias" has at least four unrelated meanings 
 
 ### Hoeffding's inequality
 
-For independent $X_i \in [a,b]$ with mean $\mu$:
+For independent $`X_i \in [a,b]`$ with mean $\mu$:
 
 ▸ $$\Pr\left(\left|\tfrac1n\sum X_i - \mu\right| \ge \epsilon\right) \le 2\exp\!\left(\frac{-2n\epsilon^2}{(b-a)^2}\right)$$
 
@@ -391,10 +391,10 @@ Read the whole thing aloud first: *"The probability that the sample average diff
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $X_i$ | "X-sub-i" | One measurement. Here: the loss on one validation example |
+| $`X_i`$ | "X-sub-i" | One measurement. Here: the loss on one validation example |
 | $[a,b]$ | "the interval a to b" | The range each measurement is guaranteed to fall in |
 | $\mu$ | "mu" | The true mean you are trying to learn |
-| $\tfrac1n\sum X_i$ | "the sample average" | What you actually computed |
+| $`\tfrac1n\sum X_i`$ | "the sample average" | What you actually computed |
 | $\lvert\,\cdot\,\rvert$ | "the absolute value of" | Distance, sign discarded — wrong high or wrong low, both count |
 | $\epsilon$ | "epsilon" | How wrong you're asking about |
 | $\Pr(\cdot) \le \cdot$ | "the probability is at most" | An upper bound on bad luck |
@@ -442,7 +442,7 @@ Set the RHS to $\delta$ and solve:
 
 #### The union bound, decoded — and why the result goes vacuous
 
-**What the union bound says.** In one line: *"the chance that at least one of several bad things happens is at most the sum of their individual chances."* Formally $\Pr(A_1 \cup A_2 \cup \cdots) \le \sum_k \Pr(A_k)$. It is almost embarrassingly simple — you are just refusing to subtract the overlaps — and it is one of the two or three most-used tools in all of theoretical computer science.
+**What the union bound says.** In one line: *"the chance that at least one of several bad things happens is at most the sum of their individual chances."* Formally $`\Pr(A_1 \cup A_2 \cup \cdots) \le \sum_k \Pr(A_k)`$. It is almost embarrassingly simple — you are just refusing to subtract the overlaps — and it is one of the two or three most-used tools in all of theoretical computer science.
 
 **Decoding the symbols:**
 
@@ -456,7 +456,7 @@ Set the RHS to $\delta$ and solve:
 
 **Where the $\log M$ comes from.** Set $2Me^{-2n\epsilon^2} = \delta$ and solve for $\epsilon$. Take logs: $\log 2 + \log M - 2n\epsilon^2 = \log\delta$, so $\epsilon = \sqrt{\frac{\log M + \log(2/\delta)}{2n}}$. **The $M$ entered as a multiplier and came out as a logarithm, because it had to pass through an exponential to get there.** That is enormously lucky: it means a class ten thousand times larger costs you only $\sqrt{\log 10^4} \approx 3$ times more. Without the exponential decay in Hoeffding, learning would be impossible.
 
-**Why $\log M$ is "bits."** Describing which of $M$ objects you mean takes $\log_2 M$ bits — that is the definition of a bit. So $\log M$ is literally **the length of the shortest name for your model**, and the bound reads:
+**Why $\log M$ is "bits."** Describing which of $M$ objects you mean takes $`\log_2 M`$ bits — that is the definition of a bit. So $\log M$ is literally **the length of the shortest name for your model**, and the bound reads:
 
 $$\text{generalization gap} \ \lesssim\ \sqrt{\frac{\text{bits needed to name your model}}{\text{number of examples}}}$$
 
@@ -545,7 +545,7 @@ $\mathcal{H}$ **shatters** a set of $m$ points if for all $2^m$ labelings, some 
 **Work the smallest example completely: thresholds on the line, VC = 1.**
 
 - *One point.* Put it at $x = 0$. Want it labelled 1? Choose $a = -1$, so $\mathbb{1}[0 > -1] = 1$. ✓ Want it labelled 0? Choose $a = 1$. ✓ Both labelings achievable, so **1 point is shattered.**
-- *Two points*, at $x_1 = 0$ and $x_2 = 1$. There are four labelings. Three are easy. But $(x_1{=}1, x_2{=}0)$ — "the left one positive, the right one negative" — is **impossible**, because a threshold rule always says positive to everything on the right. One labeling out of four is unreachable, so 2 points are not shattered.
+- *Two points*, at $`x_1 = 0`$ and $`x_2 = 1`$. There are four labelings. Three are easy. But $`(x_1{=}1, x_2{=}0)`$ — "the left one positive, the right one negative" — is **impossible**, because a threshold rule always says positive to everything on the right. One labeling out of four is unreachable, so 2 points are not shattered.
 - Therefore VC = 1. **And note: failing on even a single labeling is enough to fail.**
 
 **Now the pattern in the other examples.**
@@ -558,7 +558,7 @@ $\mathcal{H}$ **shatters** a set of $m$ points if for all $2^m$ labelings, some 
 | Axis-aligned rectangles in $\mathbb{R}^2$ | 4 | Four edges. Place points at N/S/E/W extremes; any subset can be boxed in |
 | $\mathbb{1}[\sin(\omega x) > 0]$ | $\infty$ | **One parameter.** Read the next paragraph |
 
-**The sine example is the one that should change your mind.** A single real number $\omega$ controls how fast $\sin(\omega x)$ oscillates. Crank $\omega$ up and the sign flips arbitrarily fast; a well-chosen $\omega$ can be made to have its positive half-cycles land on exactly the points you want positive, for *any* labeling of *any* number of points (placed, say, at $x_i = 2^{-i}$). One parameter, infinite VC dimension.
+**The sine example is the one that should change your mind.** A single real number $\omega$ controls how fast $\sin(\omega x)$ oscillates. Crank $\omega$ up and the sign flips arbitrarily fast; a well-chosen $\omega$ can be made to have its positive half-cycles land on exactly the points you want positive, for *any* labeling of *any* number of points (placed, say, at $`x_i = 2^{-i}`$). One parameter, infinite VC dimension.
 
 > **Analogy.** A single dial on an old radio can, in principle, address any station on the band, including ones you never imagined. The *count* of dials tells you nothing about how many stations are reachable — that depends entirely on the mechanism behind the dial. **A parameter is a dial, not a unit of capacity.** A real number contains infinitely many bits; how many of them your model can actually *use* is a completely separate question.
 
@@ -572,7 +572,7 @@ With probability $\ge 1-\delta$, for all $h$:
 
 ▸ $$R(h) \le \hat R_n(h) + \sqrt{\frac{8\big(d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}} + \log\frac{4}{\delta}\big)}{n}}$$
 
-**Sauer–Shelah lemma** is the technical engine: a class with VC dimension $d$ can realize at most $\sum_{i=0}^{d}\binom{n}{i} \le (en/d)^d$ labelings of $n$ points — *polynomial*, not exponential. That polynomial growth is what saves the union bound.
+**Sauer–Shelah lemma** is the technical engine: a class with VC dimension $d$ can realize at most $`\sum_{i=0}^{d}\binom{n}{i} \le (en/d)^d`$ labelings of $n$ points — *polynomial*, not exponential. That polynomial growth is what saves the union bound.
 
 #### Reading the VC bound, and the lemma that makes it work
 
@@ -580,13 +580,13 @@ With probability $\ge 1-\delta$, for all $h$:
 
 $$R(h) \ \le\ \underbrace{\hat R_n(h)}_{\text{what you measured}} \ +\ \underbrace{\sqrt{\frac{\text{complexity} + \text{confidence}}{n}}}_{\text{what you might be off by}}$$
 
-Everything inside the square root is either a complexity term ($d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}$) or a confidence term ($\log\frac4\delta$), and $n$ is downstairs. **$\log M$ from §2.3 has simply been replaced by $d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}$** — that is the only structural change, and it is the entire achievement of VC theory: it gives you a finite complexity number for an *infinite* hypothesis class.
+Everything inside the square root is either a complexity term ($`d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}`$) or a confidence term ($\log\frac4\delta$), and $n$ is downstairs. **$\log M$ from §2.3 has simply been replaced by $`d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}`$** — that is the only structural change, and it is the entire achievement of VC theory: it gives you a finite complexity number for an *infinite* hypothesis class.
 
 **The pieces you haven't met:**
 
 - $\binom{n}{i}$ — "n choose i", the number of ways to select $i$ items from $n$. $\binom{5}{2} = 10$.
 - $e \approx 2.718$ — Euler's number. It appears because of a standard bound on binomial sums; carry no meaning into it.
-- $\sum_{i=0}^{d}\binom{n}{i}$ — "the number of ways to choose *at most* $d$ items out of $n$." Read this as **the number of distinct behaviours the class can display on $n$ points.**
+- $`\sum_{i=0}^{d}\binom{n}{i}`$ — "the number of ways to choose *at most* $d$ items out of $n$." Read this as **the number of distinct behaviours the class can display on $n$ points.**
 
 **The crucial comparison, in numbers.** How many labelings of $n$ points are there in total, versus how many your class can achieve?
 
@@ -620,7 +620,7 @@ $$\mathrm{VC} = O(WL\log W)$$
 
 **The experiment, stated so you could run it tomorrow.** Take CIFAR-10: 50,000 photographs, each labelled with one of ten categories. Now throw the labels away and replace each one with a **uniformly random** category. A picture of a dog is now labelled "truck", another dog is "frog", and there is no pattern whatsoever — no function of the pixels predicts these labels, because the labels were generated by a random number generator that never looked at the pixels. Train a standard ResNet on this. It reaches **100% training accuracy.** It memorizes all fifty thousand arbitrary assignments.
 
-**Why that single sentence demolishes an entire theory.** Reaching zero error on 50,000 randomly-labelled points means the class realized *that particular* labeling out of $10^{50000}$ possible ones. Run it again with different random labels and it does it again. Conclusively: **this architecture can express essentially any labeling of CIFAR-10**, so its VC dimension is at least 50,000, which is at least $n$ — and $\sqrt{d_{\mathrm{VC}}/n} \ge 1$ makes every uniform-convergence bound in this chapter numerically useless. Not loose. **Useless.**
+**Why that single sentence demolishes an entire theory.** Reaching zero error on 50,000 randomly-labelled points means the class realized *that particular* labeling out of $10^{50000}$ possible ones. Run it again with different random labels and it does it again. Conclusively: **this architecture can express essentially any labeling of CIFAR-10**, so its VC dimension is at least 50,000, which is at least $n$ — and $`\sqrt{d_{\mathrm{VC}}/n} \ge 1`$ makes every uniform-convergence bound in this chapter numerically useless. Not loose. **Useless.**
 
 **Now the part that makes it a *paradox* rather than merely bad news.** The identical architecture, identical optimizer, identical hyperparameters, trained on the *real* labels, generalizes to unseen photographs at around 90% accuracy. Same $\mathcal{H}$. Same $n$. Same bound. Wildly different outcomes.
 
@@ -644,22 +644,22 @@ VC dimension is not a failed idea. It is a **correct** idea with a precisely kno
 
 | Example | Why it qualifies |
 |---|---|
-| Linear classifiers in $\mathbb{R}^{100}$: $d_{\mathrm{VC}} = 101$, with $n = 10^5$ | $\sqrt{101/10^5} \approx 0.03$. A 3% predicted gap, and observed gaps for well-conditioned linear models really are that size. The bound is **usable** |
-| Axis-aligned rectangles in the plane: $d_{\mathrm{VC}} = 4$ | Four points can be shattered, five never can. A finite, computable, tight-ish number that tells you how many samples you need |
+| Linear classifiers in $\mathbb{R}^{100}$: $`d_{\mathrm{VC}} = 101`$, with $n = 10^5$ | $\sqrt{101/10^5} \approx 0.03$. A 3% predicted gap, and observed gaps for well-conditioned linear models really are that size. The bound is **usable** |
+| Axis-aligned rectangles in the plane: $`d_{\mathrm{VC}} = 4`$ | Four points can be shattered, five never can. A finite, computable, tight-ish number that tells you how many samples you need |
 | Deciding whether a degree-$d$ polynomial threshold family is learnable from $n$ points | Capacity and parameter count coincide in this family, so the ratio $d/n$  governs the gap |
 | "Infinite VC dimension $\Rightarrow$ not distribution-free PAC-learnable" | The **negative** direction of the fundamental theorem, and it remains completely valid for deep nets. No amount of engineering repeals it |
-| $\mathbb{1}[\sin(\omega x)>0]$ has $d_{\mathrm{VC}} = \infty$ with one parameter | The theory correctly flags a one-knob family as uncontrollable. It caught something parameter-counting would have missed entirely |
+| $\mathbb{1}[\sin(\omega x)>0]$ has $`d_{\mathrm{VC}} = \infty`$ with one parameter | The theory correctly flags a one-knob family as uncontrollable. It caught something parameter-counting would have missed entirely |
 
 **❌ Near-misses — VC-shaped reasoning that doesn't hold**
 
 | Looks like it works | Why it doesn't | What it actually is |
 |---|---|---|
-| "A ResNet's $d_{\mathrm{VC}}$ is roughly its parameter count, so $p/n$ estimates my gap" | For ReLU networks $d_{\mathrm{VC}}$ scales like $O(WL\log W)$ — parameters *times depth* — and the random-label experiment shows it empirically exceeds $n$ | A ratio $\ge 1$: a vacuous bound in disguise |
-| "VC dimension counts parameters" | One parameter, infinite VC dimension; and conversely two models with equal parameter counts can differ in $d_{\mathrm{VC}}$ by orders of magnitude | Parameter count — a different number that sometimes coincides |
+| "A ResNet's $`d_{\mathrm{VC}}`$ is roughly its parameter count, so $p/n$ estimates my gap" | For ReLU networks $`d_{\mathrm{VC}}`$ scales like $O(WL\log W)$ — parameters *times depth* — and the random-label experiment shows it empirically exceeds $n$ | A ratio $\ge 1$: a vacuous bound in disguise |
+| "VC dimension counts parameters" | One parameter, infinite VC dimension; and conversely two models with equal parameter counts can differ in $`d_{\mathrm{VC}}`$ by orders of magnitude | Parameter count — a different number that sometimes coincides |
 | "Same architecture and same $n$, so the same generalization behaviour" | Random labels and real labels give the same $\mathcal{H}$, the same $n$, and outcomes 80 accuracy points apart | Proof that the answer lives in the **data and the optimizer**, which $\mathcal{H}$-only quantities cannot see |
 | "This network has the capacity to memorize the training set, so it will overfit" | Every network that generalizes well also has that capacity. The premise is true of the best models in the world | Confusing what is **possible** with what **happens** |
 | "Shattering means the model fits the data well" | Shattering means realizing *every one* of the $2^d$ labelings of some cleverly placed $d$ points | Worst-case expressivity on an adversarially chosen set — not accuracy on yours |
-| "$d_{\mathrm{VC}} \ge 50{,}000$, therefore this model is bad" | It is also $\ge 50{,}000$ for the run that hits 90% test accuracy | A statement about the hypothesis class that both runs share |
+| "$`d_{\mathrm{VC}} \ge 50{,}000`$, therefore this model is bad" | It is also $\ge 50{,}000$ for the run that hits 90% test accuracy | A statement about the hypothesis class that both runs share |
 
 ▸ **The boundary:** VC dimension is a function of $\mathcal{H}$ **alone**. It cannot see the data distribution, the optimizer, or which of the many fitting solutions you actually landed on. It is exactly right when those three don't matter — low-dimensional linear models, small classical families — and exactly useless when they are the entire story, which is the case for every network in this book.
 
@@ -677,7 +677,7 @@ Instead of counting hypotheses, directly measure: how well can my model class fi
 
 ### Definition
 
-Given samples $S = \{z_1,\dots,z_n\}$ and Rademacher variables $\sigma_i \in \{\pm1\}$ uniform:
+Given samples $`S = \{z_1,\dots,z_n\}`$ and Rademacher variables $`\sigma_i \in \{\pm1\}`$ uniform:
 
 ▸ $$\hat{\mathfrak{R}}_S(\mathcal{F}) = \mathbb{E}_\sigma\left[\sup_{f\in\mathcal{F}}\frac1n\sum_{i=1}^n \sigma_i f(z_i)\right]$$
 
@@ -689,10 +689,10 @@ This is a *correlation with random labels*, maximized over the class. If $\mathc
 
 **The procedure, in four steps:**
 
-1. Take your $n$ data points $z_1,\dots,z_n$.
-2. **Flip a fair coin for each one.** $\sigma_i = +1$ for heads, $-1$ for tails. These are the *Rademacher variables*, and they carry no information about anything — they are pure noise, generated with no reference to your data.
-3. Ask your model class: *"which of you correlates best with this meaningless pattern?"* That is the $\sup_{f\in\mathcal{F}}$ — read it as $\max$; the sup is used only because the class may be infinite and the best value may only be approached.
-4. Repeat with fresh coin flips and average. That is the $\mathbb{E}_\sigma$.
+1. Take your $n$ data points $`z_1,\dots,z_n`$.
+2. **Flip a fair coin for each one.** $`\sigma_i = +1`$ for heads, $-1$ for tails. These are the *Rademacher variables*, and they carry no information about anything — they are pure noise, generated with no reference to your data.
+3. Ask your model class: *"which of you correlates best with this meaningless pattern?"* That is the $`\sup_{f\in\mathcal{F}}`$ — read it as $\max$; the sup is used only because the class may be infinite and the best value may only be approached.
+4. Repeat with fresh coin flips and average. That is the $`\mathbb{E}_\sigma`$.
 
 ▸ **Rademacher complexity is: how well can my model class fit pure noise, on average, on this actual dataset?** That is a shockingly direct definition of capacity — no counting, no combinatorics, no shattering. Just: try it and see.
 
@@ -701,20 +701,20 @@ This is a *correlation with random labels*, maximized over the class. If $\mathc
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $\mathcal{F}$ | "script F" | The function class (here written as functions, not classifiers) |
-| $S = \{z_1,\dots,z_n\}$ | "S" | Your actual, specific sample — note it appears as a subscript |
-| $\sigma_i \in \{\pm1\}$ | "sigma-i" | One coin flip, written as $+1$ or $-1$ |
-| $\mathbb{E}_\sigma$ | "expectation over sigma" | Average over all the coin-flip patterns |
-| $\sup_{f\in\mathcal{F}}$ | "the supremum over f" | The best any function in the class can do. A careful $\max$ |
-| $\frac1n\sum_i \sigma_i f(z_i)$ | — | The **correlation** between the function's outputs and the coin flips |
+| $`S = \{z_1,\dots,z_n\}`$ | "S" | Your actual, specific sample — note it appears as a subscript |
+| $`\sigma_i \in \{\pm1\}`$ | "sigma-i" | One coin flip, written as $+1$ or $-1$ |
+| $`\mathbb{E}_\sigma`$ | "expectation over sigma" | Average over all the coin-flip patterns |
+| $`\sup_{f\in\mathcal{F}}`$ | "the supremum over f" | The best any function in the class can do. A careful $\max$ |
+| $`\frac1n\sum_i \sigma_i f(z_i)`$ | — | The **correlation** between the function's outputs and the coin flips |
 | $\hat{\mathfrak{R}}$ vs $\mathfrak{R}$ | "empirical" vs "expected" | Hat = on your sample; no hat = averaged over samples too |
 
 The letter $\mathfrak{R}$ is **Fraktur R** (blackletter). It is a font choice, not an operator; it exists so that $\mathfrak{R}$, $R$ (risk), and $\hat R$ (empirical risk) can coexist on the same page.
 
 **Work both extremes with real numbers, $n = 4$.**
 
-*A class containing only the constant function $f \equiv 1$*: the sum is $\frac14\sum_i\sigma_i$, the average of four coin flips, whose expectation is $0$. With no choice available, there is no way to exploit the noise. $\hat{\mathfrak{R}} = 0$ — well, $\mathbb{E}\lvert\frac14\sum\sigma_i\rvert$ is small and, with a  single fixed function and no absolute value, exactly 0.
+*A class containing only the constant function $f \equiv 1$*: the sum is $`\frac14\sum_i\sigma_i`$, the average of four coin flips, whose expectation is $0$. With no choice available, there is no way to exploit the noise. $\hat{\mathfrak{R}} = 0$ — well, $`\mathbb{E}\lvert\frac14\sum\sigma_i\rvert`$ is small and, with a  single fixed function and no absolute value, exactly 0.
 
-*A class rich enough to output anything in $\{\pm1\}$ at each point*: pick $f(z_i) = \sigma_i$ for every $i$. Then $\frac14\sum_i \sigma_i\cdot\sigma_i = \frac14\sum_i 1 = 1$. **Perfect correlation with noise, every time.** $\hat{\mathfrak{R}} = 1$.
+*A class rich enough to output anything in $\{\pm1\}$ at each point*: pick $`f(z_i) = \sigma_i`$ for every $i$. Then $`\frac14\sum_i \sigma_i\cdot\sigma_i = \frac14\sum_i 1 = 1`$. **Perfect correlation with noise, every time.** $\hat{\mathfrak{R}} = 1$.
 
 *Something in between* — a class that can match, say, 3 of the 4 signs: $\frac14(1+1+1-1) = 0.5$.
 
@@ -722,7 +722,7 @@ The letter $\mathfrak{R}$ is **Fraktur R** (blackletter). It is a font choice, n
 
 > **Analogy.** You want to know how gullible a conspiracy theorist is. Don't count how many books they own (VC dimension). Instead, tell them a story you made up on the spot and see how confidently they explain it. **Someone who can produce a compelling account of *any* random noise you feed them has told you exactly how much to trust their account of the real thing.** That is Rademacher complexity, and its brilliance is that it tests the mechanism rather than inventorying the parts.
 
-**Why the bound has the form $R(f) \le \hat R_n(f) + 2\mathfrak{R}_n(\mathcal{F}) + 3\sqrt{\log(2/\delta)/2n}$.** Three terms, three jobs: what you measured, a penalty for how much your class can chase noise, and a small confidence term for finite-sample luck. The factor of 2 comes from a proof technique called **symmetrization** — you compare your sample to an imaginary second "ghost" sample, and the coin flips $\sigma_i$ are what decide which of the two each point came from. The 2 and the 3 are artifacts of that argument, not insights.
+**Why the bound has the form $`R(f) \le \hat R_n(f) + 2\mathfrak{R}_n(\mathcal{F}) + 3\sqrt{\log(2/\delta)/2n}`$.** Three terms, three jobs: what you measured, a penalty for how much your class can chase noise, and a small confidence term for finite-sample luck. The factor of 2 comes from a proof technique called **symmetrization** — you compare your sample to an imaginary second "ghost" sample, and the coin flips $`\sigma_i`$ are what decide which of the two each point came from. The 2 and the 3 are artifacts of that argument, not insights.
 
 > **Where this came from.** **Hans Rademacher** introduced the $\pm1$-valued functions now bearing his name in 1922, in a paper on systems of orthogonal functions — pure analysis, no statistics anywhere near it. He held a chair at the University of Breslau until 1934, when he was dismissed by the Nazi regime on political grounds (he had been active in pacifist and human-rights organizations), and emigrated to the United States, spending the rest of his career at the University of Pennsylvania. He is best remembered in mathematics not for these functions but for the **Rademacher exact formula** of 1937, a convergent series for the number of ways to write an integer as a sum of positive integers, sharpening the celebrated asymptotic result of Hardy and Ramanujan. Rademacher complexity as a capacity measure in statistical learning theory arrived only around 2000–2002, developed by **Vladimir Koltchinskii** and, independently, by **Peter Bartlett and Shahar Mendelson** — seventy-eight years after the functions were defined for an entirely different purpose.
 
@@ -742,9 +742,9 @@ $$\mathfrak{R}_n(\{x\mapsto \langle w,x\rangle : \|w\|\le B\}) \le \frac{B\max_i
 
 - $x \mapsto \langle w,x\rangle$ — read *"the function that maps x to the dot product of w with x."* The $\mapsto$ (bar-arrow) means "sends to" and defines a function without naming it, the way a lambda does in code.
 - $\|w\| \le B$ — the weights are constrained to a ball of radius $B$. **This is the only thing restricting the class**, and $d$ is nowhere in it.
-- $\max_i\|x_i\|$ — the length of the longest data point you actually have. Note that this is a property of *your dataset*, which is what "data-dependent" means.
+- $`\max_i\|x_i\|`$ — the length of the longest data point you actually have. Note that this is a property of *your dataset*, which is what "data-dependent" means.
 
-**Put numbers on it.** Inputs normalized so $\|x_i\| \le 1$, weights constrained to $\|w\| \le 5$, and $n = 10{,}000$ samples:
+**Put numbers on it.** Inputs normalized so $`\|x_i\| \le 1`$, weights constrained to $\|w\| \le 5$, and $n = 10{,}000$ samples:
 
 $$\mathfrak{R}_n \le \frac{5 \times 1}{\sqrt{10{,}000}} = \frac{5}{100} = 0.05$$
 
@@ -758,7 +758,7 @@ $$\mathfrak{R}_n \le \frac{5 \times 1}{\sqrt{10{,}000}} = \frac{5}{100} = 0.05$$
 
 ▸ **This is the pivot on which the rest of the chapter turns.** Once capacity is a *norm* rather than a *count*, weight decay stops being a heuristic and becomes a direct intervention on your generalization bound. §2.6 makes that connection exact, and §2.9 item 4 is the same fact stated as practical advice.
 
-**Where the $1/\sqrt n$ comes from — it is the same $\sqrt n$ as everywhere else.** The quantity $\frac1n\sum_i\sigma_i x_i$ is an average of $n$ random $\pm$ vectors. Random terms partially cancel, so their sum grows like $\sqrt n$ rather than $n$, and the average therefore shrinks like $1/\sqrt n$. Chapter 1 §1.3.1 has this as the standard error; Chapter 0 §0.8 has it as why random high-dimensional vectors are near-orthogonal. **It is one fact, wearing three costumes.**
+**Where the $1/\sqrt n$ comes from — it is the same $\sqrt n$ as everywhere else.** The quantity $`\frac1n\sum_i\sigma_i x_i`$ is an average of $n$ random $\pm$ vectors. Random terms partially cancel, so their sum grows like $\sqrt n$ rather than $n$, and the average therefore shrinks like $1/\sqrt n$. Chapter 1 §1.3.1 has this as the standard error; Chapter 0 §0.8 has it as why random high-dimensional vectors are near-orthogonal. **It is one fact, wearing three costumes.**
 
 ### Contraction and layer-wise bounds for networks
 
@@ -768,7 +768,7 @@ Chaining through $L$ layers with spectral norm bounds gives things like
 
 $$\mathfrak{R}_n \lesssim \frac{\prod_{\ell=1}^L \|W_\ell\|_2 \cdot \left(\sum_\ell \frac{\|W_\ell\|_{2,1}^{2/3}}{\|W_\ell\|_2^{2/3}}\right)^{3/2}}{\sqrt n}$$
 
-(Bartlett–Foster–Telgarsky). This is *norm-based* and can be non-vacuous for small networks. For large ones it's still typically vacuous, because $\prod\|W_\ell\|_2$ is astronomically large in practice.
+(Bartlett–Foster–Telgarsky). This is *norm-based* and can be non-vacuous for small networks. For large ones it's still typically vacuous, because $`\prod\|W_\ell\|_2`$ is astronomically large in practice.
 
 #### Reading the layer-wise bound, and why it still fails
 
@@ -778,13 +778,13 @@ $$\mathfrak{R}_n \lesssim \frac{\prod_{\ell=1}^L \|W_\ell\|_2 \cdot \left(\sum_\
 
 **Now the big expression, which is less fearsome than it looks:**
 
-- $\prod_{\ell=1}^L\|W_\ell\|_2$ — the product of the spectral norms, layer by layer. **This is exactly the network's overall Lipschitz constant** from Chapter 1 §1.1.4: the maximum amplification the whole stack can apply. Every term in the product is "how much can this layer stretch."
-- $\|W_\ell\|_{2,1}$ — a **mixed norm**: take the $\ell_2$ length of each row, then $\ell_1$-sum those lengths. It is sensitive to how many rows are meaningfully non-zero, so it acts as a rough sparsity measure.
-- The ratio $\|W_\ell\|_{2,1}/\|W_\ell\|_2$ inside the sum measures **how much of the layer's capacity is spread across many directions** versus concentrated in one — a cousin of the stable rank from Chapter 1 §1.1.3.
+- $`\prod_{\ell=1}^L\|W_\ell\|_2`$ — the product of the spectral norms, layer by layer. **This is exactly the network's overall Lipschitz constant** from Chapter 1 §1.1.4: the maximum amplification the whole stack can apply. Every term in the product is "how much can this layer stretch."
+- $`\|W_\ell\|_{2,1}`$ — a **mixed norm**: take the $`\ell_2`$ length of each row, then $`\ell_1`$-sum those lengths. It is sensitive to how many rows are meaningfully non-zero, so it acts as a rough sparsity measure.
+- The ratio $`\|W_\ell\|_{2,1}/\|W_\ell\|_2`$ inside the sum measures **how much of the layer's capacity is spread across many directions** versus concentrated in one — a cousin of the stable rank from Chapter 1 §1.1.3.
 - $\lesssim$ — "is at most, up to constants nobody tracks."
 - $/\sqrt n$ — the same $\sqrt n$ as always.
 
-**Where it breaks, with numbers.** Suppose a 50-layer network has $\|W_\ell\|_2 = 1.5$ at every layer — a completely unremarkable value that no practitioner would flag.
+**Where it breaks, with numbers.** Suppose a 50-layer network has $`\|W_\ell\|_2 = 1.5`$ at every layer — a completely unremarkable value that no practitioner would flag.
 
 $$\prod_{\ell=1}^{50}1.5 = 1.5^{50} \approx 6.4\times10^{8}$$
 
@@ -822,7 +822,7 @@ For a prior $P$ over $\mathcal{H}$ chosen *before* seeing data, and any posterio
 
 - $P$ — the **prior**: a probability distribution over models, fixed **before you look at the data**. Typically "the distribution from which you drew your random initialization."
 - $Q$ — the **posterior**: any distribution over models you like, chosen **after** seeing the data. Typically "a small Gaussian blob centred on the weights you trained to."
-- $\mathbb{E}_{h\sim Q}[R(h)]$ — read *"the expected true risk, when h is drawn from Q."* You are not asking about one model; you are asking about the **average performance of a randomly perturbed version of your model.**
+- $`\mathbb{E}_{h\sim Q}[R(h)]`$ — read *"the expected true risk, when h is drawn from Q."* You are not asking about one model; you are asking about the **average performance of a randomly perturbed version of your model.**
 
 ▸ **That change of question is what buys the whole result.** It is much harder to guarantee that *one specific* parameter setting generalizes than to guarantee that *a whole neighbourhood* of settings generalizes on average — because a fluke can be a single point, but a fluke cannot be a whole region.
 
@@ -839,8 +839,8 @@ Kullback–Leibler (KL) divergence, from Chapter 1 §1.4, measures **how many ex
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $h \sim Q$ | "h drawn from Q" | Sample a model from your posterior cloud |
-| $\mathbb{E}_{h\sim Q}[R(h)]$ | "expected true risk under Q" | Average true error of the cloud |
-| $\mathbb{E}_{h\sim Q}[\hat R_n(h)]$ | "expected training risk under Q" | Average training error of the cloud — measurable! |
+| $`\mathbb{E}_{h\sim Q}[R(h)]`$ | "expected true risk under Q" | Average true error of the cloud |
+| $`\mathbb{E}_{h\sim Q}[\hat R_n(h)]`$ | "expected training risk under Q" | Average training error of the cloud — measurable! |
 | $\mathrm{KL}(Q\|P)$ | "KL of Q from P" | Information injected by the data, in nats |
 | $\log\frac{2\sqrt n}{\delta}$ | — | The confidence term. Grows like $\log$, so it barely matters |
 | $2n$ | — | Twice your sample size, downstairs, as always |
@@ -858,9 +858,9 @@ Kullback–Leibler (KL) divergence, from Chapter 1 §1.4, measures **how many ex
 
 ▸ **Compare with §2.3's $\log M \le 2.2\times10^8$ for the same network.** The KL term is small whenever training moved you a short distance in *information* terms, regardless of how many parameters there are to move. **The bound stopped charging you for capacity you didn't use.** That single reframing — from "how much could you have done" to "how much did you actually do" — is why this is the only bound in the chapter that produces a number below 1 for a real network.
 
-**Why flatness buys you a tighter bound, spelled out.** Suppose the loss surface around your solution $\hat\theta$ is a wide, flat basin. Then you can smear $Q$ out over that whole basin — use a large $\sigma$ — and the *average* training error $\mathbb{E}_{h\sim Q}[\hat R_n(h)]$ barely rises, because every model in the basin is nearly as good. But a wide $Q$ is *closer* to a wide prior, so $\mathrm{KL}(Q\|P)$ is small. **You get the same first term and a smaller second term. The bound improves for free.**
+**Why flatness buys you a tighter bound, spelled out.** Suppose the loss surface around your solution $\hat\theta$ is a wide, flat basin. Then you can smear $Q$ out over that whole basin — use a large $\sigma$ — and the *average* training error $`\mathbb{E}_{h\sim Q}[\hat R_n(h)]`$ barely rises, because every model in the basin is nearly as good. But a wide $Q$ is *closer* to a wide prior, so $\mathrm{KL}(Q\|P)$ is small. **You get the same first term and a smaller second term. The bound improves for free.**
 
-Now suppose $\hat\theta$ sits in a needle-thin crevice. Smearing $Q$ at all sends most of its mass up the walls, so $\mathbb{E}_{h\sim Q}[\hat R_n(h)]$ explodes and you are forced to keep $Q$ narrow — which makes $\mathrm{KL}(Q\|P)$ large. **You pay either way.**
+Now suppose $\hat\theta$ sits in a needle-thin crevice. Smearing $Q$ at all sends most of its mass up the walls, so $`\mathbb{E}_{h\sim Q}[\hat R_n(h)]`$ explodes and you are forced to keep $Q$ narrow — which makes $\mathrm{KL}(Q\|P)$ large. **You pay either way.**
 
 ▸ **This is the rigorous content of "flat minima generalize better."** It is not an analogy and it is not folklore: flatness is literally the geometric condition that lets you choose a low-information posterior, and low information is literally what the bound charges for. Chapter 19 builds on this; sharpness-aware minimization (SAM) is an optimizer that attacks this quantity directly.
 
@@ -869,25 +869,25 @@ Now suppose $\hat\theta$ sits in a needle-thin crevice. Smearing $Q$ at all send
 ### Why this one succeeds where VC fails
 
 - $\mathrm{KL}(Q\|P)$ measures **how much information the training data injected into the parameters**, not how many parameters exist. A 100M-parameter network that barely moved from initialization has small KL.
-- It's naturally connected to **flat minima**: if the loss is flat around $\hat\theta$, you can use a wide $Q$ (large-variance Gaussian around $\hat\theta$) without hurting $\mathbb{E}_Q[\hat R_n]$. A wide $Q$ has *small* $\mathrm{KL}$ to a wide prior. **So flatness literally buys you a tighter generalization bound.** This is the rigorous version of "flat minima generalize better" (Ch. 19).
+- It's naturally connected to **flat minima**: if the loss is flat around $\hat\theta$, you can use a wide $Q$ (large-variance Gaussian around $\hat\theta$) without hurting $`\mathbb{E}_Q[\hat R_n]`$. A wide $Q$ has *small* $\mathrm{KL}$ to a wide prior. **So flatness literally buys you a tighter generalization bound.** This is the rigorous version of "flat minima generalize better" (Ch. 19).
 
-Formally: let $Q = \mathcal{N}(\hat\theta, \sigma^2 I)$, $P = \mathcal{N}(0,\sigma_0^2 I)$. Then
+Formally: let $Q = \mathcal{N}(\hat\theta, \sigma^2 I)$, $`P = \mathcal{N}(0,\sigma_0^2 I)`$. Then
 $$\mathrm{KL}(Q\|P) = \frac{\|\hat\theta\|^2}{2\sigma_0^2} + \frac{p}{2}\left(\frac{\sigma^2}{\sigma_0^2} - 1 - \log\frac{\sigma^2}{\sigma_0^2}\right)$$
-The larger $\sigma$ you can tolerate (i.e. the flatter the minimum), the closer $\sigma \to \sigma_0$ and the smaller the second term. And the whole bound only depends on $\|\hat\theta\|^2$ — **weight norm**, not parameter count.
+The larger $\sigma$ you can tolerate (i.e. the flatter the minimum), the closer $`\sigma \to \sigma_0`$ and the smaller the second term. And the whole bound only depends on $\|\hat\theta\|^2$ — **weight norm**, not parameter count.
 
 #### Unpacking the Gaussian KL
 
-This formula looks forbidding and is  simple once split in two. **The setup:** $Q = \mathcal{N}(\hat\theta,\sigma^2 I)$ is a spherical Gaussian blob of radius $\sigma$ centred on your trained weights; $P = \mathcal{N}(0,\sigma_0^2 I)$ is a spherical blob of radius $\sigma_0$ centred at the origin, chosen before training. $I$ is the identity matrix, so "spherical" — the same spread in every direction, no correlations.
+This formula looks forbidding and is  simple once split in two. **The setup:** $Q = \mathcal{N}(\hat\theta,\sigma^2 I)$ is a spherical Gaussian blob of radius $\sigma$ centred on your trained weights; $`P = \mathcal{N}(0,\sigma_0^2 I)`$ is a spherical blob of radius $`\sigma_0`$ centred at the origin, chosen before training. $I$ is the identity matrix, so "spherical" — the same spread in every direction, no correlations.
 
-**Term 1 — $\dfrac{\|\hat\theta\|^2}{2\sigma_0^2}$: the cost of having *moved*.**
+**Term 1 — $`\dfrac{\|\hat\theta\|^2}{2\sigma_0^2}`$: the cost of having *moved*.**
 
 $\|\hat\theta\|^2$ is the squared length of your weight vector, i.e. how far training carried you from the origin, measured in units of the prior's own spread. **This is exactly what weight decay minimizes.** Set $\hat\theta = 0$ and it vanishes; double every weight and it quadruples.
 
-**Term 2 — $\dfrac{p}{2}\left(\dfrac{\sigma^2}{\sigma_0^2} - 1 - \log\dfrac{\sigma^2}{\sigma_0^2}\right)$: the cost of having *narrowed*.**
+**Term 2 — $`\dfrac{p}{2}\left(\dfrac{\sigma^2}{\sigma_0^2} - 1 - \log\dfrac{\sigma^2}{\sigma_0^2}\right)`$: the cost of having *narrowed*.**
 
-Write $r = \sigma^2/\sigma_0^2$ (how much narrower your posterior is than the prior). The bracket is $r - 1 - \log r$, and this little function is worth knowing:
+Write $`r = \sigma^2/\sigma_0^2`$ (how much narrower your posterior is than the prior). The bracket is $r - 1 - \log r$, and this little function is worth knowing:
 
-| $r = \sigma^2/\sigma_0^2$ | $r - 1 - \log r$ | Meaning |
+| $`r = \sigma^2/\sigma_0^2`$ | $r - 1 - \log r$ | Meaning |
 |---|---|---|
 | 1.0 | **0** | Posterior as wide as prior — you learned nothing, you pay nothing |
 | 0.5 | 0.193 | Half as wide |
@@ -899,7 +899,7 @@ Write $r = \sigma^2/\sigma_0^2$ (how much narrower your posterior is than the pr
 
 **The $p$ out front is the sting, and it explains the flatness argument completely.** That per-dimension penalty is multiplied by the number of parameters. With $p = 10^7$ and $r = 0.1$, term 2 is $\frac{10^7}{2}(1.397) = 7\times10^6$ nats — vacuous again. With $r = 0.99$, the bracket is $5\times10^{-5}$ and term 2 is only $250$ nats. **A 0.1% narrowing of the posterior costs 250 nats; a 90% narrowing costs seven million.**
 
-▸ **So the entire PAC-Bayes game is: how close can you keep $\sigma$ to $\sigma_0$ without your average training loss falling apart?** And that is precisely a question about how flat the minimum is. A flat basin lets you keep $r \approx 1$ and pay almost nothing. A sharp minimum forces $r \ll 1$ and the $p/2$ multiplier annihilates you. **Flatness isn't a nice-to-have in this bound; it is the only thing standing between you and a factor of ten million.**
+▸ **So the entire PAC-Bayes game is: how close can you keep $\sigma$ to $`\sigma_0`$ without your average training loss falling apart?** And that is precisely a question about how flat the minimum is. A flat basin lets you keep $r \approx 1$ and pay almost nothing. A sharp minimum forces $r \ll 1$ and the $p/2$ multiplier annihilates you. **Flatness isn't a nice-to-have in this bound; it is the only thing standing between you and a factor of ten million.**
 
 > **Analogy.** You must state your answer to a question, and you are billed by how precise you make it. "Somewhere in Europe" is nearly free. "Latitude 48.8566, longitude 2.3522" costs a great deal. **If the true answer is a broad region, you can give the cheap answer and still be right — but if it is a single point, you have no choice but to buy the expensive one.** Flat minima are broad regions. Sharp minima are single points.
 
@@ -926,8 +926,8 @@ This is Occam's razor made quantitative, and it's the same $\log M$ from §2.3 i
 | Section | Complexity term | What it counts |
 |---|---|---|
 | §2.3 | $\log M$ | Bits to name one model out of $M$ — requires a finite class |
-| §2.4 | $d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}$ | Bits to name one *behaviour on $n$ points* — handles infinite classes |
-| §2.5 | $\mathfrak{R}_n(\mathcal{F})$ | Measured directly, on your data, by fitting noise |
+| §2.4 | $`d_{\mathrm{VC}}\log\frac{2en}{d_{\mathrm{VC}}}`$ | Bits to name one *behaviour on $n$ points* — handles infinite classes |
+| §2.5 | $`\mathfrak{R}_n(\mathcal{F})`$ | Measured directly, on your data, by fitting noise |
 | §2.6 | $\mathrm{KL}(Q\|P)$ | Bits the data actually injected — the only one that stays small |
 
 **Minimum description length (MDL), stated as a principle.** Choose the model that minimizes *(bits to describe the model) + (bits to describe the data given the model)*. A model that memorizes needs no bits for the second term and enormous bits for the first; a model that says nothing needs no bits for the first and enormous bits for the second. **The best model is the one that pays the smallest total bill**, and compression and generalization turn out to be the same objective viewed from two sides.
@@ -1065,9 +1065,9 @@ $$0.9932^{43} = e^{-0.00682\times43} = e^{-0.293} = 0.746$$
 
 ▸ **Sit with the ratio: three parts per million becomes a 25% effect.** This is the compounding arithmetic from Chapter 1 §1.1.2 ($\lambda^k$) and §1.1.4 ($1.2^{50}\approx9100$) once more — **any per-step multiplier that is not exactly 1 becomes a large number when raised to the power of a training run.** It is why learning-rate and weight-decay settings that look inconsequential move final results, and why "I only changed it slightly" is not a defence.
 
-**What "decoupled" means and why it matters here.** In classic $\ell_2$ regularization you add $\frac\lambda2\|\theta\|^2$ to the loss, so the decay term passes through Adam's adaptive rescaling and gets divided by each parameter's own gradient-magnitude estimate — meaning parameters with small gradients get decayed *harder*, which nobody intended. **AdamW's "W" is the fix**: apply the shrinkage directly to $\theta$, outside the adaptive machinery. That is what makes the arithmetic above exactly right rather than approximately right; with coupled $\ell_2$ you could not compute it at all without knowing the gradient statistics.
+**What "decoupled" means and why it matters here.** In classic $`\ell_2`$ regularization you add $\frac\lambda2\|\theta\|^2$ to the loss, so the decay term passes through Adam's adaptive rescaling and gets divided by each parameter's own gradient-magnitude estimate — meaning parameters with small gradients get decayed *harder*, which nobody intended. **AdamW's "W" is the fix**: apply the shrinkage directly to $\theta$, outside the adaptive machinery. That is what makes the arithmetic above exactly right rather than approximately right; with coupled $`\ell_2`$ you could not compute it at all without knowing the gradient statistics.
 
-**The connection back to §2.6, stated plainly.** The Gaussian PAC-Bayes KL had two terms, and the first was $\|\hat\theta\|^2/2\sigma_0^2$. Weight decay reduces $\|\hat\theta\|^2$. **So this hyperparameter is not acting on a proxy for generalization — it is acting on the literal quantity appearing in the only non-vacuous bound in the chapter.** Shrinking the weight norm by 25% cuts that KL term by $1 - 0.746^2 = 44\%$.
+**The connection back to §2.6, stated plainly.** The Gaussian PAC-Bayes KL had two terms, and the first was $`\|\hat\theta\|^2/2\sigma_0^2`$. Weight decay reduces $\|\hat\theta\|^2$. **So this hyperparameter is not acting on a proxy for generalization — it is acting on the literal quantity appearing in the only non-vacuous bound in the chapter.** Shrinking the weight norm by 25% cuts that KL term by $1 - 0.746^2 = 44\%$.
 
 ▸ **This is the rarest thing in applied deep learning: a knob whose effect on a rigorous guarantee you can compute exactly.** Almost everything else in §2.9's list works through mechanisms the theory can only gesture at. Weight decay is the one where the arithmetic closes.
 

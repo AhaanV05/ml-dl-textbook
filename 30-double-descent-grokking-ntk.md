@@ -17,16 +17,16 @@ Skim this once now; every entry is unpacked properly where it first appears.
 | $X$ | "the design matrix" | The data laid out as a grid: one row per example, one column per feature |
 | $\hat\beta$ | "beta-hat" | The fitted coefficients. The hat means "estimated" (§0.6) |
 | $X^+$ | "X-plus" / "X-dagger" | The **pseudo-inverse** — the closest thing to an inverse a non-square matrix has |
-| $\sigma_j$ | "sigma-j" | A **singular value** of $X$ (§1.1.3) — here, *not* a standard deviation |
+| $`\sigma_j`$ | "sigma-j" | A **singular value** of $X$ (§1.1.3) — here, *not* a standard deviation |
 | $\lambda$ | "lambda" | Ridge regularization strength, or an eigenvalue. Both appear; context decides |
 | $\Theta(x,x')$ | "the neural tangent kernel of x and x-prime" | How much training on example $x'$ moves the prediction at $x$ |
-| $\nabla_\theta f(x;\theta_0)$ | "grad-theta f at theta-nought" | How the network's output at $x$ responds to each parameter, **measured at initialization** |
+| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | How the network's output at $x$ responds to each parameter, **measured at initialization** |
 | $\phi(x)$ | "phi of x" | The feature map — here it equals the gradient above, and it never changes |
-| $\theta_0$ | "theta-nought" | The parameters at initialization, before any training |
+| $`\theta_0`$ | "theta-nought" | The parameters at initialization, before any training |
 | $\dfrac{df(x)}{dt}$ | "d f by d t" | **Gradient flow** — gradient descent with infinitesimally small steps, so time is continuous |
 | $e^{-\eta\Theta t}$ | "e to the minus eta Theta t" | Exponential decay of the error, one rate per kernel eigendirection |
 | $a\circ b = (a+b)\bmod 97$ | "a plus b, mod 97" | Add, then keep only the remainder after dividing by 97 |
-| $\omega_k$ | "omega-k" | A **frequency** the network discovers in its embeddings |
+| $`\omega_k`$ | "omega-k" | A **frequency** the network discovers in its embeddings |
 
 ### ⚠ The one notation trap in this chapter
 
@@ -148,7 +148,7 @@ A rise-then-fall in a test-error curve has several possible causes, and only one
 
 ### Why the peak exists — the linear analysis
 
-Consider minimum-$\ell_2$-norm interpolation ("ridgeless regression"): with $n$ samples and $p$ features,
+Consider minimum-$`\ell_2`$-norm interpolation ("ridgeless regression"): with $n$ samples and $p$ features,
 
 $$\hat\beta = X^+y = X^\top(XX^\top)^{-1}y \quad (p>n)$$
 
@@ -177,24 +177,24 @@ This is the load-bearing derivation of the chapter and it uses nothing beyond Ch
 | $X^+$ | "X pseudo-inverse" | $p\times n$ | The best stand-in for $X^{-1}$ when $X$ isn't square |
 | $XX^\top$ | "X X transpose" | $n\times n$ | Note the shape: it is $n\times n$, **not** $p\times p$ — this form is the one that works when $p>n$ |
 
-**The pseudo-inverse, in one sentence.** A square, well-behaved matrix has an inverse that undoes it. A non-square one does not, so $X^+$ does the next best thing: **among all $\beta$ that fit the data exactly, it returns the one with the smallest $\|\beta\|_2$.** That choice — "smallest norm" — is not a neutral technical default. It is the entire reason overparameterization works, and it is the ancestor of every implicit-bias result in Chapter 31.
+**The pseudo-inverse, in one sentence.** A square, well-behaved matrix has an inverse that undoes it. A non-square one does not, so $X^+$ does the next best thing: **among all $\beta$ that fit the data exactly, it returns the one with the smallest $`\|\beta\|_2`$.** That choice — "smallest norm" — is not a neutral technical default. It is the entire reason overparameterization works, and it is the ancestor of every implicit-bias result in Chapter 31.
 
-**A two-parameter example you can do in your head.** One data point: $x = (1,1)$, $y = 2$. Fit $\beta_1 x_1 + \beta_2 x_2 = 2$. There are **infinitely many** exact solutions — every point on the line $\beta_1 + \beta_2 = 2$:
+**A two-parameter example you can do in your head.** One data point: $x = (1,1)$, $y = 2$. Fit $`\beta_1 x_1 + \beta_2 x_2 = 2`$. There are **infinitely many** exact solutions — every point on the line $`\beta_1 + \beta_2 = 2`$:
 
-| Solution $\beta$ | Fits the data? | $\|\beta\|_2$ |
+| Solution $\beta$ | Fits the data? | $`\|\beta\|_2`$ |
 |---|---|---|
 | $(2, 0)$ | ✓ | $2.00$ |
 | $(1, 1)$ | ✓ | $1.41$ ← **minimum-norm** |
 | $(10, -8)$ | ✓ | $12.81$ |
 | $(500,-498)$ | ✓ | $705.7$ |
 
-▸ **Every row fits the training data perfectly, and they will behave wildly differently on a new point.** The last one is a hair-trigger: change $x_1$ by $0.01$ and the prediction moves by $5$. The pseudo-inverse picks row two — the placid one. **"Which of the infinitely many perfect fits do you take?" is the only question that matters here, and the answer is a property of the algorithm, not of the model class.**
+▸ **Every row fits the training data perfectly, and they will behave wildly differently on a new point.** The last one is a hair-trigger: change $`x_1`$ by $0.01$ and the prediction moves by $5$. The pseudo-inverse picks row two — the placid one. **"Which of the infinitely many perfect fits do you take?" is the only question that matters here, and the answer is a property of the algorithm, not of the model class.**
 
-**Now why the norm *shrinks* as $p$ grows.** Same setup, but with $p$ features all equal to 1 and a target of 1. The minimum-norm solution spreads the job evenly: $\beta_j = 1/p$ for each $j$, so
+**Now why the norm *shrinks* as $p$ grows.** Same setup, but with $p$ features all equal to 1 and a target of 1. The minimum-norm solution spreads the job evenly: $`\beta_j = 1/p`$ for each $j$, so
 
 $$\|\hat\beta\|_2 = \sqrt{p\cdot\left(\tfrac1p\right)^2} = \frac{1}{\sqrt p}$$
 
-| $p$ | $\|\hat\beta\|_2$ |
+| $p$ | $`\|\hat\beta\|_2`$ |
 |---|---|
 | 1 | $1.000$ |
 | 100 | $0.100$ |
@@ -202,13 +202,13 @@ $$\|\hat\beta\|_2 = \sqrt{p\cdot\left(\tfrac1p\right)^2} = \frac{1}{\sqrt p}$$
 
 ▸ **More parameters means each one has to do less.** The solution set grows, and the smallest element of a bigger set is smaller. This is the entire right-hand branch of the double-descent curve in one line: **the descent after the peak is the minimum-norm solution getting quieter as the space of exact fits gets roomier.**
 
-**Now the peak itself, and where the singular values come in.** The variance of the estimator is governed by $1/\sigma_{\min}^2$ — the *smallest* singular value of $X$. Small singular value means the matrix nearly squashes some direction to nothing (§1.1.3), and inverting it means dividing by nearly nothing.
+**Now the peak itself, and where the singular values come in.** The variance of the estimator is governed by $`1/\sigma_{\min}^2`$ — the *smallest* singular value of $X$. Small singular value means the matrix nearly squashes some direction to nothing (§1.1.3), and inverting it means dividing by nearly nothing.
 
 > **Analogy.** A set of bathroom scales that reads to the nearest kilogram. Weigh an elephant and the reading is fine. Weigh a feather by putting it on the scales and reading the difference — you divide a rounding error by an almost-zero quantity, and the answer is nonsense. **Inverting a near-singular matrix is dividing by a feather.**
 
 **The Marchenko–Pastur law says exactly how bad it gets.** For a random $n\times p$ matrix with $\gamma = p/n$, the eigenvalues of $\frac1n X^\top X$ fall in the window $\big[(1-\sqrt\gamma)^2,\ (1+\sqrt\gamma)^2\big]$. Watch the lower edge:
 
-| $p/n$ | Smallest eigenvalue $(1-\sqrt{p/n})^2$ | Variance blow-up $\propto 1/\lambda_{\min}$ |
+| $p/n$ | Smallest eigenvalue $(1-\sqrt{p/n})^2$ | Variance blow-up $`\propto 1/\lambda_{\min}`$ |
 |---|---|---|
 | $0.5$ | $0.086$ | $\times 12$ |
 | $0.9$ | $0.0026$ | $\times 380$ |
@@ -268,7 +268,7 @@ The word does a lot of work in this chapter, and it does not mean what it means 
 ### Effective rather than raw parameter count
 
 Raw parameter count is the wrong $x$-axis. Better measures place the peak more reliably:
-- Effective degrees of freedom $\sum_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}$ (Ch. 22 §22.2).
+- Effective degrees of freedom $`\sum_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$ (Ch. 22 §22.2).
 - Weight-norm-based capacity measures.
 - Nakkiran et al.'s **effective model complexity**: the largest $n$ for which the training procedure achieves ≈0 training error.
 
@@ -284,11 +284,11 @@ $$\mathrm{df}(\lambda) = \sum_j \frac{\sigma_j^2}{\sigma_j^2+\lambda}$$
 
 Look at one term. It is a fraction between 0 and 1 that answers: *"is this direction actually being used?"*
 
-| Situation | $\dfrac{\sigma_j^2}{\sigma_j^2+\lambda}$ | Reads as |
+| Situation | $`\dfrac{\sigma_j^2}{\sigma_j^2+\lambda}`$ | Reads as |
 |---|---|---|
-| $\sigma_j^2 \gg \lambda$ (strong direction) | $\approx 1$ | "This direction counts as one full parameter" |
-| $\sigma_j^2 \approx \lambda$ | $= 0.5$ | "Half a parameter" |
-| $\sigma_j^2 \ll \lambda$ (weak direction) | $\approx 0$ | "Regularization has switched this one off; it costs nothing" |
+| $`\sigma_j^2 \gg \lambda`$ (strong direction) | $\approx 1$ | "This direction counts as one full parameter" |
+| $`\sigma_j^2 \approx \lambda`$ | $= 0.5$ | "Half a parameter" |
+| $`\sigma_j^2 \ll \lambda`$ (weak direction) | $\approx 0$ | "Regularization has switched this one off; it costs nothing" |
 
 Put numbers in with $\lambda = 1$ and singular values $\sigma^2 = (100, 10, 1, 0.1, 0.01)$:
 
@@ -318,7 +318,7 @@ The theory (Bartlett, Long, Lugosi, Tsigler) explains *when* interpolating noise
 
 **The puzzle it resolves.** Classical statistics says fitting noise is fatal: memorize the random errors in your training set and you will carry them into your predictions. Modern models fit the noise *exactly* — training loss zero, on data that certainly contains label errors — and generalize fine anyway. **Benign overfitting is the theory of when that is allowed.**
 
-**"Data covariance spectrum," decoded.** The covariance matrix $\Sigma$ of your inputs has eigenvalues $\lambda_1 \ge \lambda_2 \ge \dots$, each measuring how much the data varies along one direction (§1.1.2). The *spectrum* is that sorted list. The theory says the shape of the list decides everything:
+**"Data covariance spectrum," decoded.** The covariance matrix $\Sigma$ of your inputs has eigenvalues $`\lambda_1 \ge \lambda_2 \ge \dots`$, each measuring how much the data varies along one direction (§1.1.2). The *spectrum* is that sorted list. The theory says the shape of the list decides everything:
 
 | Direction type | Eigenvalue | What lives there |
 |---|---|---|
@@ -352,10 +352,10 @@ A committee so large that no individual member's opinion shifts much. The commit
 
 ### The derivation
 
-First-order Taylor expansion around initialization $\theta_0$:
+First-order Taylor expansion around initialization $`\theta_0`$:
 $$f(x;\theta)\approx f(x;\theta_0) + \nabla_\theta f(x;\theta_0)^\top(\theta-\theta_0)$$
 
-**This is linear in $\theta$** with fixed features $\phi(x)=\nabla_\theta f(x;\theta_0)$. Define the kernel:
+**This is linear in $\theta$** with fixed features $`\phi(x)=\nabla_\theta f(x;\theta_0)`$. Define the kernel:
 
 ▸ $$\Theta(x,x') = \big\langle\nabla_\theta f(x;\theta_0),\ \nabla_\theta f(x';\theta_0)\big\rangle$$
 
@@ -369,19 +369,19 @@ Under gradient flow with squared loss, the *function* evolves as:
 
 Three moves, each simple. The result is startling.
 
-**Move 1 — a Taylor expansion.** $f(x;\theta)\approx f(x;\theta_0) + \nabla_\theta f(x;\theta_0)^\top(\theta-\theta_0)$
+**Move 1 — a Taylor expansion.** $`f(x;\theta)\approx f(x;\theta_0) + \nabla_\theta f(x;\theta_0)^\top(\theta-\theta_0)`$
 
 This is the first-order Taylor approximation from calculus: *"the value here, plus the slope, times how far you moved."* Reading each piece:
 
 | Piece | Read aloud | Job |
 |---|---|---|
-| $f(x;\theta_0)$ | "f of x at theta-nought" | The network's output **before any training**, from random weights |
-| $\nabla_\theta f(x;\theta_0)$ | "grad-theta f at theta-nought" | A vector with **one entry per parameter**: how much output $f(x)$ moves per unit change in that parameter |
-| $\theta - \theta_0$ | "theta minus theta-nought" | How far training has moved the weights from where they started |
+| $`f(x;\theta_0)`$ | "f of x at theta-nought" | The network's output **before any training**, from random weights |
+| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | A vector with **one entry per parameter**: how much output $f(x)$ moves per unit change in that parameter |
+| $`\theta - \theta_0`$ | "theta minus theta-nought" | How far training has moved the weights from where they started |
 
-▸ **Note the shape of $\nabla_\theta f$: it has $p$ entries, one per parameter.** For a network with $10^8$ parameters, this "feature vector" for a single input is a hundred million numbers long. It is enormous, and it is *fixed at initialization* — that combination is what the whole theory hangs on.
+▸ **Note the shape of $`\nabla_\theta f`$: it has $p$ entries, one per parameter.** For a network with $10^8$ parameters, this "feature vector" for a single input is a hundred million numbers long. It is enormous, and it is *fixed at initialization* — that combination is what the whole theory hangs on.
 
-**Move 2 — notice what kind of function this is.** Read the expansion again with $\phi(x) \equiv \nabla_\theta f(x;\theta_0)$ and $w \equiv \theta-\theta_0$:
+**Move 2 — notice what kind of function this is.** Read the expansion again with $`\phi(x) \equiv \nabla_\theta f(x;\theta_0)`$ and $`w \equiv \theta-\theta_0`$:
 
 $$f(x) \approx \text{const} + \phi(x)^\top w$$
 
@@ -406,23 +406,23 @@ $$\frac{df(x)}{dt} = -\eta\sum_i\Theta(x,x_i)\,\big(f(x_i)-y_i\big)$$
 
 Read it right to left, as a sentence:
 
-1. $\big(f(x_i)-y_i\big)$ — **"how wrong am I on training example $i$?"** The residual.
-2. $\Theta(x,x_i)$ — **"how much does example $i$ influence the prediction at $x$?"** The influence weight.
-3. $\sum_i$ — add up the influence from every training example.
+1. $`\big(f(x_i)-y_i\big)`$ — **"how wrong am I on training example $i$?"** The residual.
+2. $`\Theta(x,x_i)`$ — **"how much does example $i$ influence the prediction at $x$?"** The influence weight.
+3. $`\sum_i`$ — add up the influence from every training example.
 4. $-\eta$ — move against the error, at the learning rate.
 
 **In one sentence: "my prediction at $x$ changes by the sum, over all training points, of how wrong I am there times how connected $x$ is to there."**
 
 ▸ **The remarkable part is what is absent: $\theta$.** The parameters do not appear on either side. You began with a hundred-million-dimensional nonlinear optimization problem and ended with a linear differential equation in *function space*, whose only ingredient is a fixed $n\times n$ matrix. This is why the result is celebrated: **it is the only case in deep learning where the entire training trajectory has a closed-form answer**, at every time $t$, for every input.
 
-**Reading $e^{-\eta\Theta t}$.** Eigendecompose the $n\times n$ kernel matrix $\Theta$ (it is symmetric and positive semi-definite, so §1.1.2 applies). Along eigendirection $j$ the residual obeys $r_j(t) = r_j(0)\,e^{-\eta\lambda_j t}$ — plain exponential decay, one rate per direction.
+**Reading $e^{-\eta\Theta t}$.** Eigendecompose the $n\times n$ kernel matrix $\Theta$ (it is symmetric and positive semi-definite, so §1.1.2 applies). Along eigendirection $j$ the residual obeys $`r_j(t) = r_j(0)\,e^{-\eta\lambda_j t}`$ — plain exponential decay, one rate per direction.
 
-| Eigenvalue $\lambda_j$ | Decay rate | Learned |
+| Eigenvalue $`\lambda_j`$ | Decay rate | Learned |
 |---|---|---|
 | large | fast | early in training |
 | small | slow | late in training, or never |
 
-▸ **So "what does the network learn first?" has a precise answer: whatever lies along the kernel's largest eigenvalues.** If $\lambda_1/\lambda_{50} = 100$, then direction 50 needs a hundred times as many steps to reach the same level of fit. That single inequality is the entire quantitative content of spectral bias, which is the next section's subject.
+▸ **So "what does the network learn first?" has a precise answer: whatever lies along the kernel's largest eigenvalues.** If $`\lambda_1/\lambda_{50} = 100`$, then direction 50 needs a hundred times as many steps to reach the same level of fit. That single inequality is the entire quantitative content of spectral bias, which is the next section's subject.
 
 ### The two theorems
 
@@ -452,7 +452,7 @@ The mechanism is the law of large numbers. $\Theta(x,x')$ is a sum of contributi
 
 **Why the movement shrinks.** The network's output is a sum over width-many units. To change the output by a fixed amount, you can either move a few weights a lot or move all of them a tiny bit — and gradient descent, taking the shortest path in parameter space, does the second. **Widen the network and the work gets spread more thinly.** The function changes by $\Theta(1)$; each parameter changes by nearly nothing.
 
-And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ — which is a *function of the parameters* — barely changes either. So $\phi$ is frozen, so $\Theta$ is frozen. **That is the whole argument.**
+And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ — which is a *function of the parameters* — barely changes either. So $\phi$ is frozen, so $\Theta$ is frozen. **That is the whole argument.**
 
 > **Analogy.** A stadium crowd doing a wave. The wave travels — a large, coordinated, visible change. **No individual stood up more than once.** Add fifty thousand more people and each person's contribution to the visible effect becomes smaller still, while the wave itself is unchanged. Theorem 2 says an infinitely wide network learns like a stadium: the function moves a lot, and nobody in it moved at all.
 
@@ -468,7 +468,7 @@ And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ �
 | A network initialized with large weights and trained briefly | Large init means the function starts big; relatively little movement is needed |
 | The last-layer-only fine-tune of a frozen backbone | The features are *literally* frozen — this is kernel regression by construction |
 | Linear probing of a pretrained model | Same argument; the kernel is whatever the backbone gives you |
-| A network's first few steps, at any width | The Taylor expansion is accurate near $\theta_0$ regardless of width |
+| A network's first few steps, at any width | The Taylor expansion is accurate near $`\theta_0`$ regardless of width |
 
 **❌ Near-misses — settings where the NTK's predictions do not hold**
 
@@ -480,7 +480,7 @@ And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ �
 | "It is wide, so it is lazy" | The regime is set by **parameterization and init scale**, not width alone | A $\mu$P-parameterized network stays rich at any width |
 | A network trained with small initialization | Small init means the weights must move a great deal relative to their size | Rich regime — features rebuilt, theory intractable |
 
-▸ **The boundary:** you are in the NTK regime when **the features $\nabla_\theta f(x;\theta_0)$ do not meaningfully change during training.** That is a measurable property, not an architectural one: compute the kernel at initialization and again at the end and look at how much it moved. The number you get is, in a real sense, how much representation learning happened.
+▸ **The boundary:** you are in the NTK regime when **the features $`\nabla_\theta f(x;\theta_0)`$ do not meaningfully change during training.** That is a measurable property, not an architectural one: compute the kernel at initialization and again at the end and look at how much it moved. The number you get is, in a real sense, how much representation learning happened.
 
 > **Common misconception.** *"The NTK shows neural networks are 'just' kernel machines."* It shows that a network *in a particular limit* is exactly a kernel machine — and that limit is one that practitioners deliberately steer away from, because networks in it cannot learn features. Finite networks beat their own NTK by several percent on ImageNet, and that gap is not a rounding error; **it is a measurement of the thing the theory is missing.** The misconception is tempting because "X is just Y" is a satisfying reduction and the mathematics really is exact. The correct sentence is narrower and more interesting: *the NTK is the correct theory of the regime in which deep learning does not work very well.*
 
@@ -491,20 +491,20 @@ And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ �
 ### What it explains
 
 - **Why gradient descent finds a global minimum:** the loss becomes convex in the linearized model, and a positive-definite $\Theta$ guarantees convergence.
-- **The convergence rate:** the residual along eigendirection $j$ decays at rate $\eta\lambda_j$. ▸ **Since the NTK's large eigenvalues correspond to low-frequency, smooth functions, networks fit smooth structure first and high-frequency detail last** — the *spectral bias*. This is a , quantitative explanation of a real phenomenon, and it also explains why random labels take much longer to fit than real ones.
+- **The convergence rate:** the residual along eigendirection $j$ decays at rate $`\eta\lambda_j`$. ▸ **Since the NTK's large eigenvalues correspond to low-frequency, smooth functions, networks fit smooth structure first and high-frequency detail last** — the *spectral bias*. This is a , quantitative explanation of a real phenomenon, and it also explains why random labels take much longer to fit than real ones.
 - **Wide networks are easier to optimize** — the linearization is more accurate.
 
 #### Spectral bias, decoded — the NTK's best prediction
 
 **The claim: networks learn smooth things first and detailed things last.** This is not a vague impression; the NTK turns it into an equation.
 
-**Why "large eigenvalue = smooth function."** The NTK's eigenfunctions, ordered by eigenvalue, run from slowly-varying to rapidly-oscillating — the same ordering as the Laplacian eigenvectors in Chapter 29, and for the same underlying reason: **smooth functions are the ones that many nearby inputs agree on, so they accumulate large kernel mass.** Combine that with $r_j(t) = r_j(0)e^{-\eta\lambda_j t}$ and you get a schedule.
+**Why "large eigenvalue = smooth function."** The NTK's eigenfunctions, ordered by eigenvalue, run from slowly-varying to rapidly-oscillating — the same ordering as the Laplacian eigenvectors in Chapter 29, and for the same underlying reason: **smooth functions are the ones that many nearby inputs agree on, so they accumulate large kernel mass.** Combine that with $`r_j(t) = r_j(0)e^{-\eta\lambda_j t}`$ and you get a schedule.
 
 > **Analogy.** Developing a photograph, or a low-resolution image sharpening into focus. The broad shapes appear first, then edges, then texture, then grain. **A neural network trains in the same order, and the NTK tells you the exact rate for each level of detail.** The reason it looks like a progressive JPEG is that, mathematically, it is one: a decomposition into frequency components fitted at different speeds.
 
 **Why this explains the random-label observation.** A real dataset is *smooth* in the relevant sense — similar images have similar labels — so it lies mostly along the kernel's large-eigenvalue directions and is fitted fast. **Random labels are maximally jagged**: two nearly-identical images have unrelated targets, so the target function has essentially no mass on the smooth directions and all of it on the slow ones.
 
-▸ **So the prediction is quantitative, not hand-wavy: a network fits random labels using the directions with the smallest $\lambda_j$, which decay slowest, so it takes far longer.** Zhang et al. measured exactly this — random labels are learnable but take several times as many epochs — and the NTK predicts it from the spectrum alone. **This is the single best piece of evidence that the theory captures something real about finite networks**, because the prediction was quantitative and made about a phenomenon nobody was trying to explain.
+▸ **So the prediction is quantitative, not hand-wavy: a network fits random labels using the directions with the smallest $`\lambda_j`$, which decay slowest, so it takes far longer.** Zhang et al. measured exactly this — random labels are learnable but take several times as many epochs — and the NTK predicts it from the spectrum alone. **This is the single best piece of evidence that the theory captures something real about finite networks**, because the prediction was quantitative and made about a phenomenon nobody was trying to explain.
 
 **Two more consequences worth carrying.**
 
@@ -535,7 +535,7 @@ And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ �
 | Blurry outputs from an autoencoder trained with MSE | The pixel-wise squared error itself rewards the conditional mean | A loss-function property (Ch. 19), which the spectral story then reinforces |
 | "The model prefers simple explanations" as a general law | Spectral bias is a specific statement about the NTK's eigenspectrum, in a specific limit | Simplicity bias, a broader and less well-characterized claim (Ch. 31 §31.2) |
 
-▸ **The boundary:** spectral bias is the quantitative claim that **the residual along kernel eigendirection $j$ decays at rate $\eta\lambda_j$** — so what is learned first is decided by the kernel's spectrum, and nothing else. Anything that is not an ordering-in-time claim about function frequency is a different phenomenon that happens to share the word "simple."
+▸ **The boundary:** spectral bias is the quantitative claim that **the residual along kernel eigendirection $j$ decays at rate $`\eta\lambda_j`$** — so what is learned first is decided by the kernel's spectrum, and nothing else. Anything that is not an ordering-in-time claim about function frequency is a different phenomenon that happens to share the word "simple."
 
 > **Common misconception.** *"Spectral bias means the network can't represent high-frequency functions."* It can represent them fine; it *reaches* them slowly. Given enough steps a network fits random labels on CIFAR-10 exactly, and random labels are the most high-frequency target there is. The distinction is between **expressivity** (what is representable) and **optimization order** (what arrives when), and conflating them is one of the most common errors in reading deep learning theory. The misconception is tempting because "learns it last" and "can't learn it" produce identical observations on any training run you actually stop.
 
@@ -543,7 +543,7 @@ And if the parameters barely move, the gradient $\nabla_\theta f(x;\theta_0)$ �
 
 ### What it fails to explain, and why that matters more
 
-▸ **Finite networks beat their NTK, typically by several percent on ImageNet.** And the NTK cannot explain transfer learning, because it has **no feature learning at all**: the features $\phi(x)=\nabla_\theta f(x;\theta_0)$ are fixed at initialization. A model whose features never change cannot learn a representation, and representation learning is the thing deep learning is actually for.
+▸ **Finite networks beat their NTK, typically by several percent on ImageNet.** And the NTK cannot explain transfer learning, because it has **no feature learning at all**: the features $`\phi(x)=\nabla_\theta f(x;\theta_0)`$ are fixed at initialization. A model whose features never change cannot learn a representation, and representation learning is the thing deep learning is actually for.
 
 ### Lazy vs rich (feature-learning) regimes
 
@@ -618,12 +618,12 @@ Under **standard parameterization**, the scaling of the weights and learning rat
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
 | The loss went down a lot | The NTK also drives loss to zero — that is Theorem 2's whole content | Fitting, which is available in both regimes |
-| The activations changed a great deal | Activations move because the coefficients moved; the *features* $\nabla_\theta f$ may not have | A downstream consequence, not a diagnostic |
-| The weights changed a great deal in absolute terms | What matters is the change **relative to the initialization scale** | Measure $\lVert\theta-\theta_0\rVert / \lVert\theta_0\rVert$, not the numerator alone |
+| The activations changed a great deal | Activations move because the coefficients moved; the *features* $`\nabla_\theta f`$ may not have | A downstream consequence, not a diagnostic |
+| The weights changed a great deal in absolute terms | What matters is the change **relative to the initialization scale** | Measure $`\lVert\theta-\theta_0\rVert / \lVert\theta_0\rVert`$, not the numerator alone |
 | The model is very deep | Depth does not decide the regime any more than width does | An architecture choice; the regime is a parameterization choice |
 | Linear probing of the frozen backbone works well | You have measured how good the *fixed* features are — the kernel view exactly | Kernel regression on a very good kernel |
 
-▸ **The boundary:** rich versus lazy is decided by whether $\nabla_\theta f(x;\theta_0)$ — the feature map — is still the feature map at the end of training. **The one honest measurement is the kernel at init versus the kernel at convergence**; everything else is a proxy.
+▸ **The boundary:** rich versus lazy is decided by whether $`\nabla_\theta f(x;\theta_0)`$ — the feature map — is still the feature map at the end of training. **The one honest measurement is the kernel at init versus the kernel at convergence**; everything else is a proxy.
 
 ---
 
@@ -702,7 +702,7 @@ The best-supported account has several converging strands:
 
 **2. Weight decay drives the transition.** ▸ **Grokking largely disappears without weight decay** (or with weight norm otherwise controlled). Once training loss is ~0, the cross-entropy gradient is nearly zero and **weight decay becomes the dominant force**, slowly moving the model along the zero-loss manifold toward the minimum-norm solution — which is the generalizing one. The delay is the time this drift takes.
 
-**3. The circuit is identifiable.** For modular addition, the network learns a **discrete Fourier transform**: embeddings become $\big(\cos(\omega_k a),\sin(\omega_k a)\big)$ for a handful of frequencies $\omega_k$, attention and MLP layers compute products realizing the trigonometric identity
+**3. The circuit is identifiable.** For modular addition, the network learns a **discrete Fourier transform**: embeddings become $`\big(\cos(\omega_k a),\sin(\omega_k a)\big)`$ for a handful of frequencies $`\omega_k`$, attention and MLP layers compute products realizing the trigonometric identity
 $$\cos(\omega(a+b)) = \cos\omega a\cos\omega b - \sin\omega a\sin\omega b$$
 and the unembedding reads off the argmax over $c$ of $\cos(\omega(a+b-c))$. ▸ **The network implements modular addition by rotating on a circle.** Nanda et al. reverse-engineered this completely — one of the cleanest full mechanistic explanations of a trained network in existence (Ch. 32).
 
@@ -729,7 +729,7 @@ Both circuits achieve zero training loss. The difference is how much *machinery*
 
 Follow the forces once training loss hits zero:
 
-1. Cross-entropy loss is ~0, so $\nabla_\theta \mathcal{L}_{\text{CE}} \approx 0$. **The data has stopped pushing.**
+1. Cross-entropy loss is ~0, so $`\nabla_\theta \mathcal{L}_{\text{CE}} \approx 0`$. **The data has stopped pushing.**
 2. Weight decay contributes a gradient of $\lambda\theta$ — a constant pull toward the origin — and it **never stops**, because it does not care about the loss.
 3. So the model slides along the **zero-loss manifold**: the set of all parameter settings that fit the training data perfectly. It cannot leave (the data would object) but it can move freely *within* it.
 4. It drifts downhill in norm until it reaches the smallest-norm point on that surface — **the generalizing circuit.**
@@ -742,7 +742,7 @@ Follow the forces once training loss hits zero:
 
 The network discovers that modular addition **is rotation**. Follow the construction:
 
-1. **Embeddings become points on a circle.** Number $a$ is mapped to $\big(\cos(\omega_k a),\ \sin(\omega_k a)\big)$ for a few frequencies $\omega_k$. That is the standard way to place an integer on a circle — the same construction as a transformer's sinusoidal position encoding (Ch. 12), arrived at independently by gradient descent.
+1. **Embeddings become points on a circle.** Number $a$ is mapped to $`\big(\cos(\omega_k a),\ \sin(\omega_k a)\big)`$ for a few frequencies $`\omega_k`$. That is the standard way to place an integer on a circle — the same construction as a transformer's sinusoidal position encoding (Ch. 12), arrived at independently by gradient descent.
 2. **Attention and the MLP compute products of those coordinates**, which by the trigonometric identity
 $$\cos(\omega(a+b)) = \cos\omega a\cos\omega b - \sin\omega a\sin\omega b$$
 gives you the *sum's* angle from the two inputs' angles. **Adding numbers has become adding angles.**

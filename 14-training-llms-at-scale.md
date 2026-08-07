@@ -24,7 +24,7 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | $S$ | "S" | The **loss scale** — a large constant you multiply the loss by, in fp16 only |
 | $\hat m,\ \hat v$ | "m-hat, v-hat" | Adam's running average of the gradient, and of the squared gradient |
 | $\mathrm{tr}(\Sigma)$ | "trace of Sigma" | Total gradient **noise**, summed over every parameter |
-| $\mathcal{L}_z$ | "script L sub z" | The **z-loss** — a small penalty that stops output logits drifting upward together |
+| $`\mathcal{L}_z`$ | "script L sub z" | The **z-loss** — a small penalty that stops output logits drifting upward together |
 | $\mathcal{O}(\sqrt{L})$ | "big-O of root L" | "Grows like the square root of the depth" |
 
 ▸ **The $\pi$ trap, worth naming now.** In §14.1, $\pi$ is a *random permutation* — a shuffle of a list. In Chapter 16 the identical letter means a *policy*. In geometry it means 3.14159. Greek letters are recycled shamelessly across machine learning, and **the meaning always comes from the sentence, never from the glyph.** The same warning applies to $\Sigma$ here: in §14.5 it is the **covariance matrix of the gradient noise**, not the summation sign.
@@ -80,7 +80,7 @@ At scale, data quality and composition determine model quality more than archite
 - **MinHash:** for a random permutation $\pi$ of the universe, $\Pr[\min\pi(A)=\min\pi(B)] = J(A,B)$ **exactly**. Use $k$ hash functions to get a $k$-dim signature; the fraction of matching entries estimates $J$ with standard error $\approx\sqrt{J(1-J)/k}$.
 - **LSH banding:** split the $k$ signature entries into $b$ bands of $r$ rows ($k=br$). Two documents become candidates if any band matches exactly. Probability of becoming a candidate:
 ▸ $$P(\text{candidate}) = 1-(1-J^r)^b$$
-This is an S-curve with threshold near $J^*\approx(1/b)^{1/r}$. With $k=128$, $b=16$, $r=8$: $J^*=16^{-1/8}\approx0.71$ — tune $b,r$ to place the cutoff where you want it.
+This is an S-curve with threshold near $`J^*\approx(1/b)^{1/r}`$. With $k=128$, $b=16$, $r=8$: $`J^*=16^{-1/8}\approx0.71`$ — tune $b,r$ to place the cutoff where you want it.
 
 #### Unpacking MinHash and LSH
 
@@ -136,7 +136,7 @@ is just *"one minus the chance that every band missed."*
 
 ▸ **Read that column as a switch, not a curve.**  near-duplicates ($J\ge0.8$) are caught essentially always; unrelated documents ($J\le0.5$) are examined about six times in a hundred; and documents at $J=0.3$ are never looked at at all. You get a *sharp threshold out of a smooth quantity*, and you get it in one pass over the corpus instead of 160 years of pairwise work.
 
-**What $b$ and $r$ each control.** $r$ (rows per band) sets **where** the cliff sits — a longer band is a stricter test, pushing the threshold up. $b$ (number of bands) sets **how many lottery tickets** each pair holds — more bands means more chances to be noticed, pulling the threshold down and sharpening the curve. The approximation $J^*\approx(1/b)^{1/r}$ locates the steep region; at $J^*=0.71$ in the table above the true probability is around $0.65$, not exactly $0.5$, so treat it as a dial setting rather than a guarantee.
+**What $b$ and $r$ each control.** $r$ (rows per band) sets **where** the cliff sits — a longer band is a stricter test, pushing the threshold up. $b$ (number of bands) sets **how many lottery tickets** each pair holds — more bands means more chances to be noticed, pulling the threshold down and sharpening the curve. The approximation $`J^*\approx(1/b)^{1/r}`$ locates the steep region; at $`J^*=0.71`$ in the table above the true probability is around $0.65$, not exactly $0.5$, so treat it as a dial setting rather than a guarantee.
 
 > **Where this came from.** MinHash was invented by Andrei Broder at Digital Equipment Corporation's research lab in the late 1990s, for the AltaVista search engine — the problem was that the web was full of mirrored and near-mirrored pages and the index was drowning in them. His 1997 paper *On the Resemblance and Containment of Documents* introduced the sketching trick above. Locality-sensitive hashing as a general framework came shortly after, from Piotr Indyk and Rajeev Motwani in 1998, aimed at approximate nearest-neighbour search rather than duplicate detection. **The pleasing symmetry is that a technique built to stop a search engine from indexing the same web page twice is now used to stop a language model from memorizing the same web page twice.** The problem never changed; only what we do with the corpus afterwards did.
 
@@ -358,7 +358,7 @@ For $N$ parameters with AdamW in mixed precision:
 
 **Why Adam needs two extra full-size copies.** Adam keeps, for each parameter separately, a running average of the gradient ($m$, the momentum) and a running average of the *squared* gradient ($v$, used to give each parameter its own step size). "For each parameter separately" is the operative phrase: both are exactly $N$ numbers, the same size as the model. **This is the price of adaptivity** — plain SGD with momentum would need only one such buffer, and plain SGD none at all, which is exactly why you occasionally see very large models trained with memory-frugal optimizers.
 
-**Why $m$ and $v$ are the fp32 rows.** Look at Adam's second-moment update with the usual $\beta_2 = 0.999$:
+**Why $m$ and $v$ are the fp32 rows.** Look at Adam's second-moment update with the usual $`\beta_2 = 0.999`$:
 
 $$v \leftarrow 0.999\,v + 0.001\,g^2$$
 
@@ -517,9 +517,9 @@ That two-line recipe hides the single prettiest trick in distributed training, a
 
 **The shapes.** A transformer feed-forward block is two matrices back to back: $A$ of shape $4096\times16384$ (widen), then $B$ of shape $16384\times4096$ (narrow again), with a GeLU in between. Split across 8 devices.
 
-**Half one — split $A$ by columns.** Device $i$ gets $A_i$, a $4096\times2048$ slice. It computes $XA_i$ and obtains a $2048$-wide slice of $Y$'s **columns**. Now apply the GeLU. Because GeLU is **elementwise**, and each device owns whole columns of complete numbers, **each device can apply it alone. No communication.**
+**Half one — split $A$ by columns.** Device $i$ gets $`A_i`$, a $4096\times2048$ slice. It computes $`XA_i`$ and obtains a $2048$-wide slice of $Y$'s **columns**. Now apply the GeLU. Because GeLU is **elementwise**, and each device owns whole columns of complete numbers, **each device can apply it alone. No communication.**
 
-**Half two — split $B$ by rows.** Device $i$ gets $B_i$, a $2048\times4096$ slice, matching the columns it already holds. It computes $Y_iB_i$, which is a **full-size** $4096$-wide output — but only a *partial sum*. Add the eight partial sums together and you have $Z$. **That addition is one all-reduce, and it is the only communication in the whole block.**
+**Half two — split $B$ by rows.** Device $i$ gets $`B_i`$, a $2048\times4096$ slice, matching the columns it already holds. It computes $`Y_iB_i`$, which is a **full-size** $4096$-wide output — but only a *partial sum*. Add the eight partial sums together and you have $Z$. **That addition is one all-reduce, and it is the only communication in the whole block.**
 
 ▸ **Now the point: run it the other way and it breaks.** If you had split $A$ by rows, each device would hold a *partial sum* of $Y$, and $\mathrm{GeLU}(a + b) \ne \mathrm{GeLU}(a) + \mathrm{GeLU}(b)$ — nonlinear functions do not distribute over sums. You would have to all-reduce *before* the activation and again after: two communications per block instead of one. **The split is arranged so that the nonlinearity only ever sees complete numbers.** Everything in the column-then-row ordering follows from that one requirement.
 
@@ -610,9 +610,9 @@ $$\mathrm{MFU} = \frac{6ND/t}{\text{peak FLOP/s}\times\text{devices}}$$
 **Critical batch size** (McCandlish et al.): the gradient-noise scale
 ▸ $$B_{\text{crit}} \approx \frac{\mathrm{tr}(\Sigma)}{\|\nabla\mathcal{L}\|^2}$$
 
-Below $B_{\text{crit}}$, doubling the batch roughly halves the steps needed (near-perfect scaling). Above it, you buy almost nothing.
+Below $`B_{\text{crit}}`$, doubling the batch roughly halves the steps needed (near-perfect scaling). Above it, you buy almost nothing.
 
-▸ $B_{\text{crit}}$ **grows during training** — as the loss falls, $\|\nabla\mathcal{L}\|$ shrinks faster than the noise, so the ratio grows. Hence **batch-size ramping**: start small (sample-efficient), grow large (compute-efficient). Frontier runs commonly ramp from ~1M to ~60M tokens per batch.
+▸ $`B_{\text{crit}}`$ **grows during training** — as the loss falls, $\|\nabla\mathcal{L}\|$ shrinks faster than the noise, so the ratio grows. Hence **batch-size ramping**: start small (sample-efficient), grow large (compute-efficient). Frontier runs commonly ramp from ~1M to ~60M tokens per batch.
 
 Pair with the LR rules from Ch. 4 §4.6: linear scaling for SGD, square-root scaling for Adam is the safer default.
 
@@ -622,19 +622,19 @@ $$B_{\text{crit}} \approx \frac{\mathrm{tr}(\Sigma)}{\|\nabla\mathcal{L}\|^2}$$
 
 **Every symbol, out loud.** $\Sigma$ ("capital sigma") is the **covariance matrix of the per-example gradient** — not the summation sign, and not a standard deviation. It records how much individual training examples *disagree* about which way to step. $\mathrm{tr}(\Sigma)$ ("trace of Sigma") is the sum of its diagonal entries, which is the **total variance summed over every parameter**: one number for "how noisy is a single-example gradient." And $\|\nabla\mathcal{L}\|^2$ is the squared length of the true, full-dataset gradient: one number for "how strong is the actual signal."
 
-▸ **So $B_{\text{crit}}$ is a noise-to-signal ratio, and it comes out in units of *examples*.**
+▸ **So $`B_{\text{crit}}`$ is a noise-to-signal ratio, and it comes out in units of *examples*.**
 
 **Where the formula comes from, in two lines.** Averaging $B$ independent examples divides the noise variance by $B$ — Chapter 1's $\sigma/\sqrt{n}$, squared. So a batch of size $B$ has noise $\mathrm{tr}(\Sigma)/B$ and signal $\|\nabla\mathcal{L}\|^2$. Ask when they are comparable:
 
 $$\frac{\mathrm{tr}(\Sigma)}{B} = \|\nabla\mathcal{L}\|^2 \quad\Longrightarrow\quad B = \frac{\mathrm{tr}(\Sigma)}{\|\nabla\mathcal{L}\|^2}$$
 
-**That is the whole derivation.** $B_{\text{crit}}$ is the batch size at which you have averaged away just enough noise to see the signal. Below it, extra examples are still buying you real information. Above it, you are re-measuring something you already know.
+**That is the whole derivation.** $`B_{\text{crit}}`$ is the batch size at which you have averaged away just enough noise to see the signal. Below it, extra examples are still buying you real information. Above it, you are re-measuring something you already know.
 
-▸ **Put numbers on it.** If $\mathrm{tr}(\Sigma) = 100$ and $\|\nabla\mathcal{L}\|^2 = 0.01$, then $B_{\text{crit}} = 10{,}000$ examples. Use a batch of 1,000 and every step is  informative. Use a batch of 100,000 and nine tenths of your compute confirmed a direction the first ten thousand examples had already established.
+▸ **Put numbers on it.** If $\mathrm{tr}(\Sigma) = 100$ and $\|\nabla\mathcal{L}\|^2 = 0.01$, then $`B_{\text{crit}} = 10{,}000`$ examples. Use a batch of 1,000 and every step is  informative. Use a batch of 100,000 and nine tenths of your compute confirmed a direction the first ten thousand examples had already established.
 
 > **Analogy — polling.** To call an election that one side is winning 70–30, fifty respondents will do; the signal dwarfs the noise. To call a race at 50.1–49.9, fifty thousand are not enough. **The number of people you must ask is set by how close the race is, not by how many people you can afford to phone.** Batch size is the same quantity: how many examples must agree before you trust the direction.
 
-**Why $B_{\text{crit}}$ grows during training — the honest reason.** Early on, every example wants the same thing: *stop predicting nonsense*. The signal is enormous and the disagreement is small. Late in training, the easy agreement is used up; example A wants the model nudged one way and example B the other, so the **mean** gradient becomes small while the **spread** stays substantial. The numerator holds roughly steady, the denominator collapses, and the ratio climbs.
+**Why $`B_{\text{crit}}`$ grows during training — the honest reason.** Early on, every example wants the same thing: *stop predicting nonsense*. The signal is enormous and the disagreement is small. Late in training, the easy agreement is used up; example A wants the model nudged one way and example B the other, so the **mean** gradient becomes small while the **spread** stays substantial. The numerator holds roughly steady, the denominator collapses, and the ratio climbs.
 
 ▸ **Hence batch ramping, and hence why it is not a hack.** Start with a small batch, when small batches are informative and each step is cheap; grow it as the race tightens and you need more voters per call. Frontier runs commonly ramp from around 1M to around 60M tokens per batch over the course of training. **The batch size is not a memory decision or a hardware decision — it is a statistics decision that the hardware then has to accommodate.**
 
@@ -656,7 +656,7 @@ Large runs fail in characteristic ways. Knowing the taxonomy is  valuable.
 
 #### Attention-logit explosion, with numbers
 
-**Why the dot product is so eager to grow.** An attention score is $q^\top k = \sum_{i=1}^{d_k} q_i k_i$ — a sum of $d_k$ products. Suppose $d_k = 128$ and the entries of $q$ and $k$ are around unit scale. Each product has variance about 1, and 128 of them add, so the sum has standard deviation $\sqrt{128}\approx 11.3$. Divide by $\sqrt{d_k} = 11.3$ (Chapter 11's scaling) and the scores have standard deviation **1**. That is the regime the architecture was designed for.
+**Why the dot product is so eager to grow.** An attention score is $`q^\top k = \sum_{i=1}^{d_k} q_i k_i`$ — a sum of $`d_k`$ products. Suppose $`d_k = 128`$ and the entries of $q$ and $k$ are around unit scale. Each product has variance about 1, and 128 of them add, so the sum has standard deviation $\sqrt{128}\approx 11.3$. Divide by $`\sqrt{d_k} = 11.3`$ (Chapter 11's scaling) and the scores have standard deviation **1**. That is the regime the architecture was designed for.
 
 Now let training drift the entries of $q$ and $k$ up to a typical size of 3. Each product's standard deviation goes up by $3\times3 = 9$, so the scaled scores now have standard deviation **9** instead of 1.
 
@@ -678,7 +678,7 @@ which pulls the log-partition function toward 0 and keeps logits bounded without
 
 #### What the z-loss actually says
 
-**Decoding the expression.** $z_j$ is the raw output score ("logit") for vocabulary item $j$. The quantity $\log\sum_j e^{z_j}$ has a name — the **log-partition function**, or `logsumexp` — and it is exactly the denominator of the softmax, written in logs. The z-loss squares it and adds a tiny multiple of the result to the loss.
+**Decoding the expression.** $`z_j`$ is the raw output score ("logit") for vocabulary item $j$. The quantity $`\log\sum_j e^{z_j}`$ has a name — the **log-partition function**, or `logsumexp` — and it is exactly the denominator of the softmax, written in logs. The z-loss squares it and adds a tiny multiple of the result to the loss.
 
 **Now the fact that makes it necessary.** Softmax is **invariant to adding the same constant to every logit**:
 
@@ -690,7 +690,7 @@ Check it with numbers. Logits $(2,1,0)$ give probabilities $(0.665,\ 0.245,\ 0.0
 
 **Why the wandering is dangerous.** The two logit vectors above have log-partition functions of $2.41$ and $1002.41$. The predictions are identical, but $e^{1002}$ overflows every floating-point format in this chapter, the intermediate exponentials become `inf`, and the loss becomes `NaN`. **A quantity the model is indifferent to has destroyed the run.**
 
-**What the penalty does about it.** $\mathcal{L}_z = \alpha(\log\sum_j e^{z_j})^2$ pushes the log-partition function toward zero — that is, toward $\sum_j e^{z_j} = 1$ — while leaving every *difference* between logits untouched. It disciplines the free direction and only the free direction.
+**What the penalty does about it.** $`\mathcal{L}_z = \alpha(\log\sum_j e^{z_j})^2`$ pushes the log-partition function toward zero — that is, toward $`\sum_j e^{z_j} = 1`$ — while leaving every *difference* between logits untouched. It disciplines the free direction and only the free direction.
 
 ▸ **And the quadratic is the design, not an accident.** With $\alpha = 10^{-4}$ and a healthy log-partition function of $2.4$, the penalty is $10^{-4}\times 5.8 = 0.0006$ — invisible next to a cross-entropy of around 2. At a log-partition function of $1000$ the penalty is $10^{-4}\times 10^6 = 100$, which dwarfs everything else. **The term is silent when things are fine and overwhelming when they are not.** That is precisely what you want from a safety mechanism.
 

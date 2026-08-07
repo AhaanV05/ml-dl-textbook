@@ -76,7 +76,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | # | Chapter | Contents |
 |---|---|---|
 | 06 | **[Neural Networks & Backpropagation](06-neural-networks-and-backpropagation.md)** | Universal approximation and depth separation; backprop derived in index and matrix form; VJP rules; vanishing/exploding gradients quantified; Xavier/He initialization derived; zero-init residual branches; the activation zoo (GELU, SwiGLU); debugging protocol. |
-| 07 | **[Normalization & Regularization](07-normalization-and-regularization.md)** | BatchNorm and its train/eval gap; LayerNorm, RMSNorm, GroupNorm, WeightNorm; scale invariance and the effective-LR/weight-decay coupling; dropout as ensembling and as Bayesian approximation; label smoothing; mixup/CutMix; early stopping as implicit $\ell_2$; stochastic depth. |
+| 07 | **[Normalization & Regularization](07-normalization-and-regularization.md)** | BatchNorm and its train/eval gap; LayerNorm, RMSNorm, GroupNorm, WeightNorm; scale invariance and the effective-LR/weight-decay coupling; dropout as ensembling and as Bayesian approximation; label smoothing; mixup/CutMix; early stopping as implicit $`\ell_2`$; stochastic depth. |
 | 08 | **[Convolutions, ResNets & Vision Architectures](08-convolutions-resnets-vision.md)** | Convolution as constrained matmul; receptive field arithmetic; dilated, separable, transposed convolutions; the three competing explanations of why ResNets work; BatchNorm–ResNet interaction; Inception, DenseNet, EfficientNet, ConvNeXt; U-Net; detection and segmentation heads. |
 | 09 | **[Sequence Models: RNNs, LSTMs, Seq2Seq](09-sequence-models-rnn-lstm.md)** | BPTT derived; the eigenvalue condition for exploding/vanishing recurrence; LSTM gates and the constant error carousel; GRU; bidirectional and deep RNNs; encoder–decoder; Bahdanau and Luong attention — the direct ancestor of the transformer; CTC; teacher forcing and exposure bias. |
 
@@ -85,7 +85,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | # | Chapter | Contents |
 |---|---|---|
 | 10 | **[Tokenization, Embeddings & Vectorization](10-tokenization-embeddings-vectorization.md)** | One-hot → count vectors → TF-IDF → word2vec (skip-gram with negative sampling, derived) → GloVe → contextual embeddings; BPE, WordPiece, Unigram/SentencePiece with the algorithms; vocabulary size trade-offs; embedding matrices, tying, and factorization; sentence embeddings and vector databases; ANN search (HNSW, IVF-PQ). |
-| 11 | **[Attention & the Transformer](11-attention-and-transformers.md)** | Attention from first principles; the $\sqrt{d_k}$ derivation; self- vs cross-attention; multi-head and what heads specialize in; causal masking; the full encoder and decoder block; pre-LN vs post-LN; the FFN as key–value memory; residual stream as a communication channel; complete FLOP and parameter accounting; Mixture-of-Experts. |
+| 11 | **[Attention & the Transformer](11-attention-and-transformers.md)** | Attention from first principles; the $`\sqrt{d_k}`$ derivation; self- vs cross-attention; multi-head and what heads specialize in; causal masking; the full encoder and decoder block; pre-LN vs post-LN; the FFN as key–value memory; residual stream as a communication channel; complete FLOP and parameter accounting; Mixture-of-Experts. |
 | 12 | **[Positional Information & Long Context](12-positional-encoding-long-context.md)** | Why permutation equivariance forces the issue; sinusoidal, learned, relative (T5, Shaw); **RoPE derived in full**; ALiBi; NoPE; context extension (PI, NTK-aware, YaRN); efficient attention: sparse, Longformer, Linformer, Performer; **FlashAttention's tiling and online softmax**; MQA/GQA/MLA; state-space models (S4, Mamba) and linear attention. |
 | 13 | **[GPT: Autoregressive Language Modelling](13-gpt-autoregressive-language-models.md)** | The next-token objective and why it is enough; the GPT-1→2→3→4 architectural lineage; in-context learning and induction heads; decoding strategies (greedy, beam, top-$k$, nucleus, min-$p$, temperature, contrastive, typical); repetition and degeneration; perplexity and its pitfalls; BERT/T5 contrast and the encoder–decoder-vs-decoder-only question. |
 | 14 | **[Training LLMs at Scale](14-training-llms-at-scale.md)** | Data: sourcing, dedup (MinHash/SimHash), filtering, curriculum, contamination; the training stack; fp16/bf16/fp8 and loss scaling; data/tensor/pipeline/sequence parallelism; ZeRO stages; gradient checkpointing arithmetic; the memory budget formula; loss spikes and instabilities (z-loss, QK-norm); throughput accounting (MFU). |
@@ -100,7 +100,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 |---|---|---|
 | 19 | **[Generative Models: The Taxonomy](19-generative-models-taxonomy.md)** | The trilemma (quality / diversity / speed); autoregressive models; **VAEs with the full ELBO, reparameterization, and posterior collapse**; VQ-VAE and straight-through; **GANs with the optimal discriminator and JS-divergence result derived**; mode collapse; WGAN and the Kantorovich–Rubinstein duality; normalizing flows and the change-of-variables formula; energy-based models and contrastive divergence; evaluation (FID, IS, precision/recall, and their failure modes). |
 | 20 | **[Diffusion Models](20-diffusion-models.md)** | The forward process and its closed form; the exact posterior derived; the variational bound term by term; why $\epsilon$-prediction; $v$-prediction and SNR weighting; **the score-matching connection**; the SDE/probability-flow-ODE view; DDIM and deterministic sampling; noise schedules (linear, cosine, shifted); classifier and classifier-free guidance derived; latent diffusion; consistency and distillation models; flow matching and rectified flow. |
-| 21 | **[Discrete Diffusion & Conditional Generation](21-discrete-diffusion-and-conditioning.md)** | Categorical forward processes; **D3PM transition matrices $Q_t$, cumulative $\bar Q_t$, exact posterior, and the full loss including the auxiliary $x_0$ term**; uniform, absorbing, and structured kernels; SEDD and the concrete score; MDLM; conditioning mechanisms compared (concatenation, cross-attention, FiLM, **AdaLN-Zero**); the DiT architecture block by block; discrete guidance; conditioning collapse diagnostics. |
+| 21 | **[Discrete Diffusion & Conditional Generation](21-discrete-diffusion-and-conditioning.md)** | Categorical forward processes; **D3PM transition matrices $`Q_t`$, cumulative $`\bar Q_t`$, exact posterior, and the full loss including the auxiliary $`x_0`$ term**; uniform, absorbing, and structured kernels; SEDD and the concrete score; MDLM; conditioning mechanisms compared (concatenation, cross-attention, FiLM, **AdaLN-Zero**); the DiT architecture block by block; discrete guidance; conditioning collapse diagnostics. |
 
 ### Part VI — Classical Machine Learning
 
@@ -131,7 +131,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 |---|---|---|
 | 30 | **[Double Descent, Grokking & the NTK](30-double-descent-grokking-ntk.md)** | Model-wise, epoch-wise, and sample-wise double descent; **the minimum-norm interpolation analysis and the pole at the interpolation threshold**; effective vs raw parameter count; benign overfitting; the neural tangent kernel derived and its lazy-training regime; feature learning vs kernel regime; **grokking: the delayed-generalization phenomenon, the weight-norm mechanism, and progress measures**; the role of weight decay and representation formation. |
 | 31 | **[Neural Collapse, Implicit Bias & Lottery Tickets](31-neural-collapse-implicit-bias-lottery-tickets.md)** | **Neural collapse NC1–NC4 and the simplex ETF geometry derived**; the unconstrained-features model; **the implicit bias of gradient descent toward the max-margin solution**, with the $O(1/\log t)$ rate; Adam's different bias; flat minima, sharpness measures, and their reparameterization problem; the SDE temperature argument; **the Lottery Ticket Hypothesis, iterative magnitude pruning, rewinding, transfer, and the strong LTH**; linear mode connectivity and permutation symmetry. |
-| 32 | **[Mechanistic Interpretability & Superposition](32-mechanistic-interpretability-superposition.md)** | Features, circuits, and the linear representation hypothesis; **superposition, the toy model, and the sparsity/importance phase diagram**; polysemanticity; **sparse autoencoders, the $\ell_1$ objective, dead features, and JumpReLU/TopK variants**; the residual stream as a bandwidth-limited channel; QK and OV circuits; induction heads and in-context learning; activation patching, path patching, and causal scrubbing; probing and its confounds; steering vectors; what interpretability has and has not established. |
+| 32 | **[Mechanistic Interpretability & Superposition](32-mechanistic-interpretability-superposition.md)** | Features, circuits, and the linear representation hypothesis; **superposition, the toy model, and the sparsity/importance phase diagram**; polysemanticity; **sparse autoencoders, the $`\ell_1`$ objective, dead features, and JumpReLU/TopK variants**; the residual stream as a bandwidth-limited channel; QK and OV circuits; induction heads and in-context learning; activation patching, path patching, and causal scrubbing; probing and its confounds; steering vectors; what interpretability has and has not established. |
 | 33 | **[Calibration, Uncertainty & Robustness](33-calibration-uncertainty-robustness.md)** | Proper scoring rules; ECE and its estimator bias; temperature scaling, Platt, isotonic; aleatoric vs epistemic uncertainty; deep ensembles, MC dropout, SWAG, Laplace approximation; conformal prediction with the coverage guarantee derived; OOD detection (MSP, energy, Mahalanobis, ODIN); distribution shift taxonomy; adversarial examples, PGD, adversarial training, certified defences; spurious correlations and group robustness (IRM, GroupDRO). |
 
 ### Part X — Reference
@@ -169,12 +169,12 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 |---|---|
 | $x, y$ | input, label |
 | $\theta, w$ | parameters |
-| $f_\theta$ | the model |
+| $`f_\theta`$ | the model |
 | $\mathcal{L}, \hat{\mathcal{L}}$ | population loss, empirical loss |
 | $\eta, \alpha$ | learning rate |
-| $g_t$ | gradient at step $t$ |
+| $`g_t`$ | gradient at step $t$ |
 | $n$ | training set size |
-| $d, d_{\text{model}}$ | input / hidden dimension |
+| $`d, d_{\text{model}}`$ | input / hidden dimension |
 | $N$ or $p$ | parameter count |
 | $D$ | number of training tokens (Ch. 15) |
 | $B$ | batch size |
@@ -182,11 +182,11 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | $T$ | sequence length (Part IV) or horizon (Part VII) or diffusion steps (Part V) — disambiguated per chapter |
 | $H(\cdot)$, $\mathrm{KL}(\cdot\|\cdot)$ | entropy, KL divergence |
 | $\odot$ | elementwise product |
-| $\lambda_{\max}(H)$ | top Hessian eigenvalue ("sharpness") |
+| $`\lambda_{\max}(H)`$ | top Hessian eigenvalue ("sharpness") |
 | $\gamma$ | discount factor (Part VII) |
-| $\beta_t, \alpha_t, \bar\alpha_t$ | diffusion schedule quantities |
+| $`\beta_t, \alpha_t, \bar\alpha_t`$ | diffusion schedule quantities |
 
-Vectors are columns. $\nabla_\theta\mathcal{L}$ has the same shape as $\theta$.
+Vectors are columns. $`\nabla_\theta\mathcal{L}`$ has the same shape as $\theta$.
 
 > **If any symbol in that table is unfamiliar**, [Chapter 00](00-notation-and-math-primer.md) explains all of them, plus the ones this table assumes you already know. It also flags the  traps — $\sigma$ means a standard deviation, a singular value, the sigmoid function, *and* a generic activation, depending entirely on context; $\bar y$ in this book usually means $\partial\mathcal{L}/\partial y$ rather than an average; and the vertical bar in $p(x\mid y)$ means "given," not division.
 
@@ -210,9 +210,9 @@ Derived facts referenced later:
 
 ▸ A 13-epoch gap with no new best equals **29,562 parameter updates** — the model changed enormously; only the record stood still.
 
-▸ AdamW with $\beta_2=0.999$ has a memory horizon of $1/(1-\beta_2) = 1{,}000$ steps $= 0.44$ epochs. **The optimizer's entire memory is shorter than half an epoch**, so it cannot encode a multi-epoch plateau even in principle.
+▸ AdamW with $`\beta_2=0.999`$ has a memory horizon of $`1/(1-\beta_2) = 1{,}000`$ steps $= 0.44$ epochs. **The optimizer's entire memory is shorter than half an epoch**, so it cannot encode a multi-epoch plateau even in principle.
 
-▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}$ under the same null — *that* is the evidence of  improvement.
+▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $`\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629`$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}$ under the same null — *that* is the evidence of  improvement.
 
 The full analysis is Chapter 3 §3.6. The pattern generalizes to any noisy metric tracked by its running minimum.
 

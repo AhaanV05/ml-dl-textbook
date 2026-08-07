@@ -8,18 +8,18 @@
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $h_{i,c}$ | "h-i-c" | The **feature vector** of example $i$ from class $c$, taken from the second-to-last layer |
-| $\mu_c$ | "mu-c" | The **class mean** — average feature vector of class $c$ |
-| $\mu_G$ | "mu-G" | The **global mean** — average over everything |
-| $\tilde\mu_c$ | "mu-c tilde" | The **centred** class mean, $\mu_c - \mu_G$ |
-| $\Sigma_W$ | "Sigma-W" | **Within-class scatter** — how spread out one class's features are |
-| $w_c$ | "w-c" | The classifier's **weight vector** for class $c$ |
+| $`h_{i,c}`$ | "h-i-c" | The **feature vector** of example $i$ from class $c$, taken from the second-to-last layer |
+| $`\mu_c`$ | "mu-c" | The **class mean** — average feature vector of class $c$ |
+| $`\mu_G`$ | "mu-G" | The **global mean** — average over everything |
+| $`\tilde\mu_c`$ | "mu-c tilde" | The **centred** class mean, $`\mu_c - \mu_G`$ |
+| $`\Sigma_W`$ | "Sigma-W" | **Within-class scatter** — how spread out one class's features are |
+| $`w_c`$ | "w-c" | The classifier's **weight vector** for class $c$ |
 | $C$ | "C" | The **number of classes** |
 | $\langle a,b\rangle$ | "inner product" | Dot product — a similarity/alignment score |
 | $\vartheta$ | "theta" | The **angle** between two class means |
-| $\hat w_{\text{SVM}}$ | "w-hat SVM" | The **max-margin** solution a support vector machine would find |
+| $`\hat w_{\text{SVM}}`$ | "w-hat SVM" | The **max-margin** solution a support vector machine would find |
 | $\frac{w(t)}{\|w(t)\|}$ | "w over norm w" | The **direction** of the weights, with length divided out |
-| $\theta_0$ | "theta-zero" | The **initialization** — weights before any training |
+| $`\theta_0`$ | "theta-zero" | The **initialization** — weights before any training |
 | $O(1/\log t)$ | "order one over log t" | A **very** slow rate — see below |
 
 ### Abbreviations used in this chapter
@@ -49,20 +49,20 @@ Keep training a classifier *past* the point where training error hits zero — i
 
 ### The four properties
 
-Let $h_{i,c}$ be the penultimate-layer feature of the $i$-th example of class $c$, $\mu_c$ the class mean, $\mu_G$ the global mean, and $w_c$ the classifier weight vector for class $c$.
+Let $`h_{i,c}`$ be the penultimate-layer feature of the $i$-th example of class $c$, $`\mu_c`$ the class mean, $`\mu_G`$ the global mean, and $`w_c`$ the classifier weight vector for class $c$.
 
-▸ **NC1 — Variability collapse.** Within-class scatter $\to0$: $\Sigma_W\to0$, so every example of a class maps to *the same point*.
+▸ **NC1 — Variability collapse.** Within-class scatter $\to0$: $`\Sigma_W\to0`$, so every example of a class maps to *the same point*.
 
-▸ **NC2 — Simplex ETF.** The centred class means $\tilde\mu_c=\mu_c-\mu_G$ become equinorm and equiangular, forming a **simplex equiangular tight frame**:
+▸ **NC2 — Simplex ETF.** The centred class means $`\tilde\mu_c=\mu_c-\mu_G`$ become equinorm and equiangular, forming a **simplex equiangular tight frame**:
 $$\frac{\langle\tilde\mu_c,\tilde\mu_{c'}\rangle}{\|\tilde\mu_c\|\|\tilde\mu_{c'}\|} \to \begin{cases}1 & c=c'\\[2pt] -\dfrac{1}{C-1} & c\ne c'\end{cases}$$
 
 ▸ **NC3 — Self-duality.** The classifier weights align with the class means: $W\propto \tilde M^\top$. The classifier and the features become the same object.
 
-▸ **NC4 — Simplification to nearest class centre.** The network's decision reduces to $\arg\min_c\|h-\mu_c\|$ — a nearest-centroid classifier.
+▸ **NC4 — Simplification to nearest class centre.** The network's decision reduces to $`\arg\min_c\|h-\mu_c\|`$ — a nearest-centroid classifier.
 
 ### Why $-\frac{1}{C-1}$
 
-▸ It is the **maximally separated** configuration for $C$ points on a sphere in $\ge C-1$ dimensions. Proof: if $\sum_c\tilde\mu_c=0$ (which centring enforces) and all have equal norm, then
+▸ It is the **maximally separated** configuration for $C$ points on a sphere in $\ge C-1$ dimensions. Proof: if $`\sum_c\tilde\mu_c=0`$ (which centring enforces) and all have equal norm, then
 $$0 = \Big\|\sum_c\tilde\mu_c\Big\|^2 = C\|\tilde\mu\|^2 + C(C-1)\|\tilde\mu\|^2\cos\vartheta \implies \cos\vartheta = -\frac{1}{C-1}$$
 ∎ For $C=3$ this is $-1/2$, i.e. 120° apart — an equilateral triangle. For large $C$, nearly orthogonal.
 
@@ -148,7 +148,7 @@ The answer cannot be capacity (Ch. 2 showed those bounds are vacuous; Ch. 30 sho
 
 ### The linear case, solved
 
-**Separable logistic regression** (Soudry, Hoffer & Srebro, 2018). The loss $\sum_i\log(1+e^{-y_i w^\top x_i})$ has no finite minimizer — $\|w\|\to\infty$. But the *direction* converges:
+**Separable logistic regression** (Soudry, Hoffer & Srebro, 2018). The loss $`\sum_i\log(1+e^{-y_i w^\top x_i})`$ has no finite minimizer — $\|w\|\to\infty$. But the *direction* converges:
 
 ▸ $$\frac{w(t)}{\|w(t)\|}\ \longrightarrow\ \frac{\hat w_{\text{SVM}}}{\|\hat w_{\text{SVM}}\|}$$
 
@@ -159,7 +159,7 @@ The answer cannot be capacity (Ch. 2 showed those bounds are vacuous; Ch. 30 sho
 2. **The margin at any finite time is far from optimal.** So the implicit bias is real but weak, and explicit regularization still helps.
 3. It gives a principled reason to train longer than the loss curve suggests.
 
-**Other cases:** gradient descent on **least squares** from $\theta_0=0$ converges to the **minimum $\ell_2$-norm** interpolant (it stays in the row space of $X$, which is the smallest-norm solution). Deep *linear* networks bias toward low-rank / low nuclear norm. Matrix factorization with small initialization biases toward low rank.
+**Other cases:** gradient descent on **least squares** from $`\theta_0=0`$ converges to the **minimum $`\ell_2`$-norm** interpolant (it stays in the row space of $X$, which is the smallest-norm solution). Deep *linear* networks bias toward low-rank / low nuclear norm. Matrix factorization with small initialization biases toward low rank.
 
 ### Nonlinear networks
 
@@ -206,7 +206,7 @@ Fully rigorous results are limited to special cases, but the established picture
 | Example | The unrequested preference |
 |---|---|
 | GD on separable logistic loss → max-margin direction | Widest gap, never asked for |
-| GD on least squares from $\theta_0 = 0$ → minimum $\ell_2$-norm interpolant | Smallest weights among perfect fits |
+| GD on least squares from $`\theta_0 = 0`$ → minimum $`\ell_2`$-norm interpolant | Smallest weights among perfect fits |
 | Deep *linear* nets → low-rank / low nuclear norm | Simplicity in rank |
 | Simplicity bias → low-frequency functions fit first | Smooth before jagged |
 
@@ -216,7 +216,7 @@ Fully rigorous results are limited to special cases, but the established picture
 |---|---|---|
 | Weight decay shrinking weights | You wrote it into the loss | **Explicit** regularization |
 | Dropout improving generalization | Deliberately added | Explicit stochastic regularization |
-| Early stopping | A decision you made | Explicit (though it *approximates* $\ell_2$, Ch. 7) |
+| Early stopping | A decision you made | Explicit (though it *approximates* $`\ell_2`$, Ch. 7) |
 | Data augmentation | You chose the invariances | Explicit, via the data |
 | A smaller model generalizing better | Capacity control by design | Explicit architectural choice |
 
@@ -226,11 +226,11 @@ Fully rigorous results are limited to special cases, but the established picture
 
 ### Adam has a different bias — and it's worse
 
-▸ SGD's bias is toward minimum $\ell_2$ norm / max $\ell_2$ margin. **Adam's coordinate-wise normalization changes the geometry**: its implicit bias is closer to $\ell_\infty$-geometry, i.e. toward maximum $\ell_1$-margin.
+▸ SGD's bias is toward minimum $`\ell_2`$ norm / max $`\ell_2`$ margin. **Adam's coordinate-wise normalization changes the geometry**: its implicit bias is closer to $`\ell_\infty`$-geometry, i.e. toward maximum $`\ell_1`$-margin.
 
 **This is the explanation for the persistent Adam-generalization gap** (Ch. 5 §5.6): Adam converges faster but often to a worse-generalizing solution on vision tasks, while being essential for transformers. It is a  difference in what the optimizer prefers, not merely a tuning artifact.
 
-▸ **This is also the correct reason to prefer AdamW over Adam+L2** (Ch. 5 §5.2). With Adam's preconditioner, an $\ell_2$ term added to the loss gets divided by $\sqrt{\hat v}$, so the effective decay differs per coordinate and no longer corresponds to any clean norm penalty. Decoupling restores it.
+▸ **This is also the correct reason to prefer AdamW over Adam+L2** (Ch. 5 §5.2). With Adam's preconditioner, an $`\ell_2`$ term added to the loss gets divided by $\sqrt{\hat v}$, so the effective decay differs per coordinate and no longer corresponds to any clean norm penalty. Decoupling restores it.
 
 ---
 
@@ -241,14 +241,14 @@ Fully rigorous results are limited to special cases, but the established picture
 Flat minima generalize better than sharp ones, because a flat minimum's loss is insensitive to parameter perturbation — and the train-to-test shift acts like a perturbation.
 
 **Measures of sharpness:**
-- $\lambda_{\max}(\nabla^2\mathcal{L})$ — the top Hessian eigenvalue (Ch. 5 §5.5's Edge of Stability quantity).
+- $`\lambda_{\max}(\nabla^2\mathcal{L})`$ — the top Hessian eigenvalue (Ch. 5 §5.5's Edge of Stability quantity).
 - $\mathrm{tr}(H)$ — average curvature.
-- $\max_{\|\epsilon\|\le\rho}\mathcal{L}(\theta+\epsilon)-\mathcal{L}(\theta)$ — worst-case within a ball; this is SAM's objective.
+- $`\max_{\|\epsilon\|\le\rho}\mathcal{L}(\theta+\epsilon)-\mathcal{L}(\theta)`$ — worst-case within a ball; this is SAM's objective.
 - The PAC-Bayes / MDL argument: a flat minimum needs fewer bits to specify to a given loss tolerance, and Chapter 2 §2.6 showed description length bounds generalization.
 
 ### The objection you must know
 
-▸ **Dinh et al. (2017): sharpness is not reparameterization-invariant.** For a ReLU network, the map $(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)$ leaves the function *exactly* unchanged, but scales the Hessian eigenvalues by $\alpha^{\pm2}$. **So any minimum can be made arbitrarily sharp or flat without changing the function at all.**
+▸ **Dinh et al. (2017): sharpness is not reparameterization-invariant.** For a ReLU network, the map $`(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)`$ leaves the function *exactly* unchanged, but scales the Hessian eigenvalues by $\alpha^{\pm2}$. **So any minimum can be made arbitrarily sharp or flat without changing the function at all.**
 
 Therefore naive sharpness cannot, by itself, explain generalization.
 
@@ -284,7 +284,7 @@ Typically 20% pruned per round, 15–30 rounds, reaching 90–99% sparsity.
 
 ### Rewinding — the necessary correction
 
-At ImageNet scale, resetting to $\theta_0$ **does not work**. The fix (Frankle et al., 2020): reset to $\theta_k$ for a small $k$ (0.1–7% of training) rather than to $\theta_0$.
+At ImageNet scale, resetting to $`\theta_0`$ **does not work**. The fix (Frankle et al., 2020): reset to $`\theta_k`$ for a small $k$ (0.1–7% of training) rather than to $`\theta_0`$.
 
 ▸ **"Weight rewinding" implies the ticket is not present at initialization but forms in the first few hundred steps.** Frankle called this the point of **linear mode connectivity** — the moment after which the network's trajectory becomes stable to SGD noise. Two runs branched before it end up in different basins; two runs branched after it end up in the same one. **The unstated qualification of the original LTH is that "initialization" means "shortly after initialization" for any realistic model.**
 
@@ -306,16 +306,16 @@ At ImageNet scale, resetting to $\theta_0$ **does not work**. The fix (Frankle e
 
 ▸ **This reframes what overparameterization is for.** The usual story is that extra parameters add capacity. The lottery story says they add **draws**: a wide network isn't one model with many knobs, it's an ensemble of enormously many candidate subnetworks, and training amplifies whichever ones began in a favourable spot.
 
-**Why step 4 is the whole hypothesis.** The procedure resets surviving weights to their **original random values** $\theta_0$, not to fresh random values. That distinction is everything:
+**Why step 4 is the whole hypothesis.** The procedure resets surviving weights to their **original random values** $`\theta_0`$, not to fresh random values. That distinction is everything:
 
 | What you reset to | Result |
 |---|---|
-| The original $\theta_0$ values | Works — matches full network accuracy |
+| The original $`\theta_0`$ values | Works — matches full network accuracy |
 | **Fresh** random values, same mask | **Fails badly** |
 
 ▸ So the winning ticket is the **pair (mask, initialization)**, not the mask alone. The specific starting numbers matter, not just which connections exist. **The structure is not sufficient** — and that is what makes the claim surprising rather than obvious.
 
-**Why rewinding matters, and what it quietly concedes.** At ImageNet scale, resetting to $\theta_0$ stops working; you must reset to $\theta_k$ after a small amount of training. That is a real qualification: **the ticket isn't present at initialization, it forms during the first few hundred steps.** Before that point two runs diverge into different basins; after it they stay in the same one. For any realistic model, "the winning initialization" means "shortly after initialization."
+**Why rewinding matters, and what it quietly concedes.** At ImageNet scale, resetting to $`\theta_0`$ stops working; you must reset to $`\theta_k`$ after a small amount of training. That is a real qualification: **the ticket isn't present at initialization, it forms during the first few hundred steps.** Before that point two runs diverge into different basins; after it they stay in the same one. For any realistic model, "the winning initialization" means "shortly after initialization."
 
 **The strong version, and why it's startling.** A large enough random network contains a subnetwork that performs well **with no training at all** — found purely by choosing which weights to keep.
 
@@ -393,7 +393,7 @@ At ImageNet scale, resetting to $\theta_0$ **does not work**. The fix (Frankle e
 
 Two networks trained from the *same* initialization with different data order are usually **linearly** connected (the straight line between them has low loss). Two networks from *different* initializations are not — the barrier is large.
 
-▸ **The resolution (Entezari et al.; Ainsworth et al., "Git Re-Basin"): permutation symmetry.** A neural network's hidden units can be permuted arbitrarily without changing the function, so each functional solution corresponds to $\prod_\ell(n_\ell!)$ parameter settings. Two independently-trained networks may be in the *same* basin but expressed under different permutations.
+▸ **The resolution (Entezari et al.; Ainsworth et al., "Git Re-Basin"): permutation symmetry.** A neural network's hidden units can be permuted arbitrarily without changing the function, so each functional solution corresponds to $`\prod_\ell(n_\ell!)`$ parameter settings. Two independently-trained networks may be in the *same* basin but expressed under different permutations.
 
 **Align the units first** (by matching activations or weights, solved as a linear assignment problem), and the barrier largely disappears:
 

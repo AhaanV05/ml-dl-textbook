@@ -12,25 +12,25 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $T$ | "T" | **Sequence length** — how many tokens are in the input |
-| $d$, $d_{\text{model}}$ | "d", "d-model" | The **width** of the model: how many numbers describe one token |
+| $d$, $`d_{\text{model}}`$ | "d", "d-model" | The **width** of the model: how many numbers describe one token |
 | $Q,K,V$ | "queries, keys, values" | Three different learned views of the same input — what each position **asks**, what it **advertises**, and what it **hands over** |
-| $W_Q,W_K,W_V,W_O$ | "W-Q, W-K, W-V, W-O" | The weight matrices that produce $Q,K,V$, and the one that recombines the heads |
-| $d_k$, $d_v$ | "d-k", "d-v" | Width of one head's keys/queries, and of its values |
-| $\alpha_{ij}$ | "alpha i-j" | **Attention weight**: what fraction of position $i$'s update comes from position $j$ |
+| $`W_Q,W_K,W_V,W_O`$ | "W-Q, W-K, W-V, W-O" | The weight matrices that produce $Q,K,V$, and the one that recombines the heads |
+| $`d_k`$, $`d_v`$ | "d-k", "d-v" | Width of one head's keys/queries, and of its values |
+| $`\alpha_{ij}`$ | "alpha i-j" | **Attention weight**: what fraction of position $i$'s update comes from position $j$ |
 | $QK^\top$ | "Q K transpose" | The $T\times T$ grid of every query's match score against every key |
 | $\mathrm{softmax}(z)$ | "softmax of z" | Turn a row of scores into positive numbers summing to 1 |
-| $\sqrt{d_k}$ | "root d-k" | The divisor that keeps scores from saturating the softmax |
+| $`\sqrt{d_k}`$ | "root d-k" | The divisor that keeps scores from saturating the softmax |
 | $h$ | "h" | Number of **attention heads** |
-| $\delta_{ij}$ | "Kronecker delta" | 1 if $i=j$, else 0 — an `if i == j` written as a symbol |
+| $`\delta_{ij}`$ | "Kronecker delta" | 1 if $i=j$, else 0 — an `if i == j` written as a symbol |
 | $-\infty$ | "minus infinity" | A masked-out score, since $e^{-\infty}=0$ |
 | $L$ | "L" | Number of **layers** in the stack |
-| $d_{\text{ff}}$ | "d-f-f" | Width of the feed-forward hidden layer, usually $4d$ |
+| $`d_{\text{ff}}`$ | "d-f-f" | Width of the feed-forward hidden layer, usually $4d$ |
 | $\phi(\cdot)$ | "phi" | A generic activation function (ReLU, GELU, SiLU …) |
 | $\odot$ | "elementwise product" | Multiply matching entries and keep them separate (Ch. 0 §0.8) |
 | $N$, $D$, $C$ | "N, D, C" | Parameter count, training-token count, total training FLOPs |
 | $E$ | "E" | Number of **experts** in a mixture-of-experts layer |
 | $\mathrm{TopK}(\cdot)$ | "top-k" | Keep the $k$ largest entries, discard the rest |
-| $f_i$, $P_i$ | "f-i", "P-i" | Fraction of tokens routed to expert $i$; mean router probability for expert $i$ |
+| $`f_i`$, $`P_i`$ | "f-i", "P-i" | Fraction of tokens routed to expert $i$; mean router probability for expert $i$ |
 | $\mathsf{TC}^0$ | "T-C-zero" | A **complexity class**: what constant-depth threshold circuits can compute |
 
 ### Abbreviations used in this chapter
@@ -76,13 +76,13 @@ Suppose we want position $i$'s new representation to be a mixture of all positio
 
 $$y_i = \sum_j \alpha_{ij}v_j,\qquad \sum_j\alpha_{ij}=1,\ \alpha_{ij}\ge0$$
 
-We need $\alpha_{ij}$ to depend on how relevant $j$ is *to $i$*. Use a dot product as the relevance score and softmax to normalize. Give each position three different learned projections of its embedding so that "what I'm looking for" (query), "what I contain" (key), and "what I pass on" (value) can be different things:
+We need $`\alpha_{ij}`$ to depend on how relevant $j$ is *to $i$*. Use a dot product as the relevance score and softmax to normalize. Give each position three different learned projections of its embedding so that "what I'm looking for" (query), "what I contain" (key), and "what I pass on" (value) can be different things:
 
 $$Q = XW_Q,\qquad K = XW_K,\qquad V = XW_V$$
 
 ▸ $$\boxed{\ \mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V\ }$$
 
-Shapes: $X\in\mathbb{R}^{T\times d}$, $W_Q,W_K\in\mathbb{R}^{d\times d_k}$, $W_V\in\mathbb{R}^{d\times d_v}$, scores $\in\mathbb{R}^{T\times T}$, output $\in\mathbb{R}^{T\times d_v}$.
+Shapes: $X\in\mathbb{R}^{T\times d}$, $`W_Q,W_K\in\mathbb{R}^{d\times d_k}`$, $`W_V\in\mathbb{R}^{d\times d_v}`$, scores $\in\mathbb{R}^{T\times T}$, output $`\in\mathbb{R}^{T\times d_v}`$.
 
 #### Reading the mixing equation first
 
@@ -92,13 +92,13 @@ $$y_i = \sum_j \alpha_{ij}v_j,\qquad \sum_j\alpha_{ij}=1,\ \alpha_{ij}\ge0$$
 
 | Piece | Read aloud | Meaning |
 |---|---|---|
-| $y_i$ | "y-i" | The **new** representation of position $i$ |
-| $v_j$ | "v-j" | What position $j$ has to offer |
-| $\alpha_{ij}$ | "alpha i-j" | How much of $j$'s offering goes into $i$'s update |
-| $\sum_j \alpha_{ij}=1$ | "the alphas sum to one" | The weights are shares of a fixed budget |
-| $\alpha_{ij}\ge 0$ | "alpha is non-negative" | You can take some of $j$, or none — never a negative amount |
+| $`y_i`$ | "y-i" | The **new** representation of position $i$ |
+| $`v_j`$ | "v-j" | What position $j$ has to offer |
+| $`\alpha_{ij}`$ | "alpha i-j" | How much of $j$'s offering goes into $i$'s update |
+| $`\sum_j \alpha_{ij}=1`$ | "the alphas sum to one" | The weights are shares of a fixed budget |
+| $`\alpha_{ij}\ge 0`$ | "alpha is non-negative" | You can take some of $j$, or none — never a negative amount |
 
-▸ **Those two constraints together mean $y_i$ is a weighted average, and a weighted average is a *soft selection*.** If $\alpha_{i3}=1$ and everything else is 0, position $i$ has copied position 3 exactly. If the weights are spread evenly, it has blended everyone. Every intermediate case is available. **This is the whole reason attention is differentiable: hard lookup ("fetch item 3") has no gradient, but a soft weighted average does.**
+▸ **Those two constraints together mean $`y_i`$ is a weighted average, and a weighted average is a *soft selection*.** If $`\alpha_{i3}=1`$ and everything else is 0, position $i$ has copied position 3 exactly. If the weights are spread evenly, it has blended everyone. Every intermediate case is available. **This is the whole reason attention is differentiable: hard lookup ("fetch item 3") has no gradient, but a soft weighted average does.**
 
 > **Analogy.** A dictionary lookup returns exactly one entry: `d["cat"]` or a `KeyError`. Attention is a dictionary that returns 70% of "cat," 20% of "kitten," and 10% of "feline" — because the query didn't quite match anything and it would rather blend than fail. You can differentiate a blend. You cannot differentiate a `KeyError`.
 
@@ -108,21 +108,21 @@ $$\mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}
 
 Read the whole thing aloud once — *"softmax of Q K-transpose over root d-k, times V"* — then take it in four moves, inside out.
 
-**Move 1 — $QK^\top$: every question meets every advertisement.** $Q$ is $T\times d_k$ (one query row per position) and $K^\top$ is $d_k\times T$. By the shape rule (Ch. 0 §0.8), $(T\times d_k)(d_k\times T) = T\times T$. Entry $(i,j)$ of that grid is $q_i^\top k_j$ — the dot product of position $i$'s query with position $j$'s key, i.e. **how well does what $i$ is looking for match what $j$ is offering?** One matrix multiply computes all $T^2$ of those comparisons at once, and that is where the $\mathcal{O}(T^2)$ cost of transformers comes from. It is not hidden anywhere subtle; it is this one product.
+**Move 1 — $QK^\top$: every question meets every advertisement.** $Q$ is $`T\times d_k`$ (one query row per position) and $K^\top$ is $`d_k\times T`$. By the shape rule (Ch. 0 §0.8), $`(T\times d_k)(d_k\times T) = T\times T`$. Entry $(i,j)$ of that grid is $`q_i^\top k_j`$ — the dot product of position $i$'s query with position $j$'s key, i.e. **how well does what $i$ is looking for match what $j$ is offering?** One matrix multiply computes all $T^2$ of those comparisons at once, and that is where the $\mathcal{O}(T^2)$ cost of transformers comes from. It is not hidden anywhere subtle; it is this one product.
 
-**Move 2 — divide by $\sqrt{d_k}$.** Keeps the numbers in a range where softmax is responsive. Derived properly in §11.2.
+**Move 2 — divide by $`\sqrt{d_k}`$.** Keeps the numbers in a range where softmax is responsive. Derived properly in §11.2.
 
-**Move 3 — softmax, applied along each row.** Each row of the $T\times T$ grid becomes a probability distribution: non-negative, summing to 1. **Row $i$ is now exactly the $\alpha_{ij}$ from the mixing equation.** The row-wise detail matters: position $i$'s weights over all $j$ sum to 1, but a column need not sum to anything in particular — attention is a *directed* relation.
+**Move 3 — softmax, applied along each row.** Each row of the $T\times T$ grid becomes a probability distribution: non-negative, summing to 1. **Row $i$ is now exactly the $`\alpha_{ij}`$ from the mixing equation.** The row-wise detail matters: position $i$'s weights over all $j$ sum to 1, but a column need not sum to anything in particular — attention is a *directed* relation.
 
-**Move 4 — multiply by $V$.** $(T\times T)(T\times d_v) = T\times d_v$. Each output row is the weighted average of all the value rows. Shapes come out right, which is the check Chapter 0 §0.1 recommends doing first.
+**Move 4 — multiply by $V$.** $`(T\times T)(T\times d_v) = T\times d_v`$. Each output row is the weighted average of all the value rows. Shapes come out right, which is the check Chapter 0 §0.1 recommends doing first.
 
-**Now work it with actual numbers.** Take $T=3$ tokens and $d_k=2$, and suppose the projections have produced:
+**Now work it with actual numbers.** Take $T=3$ tokens and $`d_k=2`$, and suppose the projections have produced:
 
 $$q_1 = (1,\ 0),\qquad k_1 = (1,\ 0),\quad k_2 = (0.6,\ 0.8),\quad k_3 = (-1,\ 0)$$
 
-with values $v_1 = (10, 0)$, $v_2 = (0, 10)$, $v_3 = (5,5)$.
+with values $`v_1 = (10, 0)`$, $`v_2 = (0, 10)`$, $`v_3 = (5,5)`$.
 
-| $j$ | $q_1^\top k_j$ | $\div\sqrt{2}$ | $\exp(\cdot)$ | $\alpha_{1j}$ |
+| $j$ | $`q_1^\top k_j`$ | $\div\sqrt{2}$ | $\exp(\cdot)$ | $`\alpha_{1j}`$ |
 |---|---|---|---|---|
 | 1 | $1.0$ | $0.707$ | $2.028$ | $0.501$ |
 | 2 | $0.6$ | $0.424$ | $1.529$ | $0.377$ |
@@ -134,13 +134,13 @@ $$y_1 = 0.501(10,0) + 0.377(0,10) + 0.122(5,5) = (5.62,\ 4.38)$$
 
 ▸ **Read what happened: position 1 took about half of token 1, a bit over a third of token 2, and a token pointing the opposite way still contributed 12%.** Softmax never returns exactly zero. That is deliberate — a hard zero would kill the gradient to that position and it could never be recovered.
 
-**Now the three projections, decoded.** $Q = XW_Q$ reads *"multiply the input matrix by a learned weight matrix"* — one matrix multiply producing all $T$ queries at once. Each position's embedding is asked three separate questions:
+**Now the three projections, decoded.** $`Q = XW_Q`$ reads *"multiply the input matrix by a learned weight matrix"* — one matrix multiply producing all $T$ queries at once. Each position's embedding is asked three separate questions:
 
 | Projection | The question it answers | Poster-session analogy |
 |---|---|---|
-| $W_Q$ | *"What am I looking for?"* | The question you walk in with |
-| $W_K$ | *"What am I, for matching purposes?"* | The title on your poster |
-| $W_V$ | *"What do I contribute if selected?"* | The content of the poster |
+| $`W_Q`$ | *"What am I looking for?"* | The question you walk in with |
+| $`W_K`$ | *"What am I, for matching purposes?"* | The title on your poster |
+| $`W_V`$ | *"What do I contribute if selected?"* | The content of the poster |
 
 ▸ **The single most important structural fact about attention: the weights $\alpha$ are computed from the data, not stored in the parameters.** A convolution's kernel is fixed after training and applies identically to every input. Attention's mixing pattern is recomputed for every sequence. **This is why one set of weights can handle "the cat sat on the mat" and a Python traceback** — the routing is a function of the input, so the same parameters implement different data flows.
 
@@ -160,10 +160,10 @@ Both arguments deserve concrete form, because "you need three matrices" sounds a
 
 **Case 1: $Q = K$.** Then the score grid is $XW(XW)^\top$, which is **symmetric** — score$(i,j)$ = score$(j,i)$. Two consequences, both fatal:
 
-- **Self-attention becomes self-obsession.** A vector's dot product with itself is $\lVert q_i\rVert^2$, which by the Cauchy–Schwarz inequality is at least as large as its dot product with any other vector of the same length. **Every token's highest score is itself**, so every token mostly copies itself, and the layer computes nothing.
+- **Self-attention becomes self-obsession.** A vector's dot product with itself is $`\lVert q_i\rVert^2`$, which by the Cauchy–Schwarz inequality is at least as large as its dot product with any other vector of the same length. **Every token's highest score is itself**, so every token mostly copies itself, and the layer computes nothing.
 - **All relations become mutual.** "Adjective looks for the noun it modifies" and "noun looks for its adjectives" would be forced to have the same strength. But in *"the red car,"* `red` badly needs to know what it modifies, while `car` barely needs `red` at all. **Language is full of one-way dependencies**, and a symmetric matrix cannot express one.
 
-▸ **Separating $W_Q$ from $W_K$ is what makes the attention pattern a directed graph rather than an undirected one.**
+▸ **Separating $`W_Q`$ from $`W_K`$ is what makes the attention pattern a directed graph rather than an undirected one.**
 
 **Case 2: $V = K$.** Then whatever makes a token *findable* is also everything it can *deliver*. Consider a pronoun-resolution head: it wants to find the antecedent by matching on grammatical features (singular, animate, subject position), but what it wants to *retrieve* is the semantic content — who that entity actually is. ▸ **Matching on one property and transmitting another is the entire point of a lookup table**, and merging $K$ with $V$ turns a dictionary into a list.
 
@@ -181,7 +181,7 @@ Both arguments deserve concrete form, because "you need three matrices" sounds a
 | Bahdanau's 2014 decoder looking back over encoder states | The original: weights computed from a learned score, then normalized |
 | Cross-attention in an encoder–decoder, where queries come from the decoder and keys/values from the encoder | Same operation; only the source of $Q$ versus $K,V$ differs |
 | A retrieval system that embeds a query, softmaxes similarities over 10,000 documents, and returns a weighted blend of their embeddings | Attention over a corpus instead of a sequence — literally the same three lines |
-| Average pooling over $T$ tokens | The degenerate case $\alpha_{ij} = 1/T$ — a *constant* attention pattern, which is why it is a legitimate but uninteresting member of the family |
+| Average pooling over $T$ tokens | The degenerate case $`\alpha_{ij} = 1/T`$ — a *constant* attention pattern, which is why it is a legitimate but uninteresting member of the family |
 
 **❌ Near-misses — things that mix information across positions but are not attention**
 
@@ -201,34 +201,34 @@ Both arguments deserve concrete form, because "you need three matrices" sounds a
 
 > **Common misconception.** *"Softmax picks the best match."* Softmax is a *soft* argmax and it never returns exactly zero for anything. In the worked example above, a key pointing in the **opposite direction** to the query still received 12.2% of the weight. That is not a rounding artefact — it is the property that makes attention trainable, because a hard zero would send zero gradient to that position and the model could never learn to attend there later. **The leakage is the feature.**
 
-> **Common misconception.** *"$Q$, $K$, and $V$ are three different kinds of thing."* At the start of the layer they are three different **linear projections of the same vectors**. In self-attention, $Q = XW_Q$, $K = XW_K$, and $V = XW_V$ all come from the identical input $X$. The three names describe three *roles* the same token plays simultaneously — what it wants, how it advertises itself, and what it hands over. The misconception is tempting because the database analogy implies queries and keys live in different tables, and in cross-attention they  do.
+> **Common misconception.** *"$Q$, $K$, and $V$ are three different kinds of thing."* At the start of the layer they are three different **linear projections of the same vectors**. In self-attention, $`Q = XW_Q`$, $`K = XW_K`$, and $`V = XW_V`$ all come from the identical input $X$. The three names describe three *roles* the same token plays simultaneously — what it wants, how it advertises itself, and what it hands over. The misconception is tempting because the database analogy implies queries and keys live in different tables, and in cross-attention they  do.
 
 ---
 
-## 11.2 The $\sqrt{d_k}$ scaling — derive it, it's asked constantly
+## 11.2 The $`\sqrt{d_k}`$ scaling — derive it, it's asked constantly
 
-Assume $q,k\in\mathbb{R}^{d_k}$ have i.i.d. entries with mean 0 and variance 1. Then
+Assume $`q,k\in\mathbb{R}^{d_k}`$ have i.i.d. entries with mean 0 and variance 1. Then
 
 $$\mathbb{E}[q^\top k] = \sum_{i=1}^{d_k}\mathbb{E}[q_i]\mathbb{E}[k_i] = 0$$
 $$\mathrm{Var}(q^\top k) = \sum_{i=1}^{d_k}\mathrm{Var}(q_ik_i) = \sum_{i=1}^{d_k}\mathbb{E}[q_i^2]\mathbb{E}[k_i^2] = d_k$$
 
-▸ So the raw scores have standard deviation $\sqrt{d_k}$. Dividing by $\sqrt{d_k}$ restores unit variance.
+▸ So the raw scores have standard deviation $`\sqrt{d_k}`$. Dividing by $`\sqrt{d_k}`$ restores unit variance.
 
-#### Unpacking the $\sqrt{d_k}$ derivation
+#### Unpacking the $`\sqrt{d_k}`$ derivation
 
 Two lines of algebra, each doing one job. Take them apart.
 
-**The assumption.** "$q,k\in\mathbb{R}^{d_k}$ have i.i.d. entries with mean 0 and variance 1" says: each of the $d_k$ numbers in a query is drawn independently, averages to zero, and has typical size 1. **i.i.d.** is **independent and identically distributed** — the entries do not influence each other and all come from the same distribution. This is what you get at initialization, and it stays roughly true afterwards, which is enough for the argument.
+**The assumption.** "$`q,k\in\mathbb{R}^{d_k}`$ have i.i.d. entries with mean 0 and variance 1" says: each of the $`d_k`$ numbers in a query is drawn independently, averages to zero, and has typical size 1. **i.i.d.** is **independent and identically distributed** — the entries do not influence each other and all come from the same distribution. This is what you get at initialization, and it stays roughly true afterwards, which is enough for the argument.
 
-**Line 1 — the mean is zero.** $\mathbb{E}[q^\top k] = \sum_i \mathbb{E}[q_i]\mathbb{E}[k_i] = 0$. Each term factors into a product of expectations *because* $q_i$ and $k_i$ are independent, and each expectation is 0, so every term is 0. ▸ **Plain meaning: a random query and a random key have no reason to align, so on average they score zero.** Correct and unsurprising.
+**Line 1 — the mean is zero.** $`\mathbb{E}[q^\top k] = \sum_i \mathbb{E}[q_i]\mathbb{E}[k_i] = 0`$. Each term factors into a product of expectations *because* $`q_i`$ and $`k_i`$ are independent, and each expectation is 0, so every term is 0. ▸ **Plain meaning: a random query and a random key have no reason to align, so on average they score zero.** Correct and unsurprising.
 
-**Line 2 — the variance is $d_k$.** $\mathrm{Var}(q^\top k) = \sum_i \mathrm{Var}(q_ik_i) = \sum_i \mathbb{E}[q_i^2]\mathbb{E}[k_i^2] = d_k$. The first equality is *"variances of independent things add"*; the second uses $\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2$ with mean zero, so variance is just $\mathbb{E}[X^2]=1$. Each of the $d_k$ terms contributes $1\times1$, so the total is $d_k$.
+**Line 2 — the variance is $`d_k`$.** $`\mathrm{Var}(q^\top k) = \sum_i \mathrm{Var}(q_ik_i) = \sum_i \mathbb{E}[q_i^2]\mathbb{E}[k_i^2] = d_k`$. The first equality is *"variances of independent things add"*; the second uses $\mathrm{Var}(X)=\mathbb{E}[X^2]-\mathbb{E}[X]^2$ with mean zero, so variance is just $\mathbb{E}[X^2]=1$. Each of the $`d_k`$ terms contributes $1\times1$, so the total is $`d_k`$.
 
-▸ **Standard deviation is the square root of variance, so the scores have spread $\sqrt{d_k}$ — and that is the whole derivation.** Dividing by $\sqrt{d_k}$ brings it back to 1.
+▸ **Standard deviation is the square root of variance, so the scores have spread $`\sqrt{d_k}`$ — and that is the whole derivation.** Dividing by $`\sqrt{d_k}`$ brings it back to 1.
 
 > **Analogy.** A hundred people each guess whether a coin lands heads, scoring $+1$ or $-1$. The average score is 0. But the *spread* is not 0 — it is $\sqrt{100}=10$, so a total of $\pm20$ is entirely ordinary. Random contributions do not cancel exactly; they accumulate like the square root of how many there are. This is the same $\sqrt{n}$ that governs standard error (Ch. 1 §1.3.1), random-walk distance, and near-orthogonality in high dimensions (Ch. 1 §1.1.5). **It is probably the most reused number in this book.**
 
-**Sanity-check with the standard configuration.** $d_k = 64$, so unscaled scores have standard deviation $\sqrt{64} = 8$. Softmax cares about *differences* between scores, and among $T$ draws from a spread-8 distribution the top two commonly differ by several units. A gap of 10 means the larger term is $e^{10} \approx 22{,}000$ times the smaller — the softmax output is $0.99995$ on one entry. With scaling, the same gap becomes about 1.25, and $e^{1.25}\approx3.5$: a strong preference, not an absolute one.
+**Sanity-check with the standard configuration.** $`d_k = 64`$, so unscaled scores have standard deviation $\sqrt{64} = 8$. Softmax cares about *differences* between scores, and among $T$ draws from a spread-8 distribution the top two commonly differ by several units. A gap of 10 means the larger term is $e^{10} \approx 22{,}000$ times the smaller — the softmax output is $0.99995$ on one entry. With scaling, the same gap becomes about 1.25, and $e^{1.25}\approx3.5$: a strong preference, not an absolute one.
 
 ▸ **The general rule worth carrying out of this section: whenever a sum of $n$ random terms feeds a saturating nonlinearity, ask whether it needs dividing by $\sqrt n$.** He initialization does this for layer widths; attention does it for head dimension; the arithmetic is identical.
 
@@ -239,32 +239,32 @@ $$\frac{\partial p_i}{\partial z_j} = p_i(\delta_{ij}-p_j)$$
 
 If one score dominates, $p\to$ one-hot, and every entry of that Jacobian $\to0$. **The softmax saturates and its gradient vanishes.**
 
-**Numbers.** $d_k=64$, unscaled scores have SD 8. The gap between the largest and second-largest of $T$ such scores is several units, so $e^{\Delta}$ with $\Delta\approx10$ gives a softmax that is $>0.9999$ on one entry. Gradient $\approx p(1-p)\approx10^{-4}$. With scaling, SD is 1, gaps are $O(1)$, and the softmax stays in its responsive range.
+**Numbers.** $`d_k=64`$, unscaled scores have SD 8. The gap between the largest and second-largest of $T$ such scores is several units, so $e^{\Delta}$ with $\Delta\approx10$ gives a softmax that is $>0.9999$ on one entry. Gradient $\approx p(1-p)\approx10^{-4}$. With scaling, SD is 1, gaps are $O(1)$, and the softmax stays in its responsive range.
 
 ▸ **General principle worth extracting:** any time you feed a sum of $n$ terms into a saturating nonlinearity, check whether you need to divide by $\sqrt n$. This is the same variance-propagation argument as He initialization (Ch. 6 §6.4).
 
-**Related failure at scale — logit explosion.** During training, $\|q\|$ and $\|k\|$ can grow, re-saturating attention even with the $\sqrt{d_k}$ factor. Fix: **QK-normalization** (apply LayerNorm/RMSNorm to $Q$ and $K$ before the dot product), now standard in large models (Ch. 14 §14.6).
+**Related failure at scale — logit explosion.** During training, $\|q\|$ and $\|k\|$ can grow, re-saturating attention even with the $`\sqrt{d_k}`$ factor. Fix: **QK-normalization** (apply LayerNorm/RMSNorm to $Q$ and $K$ before the dot product), now standard in large models (Ch. 14 §14.6).
 
 #### What the softmax Jacobian says, and why saturation kills learning
 
 $$\frac{\partial p_i}{\partial z_j} = p_i(\delta_{ij}-p_j)$$
 
-**Decoding it.** $z$ is the vector of raw scores, $p = \mathrm{softmax}(z)$ the resulting probabilities. $\partial p_i/\partial z_j$ asks *"if I nudge score $j$, how much does probability $i$ move?"* And $\delta_{ij}$ is the **Kronecker delta** — 1 when $i=j$, 0 otherwise (Ch. 0 §0.6). It is an `if` statement written as a symbol, and it lets one formula cover two cases:
+**Decoding it.** $z$ is the vector of raw scores, $p = \mathrm{softmax}(z)$ the resulting probabilities. $`\partial p_i/\partial z_j`$ asks *"if I nudge score $j$, how much does probability $i$ move?"* And $`\delta_{ij}`$ is the **Kronecker delta** — 1 when $i=j$, 0 otherwise (Ch. 0 §0.6). It is an `if` statement written as a symbol, and it lets one formula cover two cases:
 
 | Case | Formula becomes | Reading |
 |---|---|---|
-| $i = j$ | $p_i(1-p_i)$ | Raising a score raises its own probability |
-| $i \ne j$ | $-p_ip_j$ | Raising one score **lowers** every other — probabilities are a fixed budget |
+| $i = j$ | $`p_i(1-p_i)`$ | Raising a score raises its own probability |
+| $i \ne j$ | $`-p_ip_j`$ | Raising one score **lowers** every other — probabilities are a fixed budget |
 
-**Now watch it die.** Put in the numbers from the saturated case, $p_i = 0.99995$:
+**Now watch it die.** Put in the numbers from the saturated case, $`p_i = 0.99995`$:
 
 $$p_i(1-p_i) = 0.99995 \times 0.00005 = 5\times10^{-5}$$
 
-Compare the healthy case $p_i = 0.5$: $0.5\times0.5 = 0.25$. ▸ **A factor of 5,000 difference in gradient magnitude, from a change that made the attention pattern "more confident."** The layer has effectively stopped learning where to look, and — this is the cruel part — it stopped while producing outputs that look perfectly reasonable. Saturation is silent.
+Compare the healthy case $`p_i = 0.5`$: $0.5\times0.5 = 0.25$. ▸ **A factor of 5,000 difference in gradient magnitude, from a change that made the attention pattern "more confident."** The layer has effectively stopped learning where to look, and — this is the cruel part — it stopped while producing outputs that look perfectly reasonable. Saturation is silent.
 
 > **Analogy.** A dimmer switch versus a light switch. Near the middle, a small turn of the dimmer visibly changes the brightness, so you can find the setting you want by feel. Pushed hard to one end, turning it further does nothing you can perceive — and if you are trying to *learn* the right setting by observing the effect of small adjustments, you have no information to learn from. Softmax with one dominant score is a dimmer jammed at the top.
 
-**Why $\sqrt{d_k}$ is not sufficient on its own.** The derivation assumed entries with variance 1. During training, nothing enforces that: the weight matrices $W_Q$ and $W_K$ grow, so $\lVert q\rVert$ and $\lVert k\rVert$ grow with them, and the dot product grows as their product. Divide by a constant $\sqrt{d_k}$ and you have corrected for **dimension** but not for **magnitude drift**. In very large models this shows up as attention logits climbing into the hundreds and training loss spiking or diverging.
+**Why $`\sqrt{d_k}`$ is not sufficient on its own.** The derivation assumed entries with variance 1. During training, nothing enforces that: the weight matrices $`W_Q`$ and $`W_K`$ grow, so $\lVert q\rVert$ and $\lVert k\rVert$ grow with them, and the dot product grows as their product. Divide by a constant $`\sqrt{d_k}`$ and you have corrected for **dimension** but not for **magnitude drift**. In very large models this shows up as attention logits climbing into the hundreds and training loss spiking or diverging.
 
 ▸ **QK-normalization fixes it at the source: normalize $Q$ and $K$ to fixed length *before* the dot product, so scores are bounded no matter what the weights do.** The pattern is worth naming because it recurs — *a scaling constant chosen at initialization is a one-time correction; a normalization layer is a permanent one.* Chapter 7's whole argument for normalization is this sentence, and Chapter 14 §14.6 covers the large-scale-training version.
 
@@ -284,9 +284,9 @@ Reading a contract with a team: one person tracks defined terms, one tracks date
 
 ▸ $$\mathrm{MHA}(X) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)W_O,\qquad \mathrm{head}_i = \mathrm{Attention}(XW_Q^i, XW_K^i, XW_V^i)$$
 
-with $d_k = d_v = d_{\text{model}}/h$, so the total parameter count and FLOP count match single-head attention at full width.
+with $`d_k = d_v = d_{\text{model}}/h`$, so the total parameter count and FLOP count match single-head attention at full width.
 
-**Standard config:** $d_{\text{model}}=512$, $h=8$, $d_k=64$. Or $d=4096$, $h=32$, $d_k=128$.
+**Standard config:** $`d_{\text{model}}=512`$, $h=8$, $`d_k=64`$. Or $d=4096$, $h=32$, $`d_k=128`$.
 
 #### Reading multi-head attention
 
@@ -294,25 +294,25 @@ $$\mathrm{MHA}(X) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)W_O,\q
 
 | Piece | Read aloud | What it does |
 |---|---|---|
-| $\mathrm{head}_i$ | "head i" | One complete attention operation, on its own narrow projections |
-| $W_Q^i$ | "W-Q superscript i" | Head $i$'s **own** query matrix — the superscript indexes the head, it is not a power |
+| $`\mathrm{head}_i`$ | "head i" | One complete attention operation, on its own narrow projections |
+| $`W_Q^i`$ | "W-Q superscript i" | Head $i$'s **own** query matrix — the superscript indexes the head, it is not a power |
 | $\mathrm{Concat}(\cdots)$ | "concatenate" | Lay the $h$ outputs side by side into one wide vector |
-| $W_O$ | "W-O" | A learned matrix that mixes the concatenated heads back to width $d$ |
+| $`W_O`$ | "W-O" | A learned matrix that mixes the concatenated heads back to width $d$ |
 
-**Follow the shapes, which is where the elegance is.** With $d_{\text{model}} = 512$ and $h = 8$, each head uses $d_k = d_v = 512/8 = 64$:
+**Follow the shapes, which is where the elegance is.** With $`d_{\text{model}} = 512`$ and $h = 8$, each head uses $`d_k = d_v = 512/8 = 64`$:
 
 1. Each head projects $X$ ($T\times512$) down to $T\times64$ — a **narrow** view.
 2. Each head attends within its own 64 dimensions, producing $T\times64$.
 3. Concatenating 8 of those gives $T\times512$ — back to full width.
-4. $W_O$ ($512\times512$) mixes them.
+4. $`W_O`$ ($512\times512$) mixes them.
 
 ▸ **The parameter count is identical to one head of full width.** $h$ heads at $d/h$ each is $h \times d \times (d/h) = d^2$ per projection — exactly what a single $d\times d$ projection costs. **Multi-head attention is free.** You are not buying extra capacity; you are *rearranging* the same capacity into several independent lookups instead of one.
 
 > **Analogy.** You have eight hours of staff time to read a contract. Option A: one lawyer reads it for eight hours with one question in mind. Option B: eight lawyers read it for one hour each, one tracking dates, one tracking dollar figures, one tracking obligations. Same cost. Option B catches far more, because the binding constraint was never reading time — it was that a single reader can only hold one question at a time.
 
-**Why "one softmax = one commitment" is the real argument.** A softmax row must sum to 1, so its mass is a fixed budget. If a token needs its syntactic head, its coreferent antecedent, *and* the previous token, a single distribution must divide 1.0 among three unrelated targets — and then the weighted average blends three incompatible things into mush. With three heads, each gets its own budget of 1.0, retrieves cleanly, and $W_O$ decides how to combine them afterwards. ▸ **Heads exist because attention's output is an average, and averaging unrelated things destroys them.**
+**Why "one softmax = one commitment" is the real argument.** A softmax row must sum to 1, so its mass is a fixed budget. If a token needs its syntactic head, its coreferent antecedent, *and* the previous token, a single distribution must divide 1.0 among three unrelated targets — and then the weighted average blends three incompatible things into mush. With three heads, each gets its own budget of 1.0, retrieves cleanly, and $`W_O`$ decides how to combine them afterwards. ▸ **Heads exist because attention's output is an average, and averaging unrelated things destroys them.**
 
-**The rank argument, decoded.** $QK^\top$ is $(T\times d_k)(d_k\times T)$, so by the shape rule its rank is at most $d_k$ (Ch. 1 §1.1.3) — a $T\times T$ grid that only has $d_k$ independent directions in it. For $T = 2048$ and $d_k = 64$, that is a 2048×2048 table with at most 64 degrees of freedom per side. A single wide head with $d_k = 512$ raises the cap to 512, but it is still **one** low-rank structure. Eight heads give a **sum of eight** independently-shaped patterns, which spans strictly more than one pattern of the same total width. **More small pieces beat one large piece, for the same reason a sum of eight rank-64 matrices is more expressive than one rank-512 matrix constrained to a single softmax.**
+**The rank argument, decoded.** $QK^\top$ is $`(T\times d_k)(d_k\times T)`$, so by the shape rule its rank is at most $`d_k`$ (Ch. 1 §1.1.3) — a $T\times T$ grid that only has $`d_k`$ independent directions in it. For $T = 2048$ and $`d_k = 64`$, that is a 2048×2048 table with at most 64 degrees of freedom per side. A single wide head with $`d_k = 512`$ raises the cap to 512, but it is still **one** low-rank structure. Eight heads give a **sum of eight** independently-shaped patterns, which spans strictly more than one pattern of the same total width. **More small pieces beat one large piece, for the same reason a sum of eight rank-64 matrices is more expressive than one rank-512 matrix constrained to a single softmax.**
 
 **On pruning.** Michel and colleagues found most heads can be removed at inference with little loss, which sounds like it refutes everything above. It doesn't, and the resolution is worth stating: ▸ **the heads are redundant in the *trained* model but appear to be necessary during *training*.** Extra heads seem to function like extra lottery tickets (Ch. 31) — many paths to a good solution, of which the optimizer only needs to find one. You cannot train the pruned network from scratch and get the same result, which is the signature of an optimization benefit rather than a capacity one.
 
@@ -320,7 +320,7 @@ $$\mathrm{MHA}(X) = \mathrm{Concat}(\mathrm{head}_1,\dots,\mathrm{head}_h)W_O,\q
 
 A single softmax produces **one** distribution per query. It must commit to one weighting. With $h$ heads you get $h$ distributions, so a token can simultaneously copy from its syntactic head, its coreferent antecedent, and the previous token.
 
-There is also a rank argument: $\mathrm{softmax}(QK^\top/\sqrt{d_k})$ is a $T\times T$ matrix built from a rank-$d_k$ score matrix. Multiple heads give a *sum* of $h$ such low-rank-driven operations, which is strictly more expressive than one at the same total width.
+There is also a rank argument: $`\mathrm{softmax}(QK^\top/\sqrt{d_k})`$ is a $T\times T$ matrix built from a rank-$`d_k`$ score matrix. Multiple heads give a *sum* of $h$ such low-rank-driven operations, which is strictly more expressive than one at the same total width.
 
 **Diminishing returns:** Michel et al. (2019) showed most heads can be pruned at inference with little loss — often 1 head per layer suffices for many layers. Heads are redundant, but the redundancy appears to help *optimization*.
 
@@ -460,9 +460,9 @@ $$\mathrm{FFN}(x) = W_2\,\phi(W_1x + b_1) + b_2$$
 | Step | Shape | What happens |
 |---|---|---|
 | $x$ | $d$ | One position's vector |
-| $W_1x + b_1$ | $d_{\text{ff}} = 4d$ | **Expand** to four times the width |
+| $`W_1x + b_1`$ | $`d_{\text{ff}} = 4d`$ | **Expand** to four times the width |
 | $\phi(\cdot)$ | $4d$ | Apply a nonlinearity elementwise ($\phi$ is "phi," a stand-in for ReLU/GELU/SiLU) |
-| $W_2(\cdot) + b_2$ | $d$ | **Contract** back to the original width |
+| $`W_2(\cdot) + b_2`$ | $d$ | **Contract** back to the original width |
 
 At $d = 4096$: a $4096$-vector expands to $16{,}384$, gets bent, and comes back to $4096$. ▸ **The expand-then-contract shape is doing real work. Without the widening, a two-layer network with a nonlinearity between could only represent a limited set of functions; the wide middle is where patterns get separated so a linear map can act on them.** It is the same instinct as a kernel method — project into a higher-dimensional space where the problem becomes easy, then project back.
 
@@ -472,32 +472,32 @@ At $d = 4096$: a $4096$-vector expands to $16{,}384$, gets bent, and comes back 
 
 **"Why $4\times$?"** — the honest answer is that it was chosen in 2017 and has survived every attempt to improve it. It is worth being able to say that plainly rather than inventing a justification. What *is* known: narrower loses quality noticeably, wider gains little for the parameters spent, and the ratio has held from the original 512-wide transformer to models with $d$ above 12,000 — a 24× change in scale with no change in the ratio. Whether $4$ is optimal or merely a local optimum everyone copied is  open.
 
-**The key–value memory interpretation** (Geva et al., 2021): write $W_1$'s rows as keys $k_i$ and $W_2$'s columns as values $v_i$. Then
+**The key–value memory interpretation** (Geva et al., 2021): write $`W_1`$'s rows as keys $`k_i`$ and $`W_2`$'s columns as values $`v_i`$. Then
 $$\mathrm{FFN}(x) = \sum_{i=1}^{d_{\text{ff}}}\phi(k_i^\top x)\,v_i$$
-Each hidden unit is a pattern detector that, when it fires, **adds a fixed vector to the residual stream**. Empirically these correspond to interpretable patterns (a specific $n$-gram, a topic, a syntactic construction), and the values shift the output distribution toward related tokens. **The FFN is an associative memory with $d_{\text{ff}}$ slots per layer.** This is the current best account of where factual knowledge lives in an LLM, and it is what model-editing methods (ROME, MEMIT) exploit.
+Each hidden unit is a pattern detector that, when it fires, **adds a fixed vector to the residual stream**. Empirically these correspond to interpretable patterns (a specific $n$-gram, a topic, a syntactic construction), and the values shift the output distribution toward related tokens. **The FFN is an associative memory with $`d_{\text{ff}}`$ slots per layer.** This is the current best account of where factual knowledge lives in an LLM, and it is what model-editing methods (ROME, MEMIT) exploit.
 
 #### The FFN as associative memory, decoded
 
 $$\mathrm{FFN}(x) = \sum_{i=1}^{d_{\text{ff}}}\phi(k_i^\top x)\,v_i$$
 
-This is the same formula as before, rewritten to make its meaning visible. The move is Chapter 1 §1.1.1's second reading of a matrix: **a matrix–vector product is a set of dot products against rows, and a matrix times a vector of coefficients is a weighted sum of columns.** So write $W_1$'s rows as $k_1,\dots,k_{d_{\text{ff}}}$ and $W_2$'s columns as $v_1,\dots,v_{d_{\text{ff}}}$, and the two-layer network becomes a sum over $d_{\text{ff}}$ terms.
+This is the same formula as before, rewritten to make its meaning visible. The move is Chapter 1 §1.1.1's second reading of a matrix: **a matrix–vector product is a set of dot products against rows, and a matrix times a vector of coefficients is a weighted sum of columns.** So write $`W_1`$'s rows as $`k_1,\dots,k_{d_{\text{ff}}}`$ and $`W_2`$'s columns as $`v_1,\dots,v_{d_{\text{ff}}}`$, and the two-layer network becomes a sum over $`d_{\text{ff}}`$ terms.
 
-Read one term, $\phi(k_i^\top x)\,v_i$:
+Read one term, $`\phi(k_i^\top x)\,v_i`$:
 
 | Piece | Meaning |
 |---|---|
-| $k_i^\top x$ | **How much does the input look like pattern $i$?** (a dot product, i.e. alignment) |
+| $`k_i^\top x`$ | **How much does the input look like pattern $i$?** (a dot product, i.e. alignment) |
 | $\phi(\cdot)$ | A threshold: near-zero unless the match is strong |
-| $v_i$ | The **fixed vector this unit adds** when it fires |
+| $`v_i`$ | The **fixed vector this unit adds** when it fires |
 
-▸ **So each hidden unit is a detector wired to a writer. If pattern $i$ is present, add vector $v_i$ to the residual stream; otherwise add nothing.** That is precisely the behaviour of an associative memory — content-addressed, not address-addressed. You do not ask for slot 4,712; you present a pattern and whatever matches responds.
+▸ **So each hidden unit is a detector wired to a writer. If pattern $i$ is present, add vector $`v_i`$ to the residual stream; otherwise add nothing.** That is precisely the behaviour of an associative memory — content-addressed, not address-addressed. You do not ask for slot 4,712; you present a pattern and whatever matches responds.
 
 **Notice how close this is to attention**, and why the paper naming the rows "keys" and the columns "values" was making a real claim rather than a pun:
 
 | | Attention | FFN |
 |---|---|---|
 | Keys and values come from | **the current input sequence** | **the weights** |
-| Number of slots | $T$ (varies per input) | $d_{\text{ff}}$ (fixed) |
+| Number of slots | $T$ (varies per input) | $`d_{\text{ff}}`$ (fixed) |
 | Contents | this context | everything learned in training |
 | Normalization | softmax (weights sum to 1) | none — any number of units may fire |
 
@@ -505,22 +505,22 @@ Read one term, $\phi(k_i^\top x)\,v_i$:
 
 > **Analogy.** A doctor examining a patient. Attention is taking the history — gathering the facts of *this* case from *this* patient. The FFN is everything the doctor memorized in medical school: a very large set of "if you see this pattern, think of that condition" associations, identical for every patient, retrieved by pattern-match rather than by looking anything up alphabetically.
 
-**Why this is more than an interpretation.** If a specific fact lives in a specific $(k_i, v_i)$ pair, you should be able to **edit** it — find where "the Eiffel Tower is in Paris" is stored and change the value vector so the model says Rome. Model-editing methods (**ROME**, "rank-one model editing," and **MEMIT**, "mass-editing memory in a transformer") do exactly this, with enough success to count as evidence for the account. ▸ **A theory of where knowledge lives that lets you surgically change a fact is doing more work than a metaphor.** The picture is incomplete — facts are distributed across units and layers rather than sitting in one slot, and edits have side effects — but it is the best account currently available.
+**Why this is more than an interpretation.** If a specific fact lives in a specific $`(k_i, v_i)`$ pair, you should be able to **edit** it — find where "the Eiffel Tower is in Paris" is stored and change the value vector so the model says Rome. Model-editing methods (**ROME**, "rank-one model editing," and **MEMIT**, "mass-editing memory in a transformer") do exactly this, with enough success to count as evidence for the account. ▸ **A theory of where knowledge lives that lets you surgically change a fact is doing more work than a metaphor.** The picture is incomplete — facts are distributed across units and layers rather than sitting in one slot, and edits have side effects — but it is the best account currently available.
 
-**Modern variant — SwiGLU** (Ch. 6 §6.5): $W_3(\mathrm{SiLU}(W_1x)\odot W_2x)$ with $d_{\text{ff}}=\frac83 d$ to hold parameters constant. ~1% perplexity gain.
+**Modern variant — SwiGLU** (Ch. 6 §6.5): $`W_3(\mathrm{SiLU}(W_1x)\odot W_2x)`$ with $`d_{\text{ff}}=\frac83 d`$ to hold parameters constant. ~1% perplexity gain.
 
 #### Reading SwiGLU
 
 Three matrices instead of two, and one new operation. $\odot$ is the **elementwise product** (Ch. 0 §0.8): multiply matching entries and keep them separate, rather than summing them into a dot product.
 
-- $W_1x$ goes through $\mathrm{SiLU}$ (the **sigmoid linear unit**, $\mathrm{SiLU}(z) = z\cdot\sigma(z)$) to become a **gate**.
-- $W_2x$ is the **signal**, untouched.
+- $`W_1x`$ goes through $\mathrm{SiLU}$ (the **sigmoid linear unit**, $\mathrm{SiLU}(z) = z\cdot\sigma(z)$) to become a **gate**.
+- $`W_2x`$ is the **signal**, untouched.
 - $\odot$ multiplies them entry by entry, so the gate can pass, attenuate, or block each channel independently.
-- $W_3$ projects back down.
+- $`W_3`$ projects back down.
 
 ▸ **A gate lets the network make one part of the computation depend multiplicatively on another** — something a plain $\phi(Wx)$ cannot do, since its nonlinearity acts on each channel in isolation with no cross-channel control. This is the same mechanism as an LSTM's forget gate (Ch. 9), reappearing in a feed-forward setting.
 
-**Why $\frac{8}{3}d$.** Three matrices of size $d\times d_{\text{ff}}$ instead of two means parameters would rise by 50% at fixed $d_{\text{ff}}$. Setting $d_{\text{ff}} = \frac83 d$ rather than $4d$ gives $3 \times \frac83 = 8$ — **exactly the $8d^2$ of the two-matrix version.** The comparison is therefore honest: same parameters, same FLOPs, roughly 1% better perplexity. ▸ **Always check whether an architectural "improvement" was compared at matched parameter count.** Most are not, and SwiGLU's careful $\frac83$ is a large part of why the result was believed.
+**Why $\frac{8}{3}d$.** Three matrices of size $`d\times d_{\text{ff}}`$ instead of two means parameters would rise by 50% at fixed $`d_{\text{ff}}`$. Setting $`d_{\text{ff}} = \frac83 d`$ rather than $4d$ gives $3 \times \frac83 = 8$ — **exactly the $8d^2$ of the two-matrix version.** The comparison is therefore honest: same parameters, same FLOPs, roughly 1% better perplexity. ▸ **Always check whether an architectural "improvement" was compared at matched parameter count.** Most are not, and SwiGLU's careful $\frac83$ is a large part of why the result was believed.
 
 ### The residual stream
 
@@ -586,8 +586,8 @@ Encoder–decoder remains better when there is a fixed, repeatedly-attended sour
 
 | Component | Parameters |
 |---|---|
-| $W_Q,W_K,W_V,W_O$ | $4d^2$ |
-| FFN ($W_1,W_2$, $d_{\text{ff}}=4d$) | $8d^2$ |
+| $`W_Q,W_K,W_V,W_O`$ | $4d^2$ |
+| FFN ($`W_1,W_2`$, $`d_{\text{ff}}=4d`$) | $8d^2$ |
 | **Total per layer** | $\mathbf{12d^2}$ |
 
 Plus $|V|d$ for embeddings (and again for the output head if untied).
@@ -643,7 +643,7 @@ Left alone, the router collapses onto a few experts (rich-get-richer: a good exp
 
 ▸ $$\mathcal{L}_{\text{aux}} = \alpha E\sum_{i=1}^{E} f_i\,P_i$$
 
-where $f_i$ = fraction of tokens routed to expert $i$ and $P_i$ = mean router probability for expert $i$. Minimized when both are uniform ($1/E$). Typically $\alpha=0.01$.
+where $`f_i`$ = fraction of tokens routed to expert $i$ and $`P_i`$ = mean router probability for expert $i$. Minimized when both are uniform ($1/E$). Typically $\alpha=0.01$.
 
 **Other mechanisms:** expert capacity limits with token dropping; **Expert Choice** routing (experts pick their top-$k$ tokens, guaranteeing perfect balance); auxiliary-loss-free load balancing via learned per-expert bias terms (DeepSeek-V3).
 
@@ -670,9 +670,9 @@ Worth knowing precisely, because it comes up:
 
 - **All eight authors of the transformer paper have since left Google**, and several founded AI companies of their own. The paper's unusual footnote lists contributions individually and states that the author order is random.
 
-- **The $\sqrt{d_k}$ in scaled dot-product attention exists to stop the softmax from saturating.** A dot product of two $d_k$-dimensional random vectors has standard deviation $\sqrt{d_k}$, so without the division the logits grow with dimension, the softmax becomes nearly one-hot, and gradients vanish. It is a variance-control fix, and the paper explains it in a footnote.
+- **The $`\sqrt{d_k}`$ in scaled dot-product attention exists to stop the softmax from saturating.** A dot product of two $`d_k`$-dimensional random vectors has standard deviation $`\sqrt{d_k}`$, so without the division the logits grow with dimension, the softmax becomes nearly one-hot, and gradients vanish. It is a variance-control fix, and the paper explains it in a footnote.
 
-- **The feed-forward network holds about two-thirds of a transformer's parameters**, despite attention getting essentially all the attention. For a standard block with $d_{\text{ff}} = 4d$, the FFN carries $8d^2$ parameters against attention's $4d^2$.
+- **The feed-forward network holds about two-thirds of a transformer's parameters**, despite attention getting essentially all the attention. For a standard block with $`d_{\text{ff}} = 4d`$, the FFN carries $8d^2$ parameters against attention's $4d^2$.
 
 - **Attention costs scale with the *square* of sequence length.** Doubling context from 4,000 to 8,000 tokens does not double attention cost — it quadruples it. Chapters 12 and 17 are, to a large extent, a sustained engineering campaign against that one exponent.
 
@@ -699,7 +699,7 @@ Worth knowing precisely, because it comes up:
 The test of understanding is conversational: could you explain each of these to a colleague, without notation, in under a minute?
 
 1. **What are queries, keys, and values**, in terms of a dictionary lookup? What makes the lookup "soft"?
-2. **Why divide by $\sqrt{d_k}$?** What goes wrong at large $d_k$ if you don't?
+2. **Why divide by $`\sqrt{d_k}`$?** What goes wrong at large $`d_k`$ if you don't?
 3. **Why is attention permutation-equivariant**, and what does that force the architecture to add?
 4. **What does a causal mask do**, and why is setting masked logits to $-\infty$ the natural way to do it?
 5. **Why does multi-head attention beat one big head** of the same total width?

@@ -10,21 +10,21 @@ Skim this once now; every entry is unpacked properly where it first appears.
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $C_{\text{in}},\ C_{\text{out}}$ | "C-in, C-out" | How many channels (feature maps) go in, how many come out |
+| $`C_{\text{in}},\ C_{\text{out}}`$ | "C-in, C-out" | How many channels (feature maps) go in, how many come out |
 | $H,\ W$ | "H, W" | Height and width of the image, in pixels |
 | $k$ | "k" | **Kernel size** — the sliding stamp is $k\times k$ pixels |
 | $s$ | "s" | **Stride** — how many pixels the stamp jumps between placements |
 | $p$ | "p" | **Padding** — rows and columns of zeros glued round the border |
 | $d$ | "d" | **Dilation** — how many gaps to leave *inside* the stamp |
-| $X_{c,i,j}$ | "X sub c, i, j" | The input value at channel $c$, row $i$, column $j$ |
-| $K_{o,c,u,v}$ | "K sub o, c, u, v" | One weight: output channel $o$, input channel $c$, stamp position $(u,v)$ |
+| $`X_{c,i,j}`$ | "X sub c, i, j" | The input value at channel $c$, row $i$, column $j$ |
+| $`K_{o,c,u,v}`$ | "K sub o, c, u, v" | One weight: output channel $o$, input channel $c$, stamp position $(u,v)$ |
 | $\lfloor z\rfloor$ | "floor of z" | Round down to the nearest whole number |
-| $r_L$ | "r sub L" | **Receptive field** — how wide a patch of input one output can see |
-| $F(x_\ell;\theta_\ell)$ | "F of x-ell, with theta-ell" | The **residual branch** — a small stack of layers with its own weights |
-| $x_{\ell+1}=x_\ell+F(x_\ell)$ | — | "New activations = old activations **plus a correction**" |
-| $\mathrm{Var}(x_\ell)$ | "variance of x-ell" | How spread out the activations at layer $\ell$ are |
+| $`r_L`$ | "r sub L" | **Receptive field** — how wide a patch of input one output can see |
+| $`F(x_\ell;\theta_\ell)`$ | "F of x-ell, with theta-ell" | The **residual branch** — a small stack of layers with its own weights |
+| $`x_{\ell+1}=x_\ell+F(x_\ell)`$ | — | "New activations = old activations **plus a correction**" |
+| $`\mathrm{Var}(x_\ell)`$ | "variance of x-ell" | How spread out the activations at layer $\ell$ are |
 | $\mathrm{IoU}$ | "eye-oh-you" | **Intersection over Union** — how much two boxes overlap, from 0 to 1 |
-| $p_t$ | "p sub t" | The probability the model assigned to the **correct** class |
+| $`p_t`$ | "p sub t" | The probability the model assigned to the **correct** class |
 | $\gamma$ | "gamma" | ⚠ Two jobs here: the focal loss's focusing power, *and* BatchNorm's learned scale |
 | $\alpha,\beta,\phi$ | "alpha, beta, phi" | EfficientNet's depth/width/resolution scaling exponents |
 
@@ -72,7 +72,7 @@ A single rubber stamp dragged across a page, versus hand-drawing every mark indi
 
 ### The math
 
-For input $X\in\mathbb{R}^{C_{\text{in}}\times H\times W}$ and kernel $K\in\mathbb{R}^{C_{\text{out}}\times C_{\text{in}}\times k\times k}$:
+For input $`X\in\mathbb{R}^{C_{\text{in}}\times H\times W}`$ and kernel $`K\in\mathbb{R}^{C_{\text{out}}\times C_{\text{in}}\times k\times k}`$:
 
 ▸ $$Y_{o,i,j} = \sum_{c=1}^{C_{\text{in}}}\sum_{u=0}^{k-1}\sum_{v=0}^{k-1} K_{o,c,u,v}\,X_{c,\,i s+u-p,\,j s+v-p} + b_o$$
 
@@ -88,12 +88,12 @@ Now every piece:
 
 | Piece | Read aloud | What it is |
 |---|---|---|
-| $Y_{o,i,j}$ | "Y sub o, i, j" | **One single number** in the output. Three subscripts: which feature map, which row, which column |
-| $\sum_{c}\sum_{u}\sum_{v}$ | "sum over c, sum over u, sum over v" | Three nested `for` loops (Ch. 0 §0.3) |
-| $C_{\text{in}}$ | "C-in" | How many channels the input has — 3 for a colour photo, 256 deep in a network |
-| $K_{o,c,u,v}$ | "K sub o, c, u, v" | **One weight.** The kernel is a 4-dimensional array of them |
-| $X_{c,\,is+u-p,\,js+v-p}$ | "X at channel c, row i-s-plus-u-minus-p, …" | The input pixel currently under the stamp |
-| $b_o$ | "b sub o" | One bias per output channel — added once, after the sum |
+| $`Y_{o,i,j}`$ | "Y sub o, i, j" | **One single number** in the output. Three subscripts: which feature map, which row, which column |
+| $`\sum_{c}\sum_{u}\sum_{v}`$ | "sum over c, sum over u, sum over v" | Three nested `for` loops (Ch. 0 §0.3) |
+| $`C_{\text{in}}`$ | "C-in" | How many channels the input has — 3 for a colour photo, 256 deep in a network |
+| $`K_{o,c,u,v}`$ | "K sub o, c, u, v" | **One weight.** The kernel is a 4-dimensional array of them |
+| $`X_{c,\,is+u-p,\,js+v-p}`$ | "X at channel c, row i-s-plus-u-minus-p, …" | The input pixel currently under the stamp |
+| $`b_o`$ | "b sub o" | One bias per output channel — added once, after the sum |
 
 **The index arithmetic is the entire trick,** so slow down on $is + u - p$:
 
@@ -103,13 +103,13 @@ Now every piece:
 
 > **Analogy.** Print a $3\times3$ grid of numbers on a transparent sheet. Lay it over a sheet of graph paper filled with numbers. Multiply each printed number by the number showing through underneath it, add up all nine products, and write the total into a fresh grid. Slide the transparency $s$ squares right and repeat. The transparency never changes — **one sheet, dragged across the whole page.** That is a convolution, and the fact that the sheet is the *same everywhere* is the whole idea.
 
-**Put numbers in it.** Collapse to one dimension, one input channel, one output channel: $C_{\text{in}}=C_{\text{out}}=1$, $k=3$, $s=1$, $p=1$, bias $0$. Let the kernel be $K = (-1, 0, +1)$ and the input be a signal that steps up halfway through:
+**Put numbers in it.** Collapse to one dimension, one input channel, one output channel: $`C_{\text{in}}=C_{\text{out}}=1`$, $k=3$, $s=1$, $p=1$, bias $0$. Let the kernel be $K = (-1, 0, +1)$ and the input be a signal that steps up halfway through:
 
 $$X = (2,\,2,\,2,\,9,\,9,\,9)$$
 
-With padding, the formula reduces to $Y_i = -X_{i-1} + X_{i+1}$ (treating out-of-range as $0$):
+With padding, the formula reduces to $`Y_i = -X_{i-1} + X_{i+1}`$ (treating out-of-range as $0$):
 
-| $i$ | computation | $Y_i$ |
+| $i$ | computation | $`Y_i`$ |
 |---|---|---|
 | 1 | $-0 + 2$ | $2$ |
 | 2 | $-2 + 2$ | $0$ |
@@ -124,11 +124,11 @@ $Y = (2,0,7,7,0,-9)$. The two large values sit **exactly at the boundary** betwe
 
 #### Why "convolution" is the wrong word (and why it doesn't matter)
 
-A *true* mathematical convolution flips the kernel before sliding it: $\sum_u K_u X_{i-u}$, with a **minus**. What the formula above computes is $\sum_u K_u X_{i+u}$, with a **plus** — which mathematicians call **cross-correlation**.
+A *true* mathematical convolution flips the kernel before sliding it: $`\sum_u K_u X_{i-u}`$, with a **minus**. What the formula above computes is $`\sum_u K_u X_{i+u}`$, with a **plus** — which mathematicians call **cross-correlation**.
 
 Why nobody cares: the kernel is *learned*. If the optimal true-convolution kernel is $(-1,0,+1)$, gradient descent on a cross-correlation layer simply learns $(+1,0,-1)$ instead and produces identical behaviour. The flip is absorbed into the weights.
 
-Why it occasionally *does* matter: true convolution is commutative and associative ($a * b = b * a$), which is what makes the **convolution theorem** — convolution in space equals multiplication in the frequency domain — hold. That theorem is why some convolution kernels are implemented with fast Fourier transforms rather than by sliding.
+Why it occasionally *does* matter: true convolution is commutative and associative ($`a * b = b * a`$), which is what makes the **convolution theorem** — convolution in space equals multiplication in the frequency domain — hold. That theorem is why some convolution kernels are implemented with fast Fourier transforms rather than by sliding.
 
 > **Where this came from.** The convolutional network descends directly from neurophysiology. In experiments beginning in the late 1950s at Johns Hopkins, **David Hubel and Torsten Wiesel** recorded from single neurons in the cat's primary visual cortex and found cells that fired only for a bar of light at a *particular orientation* ("simple cells"), and cells that fired for that orientation *anywhere in a small region* ("complex cells"). The discovery has a famous accidental element: they were projecting dot patterns on glass slides and, by their own account, a cell fired not for any dot but as the **edge of the glass slide swept across the screen** while they were changing it. They shared the 1981 Nobel Prize in Physiology or Medicine.
 >
@@ -153,7 +153,7 @@ A convolutional layer is defined by exactly two properties: **locality** (each o
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| True mathematical convolution $\sum_u K_u X_{i-u}$ | It flips the kernel first; the layer in your framework does not | **Cross-correlation.** The flip is absorbed into the learned weights, which is why nobody cares |
+| True mathematical convolution $`\sum_u K_u X_{i-u}`$ | It flips the kernel first; the layer in your framework does not | **Cross-correlation.** The flip is absorbed into the learned weights, which is why nobody cares |
 | A **locally connected** layer with a $3\times3$ window per position | Local, but each position gets its **own** 9 weights. On a $224\times224$ map that is 50,176 separate kernels | An **unshared local** layer. Used in early face-recognition work; enormous parameter count, no translation equivariance |
 | `nn.Linear(224*224*3, 1000)` on a flattened image | Every output touches every input — no locality, no sharing, 150M parameters | A **dense layer.** It *can* represent any convolution; it simply has no reason to |
 | Self-attention | The mixing weights are **computed from the data** and change per input; a conv's weights are fixed after training | **Dynamic, global, content-based mixing** (Ch. 11) |
@@ -163,9 +163,9 @@ A convolutional layer is defined by exactly two properties: **locality** (each o
 
 ▸ **The boundary:** locality plus weight sharing. A dense layer drops both, a locally-connected layer drops sharing, attention replaces fixed weights with computed ones, and pooling drops the weights entirely. **Weight sharing is the load-bearing property** — it is where translation equivariance, the parameter savings, and the entire inductive bias come from.
 
-> **Common misconception.** *"A convolutional layer computes a convolution."* It computes a **cross-correlation**: $\sum_u K_u X_{i+u}$, with a plus. The  convolution has a minus — the kernel is flipped end-for-end before sliding. PyTorch, TensorFlow, JAX, and cuDNN all implement the plus version and all call it convolution. This costs you nothing in practice, because if the ideal flipped kernel is $(-1, 0, +1)$, gradient descent on a cross-correlation layer simply learns $(+1, 0, -1)$ and the layer behaves identically. The belief is tempting because the name is right there in the API and because the two operations  coincide for any symmetric kernel — a Gaussian blur, for instance, is its own flip, so the distinction is invisible in the most commonly drawn example. It stops being harmless in exactly one place: **the convolution theorem** ($\mathcal{F}\{a * b\} = \mathcal{F}\{a\}\cdot\mathcal{F}\{b\}$) holds for the flipped version, so an FFT-based implementation must flip, and mixing the conventions gives you a silently mirrored kernel.
+> **Common misconception.** *"A convolutional layer computes a convolution."* It computes a **cross-correlation**: $`\sum_u K_u X_{i+u}`$, with a plus. The  convolution has a minus — the kernel is flipped end-for-end before sliding. PyTorch, TensorFlow, JAX, and cuDNN all implement the plus version and all call it convolution. This costs you nothing in practice, because if the ideal flipped kernel is $(-1, 0, +1)$, gradient descent on a cross-correlation layer simply learns $(+1, 0, -1)$ and the layer behaves identically. The belief is tempting because the name is right there in the API and because the two operations  coincide for any symmetric kernel — a Gaussian blur, for instance, is its own flip, so the distinction is invisible in the most commonly drawn example. It stops being harmless in exactly one place: **the convolution theorem** ($`\mathcal{F}\{a * b\} = \mathcal{F}\{a\}\cdot\mathcal{F}\{b\}`$) holds for the flipped version, so an FFT-based implementation must flip, and mixing the conventions gives you a silently mirrored kernel.
 
-> **Common misconception.** *"A $3\times3$ convolution has 9 parameters."* It has $3 \times 3 \times C_{\text{in}} \times C_{\text{out}} + C_{\text{out}}$. A $3\times3$ conv from 256 channels to 256 channels holds $9 \cdot 256 \cdot 256 = 589{,}824$ weights — sixty-five thousand times the naive count, and this single layer is larger than all of LeNet-5. The belief is tempting because every diagram of a convolution shows a small square sliding over a flat grey image, which is the $C_{\text{in}} = C_{\text{out}} = 1$ case, and that picture never gets updated when the discussion moves to real networks. ▸ **The kernel is not a square, it is a $3\times3\times C_{\text{in}}$ box, and you have $C_{\text{out}}$ of them.** Getting this wrong makes every FLOP and memory estimate you produce wrong by three to five orders of magnitude.
+> **Common misconception.** *"A $3\times3$ convolution has 9 parameters."* It has $`3 \times 3 \times C_{\text{in}} \times C_{\text{out}} + C_{\text{out}}`$. A $3\times3$ conv from 256 channels to 256 channels holds $9 \cdot 256 \cdot 256 = 589{,}824$ weights — sixty-five thousand times the naive count, and this single layer is larger than all of LeNet-5. The belief is tempting because every diagram of a convolution shows a small square sliding over a flat grey image, which is the $`C_{\text{in}} = C_{\text{out}} = 1`$ case, and that picture never gets updated when the discussion moves to real networks. ▸ **The kernel is not a square, it is a $`3\times3\times C_{\text{in}}`$ box, and you have $`C_{\text{out}}`$ of them.** Getting this wrong makes every FLOP and memory estimate you produce wrong by three to five orders of magnitude.
 
 **Output size:**
 ▸ $$H_{\text{out}} = \left\lfloor\frac{H+2p-d(k-1)-1}{s}\right\rfloor + 1$$
@@ -184,7 +184,7 @@ Four pieces, each with a job:
 
 **Now real numbers.** Take $H = 224$ (the standard ImageNet crop) throughout:
 
-| $H$ | $k$ | $s$ | $p$ | $d$ | $H_{\text{out}}$ | What it's for |
+| $H$ | $k$ | $s$ | $p$ | $d$ | $`H_{\text{out}}`$ | What it's for |
 |---|---|---|---|---|---|---|
 | 224 | 3 | 1 | 1 | 1 | **224** | "same" padding — resolution preserved |
 | 224 | 3 | 1 | 0 | 1 | 222 | "valid" padding — you lose the border |
@@ -196,20 +196,20 @@ Work the third row by hand: $\lfloor(224 + 2 - 2 - 1)/2\rfloor + 1 = \lfloor 223
 
 ▸ **The rule worth memorizing instead of the formula: for stride 1, "same" padding is $p = d(k-1)/2$.** So $k=3\Rightarrow p=1$; $k=5\Rightarrow p=2$; $k=7\Rightarrow p=3$. Notice this only produces a whole number when $k$ is **odd** — which is precisely why essentially every kernel you will ever see is $3\times3$, $5\times5$ or $7\times7$. An even kernel has no centre pixel, so it cannot be placed symmetrically, so it shifts the image by half a pixel every layer.
 
-**Parameters:** $C_{\text{out}}\cdot C_{\text{in}}\cdot k^2 + C_{\text{out}}$.
-**FLOPs:** $2\cdot C_{\text{out}}C_{\text{in}}k^2 H_{\text{out}}W_{\text{out}}$.
+**Parameters:** $`C_{\text{out}}\cdot C_{\text{in}}\cdot k^2 + C_{\text{out}}`$.
+**FLOPs:** $`2\cdot C_{\text{out}}C_{\text{in}}k^2 H_{\text{out}}W_{\text{out}}`$.
 
 **Compared to a dense layer** on a $224\times224\times3$ image with 64 outputs at every position: dense would be $150{,}528\times(224\cdot224\cdot64)=4.8\times10^{11}$ parameters. A $3\times3$ conv is $3\cdot64\cdot9=1{,}728$. **Eight orders of magnitude**, purchased entirely by the two structural assumptions.
 
 #### Where the eight orders of magnitude come from
 
-**The parameter count first.** $C_{\text{out}}C_{\text{in}}k^2 + C_{\text{out}}$ is "one weight for every (output channel, input channel, kernel row, kernel column) combination, plus one bias per output channel." Notice what is **missing** from that expression: $H$ and $W$. The image size appears nowhere.
+**The parameter count first.** $`C_{\text{out}}C_{\text{in}}k^2 + C_{\text{out}}`$ is "one weight for every (output channel, input channel, kernel row, kernel column) combination, plus one bias per output channel." Notice what is **missing** from that expression: $H$ and $W$. The image size appears nowhere.
 
 ▸ **A convolution's parameter count is completely independent of the image size.** This is why you can pretrain at $224\times224$ and fine-tune at $384\times384$ with the very same weights, and why in vision the thing that runs out is *memory for activations*, not memory for parameters.
 
-**The FLOP count.** For each of the $H_{\text{out}}W_{\text{out}}$ output positions and each of the $C_{\text{out}}$ channels, you perform $C_{\text{in}}k^2$ multiply-accumulate operations. The leading $2$ is because one multiply-accumulate is counted as **two** floating-point operations (FLOP = FLoating-point OPeration): one multiply, one add.
+**The FLOP count.** For each of the $`H_{\text{out}}W_{\text{out}}`$ output positions and each of the $`C_{\text{out}}`$ channels, you perform $`C_{\text{in}}k^2`$ multiply-accumulate operations. The leading $2$ is because one multiply-accumulate is counted as **two** floating-point operations (FLOP = FLoating-point OPeration): one multiply, one add.
 
-Concretely, a $3\times3$ conv with $C_{\text{in}}=C_{\text{out}}=64$ on a $56\times56$ feature map:
+Concretely, a $3\times3$ conv with $`C_{\text{in}}=C_{\text{out}}=64`$ on a $56\times56$ feature map:
 
 - Parameters: $64\cdot64\cdot9 + 64 = 36{,}928$ — about 148 kilobytes in fp32.
 - FLOPs: $2\cdot 64\cdot 64\cdot 9\cdot 56\cdot 56 = 2\times 36{,}864 \times 3{,}136 \approx 2.3\times 10^{8}$ — 0.23 GFLOP, for **one layer, one image**.
@@ -258,7 +258,7 @@ Reading $\mathrm{Conv}(\mathrm{shift}(x)) = \mathrm{shift}(\mathrm{Conv}(x))$ al
 
 > **Analogy.** Equivariance is a **shadow**: move the object and the shadow moves with it, same shape, same size, just relocated. Invariance is a **bathroom scale**: put the object anywhere on the platform and you read the same weight. A convolution is a shadow. A global pool is a scale.
 
-**Watch it happen with real numbers.** One dimension, kernel $(1,1,1)$, $p=1$, input $X = (0,0,1,0,0,0)$ — a single bright pixel at position 3. Then $Y_i = X_{i-1}+X_i+X_{i+1}$:
+**Watch it happen with real numbers.** One dimension, kernel $(1,1,1)$, $p=1$, input $X = (0,0,1,0,0,0)$ — a single bright pixel at position 3. Then $`Y_i = X_{i-1}+X_i+X_{i+1}`$:
 
 $$Y = (0,\ 1,\ 1,\ 1,\ 0,\ 0)$$
 
@@ -276,7 +276,7 @@ Now apply global max pooling: $\max(Y) = 1$ and $\max(Y') = 1$. **The same numbe
 
 ### Receptive field
 
-For a stack of layers with kernel $k_\ell$, stride $s_\ell$, dilation $d_\ell$:
+For a stack of layers with kernel $`k_\ell`$, stride $`s_\ell`$, dilation $`d_\ell`$:
 
 ▸ $$r_L = 1 + \sum_{\ell=1}^{L} \big(d_\ell(k_\ell-1)\big)\prod_{j<\ell}s_j$$
 
@@ -290,10 +290,10 @@ $$r_L = 1 + \sum_{\ell=1}^{L} \big(d_\ell(k_\ell-1)\big)\prod_{j<\ell}s_j$$
 
 Read aloud: *"start from a single pixel; for each layer, add the extra reach that layer contributes, magnified by the product of every stride that came before it."*
 
-- **$r_L$** — the side length, in **original input pixels**, of the square patch that can influence one output value at layer $L$. It is a question about *lineage*: which pixels are this output's ancestors?
+- **$`r_L`$** — the side length, in **original input pixels**, of the square patch that can influence one output value at layer $L$. It is a question about *lineage*: which pixels are this output's ancestors?
 - **The leading $1$** — you always see at least yourself.
-- **$d_\ell(k_\ell-1)$** — layer $\ell$'s own contribution. A $3\times3$ kernel reaches one pixel either side, so it adds $1\cdot 2 = 2$. Dilating it by $d$ multiplies that reach.
-- **$\prod_{j<\ell}s_j$** — the **magnification factor**, and the reason the formula isn't just a sum. If two stride-2 layers came earlier, then one pixel at layer $\ell$'s input is a $4\times4$ block of the original image, so every step layer $\ell$ takes is worth 4 original pixels. **Strides compound multiplicatively; kernels accumulate additively.**
+- **$`d_\ell(k_\ell-1)`$** — layer $\ell$'s own contribution. A $3\times3$ kernel reaches one pixel either side, so it adds $1\cdot 2 = 2$. Dilating it by $d$ multiplies that reach.
+- **$`\prod_{j<\ell}s_j`$** — the **magnification factor**, and the reason the formula isn't just a sum. If two stride-2 layers came earlier, then one pixel at layer $\ell$'s input is a $4\times4$ block of the original image, so every step layer $\ell$ takes is worth 4 original pixels. **Strides compound multiplicatively; kernels accumulate additively.**
 
 **Numbers, three ways.** All using $3\times3$ kernels:
 
@@ -352,7 +352,7 @@ Receptive field is a *budget item*, not a virtue. It costs depth, parameters, or
 |---|---|---|
 | **1×1 conv** | $k=1$ | channel mixing; a per-position dense layer; the bottleneck in ResNet |
 | **Dilated/atrous** | insert $d-1$ holes | exponential receptive field growth at constant cost; segmentation, WaveNet |
-| **Depthwise** | one kernel per input channel, $C_{\text{out}}=C_{\text{in}}$ | $k^2C$ params instead of $k^2C^2$ |
+| **Depthwise** | one kernel per input channel, $`C_{\text{out}}=C_{\text{in}}`$ | $k^2C$ params instead of $k^2C^2$ |
 | **Depthwise separable** | depthwise then $1\times1$ | $\frac{k^2C + C^2}{k^2C^2}\approx\frac1{k^2}$ of the cost; MobileNet, Xception |
 | **Grouped** | split channels into $g$ groups | AlexNet (GPU memory), ResNeXt (cardinality) |
 | **Transposed ("deconv")** | fractionally-strided | upsampling; **causes checkerboard artifacts** — prefer `upsample + conv` |
@@ -364,7 +364,7 @@ Receptive field is a *budget item*, not a virtue. It costs depth, parameters, or
 
 Every row of that table is a different answer to one question: **a standard convolution mixes across space *and* across channels at the same time — which of those two jobs can we do more cheaply, or skip?**
 
-**$1\times1$ convolution.** Set $k=1$ and the sliding window is a single pixel, so there is **no spatial mixing at all**. What survives is a matrix multiply across the channel axis, applied independently and identically at every position — an ordinary dense layer, run once per pixel. Cost drops from $C_{\text{in}}C_{\text{out}}k^2$ to $C_{\text{in}}C_{\text{out}}$. Its three jobs: shrink the channel count before an expensive operation, mix information across channels, and (with an activation after it) add a nonlinearity for almost nothing.
+**$1\times1$ convolution.** Set $k=1$ and the sliding window is a single pixel, so there is **no spatial mixing at all**. What survives is a matrix multiply across the channel axis, applied independently and identically at every position — an ordinary dense layer, run once per pixel. Cost drops from $`C_{\text{in}}C_{\text{out}}k^2`$ to $`C_{\text{in}}C_{\text{out}}`$. Its three jobs: shrink the channel count before an expensive operation, mix information across channels, and (with an activation after it) add a nonlinearity for almost nothing.
 
 **Dilated / atrous.** Insert $d-1$ empty positions between the kernel's taps. The word *atrous* is French — **à trous**, "with holes" — borrowed from the wavelet literature's *algorithme à trous*. A $3\times3$ kernel with $d=4$ still holds exactly 9 weights but straddles a $9\times9$ region. Stack dilations $1,2,4,8,\dots$ and the receptive field doubles per layer at flat cost.
 
@@ -442,11 +442,11 @@ The backward pass is the part worth understanding. **The gradient routes only to
 |---|---|---|
 | Max pool | $8$ | The strongest response. Robust to small shifts, blind to the other three |
 | Average pool | $3.5$ | The total energy. Sensitive to all four, blurs the peak |
-| Stride-2 conv with weights $(w_1,w_2,w_3,w_4)$ | $w_1 + 8w_2 + 2w_3 + 3w_4$ | Whatever the data said was worth keeping |
+| Stride-2 conv with weights $`(w_1,w_2,w_3,w_4)`$ | $`w_1 + 8w_2 + 2w_3 + 3w_4`$ | Whatever the data said was worth keeping |
 
 ▸ **The boundary:** pooling chooses *by a fixed rule you wrote down*; stride chooses *by a rate*, and the accompanying convolution's learned weights decide what survives. **Stride costs nothing extra to compute (it computes fewer positions); pooling costs nothing to store (it has no weights). They are not substitutes for each other, and the modern default is stride precisely because "keep the biggest" is a strong assumption nobody actually verified.**
 
-> **Common misconception.** *"Stride and pooling are interchangeable — both just downsample."* They produce the same shape and different functions. A stride-2 convolution is a linear map with $9 C_{\text{in}} C_{\text{out}}$ learnable weights that can implement average pooling, learn a low-pass filter, or learn something else entirely; max pooling is a fixed nonlinearity that cannot be adjusted and, being a $\max$, is not even differentiable everywhere. The belief is tempting because in shape-debugging — which is where most people meet both — they  are interchangeable, and the output-size formula is the same. The distinction shows up the moment you care about *what information survived*: a stride-2 $1\times1$ conv silently drops 75% of its input pixels without ever looking at them, which is an aliasing bug that pooling would not have had, and which several ResNet variants exist specifically to repair.
+> **Common misconception.** *"Stride and pooling are interchangeable — both just downsample."* They produce the same shape and different functions. A stride-2 convolution is a linear map with $`9 C_{\text{in}} C_{\text{out}}`$ learnable weights that can implement average pooling, learn a low-pass filter, or learn something else entirely; max pooling is a fixed nonlinearity that cannot be adjusted and, being a $\max$, is not even differentiable everywhere. The belief is tempting because in shape-debugging — which is where most people meet both — they  are interchangeable, and the output-size formula is the same. The distinction shows up the moment you care about *what information survived*: a stride-2 $1\times1$ conv silently drops 75% of its input pixels without ever looking at them, which is an aliasing bug that pooling would not have had, and which several ResNet variants exist specifically to repair.
 
 ---
 
@@ -476,19 +476,19 @@ First the diagnosis, because it is the more surprising half. A 56-layer plain ne
 
 ▸ **The deeper network could represent the better solution and gradient descent could not find it.** This is why the word is *degradation*, not *overfitting*. Overfitting is a statistics problem (Ch. 2): too much capacity, not enough data, training error goes down while test error goes up. Degradation is an **optimization** problem: training error itself gets worse. Those require completely different fixes, and confusing them wastes months.
 
-**Now the equation.** $x_{\ell+1} = x_\ell + F(x_\ell;\theta_\ell)$
+**Now the equation.** $`x_{\ell+1} = x_\ell + F(x_\ell;\theta_\ell)`$
 
 | Piece | Read aloud | What it is |
 |---|---|---|
-| $x_\ell$ | "x sub ell" | The whole activation tensor entering block $\ell$ |
+| $`x_\ell`$ | "x sub ell" | The whole activation tensor entering block $\ell$ |
 | $\ell$ | "ell" | A **layer index**, not a loss (Ch. 0, Trap 3) |
-| $F(\cdot\,;\theta_\ell)$ | "F of dot, given theta-ell" | The **residual branch** — typically two or three convs with BN and ReLU, holding their own weights $\theta_\ell$ |
-| $\theta_\ell$ | "theta sub ell" | This block's parameters |
+| $`F(\cdot\,;\theta_\ell)`$ | "F of dot, given theta-ell" | The **residual branch** — typically two or three convs with BN and ReLU, holding their own weights $`\theta_\ell`$ |
+| $`\theta_\ell`$ | "theta sub ell" | This block's parameters |
 | $+$ | "plus" | Ordinary **elementwise** addition — which is why the shapes must match, and why you need a $1\times1$ projection when they don't |
 
 **Where the name comes from.** Suppose the block ought to compute some function $\mathcal{H}(x)$. Rearranging, $F(x) = \mathcal{H}(x) - x$: the branch learns the **residual**, the leftover, the difference between what you already have and what you want. If the answer is "you already have it," the residual is zero.
 
-**Why zero is easy and identity is hard.** For a plain block $x_{\ell+1} = \sigma(Wx_\ell)$ to compute the identity, $W$ must be *exactly* the identity matrix and the activation must be linear over the relevant range — a single measure-zero point in a space of millions of dimensions, which gradient descent has no particular reason to visit. For a residual block, "do nothing" means $F = 0$, and $F=0$ happens whenever the branch's final weights are near zero — which is **where you initialize** and where weight decay pulls you back.
+**Why zero is easy and identity is hard.** For a plain block $`x_{\ell+1} = \sigma(Wx_\ell)`$ to compute the identity, $W$ must be *exactly* the identity matrix and the activation must be linear over the relevant range — a single measure-zero point in a space of millions of dimensions, which gradient descent has no particular reason to visit. For a residual block, "do nothing" means $F = 0$, and $F=0$ happens whenever the branch's final weights are near zero — which is **where you initialize** and where weight decay pulls you back.
 
 > **Analogy.** A relay of 56 scribes copying a manuscript. In the plain design, each scribe reads the previous copy and rewrites the whole page from scratch; small errors accumulate and by scribe 56 the text is unrecognisable, and there is no way for a scribe to "do nothing" — copying *is* the job. In the residual design, each scribe receives the page itself and writes only **corrections in the margin**. A scribe with nothing to add adds nothing, which costs no effort and introduces no error. After 56 scribes the original is still legible underneath.
 
@@ -511,18 +511,18 @@ $$x_L = x_\ell + \sum_{i=\ell}^{L-1}F(x_i)\quad\Rightarrow\quad \frac{\partial\m
 
 #### Unpacking the gradient highway
 
-**Where the unrolling comes from.** Apply $x_{i+1} = x_i + F(x_i)$ repeatedly and watch the terms accumulate:
+**Where the unrolling comes from.** Apply $`x_{i+1} = x_i + F(x_i)`$ repeatedly and watch the terms accumulate:
 
 $$x_{\ell+1} = x_\ell + F(x_\ell)$$
 $$x_{\ell+2} = x_{\ell+1} + F(x_{\ell+1}) = x_\ell + F(x_\ell) + F(x_{\ell+1})$$
 
-Keep going and you get $x_L = x_\ell + \sum_{i=\ell}^{L-1}F(x_i)$: **the activations at the top are the activations at layer $\ell$ plus a pile of corrections.** The original signal is never multiplied by anything. It is *literally still there*, additively, at the top of a 152-layer network.
+Keep going and you get $`x_L = x_\ell + \sum_{i=\ell}^{L-1}F(x_i)`$: **the activations at the top are the activations at layer $\ell$ plus a pile of corrections.** The original signal is never multiplied by anything. It is *literally still there*, additively, at the top of a 152-layer network.
 
-Differentiate that with respect to $x_\ell$ and read the result aloud:
+Differentiate that with respect to $`x_\ell`$ and read the result aloud:
 
 $$\frac{\partial\mathcal{L}}{\partial x_\ell} = \frac{\partial\mathcal{L}}{\partial x_L}\left(1 + \sum_{i=\ell}^{L-1}\frac{\partial F(x_i)}{\partial x_\ell}\right)$$
 
-*"The gradient arriving at layer $\ell$ equals the gradient at the top, times one-plus-a-correction."* The $1$ comes from differentiating the $x_\ell$ term — the skip path — and it does not depend on any weight anywhere in the network.
+*"The gradient arriving at layer $\ell$ equals the gradient at the top, times one-plus-a-correction."* The $1$ comes from differentiating the $`x_\ell`$ term — the skip path — and it does not depend on any weight anywhere in the network.
 
 **Put numbers on the contrast.** Suppose each layer's Jacobian typically scales gradients by 0.8, and there are 50 layers:
 
@@ -557,24 +557,24 @@ The definition is narrow and the narrowness is the point: **the block's own, unm
 
 | Example | The equation | Why it qualifies |
 |---|---|---|
-| A ResNet-v2 basic block | $x_{\ell+1} = x_\ell + F(x_\ell)$ | Bare skip path; setting $F = 0$ recovers the identity exactly |
+| A ResNet-v2 basic block | $`x_{\ell+1} = x_\ell + F(x_\ell)`$ | Bare skip path; setting $F = 0$ recovers the identity exactly |
 | A transformer sublayer | $x + \mathrm{Attn}(\mathrm{LN}(x))$ | The normalization sits *inside* the branch; the skip is untouched |
-| Diffusion models predicting $\epsilon$ rather than $x_0$ | $\hat x_0 = (x_t - \sigma\hat\epsilon)/\alpha$ | The network outputs a *correction* to what it was handed |
-| A ResNet stage with 3 blocks at constant width | $x + F_1$, then $+F_2$, then $+F_3$ | Three clean additions in a row — the mesh of §8.2 |
-| Zero-initializing the last BN's $\gamma$ in each branch | $x_{\ell+1} = x_\ell + 0$ at step 0 | Starts the network *as* the identity and lets it earn its depth |
+| Diffusion models predicting $\epsilon$ rather than $`x_0`$ | $`\hat x_0 = (x_t - \sigma\hat\epsilon)/\alpha`$ | The network outputs a *correction* to what it was handed |
+| A ResNet stage with 3 blocks at constant width | $`x + F_1`$, then $`+F_2`$, then $`+F_3`$ | Three clean additions in a row — the mesh of §8.2 |
+| Zero-initializing the last BN's $\gamma$ in each branch | $`x_{\ell+1} = x_\ell + 0`$ at step 0 | Starts the network *as* the identity and lets it earn its depth |
 
 **❌ Near-misses — skip something, but aren't the residual connection the algebra assumes**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| DenseNet's $[x_\ell, F(x_\ell)]$ | **Concatenation**, not addition. The channel count grows every block; there is no "$1 +$" to differentiate | **Dense connectivity.** Feature reuse rather than a gradient identity |
+| DenseNet's $`[x_\ell, F(x_\ell)]`$ | **Concatenation**, not addition. The channel count grows every block; there is no "$1 +$" to differentiate | **Dense connectivity.** Feature reuse rather than a gradient identity |
 | U-Net's encoder→decoder skips | Span the whole network across a resolution change, and are concatenated | **Long-range skips** carrying spatial detail past the bottleneck (§8.4) |
 | Highway networks: $T(x)\odot F(x) + (1-T(x))\odot x$ | The skip is multiplied by a **learned gate**. Differentiating gives $(1-T)$ where ResNet gives $1$ — and 50 such factors multiply | A **gated** skip. The direct ancestor, and the gate is exactly what ResNet removed |
-| The shortcut $1\times1$ stride-2 conv used when shapes change | The "identity" is now a matrix $W_s x$; the leading term is $W_s$, not $1$ | A **projection shortcut** (option B). Necessary, but each one is a break in the highway — ResNet-50 has only four |
+| The shortcut $1\times1$ stride-2 conv used when shapes change | The "identity" is now a matrix $`W_s x`$; the leading term is $`W_s`$, not $1$ | A **projection shortcut** (option B). Necessary, but each one is a break in the highway — ResNet-50 has only four |
 | A BatchNorm placed **on** the skip path | Same problem: $1$ becomes a Jacobian, and 50 Jacobians multiply back down to $0.8^{50}$ territory | The original post-activation ResNet-v1 arrangement — which is *why* v2 exists |
 | Feeding the raw input directly to the final classifier | A single long jump, not a per-block addition; the intermediate layers get no identity path | A **skip to output** / wide-and-deep pattern |
 | "Residuals" in a regression diagnostic plot | $y - \hat y$: a measured error, not a piece of architecture | The **statistical** sense of the word. Same etymology, unrelated object |
-| $x_{\ell+1} = 0.5x_\ell + 0.5F(x_\ell)$ | The coefficient on the skip is $0.5$, and $0.5^{50} = 8.9\times10^{-16}$ | A **convex-combination** update — and a good illustration of why the coefficient must be exactly 1 |
+| $`x_{\ell+1} = 0.5x_\ell + 0.5F(x_\ell)`$ | The coefficient on the skip is $0.5$, and $0.5^{50} = 8.9\times10^{-16}$ | A **convex-combination** update — and a good illustration of why the coefficient must be exactly 1 |
 
 ▸ **The boundary:** the skip path must be the identity — no weights, no normalization, no gate, no coefficient. **Anything you put on the skip converts the constant $1$ into something that gets multiplied $L$ times, and that is precisely the disease residual connections were invented to cure.**
 
@@ -616,23 +616,23 @@ Count it with $C = 256$ (so $C/4 = 64$):
 
 ▸ **This is why ResNet-50 is four times deeper than ResNet-34 at comparable total compute.** The bottleneck is the reason "deeper" stopped being expensive, and the identical squeeze–work–expand pattern reappears as the transformer's feed-forward network, MobileNetV2's *inverted* residual (which expands then squeezes, because depthwise convolutions are cheap in the wide space), and every adapter and LoRA module in Chapter 17.
 
-**Pre-activation (ResNet-v2).** Move BatchNorm and ReLU to the *front* of each convolution, so the block is BN → ReLU → conv → BN → ReLU → conv, and the addition is the last thing that happens. The skip path then carries a completely unmodified $x_\ell$: **no normalization, no activation, nothing.** By the caveat in the gradient-highway section, that is exactly the condition under which the leading $1$ survives all the way down, and it is what allowed 1000-layer networks to train.
+**Pre-activation (ResNet-v2).** Move BatchNorm and ReLU to the *front* of each convolution, so the block is BN → ReLU → conv → BN → ReLU → conv, and the addition is the last thing that happens. The skip path then carries a completely unmodified $`x_\ell`$: **no normalization, no activation, nothing.** By the caveat in the gradient-highway section, that is exactly the condition under which the leading $1$ survives all the way down, and it is what allowed 1000-layer networks to train.
 
 This is the same rearrangement as **pre-LN** versus **post-LN** in transformers (Ch. 7 and Ch. 11), for exactly the same reason, discovered independently in the two literatures. Learn the principle once: **keep the residual highway clean and push everything else into the branch.**
 
-**Shortcut projections.** When a block changes resolution or channel count, $x_\ell$ and $F(x_\ell)$ no longer have matching shapes, so the $+$ is undefined. Option A pads the extra channels with zeros (free, no parameters). Option B inserts a $1\times1$ stride-2 convolution on the skip (better accuracy, but note that it puts a matrix back on the highway — which is why these projections appear only at the three or four resolution changes in the network, never in every block).
+**Shortcut projections.** When a block changes resolution or channel count, $`x_\ell`$ and $`F(x_\ell)`$ no longer have matching shapes, so the $+$ is undefined. Option A pads the extra channels with zeros (free, no parameters). Option B inserts a $1\times1$ stride-2 convolution on the skip (better accuracy, but note that it puts a matrix back on the highway — which is why these projections appear only at the three or four resolution changes in the network, never in every block).
 
 ### The BatchNorm–residual interaction
 
-At initialization, $\mathrm{Var}(x_{\ell+1}) = \mathrm{Var}(x_\ell)+\mathrm{Var}(F)$, so variance grows **linearly with depth** and the signal-to-residual ratio degrades. BatchNorm inside the block rescales $F$ so this stays controlled.
+At initialization, $`\mathrm{Var}(x_{\ell+1}) = \mathrm{Var}(x_\ell)+\mathrm{Var}(F)`$, so variance grows **linearly with depth** and the signal-to-residual ratio degrades. BatchNorm inside the block rescales $F$ so this stays controlled.
 
 ▸ **Zero-initializing the last BN's $\gamma$ in each block** makes every block start as exact identity. This is standard (`zero_init_residual=True`) and gives ~0.5% top-1 for free. It is the same idea as **Fixup**, **ReZero**, and **AdaLN-Zero** (Ch. 21). Learn it once; it recurs everywhere.
 
 #### Why the variance grows, and what zero-init fixes
 
-**Reading $\mathrm{Var}(x_{\ell+1}) = \mathrm{Var}(x_\ell)+\mathrm{Var}(F)$.** $\mathrm{Var}$ is variance — the average squared distance from the mean, i.e. how *spread out* the numbers are (Ch. 1). The identity holds because variances of **independent** quantities add, and at initialization the branch's random output is essentially uncorrelated with its input. Two things being added and neither being subtracted means the spread only ever grows.
+**Reading $`\mathrm{Var}(x_{\ell+1}) = \mathrm{Var}(x_\ell)+\mathrm{Var}(F)`$.** $\mathrm{Var}$ is variance — the average squared distance from the mean, i.e. how *spread out* the numbers are (Ch. 1). The identity holds because variances of **independent** quantities add, and at initialization the branch's random output is essentially uncorrelated with its input. Two things being added and neither being subtracted means the spread only ever grows.
 
-**The consequence, with numbers.** Start with $\mathrm{Var}(x_0) = 1$ and let every block contribute variance $1$. Then $\mathrm{Var}(x_L) = L+1$:
+**The consequence, with numbers.** Start with $`\mathrm{Var}(x_0) = 1`$ and let every block contribute variance $1$. Then $`\mathrm{Var}(x_L) = L+1`$:
 
 | After $L$ blocks | Variance | Typical activation magnitude | One block's share of the signal |
 |---|---|---|---|
@@ -645,7 +645,7 @@ Two separate problems live in that table. **Activations grow like $\sqrt{L}$**, 
 
 BatchNorm inside the branch fixes the first problem by rescaling $F$'s output to unit variance regardless of what came before.
 
-**Now the zero-init trick.** BatchNorm's output is $\gamma\hat{x} + \beta$, where $\gamma$ is a *learned* per-channel scale. Set $\gamma = 0$ in the **last** BatchNorm of each residual branch and that branch outputs exactly zero, so $x_{\ell+1} = x_\ell$ **exactly**. Every block is a perfect identity at step zero.
+**Now the zero-init trick.** BatchNorm's output is $\gamma\hat{x} + \beta$, where $\gamma$ is a *learned* per-channel scale. Set $\gamma = 0$ in the **last** BatchNorm of each residual branch and that branch outputs exactly zero, so $`x_{\ell+1} = x_\ell`$ **exactly**. Every block is a perfect identity at step zero.
 
 ▸ **A network initialized this way starts out effectively shallow and grows its own depth.** At step 0 it is a linear stem plus a classifier — trivially easy to optimize. As each $\gamma$ drifts off zero, that block switches itself on. You are not training a 152-layer network from scratch; you are training a 1-layer network that recruits 151 more as it needs them. Half a percent of top-1 accuracy for one line of initialization code is one of the best returns in the entire field.
 
@@ -672,7 +672,7 @@ They all say: **start every block as a no-op and let gradient descent decide whi
 | **GoogLeNet/Inception** | 2014 | parallel multi-scale branches; 1×1 bottlenecks; factorized $n\times n \to n\times1,1\times n$ | 74.8% | 6.8M |
 | **ResNet-50** | 2015 | residual connections | 76.1% | 25.6M |
 | ResNeXt | 2016 | grouped conv, "cardinality" | 77.8% | 25M |
-| DenseNet | 2016 | concatenate all previous features: $x_\ell = H([x_0,\dots,x_{\ell-1}])$; feature reuse, $O(L^2)$ connections | 77.7% | 8M |
+| DenseNet | 2016 | concatenate all previous features: $`x_\ell = H([x_0,\dots,x_{\ell-1}])`$; feature reuse, $O(L^2)$ connections | 77.7% | 8M |
 | SENet | 2017 | **channel attention**: squeeze (GAP) → excite (2 FC + sigmoid) → rescale channels. The first widely-used attention in vision. | 82.7% | 146M |
 | MobileNetV2 | 2018 | inverted residual + linear bottleneck | 72.0% | 3.4M |
 | **EfficientNet** | 2019 | **compound scaling**: $d=\alpha^\phi, w=\beta^\phi, r=\gamma^\phi$ s.t. $\alpha\beta^2\gamma^2\approx2$ — scale depth, width, resolution together | 84.3% (B7) | 66M |
@@ -736,7 +736,7 @@ $$d = \alpha^\phi,\qquad w = \beta^\phi,\qquad r = \gamma^\phi,\qquad \text{subj
 
 - $\phi$ ("phi") is the single dial the practitioner turns — "how much compute do I have?"
 - $\alpha,\beta,\gamma$ are fixed ratios found once by a small grid search, then never changed.
-- The constraint $\alpha\beta^2\gamma^2\approx 2$ exists because **FLOPs scale linearly with depth but quadratically with both width and resolution.** (Doubling the channels quadruples the work in a conv, since both $C_{\text{in}}$ and $C_{\text{out}}$ double; doubling the resolution quadruples the number of output positions.) So the constraint says "one step of $\phi$ doubles the compute" — and total cost is then simply $2^\phi$.
+- The constraint $\alpha\beta^2\gamma^2\approx 2$ exists because **FLOPs scale linearly with depth but quadratically with both width and resolution.** (Doubling the channels quadruples the work in a conv, since both $`C_{\text{in}}`$ and $`C_{\text{out}}`$ double; doubling the resolution quadruples the number of output positions.) So the constraint says "one step of $\phi$ doubles the compute" — and total cost is then simply $2^\phi$.
 
 ▸ **The insight is that the three axes are complementary, not interchangeable.** A very deep network on tiny images has receptive field it cannot use; a very wide network with few layers has capacity but no compositional depth; high resolution with a shallow network has detail nothing can integrate. Scaling one axis alone saturates quickly. Scaling all three in a fixed ratio does not. **The same logic, with different axes, is exactly what Chapter 15's scaling laws do for language models** — there too the finding is that parameters and data must grow together, and that growing one alone wastes the other.
 
@@ -779,7 +779,7 @@ You need both. Semantic understanding ("this region is liver") requires context,
 
 > **Analogy.** Tracing a map. To decide "this is a river, not a road" you need to step back and see the whole region — but stepping back means you can no longer see exactly where the bank is. So you do both: step back to identify it, then put your finger back on the detailed map to trace it precisely. The skip connection is putting your finger back on the detailed map.
 
-**Note the difference from a residual connection.** A ResNet skip **adds** ($x + F(x)$, shapes must match). A U-Net skip **concatenates** ($[\,x_{\text{enc}},\, x_{\text{dec}}\,]$, channel counts add up and the next convolution decides how to combine them). Addition forces the two signals into the same representational space; concatenation keeps them separate and lets the network learn the mixture. Both are "skip connections" and they are not the same operation.
+**Note the difference from a residual connection.** A ResNet skip **adds** ($x + F(x)$, shapes must match). A U-Net skip **concatenates** ($`[\,x_{\text{enc}},\, x_{\text{dec}}\,]`$, channel counts add up and the next convolution decides how to combine them). Addition forces the two signals into the same representational space; concatenation keeps them separate and lets the network learn the mixture. Both are "skip connections" and they are not the same operation.
 
 **The diffusion additions, in plain terms** (all of them arrive properly in Ch. 20):
 
@@ -798,7 +798,7 @@ You need both. Semantic understanding ("this region is liver") requires context,
 
 **One-stage (YOLO, SSD, RetinaNet):** dense prediction over anchors in one pass. **Focal loss** solved the extreme foreground/background imbalance:
 ▸ $$\mathrm{FL}(p_t) = -\alpha_t(1-p_t)^\gamma\log p_t,\qquad \gamma=2$$
-The $(1-p_t)^\gamma$ factor down-weights easy examples by up to $100\times$, letting the rare hard positives dominate the gradient. **This is the canonical answer to "how do you handle class imbalance in dense prediction."**
+The $`(1-p_t)^\gamma`$ factor down-weights easy examples by up to $100\times$, letting the rare hard positives dominate the gradient. **This is the canonical answer to "how do you handle class imbalance in dense prediction."**
 
 **DETR:** treats detection as set prediction with a transformer; uses **Hungarian matching** for a bipartite assignment between predictions and ground truth, removing NMS and anchors entirely.
 
@@ -812,15 +812,15 @@ $$\mathrm{FL}(p_t) = -\alpha_t(1-p_t)^\gamma\log p_t,\qquad \gamma=2$$
 
 Every symbol:
 
-- **$p_t$** — the probability the model assigned to the **correct** answer for this example. If the true label is "background" and the model says 99% background, then $p_t = 0.99$. The subscript $t$ stands for "true," not for time.
-- **$-\log p_t$** — this is just ordinary cross-entropy (Ch. 1). Read it as "your surprise at the truth."
-- **$(1-p_t)^\gamma$** — the **modulating factor**, the entire contribution of this paper. It is near zero when the model is already confident and correct, and near one when the model is badly wrong.
+- **$`p_t`$** — the probability the model assigned to the **correct** answer for this example. If the true label is "background" and the model says 99% background, then $`p_t = 0.99`$. The subscript $t$ stands for "true," not for time.
+- **$`-\log p_t`$** — this is just ordinary cross-entropy (Ch. 1). Read it as "your surprise at the truth."
+- **$`(1-p_t)^\gamma`$** — the **modulating factor**, the entire contribution of this paper. It is near zero when the model is already confident and correct, and near one when the model is badly wrong.
 - **$\gamma$** ("gamma", the *focusing parameter*, $\gamma=2$ in practice) — how aggressively to discount easy examples. $\gamma=0$ recovers plain cross-entropy exactly.
-- **$\alpha_t$** — a fixed per-class weight (typically 0.25 for the foreground class) handling raw class *frequency*, a separate job from difficulty.
+- **$`\alpha_t`$** — a fixed per-class weight (typically 0.25 for the foreground class) handling raw class *frequency*, a separate job from difficulty.
 
 **The numbers are the argument.** With $\gamma = 2$:
 
-| $p_t$ | Plain CE $=-\log p_t$ | $(1-p_t)^2$ | Focal loss | Down-weighted by |
+| $`p_t`$ | Plain CE $`=-\log p_t`$ | $`(1-p_t)^2`$ | Focal loss | Down-weighted by |
 |---|---|---|---|---|
 | 0.99 (easy, confident) | 0.0101 | 0.0001 | $1.0\times10^{-6}$ | $10{,}000\times$ |
 | 0.9 (easy) | 0.105 | 0.01 | 0.00105 | $100\times$ |
@@ -938,7 +938,7 @@ The test of understanding is conversational: could you explain each of these to 
 7. **Why does a bottleneck block let you make a network four times deeper for the same compute?**
 8. **What does zero-initializing the last BatchNorm scale in every block actually do to the network at step 0?**
 9. **Why does a U-Net need skip connections at all — what specifically goes wrong without them?**
-10. **Why does a detector trained with plain cross-entropy learn to predict "background" everywhere, and what does the $(1-p_t)^\gamma$ factor change about that?**
+10. **Why does a detector trained with plain cross-entropy learn to predict "background" everywhere, and what does the $`(1-p_t)^\gamma`$ factor change about that?**
 11. **Why is the gradient of an IoU loss zero when two boxes don't overlap, and why is that a problem rather than a curiosity?**
 12. **Why did attention overtake convolution in vision at large scale, given that it isn't more expressive?**
 

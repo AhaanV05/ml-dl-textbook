@@ -3,7 +3,7 @@
 > **Prerequisites:** Ch. 1 (matrix calculus, eigendecomposition).
 > **Goal:** by the end you should be able to say, for any optimizer, *what quantity it is estimating and what its convergence rate depends on* — and to explain why the condition number is the villain in every story.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, $A^\top$, or $\mathcal{O}(\cdot)$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book. This chapter needs three things from it: $\nabla$ is "which way is uphill," $\mathbb{E}$ is "the average of," and $\theta_{t+1} = \theta_t - \dots$ is a *line of code*, not an equation to solve.
+> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, $A^\top$, or $\mathcal{O}(\cdot)$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book. This chapter needs three things from it: $\nabla$ is "which way is uphill," $\mathbb{E}$ is "the average of," and $`\theta_{t+1} = \theta_t - \dots`$ is a *line of code*, not an equation to solve.
 
 ### Symbols introduced in this chapter
 
@@ -11,27 +11,27 @@ Skim this once now; each entry is unpacked properly where it first appears.
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $\theta_t$ | "theta at step $t$" | All the model's parameters, stacked into one long vector, after $t$ updates |
+| $`\theta_t`$ | "theta at step $t$" | All the model's parameters, stacked into one long vector, after $t$ updates |
 | $\eta$ | "eta" | The **learning rate** — how big a step you take. Also called the step size |
 | $\nabla\mathcal{L}(\theta)$ | "grad L of theta" | The direction of steepest **increase** of the loss. You always move against it |
-| $g_t$ | "g at $t$" | Shorthand for the gradient actually used at step $t$ — often a noisy minibatch estimate |
-| $\theta^*,\ \mathcal{L}^*$ | "theta-star, L-star" | The best parameters, and the loss they achieve. The target |
+| $`g_t`$ | "g at $t$" | Shorthand for the gradient actually used at step $t$ — often a noisy minibatch estimate |
+| $`\theta^*,\ \mathcal{L}^*`$ | "theta-star, L-star" | The best parameters, and the loss they achieve. The target |
 | $L$ | "the smoothness constant" | A **ceiling** on curvature: how sharply the loss can bend anywhere |
 | $\mu$ | "mu" | A **floor** on curvature: how strongly the loss bends in its flattest direction |
 | $\kappa = L/\mu$ | "kappa" | **Condition number** — the aspect ratio of the valley. The villain of this chapter |
-| $\lambda_{\max},\ \lambda_{\min}$ | "lambda-max, lambda-min" | Largest and smallest eigenvalues of the Hessian: sharpest and flattest curvature |
+| $`\lambda_{\max},\ \lambda_{\min}`$ | "lambda-max, lambda-min" | Largest and smallest eigenvalues of the Hessian: sharpest and flattest curvature |
 | $H = \nabla^2\mathcal{L}$ | "the Hessian" | The grid of second derivatives — the table of curvatures |
 | $\langle a, b\rangle$ | "inner product of a and b" | The dot product $a^\top b$: one number measuring alignment |
 | $\beta$ | "beta" | The **momentum coefficient** — what fraction of the old velocity you keep |
-| $v_t$ | "v at $t$" | The momentum **buffer** (velocity): a decaying running sum of past gradients |
-| $B$, $\mathcal{B}_t$ | "B", "batch at $t$" | Minibatch size, and the set of examples drawn at step $t$ |
+| $`v_t`$ | "v at $t$" | The momentum **buffer** (velocity): a decaying running sum of past gradients |
+| $B$, $`\mathcal{B}_t`$ | "B", "batch at $t$" | Minibatch size, and the set of examples drawn at step $t$ |
 | $\Sigma(\theta)$ | "capital sigma of theta" | **Covariance of the per-example gradients** — how much the minibatch gradient wobbles |
 | $\mathrm{tr}\,\Sigma$ | "trace of Sigma" | Sum of the diagonal entries: total gradient noise across all coordinates |
 | $\mathcal{O}(1/T)$ | "big-O of one over T" | "Falls at least as fast as $1/T$," with constants deliberately ignored |
 | $dW$ | "d-W" | An infinitesimal random kick (Brownian motion) inside a stochastic differential equation |
 | $F$ | "the Fisher" | Fisher information matrix — curvature measured in *probability* space, not parameter space |
 | $\otimes$ | "Kronecker product" | Build a big matrix by scaling a whole matrix by every entry of another |
-| $\bar\theta_t$ | "theta-bar" | Here, the **averaged weights**. ⚠ Not a gradient — Chapter 1's bar convention does not apply in §4.8 |
+| $`\bar\theta_t`$ | "theta-bar" | Here, the **averaged weights**. ⚠ Not a gradient — Chapter 1's bar convention does not apply in §4.8 |
 
 **Full forms for the abbreviations in this chapter:**
 
@@ -73,9 +73,9 @@ Three regimes matter:
 
 | Regime | What we assume | What we can prove |
 |---|---|---|
-| Convex + smooth | $L$-Lipschitz gradient | $\mathcal{L}(\theta_T)-\mathcal{L}^* = O(1/T)$ |
+| Convex + smooth | $L$-Lipschitz gradient | $`\mathcal{L}(\theta_T)-\mathcal{L}^* = O(1/T)`$ |
 | Strongly convex + smooth | also $\mu$-strongly convex | linear rate $O((1-\mu/L)^T)$ |
-| Nonconvex + smooth | just smoothness | $\min_t\|\nabla\mathcal{L}(\theta_t)\|^2 = O(1/T)$ (stationary point only) |
+| Nonconvex + smooth | just smoothness | $`\min_t\|\nabla\mathcal{L}(\theta_t)\|^2 = O(1/T)`$ (stationary point only) |
 
 Deep learning is the third row, which is why theory gives so little and practice gives so much.
 
@@ -87,23 +87,23 @@ Read aloud: *"theta at step t-plus-one equals theta at step t, minus eta times g
 
 | Piece | Read aloud | Job |
 |---|---|---|
-| $\theta_t$ | "theta sub t" | Every weight in the model at step $t$, laid end to end in one vector. For a 100-million-parameter model, $\theta$ is a list of $10^8$ numbers |
-| $\nabla\mathcal{L}(\theta_t)$ | "grad L of theta-t" | A vector of the **same length** as $\theta$, one entry per parameter, saying "raise this weight and the loss goes up by this much per unit" |
+| $`\theta_t`$ | "theta sub t" | Every weight in the model at step $t$, laid end to end in one vector. For a 100-million-parameter model, $\theta$ is a list of $10^8$ numbers |
+| $`\nabla\mathcal{L}(\theta_t)`$ | "grad L of theta-t" | A vector of the **same length** as $\theta$, one entry per parameter, saying "raise this weight and the loss goes up by this much per unit" |
 | the minus sign | "minus" | The gradient points **uphill**. You want down. Hence the minus |
 | $\eta$ | "eta" | How far to walk. A single scalar multiplying the whole vector |
 | $t{+}1$ vs $t$ | — | This is an **assignment**, not an equation. Read it as `theta = theta - eta * grad`. Solving it as an equation would give the nonsense $\eta\nabla\mathcal{L} = 0$ |
 
 ▸ **The whole of deep learning is this one line, run a few hundred thousand times.** Everything else in Chapters 4 and 5 — momentum, Adam, warmup, cosine decay, clipping — is a modification of either $\eta$ or $\nabla\mathcal{L}$ in that single expression. Nothing replaces it.
 
-**Put a number in.** Take a one-parameter model with $\mathcal{L}(\theta) = \theta^2$, so $\nabla\mathcal{L} = 2\theta$. Start at $\theta_0 = 1$ with $\eta = 0.1$:
+**Put a number in.** Take a one-parameter model with $\mathcal{L}(\theta) = \theta^2$, so $\nabla\mathcal{L} = 2\theta$. Start at $`\theta_0 = 1`$ with $\eta = 0.1$:
 
-- $\theta_1 = 1 - 0.1(2)(1) = 0.8$
-- $\theta_2 = 0.8 - 0.1(2)(0.8) = 0.64$
-- $\theta_3 = 0.512$, and in general $\theta_t = 0.8^t$.
+- $`\theta_1 = 1 - 0.1(2)(1) = 0.8`$
+- $`\theta_2 = 0.8 - 0.1(2)(0.8) = 0.64`$
+- $`\theta_3 = 0.512`$, and in general $`\theta_t = 0.8^t`$.
 
 Each step multiplies the distance-to-zero by $0.8$. That is **geometric decay**, and it is the whole story of gradient descent on a well-behaved problem: you don't march to the answer, you shrink toward it by a constant fraction each step. Twenty steps gets you to $0.8^{20}\approx0.012$.
 
-Now set $\eta = 1.1$ instead: $\theta_1 = 1 - 1.1(2)(1) = -1.2$, then $\theta_2 = 1.44$, then $-1.728$. **It diverges, flipping sign every step.** The threshold between these two behaviours is what §4.3 calls the stability condition, and it is the first thing to check when a training run explodes.
+Now set $\eta = 1.1$ instead: $`\theta_1 = 1 - 1.1(2)(1) = -1.2`$, then $`\theta_2 = 1.44`$, then $-1.728$. **It diverges, flipping sign every step.** The threshold between these two behaviours is what §4.3 calls the stability condition, and it is the first thing to check when a training run explodes.
 
 #### Unpacking the three regimes
 
@@ -130,8 +130,8 @@ The word does three different jobs in three different sentences, and the three c
 | Example | Why it qualifies |
 |---|---|
 | Full-batch gradient descent on logistic regression with $\eta < 2/L$: loss falls monotonically to the global minimum | Convex and smooth — row 1 of the table. The claim is proved, and the rate is known |
-| A quadratic direction with $\eta = 1/\lambda_i$: that coordinate hits exactly zero in **one step** | $(1-\eta\lambda_i) = 0$. Exact, not asymptotic |
-| SGD with $\eta_t = \eta_0/t$ on a strongly convex loss: $\theta_t \to \theta^*$ | The Robbins–Monro conditions hold ($\sum\eta_t=\infty$, $\sum\eta_t^2<\infty$) |
+| A quadratic direction with $`\eta = 1/\lambda_i`$: that coordinate hits exactly zero in **one step** | $`(1-\eta\lambda_i) = 0`$. Exact, not asymptotic |
+| SGD with $`\eta_t = \eta_0/t`$ on a strongly convex loss: $`\theta_t \to \theta^*`$ | The Robbins–Monro conditions hold ($`\sum\eta_t=\infty`$, $`\sum\eta_t^2<\infty`$) |
 | A nonconvex run whose gradient norm falls $12.0 \to 0.003$ | This is precisely, and only, what row 3 promises: you arrive somewhere the gradient is small |
 
 **❌ Near-misses — sound like convergence, aren't**
@@ -141,8 +141,8 @@ The word does three different jobs in three different sentences, and the three c
 | "Loss has been flat for 5,000 steps, so we converged" | At constant $\eta$, SGD does not converge — it orbits a noise ball of radius $\eta\,\mathrm{tr}\Sigma/2\mu B$. The loss is flat; the weights are still moving | Statistical equilibrium (§4.6) |
 | "Training loss is $0.001$, so the optimizer found a good solution" | That is a statement about the training set. Zero training loss is achievable on **random labels** | Interpolation. Says nothing whatsoever about $R(h)$ |
 | "The gradient norm is $10^{-4}$, so we're at a minimum" | $\nabla\mathcal{L}=0$ is also true at maxima, saddles, and plateaus | A stationary point, of unknown type |
-| "Theory proves SGD finds the minimum of a deep network" | Row 3 promises $\min_t\|\nabla\mathcal{L}\|^2 = \mathcal{O}(1/\sqrt{T})$ — a small gradient somewhere along the path | $\epsilon$-stationarity, which is a much weaker sentence than it sounds |
-| "Loss went down every step for 2,000 steps, so $\eta$ is safe" | A single direction with $\eta\lambda_i$ just past $2$ grows silently while the other $10^8$ directions dominate the total — until it doesn't | Latent instability, typically discovered as a `NaN` at step 12,000 |
+| "Theory proves SGD finds the minimum of a deep network" | Row 3 promises $`\min_t\|\nabla\mathcal{L}\|^2 = \mathcal{O}(1/\sqrt{T})`$ — a small gradient somewhere along the path | $\epsilon$-stationarity, which is a much weaker sentence than it sounds |
+| "Loss went down every step for 2,000 steps, so $\eta$ is safe" | A single direction with $`\eta\lambda_i`$ just past $2$ grows silently while the other $10^8$ directions dominate the total — until it doesn't | Latent instability, typically discovered as a `NaN` at step 12,000 |
 | "Two runs ended at the same loss, so they found the same solution" | Two draws from the same noise ball, at a distance of $2\sqrt{\eta\,\mathrm{tr}\Sigma/2\mu B}$ from each other | Equal loss, different weights (§4.6, §4.8) |
 
 ▸ **The boundary:** "converged" can mean *the iterates stopped moving*, *the gradient reached zero*, or *the model is good*. These are three distinct claims about three distinct objects ($\theta$, $\nabla\mathcal{L}$, and $R(h)$), and **every theorem in this chapter proves only the middle one.**
@@ -179,7 +179,7 @@ Decoding each part:
 - $\|\cdot\|$ is the ordinary length of a vector (§0.6). $\|x - y\|$ = "how far apart are these two parameter settings."
 - $\nabla\mathcal{L}(x) - \nabla\mathcal{L}(y)$ = "how different are the two slopes."
 - $L$ is the **worst-case exchange rate** between the two. Small $L$ = gently rolling terrain. Large $L$ = the tilt can swing wildly over a short distance.
-- $\iff \lambda_{\max}(\nabla^2\mathcal{L}) \le L$ says the same thing in curvature language: the Hessian's largest eigenvalue — the sharpest bend anywhere — never exceeds $L$. **Smoothness and maximum curvature are the same quantity seen from two sides**, because curvature *is* the rate at which slope changes.
+- $`\iff \lambda_{\max}(\nabla^2\mathcal{L}) \le L`$ says the same thing in curvature language: the Hessian's largest eigenvalue — the sharpest bend anywhere — never exceeds $L$. **Smoothness and maximum curvature are the same quantity seen from two sides**, because curvature *is* the rate at which slope changes.
 
 > **Analogy.** $L$ is the tightest hairpin allowed on a mountain road. A road with a low $L$ has only long sweeping bends: if you glance at the road ahead and it looks straight, you can safely drive fifty metres without looking again. A road with a huge $L$ can turn 90° in a metre, so any information you gathered is stale almost immediately. **Gradient descent's step size is exactly "how far you drive between glances," and $L$ is what makes that safe or reckless.**
 
@@ -230,7 +230,7 @@ Read aloud: *"kappa equals L over mu."* In English: **"how lopsided is this bowl
 
 > **Analogy.** Picture a running track versus a circular bowl. In a round bowl, downhill is always toward the centre. In a long, steeply-banked track, "downhill" as felt underfoot means "toward the inside rail" — almost perpendicular to the direction you actually need to travel to reach the finish. **$\kappa$ measures how badly the direction that feels downhill differs from the direction that gets you there.** A ball dropped into a bathtub sloshes side to side many times while creeping slowly toward the drain; $\kappa$ is the ratio of the sloshing to the creeping.
 
-**A one-line numerical demonstration.** Take $\mathcal{L}(\theta) = \frac12(100\theta_1^2 + 0.01\theta_2^2)$. Then $L = 100$, $\mu = 0.01$, $\kappa = 10^4$. Stability forces $\eta < 2/100 = 0.02$. At $\eta = 0.01$, the $\theta_1$ coordinate shrinks by a factor $|1 - 0.01\times100| = 0$ — it is solved in a single step. The $\theta_2$ coordinate shrinks by $|1 - 0.01\times0.01| = 0.9999$ — it needs about **6,900 steps to halve**, and about 23,000 to reach a tenth of where it started. *One coordinate is finished in a single step; the other takes tens of thousands.* You cannot use a bigger step, because doing so would blow up the first coordinate.
+**A one-line numerical demonstration.** Take $`\mathcal{L}(\theta) = \frac12(100\theta_1^2 + 0.01\theta_2^2)`$. Then $L = 100$, $\mu = 0.01$, $\kappa = 10^4$. Stability forces $\eta < 2/100 = 0.02$. At $\eta = 0.01$, the $`\theta_1`$ coordinate shrinks by a factor $|1 - 0.01\times100| = 0$ — it is solved in a single step. The $`\theta_2`$ coordinate shrinks by $|1 - 0.01\times0.01| = 0.9999$ — it needs about **6,900 steps to halve**, and about 23,000 to reach a tenth of where it started. *One coordinate is finished in a single step; the other takes tens of thousands.* You cannot use a bigger step, because doing so would blow up the first coordinate.
 
 ▸ **This is the entire problem, and every optimizer in Chapters 4 and 5 is an attempt to solve it.** Momentum attacks it by averaging away the sloshing. Adam attacks it by giving each coordinate its own step size. Newton's method attacks it by rescaling space so the valley becomes round. Normalization layers (Ch. 7) attack it by keeping the loss surface from becoming lopsided in the first place. **When you understand $\kappa$, the rest of optimization stops looking like a bag of tricks and starts looking like one problem with several attacks.**
 
@@ -238,7 +238,7 @@ Read aloud: *"kappa equals L over mu."* In English: **"how lopsided is this bowl
 
 ## 4.3 The convergence proof for smooth convex GD
 
-Plug $y = \theta_{t+1} = \theta_t - \eta g_t$ into the descent lemma:
+Plug $`y = \theta_{t+1} = \theta_t - \eta g_t`$ into the descent lemma:
 
 $$\mathcal{L}(\theta_{t+1}) \le \mathcal{L}(\theta_t) - \eta\|g_t\|^2 + \frac{L\eta^2}{2}\|g_t\|^2 = \mathcal{L}(\theta_t) - \eta\left(1 - \frac{L\eta}{2}\right)\|g_t\|^2$$
 
@@ -253,7 +253,7 @@ $$\frac{1}{2L}\sum_{t=0}^{T-1}\|g_t\|^2 \le \mathcal{L}(\theta_0) - \mathcal{L}^
 
 So gradient norm shrinks as $O(1/\sqrt T)$ in the nonconvex case. **This is all the guarantee deep learning has.** Not a global minimum, not even a local minimum — just "you'll eventually pass near a point with small gradient."
 
-**With convexity added**, a few more lines give $\mathcal{L}(\theta_T) - \mathcal{L}^* \le \frac{\|\theta_0-\theta^*\|^2}{2\eta T}$, the $O(1/T)$ rate.
+**With convexity added**, a few more lines give $`\mathcal{L}(\theta_T) - \mathcal{L}^* \le \frac{\|\theta_0-\theta^*\|^2}{2\eta T}`$, the $O(1/T)$ rate.
 
 **With strong convexity:**
 ▸ $$\|\theta_T - \theta^*\|^2 \le \left(1-\frac{\mu}{L}\right)^T\|\theta_0-\theta^*\|^2 = \left(1-\frac{1}{\kappa}\right)^T\|\theta_0-\theta^*\|^2$$
@@ -266,12 +266,12 @@ To reach error $\epsilon$: $T = O(\kappa\log(1/\epsilon))$ iterations.
 
 The proof is four lines and each is a small, mechanical move. Here is the same argument in slow motion.
 
-**Line 1 — substitute your own step into the bound.** The descent lemma held for *any* $y$. Choose $y$ to be exactly where gradient descent is about to go, $y = \theta_t - \eta g_t$. Then $y - x = -\eta g_t$, and the two terms become:
+**Line 1 — substitute your own step into the bound.** The descent lemma held for *any* $y$. Choose $y$ to be exactly where gradient descent is about to go, $`y = \theta_t - \eta g_t`$. Then $`y - x = -\eta g_t`$, and the two terms become:
 
-- $\langle\nabla\mathcal{L}(x),\ -\eta g_t\rangle = -\eta\|g_t\|^2$, since the gradient is being dotted with a scaled copy of itself. *A vector dotted with itself is its squared length* — that is where $\|g_t\|^2$ comes from.
-- $\frac{L}{2}\|-\eta g_t\|^2 = \frac{L\eta^2}{2}\|g_t\|^2$, since pulling a scalar out of a norm squares it.
+- $`\langle\nabla\mathcal{L}(x),\ -\eta g_t\rangle = -\eta\|g_t\|^2`$, since the gradient is being dotted with a scaled copy of itself. *A vector dotted with itself is its squared length* — that is where $`\|g_t\|^2`$ comes from.
+- $`\frac{L}{2}\|-\eta g_t\|^2 = \frac{L\eta^2}{2}\|g_t\|^2`$, since pulling a scalar out of a norm squares it.
 
-**Line 2 — read the sign.** Factor out $\eta\|g_t\|^2$:
+**Line 2 — read the sign.** Factor out $`\eta\|g_t\|^2`$:
 
 $$\mathcal{L}(\theta_{t+1}) \le \mathcal{L}(\theta_t) - \eta\left(1 - \frac{L\eta}{2}\right)\|g_t\|^2$$
 
@@ -287,11 +287,11 @@ Read aloud: *"the new loss is at most the old loss, minus one over two-L, times 
 
 > **Analogy.** Steepness is your reward for stepping; sharpness is your tax. A steep, gently-curving slope (big $\|g\|$, small $L$) is a bargain — you can commit to a long stride and cash in. A steep but violently-curving slope (big $\|g\|$, big $L$) is a trap: the slope you measured stops being true almost immediately, so you must take small steps and progress crawls.
 
-**Line 4 — the telescoping trick.** Every step buys at least $\frac{1}{2L}\|g_t\|^2$ of loss reduction. But the *total* loss reduction available in the whole run is finite — it can never exceed $\mathcal{L}(\theta_0) - \mathcal{L}^*$, the drop from your starting point to the best possible. So:
+**Line 4 — the telescoping trick.** Every step buys at least $`\frac{1}{2L}\|g_t\|^2`$ of loss reduction. But the *total* loss reduction available in the whole run is finite — it can never exceed $`\mathcal{L}(\theta_0) - \mathcal{L}^*`$, the drop from your starting point to the best possible. So:
 
 $$\underbrace{\frac{1}{2L}\sum_{t=0}^{T-1}\|g_t\|^2}_{\text{total bought}} \ \le\ \underbrace{\mathcal{L}(\theta_0) - \mathcal{L}^*}_{\text{total available}}$$
 
-▸ **This is a budget argument, and it is worth admiring.** You have a fixed amount of loss to spend. Every large gradient spends some of it. Therefore **you cannot have many large gradients** — you would run out of loss. Since the *smallest* of $T$ numbers is no bigger than their average, $\min_{t<T}\|g_t\|^2 \le \frac{2L(\mathcal{L}(\theta_0)-\mathcal{L}^*)}{T}$.
+▸ **This is a budget argument, and it is worth admiring.** You have a fixed amount of loss to spend. Every large gradient spends some of it. Therefore **you cannot have many large gradients** — you would run out of loss. Since the *smallest* of $T$ numbers is no bigger than their average, $`\min_{t<T}\|g_t\|^2 \le \frac{2L(\mathcal{L}(\theta_0)-\mathcal{L}^*)}{T}`$.
 
 **Read the conclusion honestly.** It says: *somewhere in your first $T$ steps, you passed a point where the gradient was small.* It does not say the last step was good. It does not say you are near a minimum. It does not even tell you **which** step it was, so you could not go back and retrieve it. This is what "all the guarantee deep learning has" means, precisely.
 
@@ -301,8 +301,8 @@ The three rates look similar on paper and are wildly different in practice. Put 
 
 | Rate | Form | Steps to gain one decimal digit | Character |
 |---|---|---|---|
-| Nonconvex | $\min_t\|g_t\|^2 \sim 1/T$ | needs **10×** the total steps so far | brutal; you buy accuracy by multiplying your budget |
-| Convex | $\mathcal{L}(\theta_T)-\mathcal{L}^* \sim 1/T$ | needs **10×** the total steps so far | same shape, but now it is the *loss* that's converging, not just the gradient |
+| Nonconvex | $`\min_t\|g_t\|^2 \sim 1/T`$ | needs **10×** the total steps so far | brutal; you buy accuracy by multiplying your budget |
+| Convex | $`\mathcal{L}(\theta_T)-\mathcal{L}^* \sim 1/T`$ | needs **10×** the total steps so far | same shape, but now it is the *loss* that's converging, not just the gradient |
 | Strongly convex | $(1-1/\kappa)^T$ | a **fixed** $\approx 2.3\kappa$ more steps | each digit costs the same as the last |
 
 ▸ **The difference between $1/T$ and $(1-1/\kappa)^T$ is the difference between "progress gets harder forever" and "progress costs a constant rent."** The strongly convex rate is called **linear convergence** — confusingly, because the *log* of the error falls linearly with $T$. Each digit costs a fixed toll. Under a $1/T$ rate, the first digit might cost 10 steps, the second 100, the third 1,000. **That is why practitioners care so much about anything that restores curvature: it changes the shape of the cost curve, not just its constant.**
@@ -319,15 +319,15 @@ Take $\mathcal{L}(\theta) = \frac12\theta^\top H\theta$ with $H = Q\Lambda Q^\to
 
 $$u^{(i)}_{t+1} = (1-\eta\lambda_i)\,u^{(i)}_t \implies u^{(i)}_t = (1-\eta\lambda_i)^t u^{(i)}_0$$
 
-▸ Each eigendirection contracts independently by factor $|1-\eta\lambda_i|$.
+▸ Each eigendirection contracts independently by factor $`|1-\eta\lambda_i|`$.
 
-- **Convergence requires** $|1-\eta\lambda_i|<1$ for all $i$, i.e. $\eta < 2/\lambda_{\max}$. **This is the stability threshold** — remember it for Edge of Stability in Ch. 5.
-- The **slowest** direction is $\lambda_{\min}$: contraction $1-\eta\lambda_{\min} = 1-\lambda_{\min}/\lambda_{\max} = 1 - 1/\kappa$ at the largest stable LR.
-- The **optimal** LR balances the two extremes: $\eta^* = \frac{2}{\lambda_{\min}+\lambda_{\max}}$, giving contraction $\frac{\kappa-1}{\kappa+1}$.
+- **Convergence requires** $`|1-\eta\lambda_i|<1`$ for all $i$, i.e. $`\eta < 2/\lambda_{\max}`$. **This is the stability threshold** — remember it for Edge of Stability in Ch. 5.
+- The **slowest** direction is $`\lambda_{\min}`$: contraction $`1-\eta\lambda_{\min} = 1-\lambda_{\min}/\lambda_{\max} = 1 - 1/\kappa`$ at the largest stable LR.
+- The **optimal** LR balances the two extremes: $`\eta^* = \frac{2}{\lambda_{\min}+\lambda_{\max}}`$, giving contraction $\frac{\kappa-1}{\kappa+1}$.
 
-**The picture:** a long narrow valley. GD zig-zags across the narrow direction (which is near its stability limit) while crawling along the long direction. You've seen this plot; now you know it's $|1-\eta\lambda_i|$ close to $-1$ in one direction and close to $+1$ in the other.
+**The picture:** a long narrow valley. GD zig-zags across the narrow direction (which is near its stability limit) while crawling along the long direction. You've seen this plot; now you know it's $`|1-\eta\lambda_i|`$ close to $-1$ in one direction and close to $+1$ in the other.
 
-**Numbers.** $\lambda_{\max}=100$, $\lambda_{\min}=0.01$, $\kappa=10^4$. Max stable $\eta = 0.02$. Contraction in the slow direction: $1 - 0.02\times0.01 = 0.9998$. To reduce that component by $e^{-1}$ takes $5{,}000$ steps. To reduce it by $10^{-3}$ takes ~35,000 steps. **That's a long training run.**
+**Numbers.** $`\lambda_{\max}=100`$, $`\lambda_{\min}=0.01`$, $\kappa=10^4$. Max stable $\eta = 0.02$. Contraction in the slow direction: $1 - 0.02\times0.01 = 0.9998$. To reduce that component by $e^{-1}$ takes $5{,}000$ steps. To reduce it by $10^{-3}$ takes ~35,000 steps. **That's a long training run.**
 
 #### The quadratic model, decoded
 
@@ -345,11 +345,11 @@ In these coordinates the update **decouples**: each direction evolves entirely o
 
 $$u^{(i)}_{t+1} = (1-\eta\lambda_i)\,u^{(i)}_t$$
 
-Read aloud: *"u-superscript-i at t-plus-one equals one minus eta lambda-i, times u-superscript-i at t."* Here $u^{(i)}$ means **the $i$-th coordinate** in the rotated frame, and $\lambda_i$ is the curvature along that axis. So a $10^8$-dimensional coupled optimization problem becomes $10^8$ *independent* one-dimensional problems, each of the trivial form "multiply by a number each step."
+Read aloud: *"u-superscript-i at t-plus-one equals one minus eta lambda-i, times u-superscript-i at t."* Here $u^{(i)}$ means **the $i$-th coordinate** in the rotated frame, and $`\lambda_i`$ is the curvature along that axis. So a $10^8$-dimensional coupled optimization problem becomes $10^8$ *independent* one-dimensional problems, each of the trivial form "multiply by a number each step."
 
-▸ **The number you multiply by is $(1-\eta\lambda_i)$, and everything follows from where it sits on the number line:**
+▸ **The number you multiply by is $`(1-\eta\lambda_i)`$, and everything follows from where it sits on the number line:**
 
-| $1-\eta\lambda_i$ | Behaviour of that direction | Feels like |
+| $`1-\eta\lambda_i`$ | Behaviour of that direction | Feels like |
 |---|---|---|
 | between $0$ and $1$ | shrinks steadily toward zero | crawling downhill |
 | exactly $0$ | solved in **one step** | a perfect step size for that axis |
@@ -357,47 +357,47 @@ Read aloud: *"u-superscript-i at t-plus-one equals one minus eta lambda-i, times
 | exactly $-1$ | bounces forever, never shrinking | permanent oscillation |
 | beyond $-1$ | grows, flipping sign | **divergence**, and `NaN` shortly after |
 
-**Numbers on all five rows**, with $\lambda_i = 100$ throughout, varying only $\eta$:
+**Numbers on all five rows**, with $`\lambda_i = 100`$ throughout, varying only $\eta$:
 
 - $\eta = 0.001$: factor $0.9$ → slow, steady.
 - $\eta = 0.01$: factor $0$ → done in one step.
 - $\eta = 0.015$: factor $-0.5$ → overshoots past the bottom, comes back, halving each time.
-- $\eta = 0.02$: factor $-1$ → oscillates forever at fixed amplitude. This is the stability edge, $\eta = 2/\lambda_{\max}$.
+- $\eta = 0.02$: factor $-1$ → oscillates forever at fixed amplitude. This is the stability edge, $`\eta = 2/\lambda_{\max}`$.
 - $\eta = 0.025$: factor $-1.5$ → each swing is 50% wider than the last. After 40 steps, $1.5^{40}\approx 1.1\times10^7$.
 
-▸ **Notice what the single scalar $\eta$ must do:** it is one number applied to *every* coordinate at once, and each coordinate wants a different one. The sharpest direction ($\lambda_{\max}$) sets a hard ceiling — exceed $2/\lambda_{\max}$ and that direction explodes, taking the whole model with it. The flattest direction ($\lambda_{\min}$) then has to make do with whatever is left, which is $\kappa$ times too small for it. **One knob, a million conflicting demands, and the loudest one wins.**
+▸ **Notice what the single scalar $\eta$ must do:** it is one number applied to *every* coordinate at once, and each coordinate wants a different one. The sharpest direction ($`\lambda_{\max}`$) sets a hard ceiling — exceed $`2/\lambda_{\max}`$ and that direction explodes, taking the whole model with it. The flattest direction ($`\lambda_{\min}`$) then has to make do with whatever is left, which is $\kappa$ times too small for it. **One knob, a million conflicting demands, and the loudest one wins.**
 
-**Why the zig-zag picture looks the way it does.** In the sharp direction, $1-\eta\lambda_{\max}$ sits near $-1$: sign flips every step, so the path crosses back and forth over the valley floor. In the flat direction, $1-\eta\lambda_{\min}$ sits near $+1$: essentially no movement per step. Draw both at once and you get the classic hairpin path — **furious lateral sloshing plus imperceptible forward progress.** The picture is not an artist's impression; it is $(-0.9)^t$ plotted against $(0.9998)^t$.
+**Why the zig-zag picture looks the way it does.** In the sharp direction, $`1-\eta\lambda_{\max}`$ sits near $-1$: sign flips every step, so the path crosses back and forth over the valley floor. In the flat direction, $`1-\eta\lambda_{\min}`$ sits near $+1$: essentially no movement per step. Draw both at once and you get the classic hairpin path — **furious lateral sloshing plus imperceptible forward progress.** The picture is not an artist's impression; it is $(-0.9)^t$ plotted against $(0.9998)^t$.
 
-**Verifying the book's numbers.** With $\lambda_{\max}=100$, stability caps $\eta$ at $2/100 = 0.02$. The slow direction then contracts by $1 - 0.02(0.01) = 0.9998$ per step, i.e. it loses $0.02\%$ of its error each step. To fall by a factor $e \approx 2.718$ takes $1/0.0002 = 5{,}000$ steps. To fall by $1000\times$ takes $\ln(1000)/0.0002 \approx 34{,}500$ steps. **And that is the best case** — with the largest step size that does not immediately destroy the run.
+**Verifying the book's numbers.** With $`\lambda_{\max}=100`$, stability caps $\eta$ at $2/100 = 0.02$. The slow direction then contracts by $1 - 0.02(0.01) = 0.9998$ per step, i.e. it loses $0.02\%$ of its error each step. To fall by a factor $e \approx 2.718$ takes $1/0.0002 = 5{,}000$ steps. To fall by $1000\times$ takes $\ln(1000)/0.0002 \approx 34{,}500$ steps. **And that is the best case** — with the largest step size that does not immediately destroy the run.
 
 #### Examples and non-examples: problems the learning rate can fix
 
-The quadratic model gives you the exact tool for this: $\eta$ enters the dynamics only through the contraction factor $(1-\eta\lambda_i)$. Any pathology you can describe as "that factor sits in the wrong place on the number line" is an $\eta$ problem. Nothing else is.
+The quadratic model gives you the exact tool for this: $\eta$ enters the dynamics only through the contraction factor $`(1-\eta\lambda_i)`$. Any pathology you can describe as "that factor sits in the wrong place on the number line" is an $\eta$ problem. Nothing else is.
 
 **✅  learning-rate problems**
 
 | Example | Why it qualifies |
 |---|---|
-| Loss becomes `NaN` within 30 steps; halving $\eta$ fixes it permanently | $\eta > 2/\lambda_{\max}$, so $\lvert 1-\eta\lambda_{\max}\rvert > 1$ and that direction grows geometrically. At factor $-1.5$, forty steps gives $1.5^{40} \approx 1.1\times10^7$ |
-| Loss visibly bounces up and down with a period of about two steps | $1-\eta\lambda_{\max}$ sits just inside $-1$: the sign flips every step. This is the stability edge, and it is diagnosable by eye |
-| Loss falls steadily but $10\times$ too slowly, and $\eta \times 8$ gives a clean $8\times$ speedup | You were sitting at $1-\eta\lambda_i \approx 0.99$ everywhere, far below the ceiling. Free money, and rare |
+| Loss becomes `NaN` within 30 steps; halving $\eta$ fixes it permanently | $`\eta > 2/\lambda_{\max}`$, so $`\lvert 1-\eta\lambda_{\max}\rvert > 1`$ and that direction grows geometrically. At factor $-1.5$, forty steps gives $1.5^{40} \approx 1.1\times10^7$ |
+| Loss visibly bounces up and down with a period of about two steps | $`1-\eta\lambda_{\max}`$ sits just inside $-1$: the sign flips every step. This is the stability edge, and it is diagnosable by eye |
+| Loss falls steadily but $10\times$ too slowly, and $\eta \times 8$ gives a clean $8\times$ speedup | You were sitting at $`1-\eta\lambda_i \approx 0.99`$ everywhere, far below the ceiling. Free money, and rare |
 | Turning on momentum with $\beta=0.9$ causes divergence, and cutting $\eta$ by 10 restores it | Momentum multiplied the effective step by $1/(1-\beta) = 10$. It really was a step-size problem — you just made it without meaning to |
 
 **❌ Near-misses — look like learning-rate problems, aren't**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| Loss plateaus at $2.31$ for 20,000 steps, and no value of $\eta$ helps | With $\kappa = 10^4$, the flat direction contracts by $0.9998$ per step at the **largest stable** $\eta$. That is $34{,}500$ steps to fall $1000\times$, and $\eta$ cannot be raised because $\lambda_{\max}$ forbids it | **Conditioning.** Fixed by preconditioning, normalization, or better architecture — never by the step size |
+| Loss plateaus at $2.31$ for 20,000 steps, and no value of $\eta$ helps | With $\kappa = 10^4$, the flat direction contracts by $0.9998$ per step at the **largest stable** $\eta$. That is $34{,}500$ steps to fall $1000\times$, and $\eta$ cannot be raised because $`\lambda_{\max}`$ forbids it | **Conditioning.** Fixed by preconditioning, normalization, or better architecture — never by the step size |
 | Training diverges in fp16 but is stable in fp32 at the identical $\eta$ | fp16's largest representable value is $65{,}504$; the gradient overflowed before any dynamics were involved | Numerical range. Fixed by loss scaling (Ch. 14) |
 | One loss spike every few thousand steps, recovering afterwards | A rare high-curvature batch. Lowering $\eta$ globally taxes all 5,000 well-behaved steps to police one bad one | An outlier-batch problem. Fixed by gradient clipping (§4.8) |
 | Halving $\eta$ and halving $B$ together changes nothing | They appear only as the ratio $\eta/B$ (§4.6). You changed both halves of a fraction | A no-op, dressed as two experiments |
 | Loss trains beautifully; test accuracy is poor | $\eta/B$ does influence which minimum you land in — but the training dynamics were never the failure | A generalization problem (Ch. 2), not an optimization one |
 | Loss decreases faster with $\eta = 0.01$ than $\eta = 0.001$ over 100 steps, so $0.01$ is better | Early-run speed and final quality are different questions; the larger step also sets a larger noise-ball floor | A measurement over the wrong horizon |
 
-▸ **The boundary:** $\eta$ multiplies **every** eigenvalue at once, which is exactly why it cannot change $\kappa = \lambda_{\max}/\lambda_{\min}$ — the ratio is invariant to scaling both terms. **The learning rate sets your position between "too slow" and "unstable"; the condition number sets how wide that gap is.** No amount of tuning one fixes the other.
+▸ **The boundary:** $\eta$ multiplies **every** eigenvalue at once, which is exactly why it cannot change $`\kappa = \lambda_{\max}/\lambda_{\min}`$ — the ratio is invariant to scaling both terms. **The learning rate sets your position between "too slow" and "unstable"; the condition number sets how wide that gap is.** No amount of tuning one fixes the other.
 
-> **Common misconception.** *"The learning rate is the hyperparameter that really matters — get it right and the rest is detail."* It is the most *sensitive* knob, which is not the same as the most *important* one. Its useful range is bounded above by $2/\lambda_{\max}$, a number set by your architecture, initialization, and normalization — none of which are $\eta$. And the number of steps you need is set by $\kappa$, which $\eta$ provably cannot touch. The entire remainder of this chapter, and all of Chapter 5, exists because tuning $\eta$ hits a wall: momentum attacks $\kappa$ with a square root, preconditioning attacks it directly, and normalization (Ch. 7) attacks $\lambda_{\max}$ so the ceiling itself moves. **The belief is tempting because $\eta$ is the one knob whose effect is instant and unmistakable** — wrong by $3\times$ and your run dies in the first minute. Knobs with immediate, dramatic feedback feel more important than knobs whose effect is a 30% change in total training time, even when the second is worth more.
+> **Common misconception.** *"The learning rate is the hyperparameter that really matters — get it right and the rest is detail."* It is the most *sensitive* knob, which is not the same as the most *important* one. Its useful range is bounded above by $`2/\lambda_{\max}`$, a number set by your architecture, initialization, and normalization — none of which are $\eta$. And the number of steps you need is set by $\kappa$, which $\eta$ provably cannot touch. The entire remainder of this chapter, and all of Chapter 5, exists because tuning $\eta$ hits a wall: momentum attacks $\kappa$ with a square root, preconditioning attacks it directly, and normalization (Ch. 7) attacks $`\lambda_{\max}`$ so the ceiling itself moves. **The belief is tempting because $\eta$ is the one knob whose effect is instant and unmistakable** — wrong by $3\times$ and your run dies in the first minute. Knobs with immediate, dramatic feedback feel more important than knobs whose effect is a 30% change in total training time, even when the second is worth more.
 
 > **Common misconception.** *"A smaller learning rate is always safer."* Safer against divergence, yes. But $\eta$ also sets the noise-ball radius $\eta\,\mathrm{tr}\Sigma/2\mu B$ and, through $\eta/B$, the temperature that determines *which* basin you settle in. Training at $\eta = 10^{-6}$ from step one is not a cautious version of training at $10^{-3}$ — it is a different algorithm that explores less, lands in a sharper minimum, and takes a thousand times as long to get there. **The belief is tempting because every failure mode you can see is caused by $\eta$ being too large**, and none of the failure modes caused by $\eta$ being too small announce themselves. They just look like a run that finished.
 
@@ -417,9 +417,9 @@ A ball rolling down the valley instead of a hiker taking discrete steps. The bal
 
 ▸ $$v_{t+1} = \beta v_t + g_t, \qquad \theta_{t+1} = \theta_t - \eta v_{t+1}$$
 
-(PyTorch's convention. The "$\ (1-\beta)g_t$" variant just rescales $\eta$.)
+(PyTorch's convention. The "$`\ (1-\beta)g_t`$" variant just rescales $\eta$.)
 
-**What it does, quantitatively.** For constant $g$, the velocity converges to $v_\infty = g/(1-\beta)$.
+**What it does, quantitatively.** For constant $g$, the velocity converges to $`v_\infty = g/(1-\beta)`$.
 
 ▸ $$\text{effective step} = \frac{\eta}{1-\beta}\qquad\Rightarrow\qquad \beta=0.9 \text{ multiplies your step size by } 10.$$
 
@@ -435,10 +435,10 @@ Read aloud: *"v at t-plus-one equals beta times v at t, plus g at t; then theta 
 
 | Symbol | Read aloud | Job |
 |---|---|---|
-| $v_t$ | "v at t" | The **velocity buffer** — a vector the same shape as $\theta$, stored alongside the weights |
+| $`v_t`$ | "v at t" | The **velocity buffer** — a vector the same shape as $\theta$, stored alongside the weights |
 | $\beta$ | "beta" | How much of yesterday survives into today. $\beta = 0$ recovers plain gradient descent exactly |
-| $g_t$ | "g at t" | Today's fresh gradient, added on top |
-| $\eta v_{t+1}$ | — | You now step along the *accumulated* direction, not the instantaneous one |
+| $`g_t`$ | "g at t" | Today's fresh gradient, added on top |
+| $`\eta v_{t+1}`$ | — | You now step along the *accumulated* direction, not the instantaneous one |
 
 **Unroll it and the structure appears.** Substituting repeatedly:
 
@@ -448,11 +448,11 @@ $$v_t = g_t + \beta g_{t-1} + \beta^2 g_{t-2} + \beta^3 g_{t-3} + \dots$$
 
 > **Analogy.** Plain gradient descent is a hiker who re-reads the compass at every footfall and instantly obeys it, including when the reading is nonsense. Momentum is a **loaded shopping trolley.** Push it left, then right, then left again and it barely deviates — the conflicting shoves cancel. Push it consistently in one direction and it builds up speed and keeps rolling even over a flat patch. **Consistency is amplified; contradiction is cancelled.** That is the entire mechanism, and it is exactly what a long narrow valley needs: the across-valley shoves alternate and cancel, the along-valley shoves agree and accumulate.
 
-**Where $\eta/(1-\beta)$ comes from — do the geometric series.** Suppose the gradient is a constant $g$ every step. Then $v_\infty = g + \beta g + \beta^2 g + \dots = g\,(1 + \beta + \beta^2 + \dots) = \frac{g}{1-\beta}$, because a geometric series with ratio $\beta < 1$ sums to $1/(1-\beta)$.
+**Where $\eta/(1-\beta)$ comes from — do the geometric series.** Suppose the gradient is a constant $g$ every step. Then $`v_\infty = g + \beta g + \beta^2 g + \dots = g\,(1 + \beta + \beta^2 + \dots) = \frac{g}{1-\beta}`$, because a geometric series with ratio $\beta < 1$ sums to $1/(1-\beta)$.
 
 ▸ **Put the number in and it stops being abstract.** $\beta = 0.9 \Rightarrow \frac{1}{1-0.9} = 10$. **Turning on momentum with $\beta = 0.9$ silently multiplies your step size by ten.** $\beta = 0.99$ multiplies it by a hundred. This is the single most common cause of "I added momentum and it diverged" — you did not add a stabilizer, you added a 10× learning-rate increase. **Nudging $\beta$ from $0.99$ down to $0.98$ halves the effective step; nudging it from $0.9$ up to $0.99$ multiplies it tenfold.** The knob is wildly nonlinear near 1, which is why $\beta$ is always quoted to two or three decimal places while $\eta$ is quoted to one significant figure.
 
-**Two conventions, and why you must check which one you have.** PyTorch uses $v \leftarrow \beta v + g$. Many textbooks use $v \leftarrow \beta v + (1-\beta)g$, which is a true exponential moving average and has $v_\infty = g$ — no amplification at all. **The two differ by exactly the factor $1/(1-\beta)$**, so copying a learning rate between frameworks without checking the convention can be a 10× error. The book's parenthetical about "just rescales $\eta$" is this fact.
+**Two conventions, and why you must check which one you have.** PyTorch uses $v \leftarrow \beta v + g$. Many textbooks use $v \leftarrow \beta v + (1-\beta)g$, which is a true exponential moving average and has $`v_\infty = g`$ — no amplification at all. **The two differ by exactly the factor $1/(1-\beta)$**, so copying a learning rate between frameworks without checking the convention can be a 10× error. The book's parenthetical about "just rescales $\eta$" is this fact.
 
 > **Where this came from.** The heavy-ball method is **Boris Polyak's**, from a 1964 paper in a Soviet computational-mathematics journal on speeding up iterative methods. The name is literal: Polyak's analysis models a **physical ball with mass rolling down the loss surface under friction**, where $\beta$ plays the role of one-minus-the-friction. Momentum then arrived in neural networks by a separate route — it appears in the 1986 Rumelhart–Hinton–Williams backpropagation paper as a practical fix for slow, oscillating training, presented as an engineering tweak rather than as Polyak's theorem. **The optimization theory and the deep-learning practice were, for a couple of decades, two communities using the same algorithm without much conversation.**
 
@@ -460,7 +460,7 @@ $$v_t = g_t + \beta g_{t-1} + \beta^2 g_{t-2} + \beta^3 g_{t-3} + \dots$$
 
 **Analysis on the quadratic.** In eigendirection $i$, the coupled recursion has characteristic polynomial
 $$z^2 - (1+\beta-\eta\lambda_i)z + \beta = 0$$
-Optimal tuning $\beta^* = \left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^2$, $\eta^* = \frac{4}{(\sqrt{L}+\sqrt\mu)^2}$ gives contraction rate
+Optimal tuning $`\beta^* = \left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^2`$, $`\eta^* = \frac{4}{(\sqrt{L}+\sqrt\mu)^2}`$ gives contraction rate
 
 ▸ $$1 - \frac{1}{\sqrt\kappa}\quad\text{instead of}\quad 1-\frac{1}{\kappa}$$
 
@@ -470,7 +470,7 @@ Optimal tuning $\beta^* = \left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^2$, $
 
 The formulas above are dense, so here is what they are saying and why the result is startling.
 
-**"Characteristic polynomial"** is the standard tool for a recursion that depends on the *last two* steps rather than one. Plain gradient descent had $u_{t+1} = c\,u_t$ — one previous value, one multiplier, done. Momentum's $u_{t+1}$ depends on both $u_t$ and $u_{t-1}$ (because $v$ carries history), which makes it a **second-order recursion** — mathematically the same object as a mass on a spring, or the Fibonacci sequence. For such a recursion you find the growth factors by solving a quadratic, and $z^2 - (1+\beta-\eta\lambda_i)z + \beta = 0$ is that quadratic. The two roots are the two rates at which that direction can decay.
+**"Characteristic polynomial"** is the standard tool for a recursion that depends on the *last two* steps rather than one. Plain gradient descent had $`u_{t+1} = c\,u_t`$ — one previous value, one multiplier, done. Momentum's $`u_{t+1}`$ depends on both $`u_t`$ and $`u_{t-1}`$ (because $v$ carries history), which makes it a **second-order recursion** — mathematically the same object as a mass on a spring, or the Fibonacci sequence. For such a recursion you find the growth factors by solving a quadratic, and $`z^2 - (1+\beta-\eta\lambda_i)z + \beta = 0`$ is that quadratic. The two roots are the two rates at which that direction can decay.
 
 **The key structural fact:** the product of the two roots of $z^2 + bz + c$ is $c$ — here, $\beta$. So both roots have magnitude $\sqrt\beta$ when they are a complex-conjugate pair. **That $\sqrt{\ }$ is the entire source of the acceleration**, and it is the reason the answer is $1 - 1/\sqrt\kappa$ rather than $1 - 1/\kappa$.
 
@@ -495,7 +495,7 @@ Nesterov achieves the optimal $O(1/T^2)$ rate for smooth convex problems (vs $O(
 
 $$v_{t+1} = \beta v_t + \nabla\mathcal{L}(\theta_t - \eta\beta v_t),\qquad \theta_{t+1}=\theta_t-\eta v_{t+1}$$
 
-The **only** difference from heavy-ball is *where the gradient is measured.* Heavy-ball evaluates $\nabla\mathcal{L}$ at $\theta_t$ — where you currently stand. Nesterov evaluates it at $\theta_t - \eta\beta v_t$ — **where your existing momentum is about to carry you anyway, before today's gradient is even consulted.**
+The **only** difference from heavy-ball is *where the gradient is measured.* Heavy-ball evaluates $\nabla\mathcal{L}$ at $`\theta_t`$ — where you currently stand. Nesterov evaluates it at $`\theta_t - \eta\beta v_t`$ — **where your existing momentum is about to carry you anyway, before today's gradient is even consulted.**
 
 > **Analogy.** You are sprinting down a corridor and a wall is coming. Heavy-ball checks the wall's position from where its feet are and then leaps; if the leap ends past the wall, it discovers this on landing. Nesterov asks "**given my current speed, where will I be in a moment?**" and reads the slope *there* first. If that spot is already up the far wall, it starts braking on this step instead of the next one. **One step of anticipation, and that is the whole idea.**
 
@@ -515,7 +515,7 @@ The **only** difference from heavy-ball is *where the gradient is measured.* Hea
 
 #### Examples and non-examples: what momentum is
 
-Momentum is the most misdescribed algorithm in deep learning, because its unrolled form $v_t = g_t + \beta g_{t-1} + \beta^2 g_{t-2} + \dots$  *is* a weighted moving average — which makes "it smooths the gradient" sound like a complete explanation. It isn't, and the gap between the two descriptions is where the $100\times$ lives.
+Momentum is the most misdescribed algorithm in deep learning, because its unrolled form $`v_t = g_t + \beta g_{t-1} + \beta^2 g_{t-2} + \dots`$  *is* a weighted moving average — which makes "it smooths the gradient" sound like a complete explanation. It isn't, and the gap between the two descriptions is where the $100\times$ lives.
 
 **✅  examples of what momentum does**
 
@@ -536,11 +536,11 @@ Momentum is the most misdescribed algorithm in deep learning, because its unroll
 | "$\beta = 0.99$ is a bit more momentum than $\beta = 0.9$" | $1/(1-\beta)$ goes $10 \to 100$. The memory horizon **and** the effective step size both multiply by ten | A $10\times$ change wearing a $1\%$ costume |
 | EMA of the **weights** (§4.8) | Acts on the trajectory after the fact; the update rule itself is untouched | Weight averaging (SWA/EMA) — a different object at a different point in the pipeline |
 | "Momentum stabilizes training, so you can raise $\eta$" | It multiplies the effective step by $1/(1-\beta)$, so the nominal $\eta$ must come **down** | The single most common cause of "I added momentum and it diverged" |
-| The textbook form $v \leftarrow \beta v + (1-\beta)g$ compared with PyTorch's $v \leftarrow \beta v + g$ | The first is a true EMA with $v_\infty = g$; the second has $v_\infty = g/(1-\beta)$ | The same algorithm at two learning rates differing by $10\times$ — check which one your framework uses |
+| The textbook form $v \leftarrow \beta v + (1-\beta)g$ compared with PyTorch's $v \leftarrow \beta v + g$ | The first is a true EMA with $`v_\infty = g`$; the second has $`v_\infty = g/(1-\beta)`$ | The same algorithm at two learning rates differing by $10\times$ — check which one your framework uses |
 
 ▸ **The boundary:** smoothing changes the **variance** of the update; momentum changes the **rate**, $1-1/\kappa \to 1-1/\sqrt\kappa$. The mechanism is that feeding the average back into the state makes the recursion **second-order** — mathematically a mass on a spring — and the two roots of its characteristic polynomial multiply to $\beta$, so each has magnitude $\sqrt\beta$. **The square root comes from the feedback, not from the averaging.** Any scheme that filters the gradient and then takes a first-order step cannot produce it.
 
-> **Common misconception.** *"Momentum is just an exponential moving average of the gradient."* The unrolled form is a weighted average, so the description isn't wrong — it is incomplete in the one place that matters. A filter applied to gradients before an ordinary step gives you a quieter version of the same algorithm, with the same $1-1/\kappa$ rate. Momentum *stores* the average in state and updates from it, which makes $\theta_{t+1}$ depend on both $\theta_t$ and $\theta_{t-1}$ — a second-order recursion, with the $\sqrt{\ }$ falling out of its characteristic polynomial. **The belief is tempting precisely because the unrolled algebra looks so much like smoothing**, and because the physical name ("heavy ball") suggests inertia, which sounds like a synonym for damping. Polyak's ball is not damping the path; it is *resonating* — tuning the oscillation so that lateral sloshing cancels itself while forward drift accumulates undisturbed.
+> **Common misconception.** *"Momentum is just an exponential moving average of the gradient."* The unrolled form is a weighted average, so the description isn't wrong — it is incomplete in the one place that matters. A filter applied to gradients before an ordinary step gives you a quieter version of the same algorithm, with the same $1-1/\kappa$ rate. Momentum *stores* the average in state and updates from it, which makes $`\theta_{t+1}`$ depend on both $`\theta_t`$ and $`\theta_{t-1}`$ — a second-order recursion, with the $\sqrt{\ }$ falling out of its characteristic polynomial. **The belief is tempting precisely because the unrolled algebra looks so much like smoothing**, and because the physical name ("heavy ball") suggests inertia, which sounds like a synonym for damping. Polyak's ball is not damping the path; it is *resonating* — tuning the oscillation so that lateral sloshing cancels itself while forward drift accumulates undisturbed.
 
 > **Common misconception.** *"Nesterov is a better momentum, so switch and expect a speedup."* Nesterov's advantage is in worst-case guarantees on adversarially chosen functions, and heavy-ball's known failure case (Lessard–Recht–Packard, 2016) is a constructed counterexample, not a description of a loss surface. On a real deep network with minibatch noise blurring the look-ahead, the difference is small enough to be hard to measure. **The belief is tempting because "provably better" reads as "better," full stop**, and because `nesterov=True` costs one keyword argument. Take it — it is free. Expect nothing. **The $100\times$ is in having momentum at all, not in which variety.**
 
@@ -570,14 +570,14 @@ Read the first expression aloud: *"g at t equals one over B, times the sum over 
 
 | Symbol | Read aloud | Meaning |
 |---|---|---|
-| $\mathcal{B}_t$ | "script B at t" | The set of example indices drawn for step $t$ — a random subset of the dataset |
+| $`\mathcal{B}_t`$ | "script B at t" | The set of example indices drawn for step $t$ — a random subset of the dataset |
 | $B$ | "B" | How many examples are in it. Typically 32 to 4,096 |
-| $\ell_i$ | "little ell i" | The loss on **one** example. Lowercase for per-example; $\mathcal{L}$ (script L) for the full-dataset average (§0.4) |
+| $`\ell_i`$ | "little ell i" | The loss on **one** example. Lowercase for per-example; $\mathcal{L}$ (script L) for the full-dataset average (§0.4) |
 | $\frac1B\sum$ | "one over B, sum" | An ordinary average. The `for` loop plus a division |
-| $\mathbb{E}[g_t]$ | "the expectation of g" | The average over all possible batch draws — what you'd get if you repeated the random draw forever |
-| $\mathrm{Cov}(g_t)$ | "the covariance of g" | How much $g_t$ scatters around that average, per coordinate and between coordinates |
+| $`\mathbb{E}[g_t]`$ | "the expectation of g" | The average over all possible batch draws — what you'd get if you repeated the random draw forever |
+| $`\mathrm{Cov}(g_t)`$ | "the covariance of g" | How much $`g_t`$ scatters around that average, per coordinate and between coordinates |
 
-**"Unbiased" means precisely this:** $\mathbb{E}[g_t] = \nabla\mathcal{L}(\theta_t)$. The minibatch gradient is *not* the true gradient — on any given step it points somewhere else — but it is **not systematically wrong in any direction.** Average enough of them and the errors cancel.
+**"Unbiased" means precisely this:** $`\mathbb{E}[g_t] = \nabla\mathcal{L}(\theta_t)`$. The minibatch gradient is *not* the true gradient — on any given step it points somewhere else — but it is **not systematically wrong in any direction.** Average enough of them and the errors cancel.
 
 > **Analogy.** A political poll of 1,000 people is not the election result. But it is unbiased: it is not tilted toward one party, it is merely imprecise. Poll ten times and average, and you get closer. **Stochastic gradient descent never bothers to poll ten times — it just acts on each noisy poll immediately, on the reasonable theory that ten cheap decisions beat one expensive one.**
 
@@ -598,7 +598,7 @@ Read the first expression aloud: *"g at t equals one over B, times the sum over 
 
 ### The convergence rate and why constant LR plateaus
 
-Repeat the descent-lemma argument with $\mathbb{E}\|g_t\|^2 = \|\nabla\mathcal{L}\|^2 + \frac{\mathrm{tr}\Sigma}{B}$:
+Repeat the descent-lemma argument with $`\mathbb{E}\|g_t\|^2 = \|\nabla\mathcal{L}\|^2 + \frac{\mathrm{tr}\Sigma}{B}`$:
 
 $$\mathbb{E}[\mathcal{L}(\theta_{t+1})] \le \mathcal{L}(\theta_t) - \eta\|\nabla\mathcal{L}\|^2 + \frac{L\eta^2}{2}\left(\|\nabla\mathcal{L}\|^2 + \frac{\mathrm{tr}\Sigma}{B}\right)$$
 
@@ -610,7 +610,7 @@ $$\mathbb{E}\|\theta-\theta^*\|^2 \approx \frac{\eta\,\mathrm{tr}\Sigma}{2\mu B}
 
 For convergence you need the **Robbins–Monro conditions**:
 ▸ $$\sum_t \eta_t = \infty \quad\text{(can still travel far)},\qquad \sum_t \eta_t^2 < \infty \quad\text{(noise is summable)}$$
-$\eta_t = \eta_0/t$ satisfies both. $\eta_t = \eta_0/\sqrt t$ satisfies the first but not the second — it converges in the weaker averaged sense with rate $O(1/\sqrt T)$, which is optimal for nonsmooth stochastic convex problems.
+$`\eta_t = \eta_0/t`$ satisfies both. $`\eta_t = \eta_0/\sqrt t`$ satisfies the first but not the second — it converges in the weaker averaged sense with rate $O(1/\sqrt T)$, which is optimal for nonsmooth stochastic convex problems.
 
 **Constant $\eta$ satisfies neither**, which is exactly your setup. So your model is *not* converging to a point; it is diffusing in a noise ball around a region of low loss. That is a completely standard and often *good* place to be — but it means your parameters at epoch 43 are meaningfully different from those at epoch 42, even if the loss is the same, and it means an **EMA of the weights** (§4.8) will beat any single checkpoint.
 
@@ -618,7 +618,7 @@ $\eta_t = \eta_0/t$ satisfies both. $\eta_t = \eta_0/\sqrt t$ satisfies the firs
 
 This is one of the most practically important paragraphs in the book, and it is easy to skim past. Here it is slowly.
 
-**The step that does the work.** In the deterministic case, the descent lemma gave a term $\|\nabla\mathcal{L}\|^2$ that shrinks to zero as you approach the minimum, so progress smoothly stops. With minibatches, the quantity that appears is not $\|\nabla\mathcal{L}\|^2$ but $\mathbb{E}\|g_t\|^2$, and there is a standard identity for it:
+**The step that does the work.** In the deterministic case, the descent lemma gave a term $\|\nabla\mathcal{L}\|^2$ that shrinks to zero as you approach the minimum, so progress smoothly stops. With minibatches, the quantity that appears is not $\|\nabla\mathcal{L}\|^2$ but $`\mathbb{E}\|g_t\|^2`$, and there is a standard identity for it:
 
 $$\mathbb{E}\|g_t\|^2 = \underbrace{\|\nabla\mathcal{L}\|^2}_{\text{signal}} + \underbrace{\frac{\mathrm{tr}\,\Sigma}{B}}_{\text{noise}}$$
 
@@ -638,16 +638,16 @@ Every symbol in it earns its place: larger step $\eta$ → bigger ball (harder k
 
 | Condition | Reads as | Why you need it |
 |---|---|---|
-| $\sum_t \eta_t = \infty$ | "the step sizes add up to infinity" | You must be able to travel an **unlimited total distance**. If steps shrink too fast, you run out of road before reaching the optimum — like a car whose fuel is rationed geometrically |
-| $\sum_t \eta_t^2 < \infty$ | "the squared step sizes add up to something finite" | The accumulated *noise* must be finite. Noise enters through $\eta^2$ (from the descent lemma's quadratic term), so a finite sum means the total jitter injected over infinite time is bounded |
+| $`\sum_t \eta_t = \infty`$ | "the step sizes add up to infinity" | You must be able to travel an **unlimited total distance**. If steps shrink too fast, you run out of road before reaching the optimum — like a car whose fuel is rationed geometrically |
+| $`\sum_t \eta_t^2 < \infty`$ | "the squared step sizes add up to something finite" | The accumulated *noise* must be finite. Noise enters through $\eta^2$ (from the descent lemma's quadratic term), so a finite sum means the total jitter injected over infinite time is bounded |
 
-▸ **Together they say: shrink your steps, but not too fast.** Too fast and you stall short of the answer; too slow and the noise never settles. $\eta_t = \eta_0/t$ threads the needle: $\sum 1/t$ diverges (the harmonic series — famously, barely), while $\sum 1/t^2$ converges (to $\pi^2/6$). Those two facts, one from each side, are exactly the two conditions.
+▸ **Together they say: shrink your steps, but not too fast.** Too fast and you stall short of the answer; too slow and the noise never settles. $`\eta_t = \eta_0/t`$ threads the needle: $\sum 1/t$ diverges (the harmonic series — famously, barely), while $\sum 1/t^2$ converges (to $\pi^2/6$). Those two facts, one from each side, are exactly the two conditions.
 
 **Why this is not an academic point for you.** Constant $\eta$ satisfies neither, so a model trained at constant learning rate is *by construction* not converging. Three consequences you can act on today:
 
 1. **Two consecutive checkpoints with identical loss can have  different weights.** They are two random draws from the same ball.
 2. **Comparing single checkpoints across runs measures ball position as much as ball quality.** This is the checkpoint-selection bias of Chapter 3, arriving from the optimizer's side.
-3. **Averaging the iterates (§4.8) moves you toward the ball's centre**, which is closer to $\theta^*$ than almost any individual point in it. That is not a trick — it is the direct consequence of the marble wandering symmetrically around a low point.
+3. **Averaging the iterates (§4.8) moves you toward the ball's centre**, which is closer to $`\theta^*`$ than almost any individual point in it. That is not a trick — it is the direct consequence of the marble wandering symmetrically around a low point.
 
 ### SGD as an SDE — the temperature
 
@@ -707,7 +707,7 @@ Read: *"the probability of finding the particle at theta is proportional to e-to
 
 ### Variance reduction (why it doesn't help in deep learning)
 
-SVRG maintains a snapshot $\tilde\theta$ and uses $g_t = \nabla\ell_i(\theta_t) - \nabla\ell_i(\tilde\theta) + \nabla\mathcal{L}(\tilde\theta)$, which is unbiased with variance $\to0$ as $\theta_t\to\tilde\theta$. It gives linear convergence for strongly convex finite sums.
+SVRG maintains a snapshot $\tilde\theta$ and uses $`g_t = \nabla\ell_i(\theta_t) - \nabla\ell_i(\tilde\theta) + \nabla\mathcal{L}(\tilde\theta)`$, which is unbiased with variance $\to0$ as $`\theta_t\to\tilde\theta`$. It gives linear convergence for strongly convex finite sums.
 
 ▸ **It reliably fails to help deep networks.** Reasons: (1) data augmentation makes the "finite sum" not finite; (2) the snapshot goes stale within a few hundred steps because $\theta$ moves fast; (3) most importantly, **the noise is doing useful work** (it's the temperature above) — removing it removes the implicit regularization. A rare case where a theoretically superior algorithm is practically worse *because* the theory optimized the wrong objective.
 
@@ -721,7 +721,7 @@ Read it as: *"take one example's gradient here, subtract that same example's gra
 
 > **Analogy.** You want to know today's temperature in a city, and you have one thermometer at one street corner — noisy and unrepresentative. But you also have last week's reading from that *same* corner, and last week's official city-wide average. So you compute *"this corner today, minus this corner last week, plus the whole city last week."* The corner's personal quirks — it's in a wind tunnel, it's next to a vent — appear in both of the first two terms and **cancel.** What survives is a much cleaner estimate of the city-wide change. **The subtraction removes the part of the noise that is a stable property of the example rather than of the moment.**
 
-**Why it is unbiased.** The second and third terms have the same expectation ($\mathbb{E}_i[\nabla\ell_i(\tilde\theta)] = \nabla\mathcal{L}(\tilde\theta)$), so they cancel *in expectation* and leave $\mathbb{E}[g_t] = \nabla\mathcal{L}(\theta_t)$ — still correct on average. And as $\theta_t \to \tilde\theta$, the first two terms cancel *exactly*, driving the variance to zero. That is the beautiful part: **near the snapshot, the estimator becomes noise-free**, and you recover the fast linear convergence of full-batch gradient descent at the cost of single-example steps.
+**Why it is unbiased.** The second and third terms have the same expectation ($`\mathbb{E}_i[\nabla\ell_i(\tilde\theta)] = \nabla\mathcal{L}(\tilde\theta)`$), so they cancel *in expectation* and leave $`\mathbb{E}[g_t] = \nabla\mathcal{L}(\theta_t)`$ — still correct on average. And as $`\theta_t \to \tilde\theta`$, the first two terms cancel *exactly*, driving the variance to zero. That is the beautiful part: **near the snapshot, the estimator becomes noise-free**, and you recover the fast linear convergence of full-batch gradient descent at the cost of single-example steps.
 
 ▸ **And it does not help deep networks. Read the three reasons as three different lessons:**
 
@@ -741,7 +741,7 @@ Every formula in this section contains $\eta$ and $B$ only as the ratio $\eta/B$
 
 | Example | Why it qualifies |
 |---|---|
-| $B: 256 \to 1024$ with $\eta$ fixed shrinks the noise-ball radius² by exactly $4\times$ | $\mathbb{E}\|\theta-\theta^*\|^2 \approx \eta\,\mathrm{tr}\Sigma/2\mu B$ — $B$ appears in the denominator, linearly |
+| $B: 256 \to 1024$ with $\eta$ fixed shrinks the noise-ball radius² by exactly $4\times$ | $`\mathbb{E}\|\theta-\theta^*\|^2 \approx \eta\,\mathrm{tr}\Sigma/2\mu B`$ — $B$ appears in the denominator, linearly |
 | $B: 256 \to 1024$ **and** $\eta: 10^{-3} \to 4\times10^{-3}$ leaves the statistics identical while quartering the step count | $\eta/B$ unchanged. This is the linear scaling rule, and it is a corollary rather than a heuristic |
 | Two checkpoints 500 steps apart with identical loss but measurably different weights | Two draws from the same equilibrium distribution. Exactly what the marble-in-a-jiggled-bowl picture predicts |
 | Dropping $\eta$ by $10\times$ late in training causes a visible cliff in the loss curve | You shrank the ball's radius by $10\times$; the loss floor it was orbiting drops with it |
@@ -766,15 +766,15 @@ Every formula in this section contains $\eta$ and $B$ only as the ratio $\eta/B$
 
 ## 4.7 Second-order and quasi-Newton methods
 
-**Newton's method:** $\theta_{t+1} = \theta_t - H^{-1}g_t$. Converges quadratically near the optimum and is **affine invariant** — $\kappa$ disappears entirely. Cost: $O(p^3)$ to invert. Dead on arrival for $p=10^8$.
+**Newton's method:** $`\theta_{t+1} = \theta_t - H^{-1}g_t`$. Converges quadratically near the optimum and is **affine invariant** — $\kappa$ disappears entirely. Cost: $O(p^3)$ to invert. Dead on arrival for $p=10^8$.
 
-**Natural gradient:** replace $H$ with the Fisher information $F = \mathbb{E}[\nabla\log p_\theta \nabla\log p_\theta^\top]$. This makes the step invariant to *reparameterization of the model's distribution* rather than of the parameters — you're doing steepest descent in KL-divergence geometry, not Euclidean geometry.
+**Natural gradient:** replace $H$ with the Fisher information $`F = \mathbb{E}[\nabla\log p_\theta \nabla\log p_\theta^\top]`$. This makes the step invariant to *reparameterization of the model's distribution* rather than of the parameters — you're doing steepest descent in KL-divergence geometry, not Euclidean geometry.
 
 ▸ $$\Delta\theta^* = \arg\min_{\Delta\theta} \mathcal{L}(\theta+\Delta\theta)\ \text{ s.t. }\ \mathrm{KL}(p_\theta\|p_{\theta+\Delta\theta})\le\epsilon \implies \Delta\theta \propto -F^{-1}g$$
 
 This is the mathematical foundation of TRPO (Ch. 17).
 
-**K-FAC** approximates $F$ as a Kronecker product per layer: $F_\ell \approx A_{\ell-1}\otimes G_\ell$ where $A$ is the input covariance and $G$ the output-gradient covariance. Inversion becomes $(A\otimes G)^{-1} = A^{-1}\otimes G^{-1}$, cost $O(d^3)$ per layer instead of $O(d^6)$.
+**K-FAC** approximates $F$ as a Kronecker product per layer: $`F_\ell \approx A_{\ell-1}\otimes G_\ell`$ where $A$ is the input covariance and $G$ the output-gradient covariance. Inversion becomes $(A\otimes G)^{-1} = A^{-1}\otimes G^{-1}$, cost $O(d^3)$ per layer instead of $O(d^6)$.
 
 **Shampoo / Muon** are the modern descendants — preconditioners built from $\left(\sum g g^\top\right)^{-1/4}$ per tensor mode. Muon in particular orthogonalizes the momentum matrix (via Newton–Schulz iteration for the "sign of a matrix"), which is a spectral-norm-controlled step. These are currently the strongest challengers to AdamW at scale (Ch. 5).
 
@@ -784,15 +784,15 @@ This is the mathematical foundation of TRPO (Ch. 17).
 
 Everything in this section is one idea in five costumes: **stop using a single global step size, and instead rescale space so the valley becomes round.**
 
-**Newton's method, and why $\kappa$ vanishes.** $\theta_{t+1} = \theta_t - H^{-1}g_t$. Read: *"subtract H-inverse times g."* The gradient says *which way* is downhill; the inverse Hessian says *how far to go in each direction given how sharply it curves.* Divide by curvature and every direction is treated on equal terms.
+**Newton's method, and why $\kappa$ vanishes.** $`\theta_{t+1} = \theta_t - H^{-1}g_t`$. Read: *"subtract H-inverse times g."* The gradient says *which way* is downhill; the inverse Hessian says *how far to go in each direction given how sharply it curves.* Divide by curvature and every direction is treated on equal terms.
 
-**Do it in one dimension and it's obvious.** $\mathcal{L}(\theta) = \frac12 a\theta^2$ gives $g = a\theta$ and $H = a$. Then $\theta_{t+1} = \theta_t - \frac{a\theta_t}{a} = 0$. **One step, exactly the minimum, for any $a$ whatsoever.** The sharpness cancelled. That cancellation, happening independently in every eigendirection, is what "affine invariant" and "$\kappa$ disappears" mean.
+**Do it in one dimension and it's obvious.** $\mathcal{L}(\theta) = \frac12 a\theta^2$ gives $g = a\theta$ and $H = a$. Then $`\theta_{t+1} = \theta_t - \frac{a\theta_t}{a} = 0`$. **One step, exactly the minimum, for any $a$ whatsoever.** The sharpness cancelled. That cancellation, happening independently in every eigendirection, is what "affine invariant" and "$\kappa$ disappears" mean.
 
 > **Analogy.** Gradient descent is navigating a city with a rule like "always walk 100 metres per step." Down a wide boulevard that is far too timid; in a narrow alley it puts you through a wall. Newton's method **redraws the map** so that every street is the same width, then walks a sensible distance on the redrawn map. The territory did not change; the units did.
 
 ▸ **And it is unusable at scale, for a reason worth stating in raw numbers.** $H$ is $p\times p$. At $p = 10^8$ parameters, $H$ has $10^{16}$ entries — around 40 million gigabytes in 32-bit floats — and inverting it costs $\mathcal{O}(p^3) = 10^{24}$ operations. A modern accelerator doing $10^{15}$ operations per second would need about $10^9$ seconds — **roughly thirty years, for a single step.** This is not an engineering problem to be optimized away. **Everything else in this section is a way to get some of Newton's benefit without ever forming $H$.**
 
-**Natural gradient, decoded.** The Fisher information matrix $F = \mathbb{E}[\nabla\log p_\theta \nabla\log p_\theta^\top]$ is an outer product (§0.8) averaged over data: an "average of gradient-of-log-likelihood times its own transpose." What makes it interesting is what it measures.
+**Natural gradient, decoded.** The Fisher information matrix $`F = \mathbb{E}[\nabla\log p_\theta \nabla\log p_\theta^\top]`$ is an outer product (§0.8) averaged over data: an "average of gradient-of-log-likelihood times its own transpose." What makes it interesting is what it measures.
 
 $$\Delta\theta^* = \arg\min_{\Delta\theta} \mathcal{L}(\theta+\Delta\theta)\ \text{ s.t. }\ \mathrm{KL}(p_\theta\|p_{\theta+\Delta\theta})\le\epsilon \implies \Delta\theta \propto -F^{-1}g$$
 
@@ -802,7 +802,7 @@ Read aloud: *"the best update is the one that reduces the loss most, subject to 
 
 This is why it underpins trust-region policy methods in reinforcement learning: there, a small parameter change can catastrophically alter a policy, and the quantity you actually need to keep small is the behavioural change.
 
-**K-FAC and the Kronecker product.** $A \otimes G$ ("A Kronecker G") means: **take $A$, and replace each of its entries $a_{ij}$ by the whole matrix $a_{ij}G$.** A $d\times d$ Kronecker a $d\times d$ gives $d^2 \times d^2$ — exactly the size of the Hessian block for a $d\times d$ weight matrix.
+**K-FAC and the Kronecker product.** $A \otimes G$ ("A Kronecker G") means: **take $A$, and replace each of its entries $`a_{ij}`$ by the whole matrix $`a_{ij}G`$.** A $d\times d$ Kronecker a $d\times d$ gives $d^2 \times d^2$ — exactly the size of the Hessian block for a $d\times d$ weight matrix.
 
 The magic is the identity $(A\otimes G)^{-1} = A^{-1}\otimes G^{-1}$: **inverting the big matrix reduces to inverting the two small ones.** Numbers: $d = 1024$ gives $d^2 = 10^6$ parameters in the layer, so the exact block would be $10^6\times10^6$ and cost $10^{18}$ to invert. Two $1024\times1024$ inversions cost about $2\times10^9$ — **a saving of roughly $5\times10^8$**, in exchange for assuming the curvature factorizes into "input side" times "output side." That assumption is wrong, but usefully close.
 
@@ -822,7 +822,7 @@ Now that the Hessian is on the table, the vocabulary of §4.1 can be made precis
 |---|---|
 | Bottom of $\mathcal{L} = \frac12\theta^\top H\theta$ with $H = \mathrm{diag}(100, 0.01)$ | All eigenvalues positive $\Rightarrow$ a strict local minimum. Also global, because the problem is convex |
 | A point with $H = \mathrm{diag}(3, -0.5)$ and $\nabla\mathcal{L} = 0$ | A **saddle**: a valley along one axis, a ridge along the other. Stationary, and not a minimum |
-| A plateau where every $\lvert\lambda_i\rvert < 10^{-6}$ and $\|\nabla\mathcal{L}\| = 10^{-8}$ | Nearly flat in every direction. Not a minimum, not a saddle — a region where the gradient signal has simply run out |
+| A plateau where every $`\lvert\lambda_i\rvert < 10^{-6}`$ and $\|\nabla\mathcal{L}\| = 10^{-8}$ | Nearly flat in every direction. Not a minimum, not a saddle — a region where the gradient signal has simply run out |
 | Two deep-network checkpoints with identical loss but permuted hidden units |  distinct points in parameter space representing the **same function**. A network with 1,024 hidden units in a layer has $1024!$ such copies — more than $10^{2600}$ |
 | A direction of negative curvature found at a stalled checkpoint | Good news, and worth stating: it means a descent direction exists and you are not at a minimum at all |
 
@@ -841,7 +841,7 @@ Now that the Hessian is on the table, the vocabulary of §4.1 can be made precis
 
 > **Common misconception.** *"Neural networks are hard to train because gradient descent gets trapped in bad local minima."* This was the field's standard explanation through the 1990s, and it is largely wrong for large models. Being at a local minimum requires all $p$ eigenvalues of the Hessian to be non-negative simultaneously; in high dimensions, stationary points essentially always have at least one negative direction, and the fraction of negative directions falls as the loss falls. What actually slows training is **saddles and plateaus** — places where the gradient is small in every direction you can cheaply see, but a descent direction still exists. **The belief is tempting because every loss landscape ever drawn is two-dimensional**, and in 2D a bowl and a saddle look about equally likely. The picture is not merely simplified; on this specific question it is actively misleading, and the correction — that dimension makes minima *rarer*, not commoner — is one of the  counterintuitive results in optimization.
 
-> **Common misconception.** *"A flat loss curve means I need a bigger learning rate to escape."* Sometimes. But the three causes of a flat curve want three different responses: a **noise-ball plateau** wants a *smaller* $\eta$ (the cliff appears immediately); a **saddle or plateau** wants momentum or preconditioning, since raising $\eta$ multiplies a gradient that is near zero and therefore does almost nothing; an **ill-conditioned valley** wants neither, because the slow direction contracts by $0.9998$ per step at the largest $\eta$ that $\lambda_{\max}$ permits. **The belief is tempting because raising $\eta$ is the cheapest experiment available** and it occasionally works, which is enough to keep the habit alive. The diagnostic that separates the three: drop $\eta$ by $10\times$ for 200 steps. If the loss falls, you were in a noise ball. If nothing happens, the landscape is the problem.
+> **Common misconception.** *"A flat loss curve means I need a bigger learning rate to escape."* Sometimes. But the three causes of a flat curve want three different responses: a **noise-ball plateau** wants a *smaller* $\eta$ (the cliff appears immediately); a **saddle or plateau** wants momentum or preconditioning, since raising $\eta$ multiplies a gradient that is near zero and therefore does almost nothing; an **ill-conditioned valley** wants neither, because the slow direction contracts by $0.9998$ per step at the largest $\eta$ that $`\lambda_{\max}`$ permits. **The belief is tempting because raising $\eta$ is the cheapest experiment available** and it occasionally works, which is enough to keep the habit alive. The diagnostic that separates the three: drop $\eta$ by $10\times$ for 200 steps. If the loss falls, you were in a noise ball. If nothing happens, the landscape is the problem.
 
 ---
 
@@ -853,7 +853,7 @@ Now that the Hessian is on the table, the vocabulary of §4.1 can be made precis
 
 Clip by **global norm** across all parameters, not per-tensor (per-tensor clipping changes the *direction* of the update, global clipping only its length).
 
-**Why it works:** the smoothness constant $L$ isn't uniform. Deep nets have regions ("cliffs") where $L$ is enormous, and a normal-size step there overshoots catastrophically. Clipping enforces a trust region: **it is an adaptive step size for the local Lipschitz constant.** Theoretically justified under $(L_0,L_1)$-smoothness, where $\|\nabla^2\mathcal{L}\| \le L_0 + L_1\|\nabla\mathcal{L}\|$ — which empirically holds for transformers.
+**Why it works:** the smoothness constant $L$ isn't uniform. Deep nets have regions ("cliffs") where $L$ is enormous, and a normal-size step there overshoots catastrophically. Clipping enforces a trust region: **it is an adaptive step size for the local Lipschitz constant.** Theoretically justified under $`(L_0,L_1)`$-smoothness, where $`\|\nabla^2\mathcal{L}\| \le L_0 + L_1\|\nabla\mathcal{L}\|`$ — which empirically holds for transformers.
 
 Typical $c$: 1.0 for transformers. Log $\|g\|$ during training; if it's routinely 100× the clip value you have a problem elsewhere.
 
@@ -872,7 +872,7 @@ Read aloud: *"g becomes g times the minimum of one and c over the norm of g."* T
 
 **Why global norm and not per-tensor.** Suppose your model has two parameter tensors and today's gradient is $(10, 1)$ across them. Global clipping to $c=1$ gives $(0.995, 0.0995)$ — **the same direction**, scaled down. Per-tensor clipping to 1 gives $(1, 1)$ — **a different direction entirely**, in which the second tensor has been silently promoted to equal importance. ▸ **Global clipping changes your step length; per-tensor clipping changes your step direction.** One of those is a safety mechanism and the other is an unplanned optimizer redesign.
 
-**Why it works at all — the $(L_0, L_1)$-smoothness idea.** Section 4.2 assumed a *single* smoothness constant $L$ for the entire loss surface. Real networks violate this badly: most of the landscape is gently curved, and a few regions ("cliffs") bend enormously. The relaxed condition $\|\nabla^2\mathcal{L}\| \le L_0 + L_1\|\nabla\mathcal{L}\|$ says something more realistic — **the curvature is allowed to be large exactly where the gradient is large.**
+**Why it works at all — the $`(L_0, L_1)`$-smoothness idea.** Section 4.2 assumed a *single* smoothness constant $L$ for the entire loss surface. Real networks violate this badly: most of the landscape is gently curved, and a few regions ("cliffs") bend enormously. The relaxed condition $`\|\nabla^2\mathcal{L}\| \le L_0 + L_1\|\nabla\mathcal{L}\|`$ says something more realistic — **the curvature is allowed to be large exactly where the gradient is large.**
 
 Now recall the stability rule: safe steps need $\eta < 2/L$. If $L$ grows with $\|\nabla\mathcal{L}\|$, then the safe step size must *shrink* when the gradient is big — which is precisely the opposite of what plain gradient descent does, since its step length $\eta\|g\|$ *grows* with the gradient. **Clipping restores the correct behaviour: in the sharpest, most dangerous regions it holds the step length constant instead of letting it explode.** That is why "it is an adaptive step size for the local Lipschitz constant" is the right description rather than a rationalization.
 
@@ -906,7 +906,7 @@ Read aloud: *"theta-bar at t equals gamma times theta-bar at t-minus-one, plus o
 
 > **Analogy.** A long-exposure photograph of a candle flame. Any single frame shows an irregular, flickering shape. Hold the shutter open for ten seconds and you get a smooth, symmetric teardrop — **the shape the flame is "trying" to be**, with the flicker averaged away. §4.6 established that constant-learning-rate SGD is a marble rattling around inside a noise ball; each checkpoint is one frame of the flicker. **The EMA is the long exposure.**
 
-**Why the average is better than any of its inputs, in one line.** Each iterate is $\theta_t = \theta_{\text{centre}} + \text{noise}_t$. Average $N$ of them and the centre stays put while the noise, being roughly zero-mean and only weakly correlated across a long horizon, shrinks. ▸ **You get closer to the centre of the basin without computing a single extra gradient.** And because the loss surface curves upward away from the centre, "closer to the centre" means "lower loss" — and, by the flat-minima argument, "in a flatter spot" too.
+**Why the average is better than any of its inputs, in one line.** Each iterate is $`\theta_t = \theta_{\text{centre}} + \text{noise}_t`$. Average $N$ of them and the centre stays put while the noise, being roughly zero-mean and only weakly correlated across a long horizon, shrinks. ▸ **You get closer to the centre of the basin without computing a single extra gradient.** And because the loss surface curves upward away from the centre, "closer to the centre" means "lower loss" — and, by the flat-minima argument, "in a flatter spot" too.
 
 **Why this matters more than it sounds.** It also disposes of a methodological problem from Chapter 3. If you evaluate 43 checkpoints and keep the best, some of that "best" is  quality and some is a lucky position in the noise ball — you have run a 43-way selection on a noisy metric. **Evaluating an EMA instead removes the lottery**: there is one set of weights, it is stable across epochs, and it is not the winner of a noise contest.
 

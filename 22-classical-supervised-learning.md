@@ -17,20 +17,20 @@ Skim this once now; every entry is unpacked properly where it first appears.
 | $\lVert y - X\beta\rVert^2$ | "norm of y minus X-beta, squared" | Total squared error, added up over all $n$ examples |
 | $H$ | "the hat matrix" | The machine that turns $y$ into $\hat y$ — a projection, nothing more |
 | $\lambda$ | "lambda" | **Regularization strength.** Bigger $\lambda$ = simpler, more shrunken model |
-| $\sigma_j$ | "sigma-j" | A **singular value** of $X$ — how strongly the data pins down direction $j$ |
-| $\lVert\beta\rVert_1$ | "the one-norm of beta" | $\sum_j \lvert\beta_j\rvert$ — add up the sizes, ignoring signs |
-| $\mathcal{S}_\lambda$ | "soft-threshold at lambda" | Pull toward zero by $\lambda$; if you would overshoot, stop **at** zero |
-| $(z)_+$ | "z-plus" / "positive part" | $\max(0, z)$. A ReLU wearing a subscript |
+| $`\sigma_j`$ | "sigma-j" | A **singular value** of $X$ — how strongly the data pins down direction $j$ |
+| $`\lVert\beta\rVert_1`$ | "the one-norm of beta" | $`\sum_j \lvert\beta_j\rvert`$ — add up the sizes, ignoring signs |
+| $`\mathcal{S}_\lambda`$ | "soft-threshold at lambda" | Pull toward zero by $\lambda$; if you would overshoot, stop **at** zero |
+| $`(z)_+`$ | "z-plus" / "positive part" | $\max(0, z)$. A ReLU wearing a subscript |
 | $\sigma(z)$ | "sigmoid of z" | $1/(1+e^{-z})$ — squashes any real number into $(0,1)$ |
-| $\alpha_i$ | "alpha-i" | A **dual variable**: how hard example $i$ pushes on the solution |
-| $\xi_i$ | "xi-i" (rhymes with "sigh") | **Slack**: how far example $i$ is permitted to trespass over the margin |
+| $`\alpha_i`$ | "alpha-i" | A **dual variable**: how hard example $i$ pushes on the solution |
+| $`\xi_i`$ | "xi-i" (rhymes with "sigh") | **Slack**: how far example $i$ is permitted to trespass over the margin |
 | $C$ | "C" | The SVM's price of trespassing. Large $C$ = strict, small $C$ = forgiving |
 | $k(x, x')$ | "the kernel of x and x-prime" | A similarity score between two examples |
 | $\phi(x)$ | "phi of x" | The **feature map** — where $x$ would live in the expanded space, if you built it |
 | $\mathcal{H}$ | "script H" | A reproducing kernel Hilbert space: the set of functions a kernel can build |
 | $\gamma$ | "gamma" | The RBF kernel's width dial. Large $\gamma$ = each point's influence is very local |
 | s.t. | "subject to" | "…while obeying the constraints that follow" |
-| $\partial \lvert\beta_j\rvert$ | "the subdifferential" | The *set* of slopes at a corner where the derivative doesn't exist |
+| $`\partial \lvert\beta_j\rvert`$ | "the subdifferential" | The *set* of slopes at a corner where the derivative doesn't exist |
 
 **Every abbreviation in this chapter, spelled out.** Read each full form aloud once; most acronyms stop being frightening the moment you hear what they stand for.
 
@@ -79,7 +79,7 @@ $$\nabla_\beta\|y-X\beta\|^2 = -2X^\top(y-X\beta)=0$$
 
 ▸ $$\boxed{\ X^\top X\hat\beta = X^\top y\quad\Longrightarrow\quad \hat\beta = (X^\top X)^{-1}X^\top y\ }$$
 
-**The geometry:** $\hat y = X\hat\beta = \underbrace{X(X^\top X)^{-1}X^\top}_{H,\ \text{the hat matrix}}y$. $H$ is the orthogonal projection onto $\mathrm{col}(X)$: $H^2=H$, $H^\top=H$, $\mathrm{tr}(H)=p$ (the number of parameters — this is the "degrees of freedom").
+**The geometry:** $`\hat y = X\hat\beta = \underbrace{X(X^\top X)^{-1}X^\top}_{H,\ \text{the hat matrix}}y`$. $H$ is the orthogonal projection onto $\mathrm{col}(X)$: $H^2=H$, $H^\top=H$, $\mathrm{tr}(H)=p$ (the number of parameters — this is the "degrees of freedom").
 
 **The residual is orthogonal to every column of $X$:** $X^\top(y-X\hat\beta)=0$. That single equation *is* the normal equations, and it is the cleanest way to remember them.
 
@@ -96,9 +96,9 @@ Four objects, and each one is a shape you can picture.
 | $\beta$ | $p\times 1$ | "beta" | One weight per feature. **This is the unknown you are solving for** |
 | $X\beta$ | $n\times 1$ | "X beta" | The predictions those weights would make, all $n$ of them |
 
-So $\lVert y-X\beta\rVert^2$ reads aloud as: *"for each example, subtract the prediction from the truth, square it, and add up all $n$ of them."* The $\arg\min_\beta$ in front means **"give me the weights that make that total smallest"** — the recipe, not the score (§0.3).
+So $\lVert y-X\beta\rVert^2$ reads aloud as: *"for each example, subtract the prediction from the truth, square it, and add up all $n$ of them."* The $`\arg\min_\beta`$ in front means **"give me the weights that make that total smallest"** — the recipe, not the score (§0.3).
 
-The second line, $\nabla_\beta\lVert y-X\beta\rVert^2 = -2X^\top(y-X\beta) = 0$, is the standard find-the-bottom-of-the-bowl move: differentiate with respect to every entry of $\beta$, stack the answers into a vector, and set that vector to zero. At the lowest point of a bowl, the slope in *every* direction is flat simultaneously.
+The second line, $`\nabla_\beta\lVert y-X\beta\rVert^2 = -2X^\top(y-X\beta) = 0`$, is the standard find-the-bottom-of-the-bowl move: differentiate with respect to every entry of $\beta$, stack the answers into a vector, and set that vector to zero. At the lowest point of a bowl, the slope in *every* direction is flat simultaneously.
 
 **Now put numbers in it.** Three houses. One feature (size, in arbitrary units) plus an intercept column of ones:
 
@@ -110,7 +110,7 @@ $$X^\top X = \begin{pmatrix} 3 & 6 \\ 6 & 14\end{pmatrix},\qquad X^\top y = \beg
 
 The top-left $3$ is "how many rows"; the $6$ is $1+2+3$; the $14$ is $1+4+9$. **$X^\top X$ is nothing but a small table of feature-by-feature dot products** — for $p$ features it is $p\times p$ regardless of how many million rows you have. That is why linear regression scales to enormous $n$.
 
-Solving $3\hat\beta_0 + 6\hat\beta_1 = 10$ and $6\hat\beta_0+14\hat\beta_1=23$ gives
+Solving $`3\hat\beta_0 + 6\hat\beta_1 = 10`$ and $`6\hat\beta_0+14\hat\beta_1=23`$ gives
 
 $$\hat\beta_0 = \tfrac13,\qquad \hat\beta_1 = \tfrac32$$
 
@@ -143,7 +143,7 @@ In the numeric example above, $p=2$: you used two numbers to explain three, so e
 
 #### What breaks when $X^\top X$ is singular
 
-Record height twice: once in centimetres and once in inches. Column 2 is exactly $2.54\times$ column 1 (or in round numbers, take $x_1 = (1,2,3)$ and $x_2 = (2,4,6)$).
+Record height twice: once in centimetres and once in inches. Column 2 is exactly $2.54\times$ column 1 (or in round numbers, take $`x_1 = (1,2,3)`$ and $`x_2 = (2,4,6)`$).
 
 Now $\beta = (1, 0)$, $\beta = (0, 0.5)$, and $\beta = (3, -1)$ all produce **identical predictions** $(1,2,3)$. Check the third: $3(1,2,3) - 1(2,4,6) = (1,2,3)$ ✓.
 
@@ -161,9 +161,9 @@ Now $\beta = (1, 0)$, $\beta = (0, 0.5)$, and $\beta = (3, -1)$ all produce **id
 
 | Example | Why it qualifies |
 |---|---|
-| $\hat y = \beta_0 + \beta_1(\text{sqft}) + \beta_2(\text{bedrooms})$ | Linear in $\beta$, fit by least squares |
-| **Polynomial regression** $\hat y = \beta_0+\beta_1x+\beta_2x^2+\beta_3x^3$ | Curved in $x$, but perfectly linear in $\beta$. Just put $x^2, x^3$ in as columns |
-| Regression on a Fourier basis, $\hat y = \sum_k \beta_k\sin(kx)$ | Same story — the basis functions are fixed, the weights are free |
+| $`\hat y = \beta_0 + \beta_1(\text{sqft}) + \beta_2(\text{bedrooms})`$ | Linear in $\beta$, fit by least squares |
+| **Polynomial regression** $`\hat y = \beta_0+\beta_1x+\beta_2x^2+\beta_3x^3`$ | Curved in $x$, but perfectly linear in $\beta$. Just put $x^2, x^3$ in as columns |
+| Regression on a Fourier basis, $`\hat y = \sum_k \beta_k\sin(kx)`$ | Same story — the basis functions are fixed, the weights are free |
 | One-hot encoding a categorical variable | Each level becomes a column; the coefficients are group means |
 | A neural network's final layer, holding the body frozen | Fixed features in, linear weights out. Literally OLS on learned features |
 
@@ -171,11 +171,11 @@ Now $\beta = (1, 0)$, $\beta = (0, 0.5)$, and $\beta = (3, -1)$ all produce **id
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| $\hat y = \beta_0 e^{\beta_1 x}$ | Nonlinear **in the parameters** — no normal equations exist | Nonlinear regression; needs iterative optimization |
+| $`\hat y = \beta_0 e^{\beta_1 x}`$ | Nonlinear **in the parameters** — no normal equations exist | Nonlinear regression; needs iterative optimization |
 | Logistic regression | The response is passed through $\sigma(\cdot)$; no closed form | A generalized linear model (§22.4) |
-| Fitting a line by minimizing $\sum_i \lvert y_i - \hat y_i\rvert$ | Linear model, but the *loss* is not squared error | Least absolute deviations / quantile regression |
+| Fitting a line by minimizing $`\sum_i \lvert y_i - \hat y_i\rvert`$ | Linear model, but the *loss* is not squared error | Least absolute deviations / quantile regression |
 | $\hat y = mx + c$, called "a linear function" | $f(2x)\ne 2f(x)$ once $c\ne 0$ | **Affine** (§0.12b) — and everybody calls it linear anyway |
-| Correlation between $x$ and $y$ | A summary statistic, not a fitted model | Pearson's $r$. It happens to equal $\hat\beta_1$ when both are standardized |
+| Correlation between $x$ and $y$ | A summary statistic, not a fitted model | Pearson's $r$. It happens to equal $`\hat\beta_1`$ when both are standardized |
 
 ▸ **The boundary:** linear regression is linear **in the parameters**, never necessarily in the inputs. Ask "if I doubled $\beta$, would the prediction double?" If yes, the normal equations apply, no matter how curved the picture looks.
 
@@ -226,8 +226,8 @@ And the three conditions:
 
 | Example | Why |
 |---|---|
-| $\hat\beta_{\text{OLS}}$ under assumptions (i)–(ii) | $\mathbb{E}[\hat\beta] = \beta$ exactly |
-| The sample mean $\bar x = \frac1n\sum_i x_i$ | $\mathbb{E}[\bar x] = \mu$ for any distribution with a mean |
+| $`\hat\beta_{\text{OLS}}`$ under assumptions (i)–(ii) | $\mathbb{E}[\hat\beta] = \beta$ exactly |
+| The sample mean $`\bar x = \frac1n\sum_i x_i`$ | $\mathbb{E}[\bar x] = \mu$ for any distribution with a mean |
 | Sample variance with the $\frac{1}{n-1}$ divisor | The $-1$ exists precisely to remove the bias |
 
 **❌ Near-misses — biased, and often better anyway**
@@ -261,7 +261,7 @@ Two terms, pulling in opposite directions, with $\lambda$ as the referee.
 | $\lambda\lVert\beta\rVert^2$ | "lambda times the squared length of beta" | **Stay small.** Push $\beta$ toward the origin |
 | $\lambda$ | "lambda" | Who wins. $\lambda=0$: pure OLS. $\lambda\to\infty$: $\hat\beta\to 0$ |
 
-$\lVert\beta\rVert^2$ is $\beta_1^2+\beta_2^2+\dots+\beta_p^2$ — the squared length of the coefficient vector. Nothing more exotic than Pythagoras.
+$\lVert\beta\rVert^2$ is $`\beta_1^2+\beta_2^2+\dots+\beta_p^2`$ — the squared length of the coefficient vector. Nothing more exotic than Pythagoras.
 
 > **Analogy.** You're tuning a graphic equalizer to match a reference track. Left to yourself you would slam sliders to extremes to chase every detail, including the hiss. Ridge is a spring attached to every slider pulling it back toward flat. A slider only travels far if the *evidence* is strong enough to stretch the spring. $\lambda$ is the stiffness of the springs.
 
@@ -269,7 +269,7 @@ $\lVert\beta\rVert^2$ is $\beta_1^2+\beta_2^2+\dots+\beta_p^2$ — the squared l
 
 **Now run the numbers on the three-house example from §22.1.** Recall $X^\top X = \begin{pmatrix}3&6\\6&14\end{pmatrix}$, $X^\top y = \begin{pmatrix}10\\23\end{pmatrix}$, and OLS gave $\hat\beta = (0.333,\ 1.500)$.
 
-| $\lambda$ | $X^\top X + \lambda I$ | $\hat\beta_{\text{ridge}}$ | Slope, relative to OLS |
+| $\lambda$ | $X^\top X + \lambda I$ | $`\hat\beta_{\text{ridge}}`$ | Slope, relative to OLS |
 |---|---|---|---|
 | $0$ | $\begin{pmatrix}3&6\\6&14\end{pmatrix}$ | $(0.333,\ 1.500)$ | 100% |
 | $1$ | $\begin{pmatrix}4&6\\6&15\end{pmatrix}$ | $(0.500,\ 1.333)$ | 89% |
@@ -282,27 +282,27 @@ $\lVert\beta\rVert^2$ is $\beta_1^2+\beta_2^2+\dots+\beta_p^2$ — the squared l
 
 ### The SVD reading — the most illuminating one
 
-Let $X = U\Sigma V^\top$ with singular values $\sigma_j$. Then
+Let $X = U\Sigma V^\top$ with singular values $`\sigma_j`$. Then
 
 ▸ $$\hat y_{\text{ridge}} = \sum_{j=1}^{p}u_j\underbrace{\frac{\sigma_j^2}{\sigma_j^2+\lambda}}_{\text{shrinkage factor}}u_j^\top y$$
 
-versus OLS's $\hat y = \sum_j u_ju_j^\top y$ (all factors 1).
+versus OLS's $`\hat y = \sum_j u_ju_j^\top y`$ (all factors 1).
 
-▸ **Ridge shrinks each principal direction by $\frac{\sigma_j^2}{\sigma_j^2+\lambda}$ — barely at all for high-variance directions ($\sigma_j^2\gg\lambda$) and almost to zero for low-variance ones.** Directions the data barely constrains are exactly the ones estimated with the most noise, so this is precisely the right thing to do. This is the same statement as Ch. 7 §7.5's eigenbasis shrinkage, and it is the best one-line justification of $\ell_2$ regularization in existence.
+▸ **Ridge shrinks each principal direction by $`\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$ — barely at all for high-variance directions ($`\sigma_j^2\gg\lambda`$) and almost to zero for low-variance ones.** Directions the data barely constrains are exactly the ones estimated with the most noise, so this is precisely the right thing to do. This is the same statement as Ch. 7 §7.5's eigenbasis shrinkage, and it is the best one-line justification of $`\ell_2`$ regularization in existence.
 
-**Effective degrees of freedom:** $\mathrm{df}(\lambda)=\sum_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}$, ranging from $p$ (at $\lambda=0$) to 0. **A continuous model-complexity dial** — and the right $x$-axis for a bias–variance plot.
+**Effective degrees of freedom:** $`\mathrm{df}(\lambda)=\sum_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$, ranging from $p$ (at $\lambda=0$) to 0. **A continuous model-complexity dial** — and the right $x$-axis for a bias–variance plot.
 
 **Always standardize before ridge**, and never penalize the intercept.
 
-#### Unpacking the shrinkage factor $\frac{\sigma_j^2}{\sigma_j^2+\lambda}$
+#### Unpacking the shrinkage factor $`\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$
 
 This is the most useful single fraction in regularization, and it takes ninety seconds to make it obvious.
 
-$\sigma_j$ is the $j$-th **singular value** of $X$ (§1.1.3): *how much the data actually varies along direction $j$*. Large $\sigma_j$ = the data spreads out a lot in that direction = you have plenty of evidence about it. Small $\sigma_j$ = the data barely moves that way = whatever you estimate there is mostly noise.
+$`\sigma_j`$ is the $j$-th **singular value** of $X$ (§1.1.3): *how much the data actually varies along direction $j$*. Large $`\sigma_j`$ = the data spreads out a lot in that direction = you have plenty of evidence about it. Small $`\sigma_j`$ = the data barely moves that way = whatever you estimate there is mostly noise.
 
-Now feed numbers into $\frac{\sigma_j^2}{\sigma_j^2+\lambda}$, with $\lambda = 1$:
+Now feed numbers into $`\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$, with $\lambda = 1$:
 
-| $\sigma_j$ | $\sigma_j^2$ | Shrinkage factor | Read aloud |
+| $`\sigma_j`$ | $`\sigma_j^2`$ | Shrinkage factor | Read aloud |
 |---|---|---|---|
 | $10$ | $100$ | $100/101 = 0.990$ | "Keep 99% of it. The data is certain here." |
 | $3$ | $9$ | $9/10 = 0.900$ | "Keep 90%." |
@@ -310,9 +310,9 @@ Now feed numbers into $\frac{\sigma_j^2}{\sigma_j^2+\lambda}$, with $\lambda = 1
 | $0.3$ | $0.09$ | $0.09/1.09 = 0.083$ | "Keep 8%. Mostly noise." |
 | $0.1$ | $0.01$ | $0.01/1.01 = 0.0099$ | "Delete it. This direction is unmeasured." |
 
-▸ **$\lambda$ is a threshold expressed in units of squared singular value.** Directions with $\sigma_j^2 \gg \lambda$ pass through untouched; directions with $\sigma_j^2 \ll \lambda$ are erased; the crossover is exactly at $\sigma_j^2 = \lambda$, where you keep half. **Choosing $\lambda$ is choosing how much evidence a direction must supply before you believe it.**
+▸ **$\lambda$ is a threshold expressed in units of squared singular value.** Directions with $`\sigma_j^2 \gg \lambda`$ pass through untouched; directions with $`\sigma_j^2 \ll \lambda`$ are erased; the crossover is exactly at $`\sigma_j^2 = \lambda`$, where you keep half. **Choosing $\lambda$ is choosing how much evidence a direction must supply before you believe it.**
 
-> **Analogy.** A newsroom with a rule: run the story only if enough independent sources confirm it. A rumour from one anonymous tip gets spiked; a fact confirmed by a hundred witnesses runs verbatim; something with a handful of sources runs, hedged. $\sigma_j^2$ is the number of sources, $\lambda$ is the editor's threshold, and the shrinkage factor is how much of the claim survives to print.
+> **Analogy.** A newsroom with a rule: run the story only if enough independent sources confirm it. A rumour from one anonymous tip gets spiked; a fact confirmed by a hundred witnesses runs verbatim; something with a handful of sources runs, hedged. $`\sigma_j^2`$ is the number of sources, $\lambda$ is the editor's threshold, and the shrinkage factor is how much of the claim survives to print.
 
 **Effective degrees of freedom, with numbers.** Suppose $p=3$ and $X$ has singular values $\sigma = (10,\ 1,\ 0.1)$. At $\lambda = 1$:
 
@@ -320,7 +320,7 @@ $$\mathrm{df}(1) = 0.990 + 0.500 + 0.0099 = 1.50$$
 
 ▸ **You fit three parameters and spent one and a half.** OLS would have spent exactly 3 ($\mathrm{df}(0) = 1 + 1 + 1$). This is the moment "model complexity" stops being an integer you can count and becomes a real number you can dial — which is why $\mathrm{df}(\lambda)$, not $\lambda$, is the correct $x$-axis for a bias–variance plot. Plotting against $\lambda$ compresses everything interesting into a corner of the graph.
 
-#### Examples and non-examples: is that $\ell_2$ regularization?
+#### Examples and non-examples: is that $`\ell_2`$ regularization?
 
 **✅  the same mathematical object**
 
@@ -332,21 +332,21 @@ $$\mathrm{df}(1) = 0.990 + 0.500 + 0.0099 = 1.50$$
 | **MAP estimation with a Gaussian prior** $\beta\sim\mathcal{N}(0,\tau^2 I)$ | The negative log-prior *is* $\lVert\beta\rVert^2/2\tau^2$; $\lambda = \sigma^2/\tau^2$ |
 | Adding fake rows $\sqrt{\lambda}\,I$ to $X$ with zero targets | Algebraically identical to ridge. Sometimes literally implemented this way |
 
-**❌ Near-misses — regularization, but not $\ell_2$ shrinkage**
+**❌ Near-misses — regularization, but not $`\ell_2`$ shrinkage**
 
 | Looks like it | Why it differs | What it actually is |
 |---|---|---|
 | **AdamW's** decoupled weight decay | Subtracts $\lambda\theta$ from the weights *directly*, outside the adaptive scaling | Decoupled decay. Provably **not** the same as adding $\lambda\lVert\theta\rVert^2$ to the loss under Adam |
-| Dropout | Randomly zeroes activations, not weights | Stochastic ensembling; only $\ell_2$-like in restricted linear cases |
+| Dropout | Randomly zeroes activations, not weights | Stochastic ensembling; only $`\ell_2`$-like in restricted linear cases |
 | Early stopping | Never writes down a penalty at all | Implicit shrinkage — for linear models it is *approximately* ridge, with $\lambda \approx 1/(\eta t)$ |
 | Batch normalization | Rescales activations | Not regularization in the penalty sense, though it has regularizing side effects |
 | Clipping $\lVert\beta\rVert \le c$ | A hard constraint, not a soft penalty | The **constrained** form. Equivalent for *some* $\lambda$, but you can't name which in advance |
 
-▸ **The boundary:** $\ell_2$ regularization means a term proportional to the **squared** length of the parameters is added to the objective, so its gradient is proportional to the parameters themselves. That last clause is the tell: a penalty whose gradient shrinks to zero as $\beta\to 0$ can never push $\beta$ all the way to zero.
+▸ **The boundary:** $`\ell_2`$ regularization means a term proportional to the **squared** length of the parameters is added to the objective, so its gradient is proportional to the parameters themselves. That last clause is the tell: a penalty whose gradient shrinks to zero as $\beta\to 0$ can never push $\beta$ all the way to zero.
 
-> **Common misconception.** *"Ridge does feature selection by driving useless coefficients to zero."* It never sets anything to exactly zero. The gradient of $\lambda\beta_j^2$ is $2\lambda\beta_j$, which vanishes as $\beta_j$ approaches zero — the push weakens exactly when you'd need it to finish the job. You get a hundred tiny coefficients, not ten large ones and ninety zeros. The misconception is tempting because ridge coefficients *print* as things like `3.2e-08`, which looks like zero, and because ridge and LASSO are always taught in the same breath.
+> **Common misconception.** *"Ridge does feature selection by driving useless coefficients to zero."* It never sets anything to exactly zero. The gradient of $`\lambda\beta_j^2`$ is $`2\lambda\beta_j`$, which vanishes as $`\beta_j`$ approaches zero — the push weakens exactly when you'd need it to finish the job. You get a hundred tiny coefficients, not ten large ones and ninety zeros. The misconception is tempting because ridge coefficients *print* as things like `3.2e-08`, which looks like zero, and because ridge and LASSO are always taught in the same breath.
 
-> **Common misconception.** *"Standardizing before ridge is just tidiness."* It changes the answer. The penalty $\sum_j \beta_j^2$ treats every coefficient identically, but a coefficient's size depends on its feature's units. Measure a distance in metres and $\beta = 2$; switch to kilometres and the same relationship needs $\beta = 2000$, which the penalty now punishes a million times harder. **Un-standardized ridge silently regularizes your small-unit features into oblivion.** The intercept is left unpenalized for the same reason: shrinking it toward zero would mean "when all features are at their average, predict zero," which is a claim about your units, not about the world.
+> **Common misconception.** *"Standardizing before ridge is just tidiness."* It changes the answer. The penalty $`\sum_j \beta_j^2`$ treats every coefficient identically, but a coefficient's size depends on its feature's units. Measure a distance in metres and $\beta = 2$; switch to kilometres and the same relationship needs $\beta = 2000$, which the penalty now punishes a million times harder. **Un-standardized ridge silently regularizes your small-unit features into oblivion.** The intercept is left unpenalized for the same reason: shrinking it toward zero would mean "when all features are at their average, predict zero," which is a claim about your units, not about the world.
 
 > **Where this came from.** Ridge regression was published in 1970 by **Arthur Hoerl and Robert Kennard** in *Technometrics*, under the title "Ridge Regression: Biased Estimation for Nonorthogonal Problems." The word "ridge" is inherited from Hoerl's earlier work on **ridge analysis** in response-surface methodology, where you trace the crest of a response surface — the picture the name evokes is the ridgeline of contours, not a mountain. The paper had a hostile reception: deliberately introducing bias offended a discipline that had spent fifty years proving things about unbiased estimators, and reviewers and discussants pushed back hard. It is now one of the most-used ideas in applied statistics.
 
@@ -358,12 +358,12 @@ $$\mathrm{df}(1) = 0.990 + 0.500 + 0.0099 = 1.50$$
 
 $$\hat\beta_{\text{lasso}}=\arg\min_\beta\ \tfrac{1}{2}\|y-X\beta\|^2+\lambda\|\beta\|_1$$
 
-**No closed form** (the $\ell_1$ term is non-differentiable at 0), but for orthonormal $X$ the solution is exactly the **soft-threshold**:
+**No closed form** (the $`\ell_1`$ term is non-differentiable at 0), but for orthonormal $X$ the solution is exactly the **soft-threshold**:
 
 ▸ $$\hat\beta_j = \mathcal{S}_\lambda(\hat\beta_j^{\text{OLS}}) = \mathrm{sign}(\hat\beta_j^{\text{OLS}})\big(|\hat\beta_j^{\text{OLS}}|-\lambda\big)_+$$
 
-**Derivation of the sparsity.** The subgradient of $\lambda|\beta_j|$ at $\beta_j=0$ is the *interval* $[-\lambda,\lambda]$. Optimality requires $0\in -x_j^\top(y-X\beta)+\lambda\partial|\beta_j|$, so $\beta_j=0$ is optimal whenever $|x_j^\top r|\le\lambda$.
-▸ **Any coordinate whose correlation with the residual is below $\lambda$ is set to exactly zero.** Ridge's penalty has gradient $2\lambda\beta_j\to0$ as $\beta_j\to0$, so it never produces exact zeros. **That is the entire difference between the two.**
+**Derivation of the sparsity.** The subgradient of $`\lambda|\beta_j|`$ at $`\beta_j=0`$ is the *interval* $[-\lambda,\lambda]$. Optimality requires $`0\in -x_j^\top(y-X\beta)+\lambda\partial|\beta_j|`$, so $`\beta_j=0`$ is optimal whenever $`|x_j^\top r|\le\lambda`$.
+▸ **Any coordinate whose correlation with the residual is below $\lambda$ is set to exactly zero.** Ridge's penalty has gradient $`2\lambda\beta_j\to0`$ as $`\beta_j\to0`$, so it never produces exact zeros. **That is the entire difference between the two.**
 
 #### Reading the soft-threshold operator in plain English
 
@@ -374,7 +374,7 @@ Three pieces, read right to left:
 | Piece | Read aloud | Job |
 |---|---|---|
 | $\lvert z\rvert$ | "the absolute value of z" | Forget the sign; how big is it? |
-| $(\ \cdot\ - \lambda)_+$ | "minus lambda, positive part" | Subtract $\lambda$. **If that goes negative, return 0 instead.** This is a ReLU |
+| $`(\ \cdot\ - \lambda)_+`$ | "minus lambda, positive part" | Subtract $\lambda$. **If that goes negative, return 0 instead.** This is a ReLU |
 | $\mathrm{sign}(z)$ | "sign of z" | Put the original sign back on |
 
 In one English sentence: ▸ **"Move the coefficient $\lambda$ closer to zero — and if it would cross zero on the way, park it exactly at zero."**
@@ -386,9 +386,9 @@ def soft_threshold(z, lam):
     return np.sign(z) * np.maximum(np.abs(z) - lam, 0.0)
 ```
 
-**Now compare, with numbers.** Take an orthonormal $X$ so both methods have closed forms, and set $\lambda = 1$. For ridge on orthonormal $X$, $\hat\beta_j = \hat\beta_j^{\text{OLS}}/(1+\lambda)$, i.e. simply halved.
+**Now compare, with numbers.** Take an orthonormal $X$ so both methods have closed forms, and set $\lambda = 1$. For ridge on orthonormal $X$, $`\hat\beta_j = \hat\beta_j^{\text{OLS}}/(1+\lambda)`$, i.e. simply halved.
 
-| $\hat\beta_j^{\text{OLS}}$ | LASSO $\mathcal{S}_1(\cdot)$ | Ridge $(\cdot)/2$ | What happened |
+| $`\hat\beta_j^{\text{OLS}}`$ | LASSO $`\mathcal{S}_1(\cdot)`$ | Ridge $(\cdot)/2$ | What happened |
 |---|---|---|---|
 | $3.0$ | $2.0$ | $1.5$ | Both shrink; LASSO takes a fixed $1.0$, ridge takes 50% |
 | $1.2$ | $0.2$ | $0.6$ | LASSO nearly kills it |
@@ -405,26 +405,26 @@ def soft_threshold(z, lam):
 
 $\lvert\beta\rvert$ has a sharp corner at $\beta=0$. Approach from the right and the slope is $+1$; from the left, $-1$. At exactly zero there is no single slope — so mathematics does the obvious thing and admits the **whole interval** $[-1,+1]$ as the set of valid slopes there. That set is the **subdifferential**, written $\partial\lvert\beta\rvert$.
 
-Optimality at a corner then means: *is zero among the available slopes?* Rather than the single equation "gradient $=0$," you get the condition "$0$ belongs to the set," which is a much easier condition to satisfy — and satisfying it *is* what pins $\beta_j$ at exactly zero.
+Optimality at a corner then means: *is zero among the available slopes?* Rather than the single equation "gradient $=0$," you get the condition "$0$ belongs to the set," which is a much easier condition to satisfy — and satisfying it *is* what pins $`\beta_j`$ at exactly zero.
 
-**Concretely.** Suppose feature $j$ has correlation with the residual $x_j^\top r = 0.6$, and $\lambda = 1$. The condition for $\beta_j = 0$ to be optimal is $\lvert x_j^\top r\rvert \le \lambda$, and $0.6 \le 1$. ✓ So $\beta_j$ stays at exactly zero — **nudging it in either direction increases the objective, because the penalty's slope of $1$ outweighs the fit's payoff of $0.6$.** The coefficient is not "close to zero"; it is *stuck* at zero, held there by a corner.
+**Concretely.** Suppose feature $j$ has correlation with the residual $`x_j^\top r = 0.6`$, and $\lambda = 1$. The condition for $`\beta_j = 0`$ to be optimal is $`\lvert x_j^\top r\rvert \le \lambda`$, and $0.6 \le 1$. ✓ So $`\beta_j`$ stays at exactly zero — **nudging it in either direction increases the objective, because the penalty's slope of $1$ outweighs the fit's payoff of $0.6$.** The coefficient is not "close to zero"; it is *stuck* at zero, held there by a corner.
 
-▸ **Compare with ridge at the same point.** Ridge's penalty has slope $2\lambda\beta_j = 0$ at $\beta_j=0$. So *any* correlation, however small, tips the balance and moves the coefficient off zero. **A smooth penalty can never hold a coefficient still. A kinked one can.** Everything about $\ell_1$ follows from that corner.
+▸ **Compare with ridge at the same point.** Ridge's penalty has slope $`2\lambda\beta_j = 0`$ at $`\beta_j=0`$. So *any* correlation, however small, tips the balance and moves the coefficient off zero. **A smooth penalty can never hold a coefficient still. A kinked one can.** Everything about $`\ell_1`$ follows from that corner.
 
 > **Analogy for the kink.** Ridge is a rubber band: pull an inch, feel a little tension; pull ten inches, feel ten times as much. Near its rest point it barely resists at all. LASSO is static friction: it takes a fixed force to make the block move *at all*, and below that threshold nothing happens whatsoever. Sparsity is static friction; smooth shrinkage is a spring.
 
-**Geometric picture:** the $\ell_1$ ball is a cross-polytope with vertices on the axes. An elliptical level set of the loss expanding until it touches the ball will, generically, touch at a vertex — where coordinates are zero.
+**Geometric picture:** the $`\ell_1`$ ball is a cross-polytope with vertices on the axes. An elliptical level set of the loss expanding until it touches the ball will, generically, touch at a vertex — where coordinates are zero.
 
-**Elastic net:** $\lambda\left(\alpha\|\beta\|_1 + \frac{1-\alpha}{2}\|\beta\|^2\right)$. Needed when predictors are correlated: LASSO arbitrarily picks one of a correlated group and zeros the rest, which is unstable across resamples; the ridge term induces a **grouping effect** so correlated predictors get similar coefficients.
+**Elastic net:** $`\lambda\left(\alpha\|\beta\|_1 + \frac{1-\alpha}{2}\|\beta\|^2\right)`$. Needed when predictors are correlated: LASSO arbitrarily picks one of a correlated group and zeros the rest, which is unstable across resamples; the ridge term induces a **grouping effect** so correlated predictors get similar coefficients.
 
 **Solved by:** coordinate descent (cycle over $j$, apply soft-thresholding — fast and the standard) or LARS (traces the whole regularization path).
 
 #### Unpacking the geometric picture
 
-"The $\ell_1$ ball is a cross-polytope with vertices on the axes" sounds worse than it is. In two dimensions:
+"The $`\ell_1`$ ball is a cross-polytope with vertices on the axes" sounds worse than it is. In two dimensions:
 
-- The $\ell_2$ ball $\{\beta : \beta_1^2+\beta_2^2 \le c\}$ is a **circle**. Perfectly smooth everywhere.
-- The $\ell_1$ ball $\{\beta : \lvert\beta_1\rvert+\lvert\beta_2\rvert \le c\}$ is a **diamond** — a square rotated 45°, with its four corners sitting on the axes at $(\pm c, 0)$ and $(0,\pm c)$.
+- The $`\ell_2`$ ball $`\{\beta : \beta_1^2+\beta_2^2 \le c\}`$ is a **circle**. Perfectly smooth everywhere.
+- The $`\ell_1`$ ball $`\{\beta : \lvert\beta_1\rvert+\lvert\beta_2\rvert \le c\}`$ is a **diamond** — a square rotated 45°, with its four corners sitting on the axes at $(\pm c, 0)$ and $(0,\pm c)$.
 
 A corner on an axis means one coordinate is exactly zero. That is the whole geometric content.
 
@@ -432,8 +432,8 @@ Now the picture. The constrained view of both methods is "minimize squared error
 
 | Ball | Where the ellipse touches | Consequence |
 |---|---|---|
-| Circle ($\ell_2$) | Some point on a smooth curve. Every point looks the same | Generically **no** coordinate is zero |
-| Diamond ($\ell_1$) | Very often a **corner**, because corners stick out | A coordinate is **exactly** zero |
+| Circle ($`\ell_2`$) | Some point on a smooth curve. Every point looks the same | Generically **no** coordinate is zero |
+| Diamond ($`\ell_1`$) | Very often a **corner**, because corners stick out | A coordinate is **exactly** zero |
 
 ▸ **Corners catch things.** A pointy set has a disproportionate chance of being touched first at a point, and its points lie on the axes. In $p$ dimensions the cross-polytope has $2p$ vertices, $2^p$ flat faces, and an enormous amount of edge and corner structure at every intermediate level of sparsity — which is why LASSO can produce any number of zeros, not just all-or-nothing.
 
@@ -464,9 +464,9 @@ Now the picture. The constrained view of both methods is "minimize squared error
 
 > **Common misconception.** *"LASSO is just ridge that's better at feature selection."* They solve different problems and fail in different ways. LASSO can select **at most $n$** features — a hard structural limit, painful when $p = 20{,}000$ genes and $n = 200$ patients. LASSO is also unstable under correlated predictors. Ridge has neither limitation but never selects. The elastic net exists because in $p \gg n$ problems you routinely need both properties at once.
 
-> **What breaks if you don't standardize.** The penalty $\lambda\sum_j\lvert\beta_j\rvert$ compares coefficients directly, so it compares *units*. A feature measured in millimetres needs a coefficient a thousand times smaller than the same feature in metres, and so pays a thousand times less penalty — it will survive selection purely for being measured in large units. **Un-standardized LASSO does feature selection on your unit choices.** Every serious implementation standardizes internally by default; know that yours does, and know what it does with the intercept.
+> **What breaks if you don't standardize.** The penalty $`\lambda\sum_j\lvert\beta_j\rvert`$ compares coefficients directly, so it compares *units*. A feature measured in millimetres needs a coefficient a thousand times smaller than the same feature in metres, and so pays a thousand times less penalty — it will survive selection purely for being measured in large units. **Un-standardized LASSO does feature selection on your unit choices.** Every serious implementation standardizes internally by default; know that yours does, and know what it does with the intercept.
 
-> **Where this came from.** **Robert Tibshirani** introduced the LASSO in 1996 in the *Journal of the Royal Statistical Society*, and has said it was inspired by **Leo Breiman's** non-negative garrote (1995), which shrinks OLS coefficients by non-negative multipliers and can zero them out. Tibshirani's move was to put the constraint directly into the fitting problem rather than applying it afterwards. Related ideas arrived independently from other directions: an $\ell_1$ penalty was used in **geophysics in the mid-1980s** to recover sparse spike trains from band-limited seismic data, and **basis pursuit** (Chen, Donoho and Saunders, late 1990s) arrived from signal processing. The whole area then exploded in the 2000s under the name **compressed sensing**, on the strength of a startling result: under the right conditions, minimizing $\lVert\beta\rVert_1$ recovers the *exact* sparse signal, not an approximation of it.
+> **Where this came from.** **Robert Tibshirani** introduced the LASSO in 1996 in the *Journal of the Royal Statistical Society*, and has said it was inspired by **Leo Breiman's** non-negative garrote (1995), which shrinks OLS coefficients by non-negative multipliers and can zero them out. Tibshirani's move was to put the constraint directly into the fitting problem rather than applying it afterwards. Related ideas arrived independently from other directions: an $`\ell_1`$ penalty was used in **geophysics in the mid-1980s** to recover sparse spike trains from band-limited seismic data, and **basis pursuit** (Chen, Donoho and Saunders, late 1990s) arrived from signal processing. The whole area then exploded in the 2000s under the name **compressed sensing**, on the strength of a startling result: under the right conditions, minimizing $`\lVert\beta\rVert_1`$ recovers the *exact* sparse signal, not an approximation of it.
 
 > **Where the algorithms came from.** For years the LASSO was considered expensive to fit. **LARS** (Efron, Hastie, Johnstone and Tibshirani, 2004) changed that by computing the entire regularization path — every solution for every $\lambda$ — for roughly the cost of one OLS fit, exploiting the fact that the path is piecewise linear in $\lambda$. Then, in the late 2000s, **coordinate descent** turned out to be even faster in practice: cycle through the coefficients one at a time, applying the soft-threshold formula above, and repeat. It is almost embarrassingly simple, and it is what the widely used `glmnet` package does. ▸ **A twenty-year gap between "this is a good idea" and "this is cheap enough to be the default" is entirely typical in statistics and machine learning.**
 
@@ -500,14 +500,14 @@ $$\sigma(z) = \frac{1}{1+e^{-z}}$$
 
 *"Sigmoid" simply means S-shaped* — Greek *sigma* plus *eidos*, "form." The name describes the picture, not the mathematics.
 
-**Formula 2 — the loss.** $\mathcal{L} = -\sum_i[y_i\log p_i + (1-y_i)\log(1-p_i)]$ looks like two terms, but since $y_i$ is $0$ or $1$, **exactly one of them is alive at a time**:
+**Formula 2 — the loss.** $`\mathcal{L} = -\sum_i[y_i\log p_i + (1-y_i)\log(1-p_i)]`$ looks like two terms, but since $`y_i`$ is $0$ or $1$, **exactly one of them is alive at a time**:
 
 ```python
 loss_i = -log(p_i)      if y_i == 1
 loss_i = -log(1 - p_i)  if y_i == 0
 ```
 
-The $y_i$ and $(1-y_i)$ are a switch written as arithmetic — the same trick as the Kronecker delta in §0.6. In one sentence: ▸ **"How surprised were you by the answer that actually occurred?"** Measured in nats, since the log is natural.
+The $`y_i`$ and $`(1-y_i)`$ are a switch written as arithmetic — the same trick as the Kronecker delta in §0.6. In one sentence: ▸ **"How surprised were you by the answer that actually occurred?"** Measured in nats, since the log is natural.
 
 | True $y$ | Predicted $p$ | Loss $= -\log(\cdot)$ | Reaction |
 |---|---|---|---|
@@ -525,13 +525,13 @@ The $y_i$ and $(1-y_i)$ are a switch written as arithmetic — the same trick as
 
 Read it aloud: *"design matrix transpose, times prediction-minus-truth."* Then read what it means: **each feature's gradient is that feature's values, weighted by how wrong you were on each example.**
 
-For a single example, $\nabla_\beta\mathcal{L} = (p_i - y_i)\,x_i$, and everything about training is visible in that product:
+For a single example, $`\nabla_\beta\mathcal{L} = (p_i - y_i)\,x_i`$, and everything about training is visible in that product:
 
-| $y_i$ | $p_i$ | $p_i - y_i$ | Effect on $\beta$ |
+| $`y_i`$ | $`p_i`$ | $`p_i - y_i`$ | Effect on $\beta$ |
 |---|---|---|---|
-| $1$ | $0.5$ | $-0.5$ | Push $\beta$ **along** $x_i$ — raise this example's score |
+| $1$ | $0.5$ | $-0.5$ | Push $\beta$ **along** $`x_i`$ — raise this example's score |
 | $1$ | $0.99$ | $-0.01$ | Barely move. Already right |
-| $0$ | $0.9$ | $+0.9$ | Push $\beta$ **against** $x_i$, hard. Badly wrong |
+| $0$ | $0.9$ | $+0.9$ | Push $\beta$ **against** $`x_i`$, hard. Badly wrong |
 | $0$ | $0.01$ | $+0.01$ | Barely move |
 
 **Watch one gradient step.** Take $x = (1, 2)$, $y = 1$, and start at $\beta = (0,0)$, so $p = \sigma(0) = 0.5$.
@@ -560,7 +560,7 @@ $$\log\frac{p}{1-p} = \beta^\top x$$
 
 ▸ **The sigmoid and the log-odds are the same statement read in opposite directions.** Logistic regression is a perfectly ordinary *linear* model — it is linear in the log-odds. All the curvature you see in the fitted probability comes from the change of units, not from the model.
 
-**So what is a coefficient?** $\beta_j = 0.7$ means: *"one extra unit of feature $j$ adds $0.7$ to the log-odds."* Exponentiate to get the **odds ratio**: $e^{0.7} = 2.01$, so **each extra unit roughly doubles the odds.** Doubling the odds is not doubling the probability — from $p=0.1$ (odds $0.111$) it takes you to odds $0.222$, i.e. $p = 0.182$; from $p = 0.5$ it takes you to $p = 0.667$. Same coefficient, different absolute effect, depending on where you start.
+**So what is a coefficient?** $`\beta_j = 0.7`$ means: *"one extra unit of feature $j$ adds $0.7$ to the log-odds."* Exponentiate to get the **odds ratio**: $e^{0.7} = 2.01$, so **each extra unit roughly doubles the odds.** Doubling the odds is not doubling the probability — from $p=0.1$ (odds $0.111$) it takes you to odds $0.222$, i.e. $p = 0.182$; from $p = 0.5$ it takes you to $p = 0.667$. Same coefficient, different absolute effect, depending on where you start.
 
 > **Analogy.** Log-odds are to probability what decibels are to sound pressure. Both compress a bounded, multiplicative quantity into an unbounded, additive one where equal steps mean equal *ratios*. "+3 dB" always means twice the power, whether you were whispering or shouting; "+0.7 log-odds" always means twice the odds, whether you were at 1% or 40%. The linear model is doing its work on the decibel scale.
 
@@ -571,11 +571,11 @@ Using $\sigma'=\sigma(1-\sigma)$:
 
 **Identical in form to linear regression's $X^\top(\hat y-y)$.** This is not a coincidence — it holds for every generalized linear model with its canonical link, and it's the cleanest thing to say if asked why cross-entropy is "the right" loss for logistic regression.
 
-**Hessian:** $H = X^\top SX$ with $S=\mathrm{diag}(p_i(1-p_i))$, which is **PSD** ⇒ the loss is convex ⇒ a unique global optimum. Newton's method here is **IRLS** (iteratively reweighted least squares).
+**Hessian:** $H = X^\top SX$ with $`S=\mathrm{diag}(p_i(1-p_i))`$, which is **PSD** ⇒ the loss is convex ⇒ a unique global optimum. Newton's method here is **IRLS** (iteratively reweighted least squares).
 
-▸ **Perfect separation** makes the MLE diverge: $\|\beta\|\to\infty$ pushes probabilities to 0/1 and the loss to 0 without ever attaining it. Any $\ell_2$ penalty fixes it. This is also the setting in which the *implicit bias* of gradient descent selects the max-margin direction (Ch. 31 §31.3).
+▸ **Perfect separation** makes the MLE diverge: $\|\beta\|\to\infty$ pushes probabilities to 0/1 and the loss to 0 without ever attaining it. Any $`\ell_2`$ penalty fixes it. This is also the setting in which the *implicit bias* of gradient descent selects the max-margin direction (Ch. 31 §31.3).
 
-**Interpretation:** $\beta_j$ is the change in **log-odds** per unit of $x_j$. $e^{\beta_j}$ is the odds ratio.
+**Interpretation:** $`\beta_j`$ is the change in **log-odds** per unit of $`x_j`$. $`e^{\beta_j}`$ is the odds ratio.
 
 **Multiclass:** softmax regression, gradient $X^\top(P-Y)$ — the same shape again (Ch. 1 §1.3.4).
 
@@ -597,7 +597,7 @@ Take the smallest possible example. One feature. Two points: $x = -1$ with $y = 
 
 | Fix | What it does | Cost |
 |---|---|---|
-| Any $\ell_2$ penalty, even $\lambda = 10^{-4}$ | Adds $\lambda\beta^2$, whose growth eventually beats the loss's decay. The optimum becomes finite and unique | Trivially small bias. **This is why `sklearn`'s `LogisticRegression` regularizes by default** |
+| Any $`\ell_2`$ penalty, even $\lambda = 10^{-4}$ | Adds $\lambda\beta^2$, whose growth eventually beats the loss's decay. The optimum becomes finite and unique | Trivially small bias. **This is why `sklearn`'s `LogisticRegression` regularizes by default** |
 | Firth's penalized likelihood | A principled bias correction from the statistics literature | Less standard tooling |
 | Notice the leaked feature | Perfect separation often means a column encodes the answer | Free, and frequently the real diagnosis |
 
@@ -675,7 +675,7 @@ $g(\mathbb{E}[y]) = \beta^\top x$ reads: *"apply some fixed function $g$ to the 
 
 **Why the link is not arbitrary.** Counts cannot be negative, but $\beta^\top x$ can. Put a log link in and the constraint is enforced structurally: $e^{\text{anything}} > 0$. ▸ **The link exists to make impossible predictions unrepresentable, rather than merely unlikely.**
 
-**A Poisson coefficient, concretely.** With a log link and $\beta_j = 0.4$: one extra unit of feature $j$ multiplies the expected count by $e^{0.4} = 1.49$ — a 49% increase. Exactly as in logistic regression, ▸ **coefficients under a log-type link are multiplicative, not additive**, so "a one-unit increase adds 0.4 visits" is always the wrong reading.
+**A Poisson coefficient, concretely.** With a log link and $`\beta_j = 0.4`$: one extra unit of feature $j$ multiplies the expected count by $e^{0.4} = 1.49$ — a 49% increase. Exactly as in logistic regression, ▸ **coefficients under a log-type link are multiplicative, not additive**, so "a one-unit increase adds 0.4 visits" is always the wrong reading.
 
 **And why "canonical."** For each exponential-family distribution there is one link — the *canonical* one — that makes the gradient come out as $X^\top(\hat\mu - y)$ with no extra factors. It is not the only legal link, but it is the one where the algebra is clean, the loss is convex, and the residuals have the interpretation you expect. **All three "the same shape again" observations in this section are the same theorem viewed from three rows of that table.**
 
@@ -694,9 +694,9 @@ $g(\mathbb{E}[y]) = \beta^\top x$ reads: *"apply some fixed function $g$ to the 
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| $\hat y = \beta_0 e^{\beta_1 x}$ fitted by least squares | Nonlinear in $\beta$, and the noise model is wrong | Nonlinear least squares |
+| $`\hat y = \beta_0 e^{\beta_1 x}`$ fitted by least squares | Nonlinear in $\beta$, and the noise model is wrong | Nonlinear least squares |
 | Log-transforming $y$ then running OLS | Models $\mathbb{E}[\log y]$, **not** $\log\mathbb{E}[y]$ — Jensen's inequality makes these different | A log-linear model. Fine, but a different estimand |
-| A generalized **additive** model, $g(\mathbb{E}[y]) = \sum_j f_j(x_j)$ | The $f_j$ are learned smooth functions, not coefficients | A GAM — strictly more general |
+| A generalized **additive** model, $`g(\mathbb{E}[y]) = \sum_j f_j(x_j)`$ | The $`f_j`$ are learned smooth functions, not coefficients | A GAM — strictly more general |
 | A neural network with a sigmoid output | The "linear predictor" is a learned nonlinear function of $x$ | A GLM head bolted onto a nonlinear body |
 
 ▸ **The boundary:** in a GLM the predictor must be *linear in $\beta$* and the response must come from an exponential-family distribution, with the link mediating between them. Relax the first and you get a GAM or a network; relax the second and maximum likelihood no longer hands you a convex problem.
@@ -717,7 +717,7 @@ Building a road between two villages. Any road that doesn't cross a house works,
 
 ### The margin
 
-With $y_i\in\{-1,+1\}$ and the canonical scaling $\min_i y_i(w^\top x_i+b)=1$, the distance from a point to the hyperplane is $\frac{|w^\top x+b|}{\|w\|}$, so the **margin** is $\frac{2}{\|w\|}$.
+With $`y_i\in\{-1,+1\}`$ and the canonical scaling $`\min_i y_i(w^\top x_i+b)=1`$, the distance from a point to the hyperplane is $\frac{|w^\top x+b|}{\|w\|}$, so the **margin** is $\frac{2}{\|w\|}$.
 
 Maximizing the margin = minimizing $\|w\|$:
 
@@ -727,22 +727,22 @@ Maximizing the margin = minimizing $\|w\|$:
 
 Three notational choices are doing quiet work here, and none of them is deep.
 
-**1. Labels are $\{-1,+1\}$, not $\{0,1\}$.** This is pure convenience. It makes $y_i(w^\top x_i + b)$ a single quantity that is **positive when correct and negative when wrong**, regardless of class. That quantity has a name — the **functional margin** — and everything in this section is a statement about it.
+**1. Labels are $\{-1,+1\}$, not $\{0,1\}$.** This is pure convenience. It makes $`y_i(w^\top x_i + b)`$ a single quantity that is **positive when correct and negative when wrong**, regardless of class. That quantity has a name — the **functional margin** — and everything in this section is a statement about it.
 
-| $y_i$ | $w^\top x_i+b$ | $y_i(w^\top x_i+b)$ | Meaning |
+| $`y_i`$ | $`w^\top x_i+b`$ | $`y_i(w^\top x_i+b)`$ | Meaning |
 |---|---|---|---|
 | $+1$ | $+2.0$ | $+2.0$ | Correct, comfortably |
 | $-1$ | $-2.0$ | $+2.0$ | Also correct, also comfortably. **Same number** |
 | $+1$ | $+0.3$ | $+0.3$ | Correct but inside the margin |
 | $-1$ | $+0.5$ | $-0.5$ | Wrong |
 
-**2. "The canonical scaling $\min_i y_i(w^\top x_i+b) = 1$."** The hyperplane $w^\top x + b = 0$ is unchanged if you double both $w$ and $b$ — same set of points, same decision boundary. So there is a free scale factor floating around, and the constraint "$\ge 1$" simply spends it: **we agree to measure $w$ in units where the closest point scores exactly 1.** Without this convention "maximize the margin" has no answer, since you could make the margin any number you like by rescaling.
+**2. "The canonical scaling $`\min_i y_i(w^\top x_i+b) = 1`$."** The hyperplane $w^\top x + b = 0$ is unchanged if you double both $w$ and $b$ — same set of points, same decision boundary. So there is a free scale factor floating around, and the constraint "$\ge 1$" simply spends it: **we agree to measure $w$ in units where the closest point scores exactly 1.** Without this convention "maximize the margin" has no answer, since you could make the margin any number you like by rescaling.
 
 **3. $\text{s.t.}$ means "subject to," and $\forall i$ means "for every example."** So the whole line reads: *"make $w$ as short as possible, while keeping every single training point at least one unit away on the correct side."*
 
-**Put numbers on it.** Two dimensions, $w = (1,1)$, $b = -3$. The boundary is $x_1+x_2 = 3$.
+**Put numbers on it.** Two dimensions, $w = (1,1)$, $b = -3$. The boundary is $`x_1+x_2 = 3`$.
 
-| Point | Label | $w^\top x + b$ | $y_i(w^\top x_i+b)$ | Distance to boundary |
+| Point | Label | $w^\top x + b$ | $`y_i(w^\top x_i+b)`$ | Distance to boundary |
 |---|---|---|---|---|
 | $(2,2)$ | $+1$ | $4-3 = 1$ | $1$ | $1/\sqrt2 = 0.707$ |
 | $(1,1)$ | $-1$ | $2-3 = -1$ | $1$ | $0.707$ |
@@ -758,37 +758,37 @@ $\lVert w\rVert = \sqrt{1^2+1^2} = \sqrt2 = 1.414$, so the margin $\frac{2}{\lVe
 
 ### The dual
 
-Lagrangian $L = \frac12\|w\|^2-\sum_i\alpha_i\left[y_i(w^\top x_i+b)-1\right]$, $\alpha_i\ge0$.
+Lagrangian $`L = \frac12\|w\|^2-\sum_i\alpha_i\left[y_i(w^\top x_i+b)-1\right]`$, $`\alpha_i\ge0`$.
 
-Stationarity: $\frac{\partial L}{\partial w}=0 \Rightarrow w=\sum_i\alpha_iy_ix_i$; $\frac{\partial L}{\partial b}=0\Rightarrow \sum_i\alpha_iy_i=0$. Substituting:
+Stationarity: $`\frac{\partial L}{\partial w}=0 \Rightarrow w=\sum_i\alpha_iy_ix_i`$; $`\frac{\partial L}{\partial b}=0\Rightarrow \sum_i\alpha_iy_i=0`$. Substituting:
 
 ▸ $$\max_\alpha\ \sum_i\alpha_i - \frac12\sum_{i,j}\alpha_i\alpha_jy_iy_j\,\langle x_i,x_j\rangle\quad\text{s.t.}\quad \alpha_i\ge0,\ \sum_i\alpha_iy_i=0$$
 
 ▸ **Two facts fall out, and both matter:**
-1. **The data enters only through inner products $\langle x_i,x_j\rangle$** → the kernel trick.
-2. **KKT complementary slackness:** $\alpha_i\big[y_i(w^\top x_i+b)-1\big]=0$. So $\alpha_i>0$ **only** for points exactly on the margin. All other points have $\alpha_i=0$ and can be deleted without changing the solution. Those are the **support vectors**, and the sparsity is exact, not approximate.
+1. **The data enters only through inner products $`\langle x_i,x_j\rangle`$** → the kernel trick.
+2. **KKT complementary slackness:** $`\alpha_i\big[y_i(w^\top x_i+b)-1\big]=0`$. So $`\alpha_i>0`$ **only** for points exactly on the margin. All other points have $`\alpha_i=0`$ and can be deleted without changing the solution. Those are the **support vectors**, and the sparsity is exact, not approximate.
 
 #### The dual, decoded — what a Lagrange multiplier *is*
 
 Constrained optimization has one core trick: **turn a hard constraint into a price.**
 
-Instead of forbidding a violation outright, charge for it. $\alpha_i$ is the price attached to example $i$'s constraint, and the Lagrangian $L = \frac12\lVert w\rVert^2 - \sum_i\alpha_i[y_i(w^\top x_i+b)-1]$ reads: *"the thing I want to minimize, minus a payment for every unit of slack each constraint has left over."*
+Instead of forbidding a violation outright, charge for it. $`\alpha_i`$ is the price attached to example $i$'s constraint, and the Lagrangian $`L = \frac12\lVert w\rVert^2 - \sum_i\alpha_i[y_i(w^\top x_i+b)-1]`$ reads: *"the thing I want to minimize, minus a payment for every unit of slack each constraint has left over."*
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $\alpha_i \ge 0$ | "alpha-i, non-negative" | The **price** of example $i$'s constraint. Prices can't be negative |
-| $\alpha_i = 0$ | — | "This constraint isn't binding. Ignore this point entirely" |
-| $\alpha_i > 0$ | — | "This point is pressed right up against the boundary and is pushing" |
-| $w = \sum_i \alpha_i y_i x_i$ | "w is a weighted sum of the data" | **The answer is built out of the training points themselves** |
-| $\sum_i \alpha_i y_i = 0$ | — | The pushes from the two classes must balance, or the boundary slides |
+| $`\alpha_i \ge 0`$ | "alpha-i, non-negative" | The **price** of example $i$'s constraint. Prices can't be negative |
+| $`\alpha_i = 0`$ | — | "This constraint isn't binding. Ignore this point entirely" |
+| $`\alpha_i > 0`$ | — | "This point is pressed right up against the boundary and is pushing" |
+| $`w = \sum_i \alpha_i y_i x_i`$ | "w is a weighted sum of the data" | **The answer is built out of the training points themselves** |
+| $`\sum_i \alpha_i y_i = 0`$ | — | The pushes from the two classes must balance, or the boundary slides |
 
-▸ **Read $w = \sum_i\alpha_iy_ix_i$ carefully — it is the sentence the entire kernel edifice rests on.** The weight vector is not some independent object; it is a *linear combination of the training examples*, with positive examples pushing one way and negative ones the other, weighted by $\alpha_i$. Since $\alpha_i = 0$ for almost everything, $w$ is a combination of a handful of points.
+▸ **Read $`w = \sum_i\alpha_iy_ix_i`$ carefully — it is the sentence the entire kernel edifice rests on.** The weight vector is not some independent object; it is a *linear combination of the training examples*, with positive examples pushing one way and negative ones the other, weighted by $`\alpha_i`$. Since $`\alpha_i = 0`$ for almost everything, $w$ is a combination of a handful of points.
 
-> **Analogy for complementary slackness.** A door held shut by several people leaning on it. Everyone within arm's reach is exerting some force ($\alpha_i > 0$). Everyone standing back in the corridor is exerting exactly zero ($\alpha_i = 0$) — and the door does not care whether they are one metre away or a hundred. The condition $\alpha_i[y_i(w^\top x_i+b)-1] = 0$ is precisely "**either you're touching the door, or you're pushing with zero force.**" One of the two factors must vanish; both cannot be non-zero at once.
+> **Analogy for complementary slackness.** A door held shut by several people leaning on it. Everyone within arm's reach is exerting some force ($`\alpha_i > 0`$). Everyone standing back in the corridor is exerting exactly zero ($`\alpha_i = 0`$) — and the door does not care whether they are one metre away or a hundred. The condition $`\alpha_i[y_i(w^\top x_i+b)-1] = 0`$ is precisely "**either you're touching the door, or you're pushing with zero force.**" One of the two factors must vanish; both cannot be non-zero at once.
 
-**Why the dual is written with $\langle x_i, x_j\rangle$ and why that changes everything.** Look at the dual objective: $\sum_i\alpha_i - \frac12\sum_{i,j}\alpha_i\alpha_jy_iy_j\langle x_i,x_j\rangle$. The features $x$ appear **only** inside dot products with each other. Never alone. Never squared. Never individually.
+**Why the dual is written with $`\langle x_i, x_j\rangle`$ and why that changes everything.** Look at the dual objective: $`\sum_i\alpha_i - \frac12\sum_{i,j}\alpha_i\alpha_jy_iy_j\langle x_i,x_j\rangle`$. The features $x$ appear **only** inside dot products with each other. Never alone. Never squared. Never individually.
 
-So the optimizer never needs to know what $x_i$ *is* — only how similar each pair of examples is. Hand it a table of $n^2$ similarity numbers and it can solve the problem without ever seeing a feature vector. ▸ **That single structural observation is the kernel trick, and it was sitting in the algebra before anyone thought to exploit it.**
+So the optimizer never needs to know what $`x_i`$ *is* — only how similar each pair of examples is. Hand it a table of $n^2$ similarity numbers and it can solve the problem without ever seeing a feature vector. ▸ **That single structural observation is the kernel trick, and it was sitting in the algebra before anyone thought to exploit it.**
 
 **Where the numbers land, concretely.** Suppose 1,000 training points and the solver returns $\alpha$ with 12 non-zero entries. Then:
 
@@ -802,22 +802,22 @@ So the optimizer never needs to know what $x_i$ *is* — only how similar each p
 
 | Example | Why |
 |---|---|
-| A point sitting exactly on the margin, $y_i(w^\top x_i+b) = 1$ | $\alpha_i > 0$; it is holding the boundary in place |
-| In the soft-margin case, a point inside the margin ($0 < \xi_i < 1$) | Still constrains; $\alpha_i = C$ |
-| A **misclassified** point ($\xi_i > 1$) | Also a support vector, at $\alpha_i = C$ — it pushes maximally and loses |
+| A point sitting exactly on the margin, $`y_i(w^\top x_i+b) = 1`$ | $`\alpha_i > 0`$; it is holding the boundary in place |
+| In the soft-margin case, a point inside the margin ($`0 < \xi_i < 1`$) | Still constrains; $`\alpha_i = C`$ |
+| A **misclassified** point ($`\xi_i > 1`$) | Also a support vector, at $`\alpha_i = C`$ — it pushes maximally and loses |
 
 **❌ Near-misses**
 
 | Looks like one | Why it isn't | What it actually is |
 |---|---|---|
-| The point closest to the *other class's* centroid | Distance to a centroid has nothing to do with the margin | Just a point. $\alpha_i$ is probably 0 |
-| An outlier far outside its own class, away from the boundary | Comfortably correct ⇒ $\alpha_i = 0$ ⇒ invisible to the model | An outlier the SVM ignores completely |
-| A high-leverage point in linear regression | Leverage is $H_{ii}$, a projection quantity from a different method | An influential observation in OLS |
+| The point closest to the *other class's* centroid | Distance to a centroid has nothing to do with the margin | Just a point. $`\alpha_i`$ is probably 0 |
+| An outlier far outside its own class, away from the boundary | Comfortably correct ⇒ $`\alpha_i = 0`$ ⇒ invisible to the model | An outlier the SVM ignores completely |
+| A high-leverage point in linear regression | Leverage is $`H_{ii}`$, a projection quantity from a different method | An influential observation in OLS |
 | A "hard negative" mined for a contrastive loss (Ch. 25) | Related in spirit, but selected by heuristic, not by an optimality condition | A hard negative |
 
-▸ **The boundary:** a support vector is defined by an *optimality condition* — $\alpha_i > 0$ — not by being unusual, extreme, or interesting. It is the set of points whose removal would change the answer, and the SVM computes that set exactly rather than estimating it.
+▸ **The boundary:** a support vector is defined by an *optimality condition* — $`\alpha_i > 0`$ — not by being unusual, extreme, or interesting. It is the set of points whose removal would change the answer, and the SVM computes that set exactly rather than estimating it.
 
-> **Common misconception.** *"Outliers wreck an SVM, because it's fitted to the extreme points."* An outlier far from the boundary on the correct side is the *most* ignorable point there is: $\alpha_i = 0$, and it could be at infinity for all the model cares. Compare OLS, where a single distant point can drag the entire line toward it because squared error grows quadratically. **The SVM is robust to distant outliers and fragile to near-boundary noise; OLS is the reverse.** The misconception is tempting because "it only uses the extreme points" sounds like "it only uses the outliers," and those are entirely different notions of extreme.
+> **Common misconception.** *"Outliers wreck an SVM, because it's fitted to the extreme points."* An outlier far from the boundary on the correct side is the *most* ignorable point there is: $`\alpha_i = 0`$, and it could be at infinity for all the model cares. Compare OLS, where a single distant point can drag the entire line toward it because squared error grows quadratically. **The SVM is robust to distant outliers and fragile to near-boundary noise; OLS is the reverse.** The misconception is tempting because "it only uses the extreme points" sounds like "it only uses the outliers," and those are entirely different notions of extreme.
 
 > **Common misconception.** *"The dual is just a mathematical curiosity; you could solve the primal."* You can, and for linear SVMs on large $n$ you should — that is exactly what LIBLINEAR does. But the dual is what makes kernels *possible*, because the primal contains $w$, which lives in the feature space, and in an infinite-dimensional feature space $w$ cannot be written down. ▸ **The dual is where you go when the primal's variables don't fit in memory — or in the universe.**
 
@@ -828,24 +828,24 @@ $$\min\ \tfrac12\|w\|^2 + C\sum_i\xi_i\quad\text{s.t. } y_i(w^\top x_i+b)\ge1-\x
 Equivalent unconstrained form with the **hinge loss**:
 ▸ $$\min_w\ \frac{1}{2}\|w\|^2 + C\sum_i\max\big(0,\ 1-y_i(w^\top x_i+b)\big)$$
 
-The dual is unchanged except $0\le\alpha_i\le C$ (a "box constraint"). **Small $C$ = wide margin, more violations, more regularization.**
+The dual is unchanged except $`0\le\alpha_i\le C`$ (a "box constraint"). **Small $C$ = wide margin, more violations, more regularization.**
 
 **Hinge vs logistic loss:** hinge is exactly zero once the margin is met (⇒ sparsity, only support vectors matter); logistic is always positive (⇒ every point contributes, and you get calibrated probabilities). That trade — sparsity vs probabilities — is the practical difference between SVM and logistic regression.
 
 #### Unpacking slack, $C$, and the hinge
 
-**$\xi_i$ (xi, rhyming with "sigh") is a permission slip.** The hard constraint said "score at least 1." The soft one says "score at least $1 - \xi_i$, and pay $C\xi_i$ for the privilege."
+**$`\xi_i`$ (xi, rhyming with "sigh") is a permission slip.** The hard constraint said "score at least 1." The soft one says "score at least $`1 - \xi_i`$, and pay $`C\xi_i`$ for the privilege."
 
-| $\xi_i$ | $y_i(w^\top x_i+b)$ | Where the point sits |
+| $`\xi_i`$ | $`y_i(w^\top x_i+b)`$ | Where the point sits |
 |---|---|---|
 | $0$ | $\ge 1$ | Outside the margin, correct. **Free** |
 | $0.3$ | $0.7$ | Inside the margin, still on the correct side |
 | $1.0$ | $0$ | Exactly on the decision boundary |
-| $1.7$ | $-0.7$ | **Misclassified**, and $\xi_i > 1$ says so |
+| $1.7$ | $-0.7$ | **Misclassified**, and $`\xi_i > 1`$ says so |
 
-▸ **$\xi_i > 1$ is exactly the condition for a training error**, so $\sum_i\xi_i$ is an upper bound on the number of mistakes. The soft-margin objective is therefore, quite literally, "keep the corridor wide, and pay $C$ per unit of mistake-ness."
+▸ **$`\xi_i > 1`$ is exactly the condition for a training error**, so $`\sum_i\xi_i`$ is an upper bound on the number of mistakes. The soft-margin objective is therefore, quite literally, "keep the corridor wide, and pay $C$ per unit of mistake-ness."
 
-**Now $C$.** Divide the whole objective by $C$ and it becomes $\frac{1}{2C}\lVert w\rVert^2 + \sum_i\xi_i$. ▸ **So $\frac1C$ plays the role that $\lambda$ played in ridge: it is the regularization strength wearing a reciprocal.** Every confusion about "does larger $C$ mean more or less regularization" dissolves the moment you write it that way.
+**Now $C$.** Divide the whole objective by $C$ and it becomes $`\frac{1}{2C}\lVert w\rVert^2 + \sum_i\xi_i`$. ▸ **So $\frac1C$ plays the role that $\lambda$ played in ridge: it is the regularization strength wearing a reciprocal.** Every confusion about "does larger $C$ mean more or less regularization" dissolves the moment you write it that way.
 
 | $C$ | Behaviour | Failure mode |
 |---|---|---|
@@ -855,7 +855,7 @@ The dual is unchanged except $0\le\alpha_i\le C$ (a "box constraint"). **Small $
 | $C = 0.01$ | Wide corridor, many violations allowed | Underfits; nearly every point becomes a support vector |
 | $C \to 0$ | The penalty vanishes; $w \to 0$ | Predicts one class for everything |
 
-**The hinge, and the trade against logistic.** $\max(0, 1-z)$ is the same positive-part operator $(\cdot)_+$ from soft-thresholding in §22.3 — and, for that matter, the same shape as a ReLU, flipped. Write $z = y_i(w^\top x_i + b)$:
+**The hinge, and the trade against logistic.** $\max(0, 1-z)$ is the same positive-part operator $`(\cdot)_+`$ from soft-thresholding in §22.3 — and, for that matter, the same shape as a ReLU, flipped. Write $`z = y_i(w^\top x_i + b)`$:
 
 | $z$ | Hinge $\max(0,1-z)$ | Logistic $\log(1+e^{-z})$ | Difference |
 |---|---|---|---|
@@ -887,7 +887,7 @@ The dual is unchanged except $0\le\alpha_i\le C$ (a "box constraint"). **Small $
 | 0–1 loss, $\mathbb{1}[z < 0]$ | Zero gradient everywhere it's defined; NP-hard to minimize | The thing all the others are **surrogates for** |
 | Squared error on $\pm1$ labels | Punishes $z = 3$ *more* than $z = 1$ — being too right is penalized | Regression, misapplied |
 | Accuracy | Not a loss at all; not differentiable, not decomposable | An evaluation metric |
-| Triplet loss, $\max(0, d_+ - d_- + m)$ | Also a hinge, but on a *difference of distances*, not on $y\cdot\text{score}$ | A metric-learning loss (Ch. 25) |
+| Triplet loss, $`\max(0, d_+ - d_- + m)`$ | Also a hinge, but on a *difference of distances*, not on $y\cdot\text{score}$ | A metric-learning loss (Ch. 25) |
 
 ▸ **The boundary:** a margin loss is a decreasing function of the single quantity $z = y\cdot\text{score}$, so it rewards being right *by a comfortable amount*, not merely right. Squared error fails the test because it is not monotone in $z$ — it wants your score to be exactly $\pm1$ and objects to anything more confident.
 
@@ -897,17 +897,17 @@ The dual is unchanged except $0\le\alpha_i\le C$ (a "box constraint"). **Small $
 
 ### Kernels
 
-Replace $\langle x_i,x_j\rangle$ with $k(x_i,x_j)=\langle\phi(x_i),\phi(x_j)\rangle$. **$\phi$ is never computed.**
+Replace $`\langle x_i,x_j\rangle`$ with $`k(x_i,x_j)=\langle\phi(x_i),\phi(x_j)\rangle`$. **$\phi$ is never computed.**
 
 | Kernel | $k(x,x')$ | Note |
 |---|---|---|
 | Linear | $x^\top x'$ | |
 | Polynomial | $(\gamma x^\top x'+r)^d$ | finite feature space |
 | **RBF/Gaussian** | $\exp(-\gamma\|x-x'\|^2)$ | **infinite-dimensional**; the default |
-| Laplacian | $\exp(-\gamma\|x-x'\|_1)$ | |
+| Laplacian | $`\exp(-\gamma\|x-x'\|_1)`$ | |
 | Sigmoid | $\tanh(\gamma x^\top x'+r)$ | not PSD for all params |
 
-**Mercer's condition:** $k$ is a valid kernel iff the Gram matrix $K_{ij}=k(x_i,x_j)$ is PSD for every finite sample.
+**Mercer's condition:** $k$ is a valid kernel iff the Gram matrix $`K_{ij}=k(x_i,x_j)`$ is PSD for every finite sample.
 
 ▸ **The RBF kernel's feature map is infinite-dimensional** (expand the exponential in a Taylor series — every polynomial degree appears). So the SVM fits a linear classifier in an infinite-dimensional space, and it generalizes anyway — because, as Chapter 2 §2.5 showed, **the capacity that matters is the norm, not the dimension.** This is the single best illustration of that point.
 
@@ -962,7 +962,7 @@ $$e^{2\gamma\,x^\top x'} = \sum_{k=0}^{\infty}\frac{(2\gamma)^k}{k!}\,(x^\top x'
 
 #### Examples and non-examples: valid kernels
 
-A kernel is valid (Mercer) exactly when every Gram matrix $K_{ij} = k(x_i,x_j)$ it produces is symmetric and positive semi-definite. That is not decoration: PSD is what guarantees the dual is a **convex** problem with a unique optimum, and it is what guarantees the implied $\phi$ exists at all.
+A kernel is valid (Mercer) exactly when every Gram matrix $`K_{ij} = k(x_i,x_j)`$ it produces is symmetric and positive semi-definite. That is not decoration: PSD is what guarantees the dual is a **convex** problem with a unique optimum, and it is what guarantees the implied $\phi$ exists at all.
 
 **✅ Valid kernels**
 
@@ -971,7 +971,7 @@ A kernel is valid (Mercer) exactly when every Gram matrix $K_{ij} = k(x_i,x_j)$ 
 | $k(x,x') = x^\top x'$ | $K = XX^\top$, PSD by construction |
 | $\exp(-\gamma\lVert x-x'\rVert^2)$ | Provably PSD for all $\gamma>0$ |
 | $(\gamma x^\top x' + r)^d$ with $r\ge0$, $d$ a positive integer | Products and sums of valid kernels are valid |
-| $k_1 + k_2$, or $c\cdot k_1$ for $c>0$, or $k_1 k_2$ | **Kernels are closed under these operations** — build new ones this way |
+| $`k_1 + k_2`$, or $`c\cdot k_1`$ for $c>0$, or $`k_1 k_2`$ | **Kernels are closed under these operations** — build new ones this way |
 | A string kernel counting shared subsequences | Never writes down a feature vector at all, and is PSD |
 
 **❌ Near-misses — similarity scores that are not kernels**
@@ -993,14 +993,14 @@ A kernel is valid (Mercer) exactly when every Gram matrix $K_{ij} = k(x_i,x_j)$ 
 
 ### The representer theorem
 
-▸ For any regularized loss of the form $\min_f \sum_i L(y_i,f(x_i)) + \Omega(\|f\|_{\mathcal{H}})$ over an RKHS $\mathcal{H}$, with $\Omega$ strictly increasing, **the minimizer has the form**
+▸ For any regularized loss of the form $`\min_f \sum_i L(y_i,f(x_i)) + \Omega(\|f\|_{\mathcal{H}})`$ over an RKHS $\mathcal{H}$, with $\Omega$ strictly increasing, **the minimizer has the form**
 $$f^*(\cdot)=\sum_{i=1}^{n}\alpha_i k(x_i,\cdot)$$
 
-*Sketch:* decompose $f = f_\parallel + f_\perp$ where $f_\parallel$ lies in the span of $\{k(x_i,\cdot)\}$. By the reproducing property, $f(x_i)=\langle f,k(x_i,\cdot)\rangle$ depends only on $f_\parallel$, so the loss term is unchanged by $f_\perp$; but $\|f\|^2=\|f_\parallel\|^2+\|f_\perp\|^2$, so the penalty is strictly increased by any nonzero $f_\perp$. Hence $f_\perp=0$ at the optimum. ∎
+*Sketch:* decompose $`f = f_\parallel + f_\perp`$ where $`f_\parallel`$ lies in the span of $`\{k(x_i,\cdot)\}`$. By the reproducing property, $`f(x_i)=\langle f,k(x_i,\cdot)\rangle`$ depends only on $`f_\parallel`$, so the loss term is unchanged by $`f_\perp`$; but $`\|f\|^2=\|f_\parallel\|^2+\|f_\perp\|^2`$, so the penalty is strictly increased by any nonzero $`f_\perp`$. Hence $`f_\perp=0`$ at the optimum. ∎
 
 ▸ **This is why kernel methods are computationally possible at all:** an infinite-dimensional optimization problem provably reduces to $n$ coefficients.
 
-**Scaling:** SVM training is $O(n^2)$–$O(n^3)$, and prediction is $O(n_{\text{SV}}d)$. **Do not use kernel SVMs beyond ~100k samples.** Use linear SVM (LIBLINEAR), or approximate the kernel with random Fourier features: $k(x,x')\approx z(x)^\top z(x')$ with $z(x)=\sqrt{2/D}\cos(\omega^\top x+b)$, $\omega\sim\mathcal{N}(0,2\gamma I)$ — then run a linear model.
+**Scaling:** SVM training is $O(n^2)$–$O(n^3)$, and prediction is $`O(n_{\text{SV}}d)`$. **Do not use kernel SVMs beyond ~100k samples.** Use linear SVM (LIBLINEAR), or approximate the kernel with random Fourier features: $k(x,x')\approx z(x)^\top z(x')$ with $z(x)=\sqrt{2/D}\cos(\omega^\top x+b)$, $\omega\sim\mathcal{N}(0,2\gamma I)$ — then run a linear model.
 
 ---
 
@@ -1018,7 +1018,7 @@ Extremely fast, one pass, a strong text baseline, and it works with very little 
 
 No training; predict by majority/mean over the $k$ nearest points.
 
-▸ **The curse of dimensionality**, made concrete: in $d$ dimensions, to capture a fraction $r$ of the data volume, a hypercube neighbourhood must have edge length $r^{1/d}$. For $d=10$, $r=0.01$: edge $=0.63$ — **63% of the range of every feature.** "Local" is not local. Relatedly, the ratio $\frac{\text{dist}_{\max}-\text{dist}_{\min}}{\text{dist}_{\min}}\to0$ as $d\to\infty$, so all points become equidistant and "nearest" stops meaning anything.
+▸ **The curse of dimensionality**, made concrete: in $d$ dimensions, to capture a fraction $r$ of the data volume, a hypercube neighbourhood must have edge length $r^{1/d}$. For $d=10$, $r=0.01$: edge $=0.63$ — **63% of the range of every feature.** "Local" is not local. Relatedly, the ratio $`\frac{\text{dist}_{\max}-\text{dist}_{\min}}{\text{dist}_{\min}}\to0`$ as $d\to\infty$, so all points become equidistant and "nearest" stops meaning anything.
 
 **The 1-NN bound** is worth knowing: as $n\to\infty$, the 1-NN error is at most twice the Bayes error. A remarkably strong guarantee for so simple a method.
 
@@ -1063,7 +1063,7 @@ Ranked by what actually works:
 
 - **LASSO stands for Least Absolute Shrinkage and Selection Operator**, coined by Robert Tibshirani in 1996. The acronym was reverse-engineered to spell a word — a small tradition in statistics that also gave us BIC, GLM, and a great many strained abbreviations.
 
-- **The reason $\ell_1$ produces exact zeros is geometric.** The $\ell_1$ constraint region is a diamond with sharp corners on the axes; the $\ell_2$ region is a smooth ball. A contour of the loss touching a diamond most often touches it *at a corner* — and a corner is where a coordinate equals exactly zero. A ball has no corners, so $\ell_2$ shrinks without ever zeroing.
+- **The reason $`\ell_1`$ produces exact zeros is geometric.** The $`\ell_1`$ constraint region is a diamond with sharp corners on the axes; the $`\ell_2`$ region is a smooth ball. A contour of the loss touching a diamond most often touches it *at a corner* — and a corner is where a coordinate equals exactly zero. A ball has no corners, so $`\ell_2`$ shrinks without ever zeroing.
 
 - **Support vector machines dominated machine learning for roughly fifteen years.** From the mid-1990s until deep learning's 2012 breakthrough, SVMs with kernels were the default strong baseline for most classification problems. Vladimir Vapnik, their co-inventor, also developed the VC dimension of Chapter 2.
 
@@ -1075,7 +1075,7 @@ Ranked by what actually works:
 
 - **Ridge regression was invented twice, in different fields, for different reasons.** Statisticians derived it to handle correlated predictors; numerical analysts derived essentially the same fix (Tikhonov regularization, named for Andrey Tikhonov) to stabilize ill-posed inverse problems. Adding $\lambda$ to the diagonal solves both problems because they are the same problem.
 
-- **Ridge shrinks different directions by different amounts**, which is invisible in the usual formula. Written through the singular value decomposition, direction $j$ is multiplied by $\sigma_j^2/(\sigma_j^2 + \lambda)$ — so well-determined directions (large $\sigma_j$) pass through nearly untouched while poorly-determined ones are crushed. It is a *targeted* penalty, not a blanket one.
+- **Ridge shrinks different directions by different amounts**, which is invisible in the usual formula. Written through the singular value decomposition, direction $j$ is multiplied by $`\sigma_j^2/(\sigma_j^2 + \lambda)`$ — so well-determined directions (large $`\sigma_j`$) pass through nearly untouched while poorly-determined ones are crushed. It is a *targeted* penalty, not a blanket one.
 
 - **These methods are not obsolete, and on tabular data they frequently win.** Gradient-boosted trees (Chapter 23) and regularized linear models still outperform neural networks on the majority of real-world tabular problems — a fact that surprises people whose exposure to machine learning began after 2015.
 
@@ -1083,14 +1083,14 @@ Ranked by what actually works:
 
 ## Check for Understanding
 
-**Ridge shrinks each principal direction by $\sigma_j^2/(\sigma_j^2+\lambda)$ so poorly-determined directions are damped most, LASSO's non-differentiable corner at zero is what produces exact sparsity, and the SVM's dual shows the data entering only through inner products — which is what lets a linear classifier in an infinite-dimensional space be computed with $n$ coefficients and still generalize, because capacity is controlled by norm rather than dimension.**
+**Ridge shrinks each principal direction by $`\sigma_j^2/(\sigma_j^2+\lambda)`$ so poorly-determined directions are damped most, LASSO's non-differentiable corner at zero is what produces exact sparsity, and the SVM's dual shows the data entering only through inner products — which is what lets a linear classifier in an infinite-dimensional space be computed with $n$ coefficients and still generalize, because capacity is controlled by norm rather than dimension.**
 
 ### Can you explain these out loud?
 
 The test of understanding is conversational: could you explain each of these to a colleague, without notation, in under a minute?
 
 1. **Why does ridge regression shrink some directions more than others?** What makes a direction "poorly determined"?
-2. **Why does $\ell_1$ give exact zeros when $\ell_2$ doesn't?** (Diamond versus ball — say it geometrically.)
+2. **Why does $`\ell_1`$ give exact zeros when $`\ell_2`$ doesn't?** (Diamond versus ball — say it geometrically.)
 3. **When would you choose ridge over LASSO**, and when elastic net over either?
 4. **Why does logistic regression need an iterative solver when linear regression doesn't?**
 5. **What is a support vector**, and why does deleting all the other training points change nothing?

@@ -27,8 +27,8 @@ The audit below covered mathematical correctness but not **Markdown rendering**.
 
 | File | Row | Problem | Fix |
 |---|---|---|---|
-| §1.1.4 | $\ell_1$ norm | `\sum` followed by a bare-pipe absolute value split the cell | `\sum_i \lvert x_i \rvert` |
-| §1.1.4 | $\ell_\infty$ norm | `\max_i` followed by a bare-pipe absolute value split the cell | `\max_i \lvert x_i \rvert` |
+| §1.1.4 | $`\ell_1`$ norm | `\sum` followed by a bare-pipe absolute value split the cell | `\sum_i \lvert x_i \rvert` |
+| §1.1.4 | $`\ell_\infty`$ norm | `\max_i` followed by a bare-pipe absolute value split the cell | `\max_i \lvert x_i \rvert` |
 | §10.4 | vocabulary trade-off header | bare-pipe cardinality of $V$ split the cell | `\lvert V \rvert` |
 | §10.4 | embedding parameter count | bare-pipe cardinality inside $2\cdot\lvert V\rvert\cdot d$ split the cell | `2\lvert V \rvert d` |
 
@@ -77,7 +77,7 @@ All quantitative claims were recomputed. **28 of 32 verified exactly or within s
 
 | Claim | Location | Stated | Computed | Status |
 |---|---|---|---|---|
-| $\prod_{k=23}^{35}(1-1/k)=22/35$ | §3.6 | 0.629 | 0.62857 | ✓ |
+| $`\prod_{k=23}^{35}(1-1/k)=22/35`$ | §3.6 | 0.629 | 0.62857 | ✓ |
 | $P(\text{records at }36\text{ and }37)$ | §3.6 | $7.5\times10^{-4}$ | $7.508\times10^{-4}$ | ✓ |
 | Perplexity change $1.556\to1.524$ | §1.4 | 3.2% | 3.15% | ✓ |
 | $(1-3\times10^{-6})^{2274}$ | §2.8 | 0.9932 | 0.993201 | ✓ |
@@ -98,12 +98,12 @@ All quantitative claims were recomputed. **28 of 32 verified exactly or within s
 | 70B bf16 decode bandwidth floor | §17.1 | 24 tok/s | 23.93 | ✓ |
 | H100 ridge point | §17.1 | 295 FLOP/byte | 148 (dense) | ⚠ **corrected** |
 | Agent reliability $0.95^{20}$, $0.99^{20}$ | §18.7 | 0.36, 0.82 | 0.3585, 0.8179 | ✓ |
-| Diffusion posterior variance identity | §20.3 | $\tilde\beta_t$ | matches symbolically & numerically | ✓ |
+| Diffusion posterior variance identity | §20.3 | $`\tilde\beta_t`$ | matches symbolically & numerically | ✓ |
 | Simplex ETF angle $-1/(C-1)$ | §31.1 | −0.5 at $C=3$ | −0.5 | ✓ |
 | kNN neighbourhood edge length, $d=10$, $r=0.01$ | §22.6 | 0.63 | 0.6310 | ✓ |
 | InfoNCE bound ceiling $\log N$, $N=256$ | §25.3 | 5.5 nats | 5.545 | ✓ |
 | Bootstrap out-of-bag fraction $e^{-1}$ | §23.2 | 36.8% | 36.79% | ✓ |
-| RAdam $\rho_\infty = 2/(1-\beta_2)-1$ | §5.4 | 1999 | 1999 | ✓ |
+| RAdam $`\rho_\infty = 2/(1-\beta_2)-1`$ | §5.4 | 1999 | 1999 | ✓ |
 | Expected minimum of $n=43$ noisy draws | §3.6 | ~2σ below mean | 2.00σ (simple), 2.18σ (Blom) | ✓ |
 
 ---
@@ -112,7 +112,7 @@ All quantitative claims were recomputed. **28 of 32 verified exactly or within s
 
 ### 3.1 KV-cache example conflated MHA and GQA geometry *(Ch. 12 §12.7, Ch. 34 Q53)*
 
-**The error.** The worked example was labelled "LLaMA-2-70B" with $h_{kv}=64$. LLaMA-2-70B ships **GQA with $h_{kv}=8$**, so its real per-sequence cache at 4k context is **1.34 GB**, not 10.7 GB. The arithmetic was right; the attribution was wrong.
+**The error.** The worked example was labelled "LLaMA-2-70B" with $`h_{kv}=64`$. LLaMA-2-70B ships **GQA with $`h_{kv}=8`$**, so its real per-sequence cache at 4k context is **1.34 GB**, not 10.7 GB. The arithmetic was right; the attribution was wrong.
 
 **Why it mattered.** The example sits immediately before the section arguing that GQA exists to shrink the cache — so citing a GQA model's cache as though it were unmitigated undercut the very point being made, and would have been a bad answer to give in an interview.
 
@@ -134,9 +134,9 @@ All quantitative claims were recomputed. **28 of 32 verified exactly or within s
 
 ### 3.4 Equilibrium weight-norm expression *(Ch. 7 §7.4)*
 
-**The error.** The formula $\|W\|^4_{\text{eq}} \approx \frac{\eta\|\nabla\mathcal{L}\|^2}{2\lambda}$ contained a vestigial "$\cdot\frac11$" and — more seriously — was circular: $\|\nabla\mathcal{L}\|$ itself depends on $\|W\|$ (it scales as $1/\|W\|$ by the scale-invariance argument two paragraphs earlier), so the expression as written does not determine $\|W\|$.
+**The error.** The formula $`\|W\|^4_{\text{eq}} \approx \frac{\eta\|\nabla\mathcal{L}\|^2}{2\lambda}`$ contained a vestigial "$\cdot\frac11$" and — more seriously — was circular: $\|\nabla\mathcal{L}\|$ itself depends on $\|W\|$ (it scales as $1/\|W\|$ by the scale-invariance argument two paragraphs earlier), so the expression as written does not determine $\|W\|$.
 
-**Fix.** Introduced the scale-invariant quantity $G\equiv\|W\|\cdot\|\nabla_W\mathcal{L}\|$, restated the result as $\|W\|^4_{\text{eq}}\approx\eta G^2/(2\lambda)$ and $\eta_{\text{eff}}\approx\sqrt{2\eta\lambda}/G$, and added the two-line derivation (growth per step $\eta^2G^2/\|W\|^2$ balanced against decay $2\eta\lambda\|W\|^2$). The conclusion $\eta_{\text{eff}}\propto\sqrt{\eta\lambda}$ was correct throughout; only the intermediate step was malformed.
+**Fix.** Introduced the scale-invariant quantity $`G\equiv\|W\|\cdot\|\nabla_W\mathcal{L}\|`$, restated the result as $`\|W\|^4_{\text{eq}}\approx\eta G^2/(2\lambda)`$ and $`\eta_{\text{eff}}\approx\sqrt{2\eta\lambda}/G`$, and added the two-line derivation (growth per step $\eta^2G^2/\|W\|^2$ balanced against decay $2\eta\lambda\|W\|^2$). The conclusion $`\eta_{\text{eff}}\propto\sqrt{\eta\lambda}`$ was correct throughout; only the intermediate step was malformed.
 
 ---
 
@@ -148,39 +148,39 @@ Each of these was re-derived from scratch and matched:
 |---|---|---|
 | Bias–variance decomposition | §2.2 | cross term vanishes correctly |
 | ELBO from Jensen; gap $=\mathrm{KL}(q\|p(z\mid x))$ | §1.4 | ✓ |
-| Softmax Jacobian $p_i(\delta_{ij}-p_j)$ | §1.3 | ✓ |
-| Heavy-ball optimal $\beta^*=\left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^2$ | §4.5 | ✓ |
-| Adam bias correction | §5.3 | geometric sum $(1-\beta_1^t)$ ✓ |
+| Softmax Jacobian $`p_i(\delta_{ij}-p_j)`$ | §1.3 | ✓ |
+| Heavy-ball optimal $`\beta^*=\left(\frac{\sqrt\kappa-1}{\sqrt\kappa+1}\right)^2`$ | §4.5 | ✓ |
+| Adam bias correction | §5.3 | geometric sum $`(1-\beta_1^t)`$ ✓ |
 | He initialization $\mathrm{Var}(W)=2/n$ | §6.4 | ReLU halving handled ✓ |
-| BatchNorm backward pass | §7.2 | three-term form; $\sum_i(x_i-\mu)=0$ used correctly ✓ |
+| BatchNorm backward pass | §7.2 | three-term form; $`\sum_i(x_i-\mu)=0`$ used correctly ✓ |
 | Scale invariance $\Rightarrow\langle\nabla\mathcal{L},W\rangle=0$ | §7.4 | ✓ (downstream step corrected, §3.4 above) |
-| Early stopping $\equiv\ell_2$ with $\lambda\approx1/(\eta t)$ | §7.5 | ✓ |
-| Dropout $\equiv$ data-dependent $\ell_2$ | §7.5 | ✓ |
-| $\mathrm{Var}(q^\top k)=d_k$ | §11.2 | ✓ |
+| Early stopping $`\equiv\ell_2`$ with $\lambda\approx1/(\eta t)$ | §7.5 | ✓ |
+| Dropout $\equiv$ data-dependent $`\ell_2`$ | §7.5 | ✓ |
+| $`\mathrm{Var}(q^\top k)=d_k`$ | §11.2 | ✓ |
 | $12d^2$ per layer; $C\approx6ND$ | §11.7 | ✓, validated against GPT-3 |
-| RoPE: $R_m^\top R_n = R_{n-m}$ | §12.4 | rotation group property ✓ |
-| Sinusoidal shift is linear in $PE_{pos}$ | §12.2 | angle-addition identities ✓ |
+| RoPE: $`R_m^\top R_n = R_{n-m}`$ | §12.4 | rotation group property ✓ |
+| Sinusoidal shift is linear in $`PE_{pos}`$ | §12.2 | angle-addition identities ✓ |
 | Online softmax rescaling (FlashAttention) | §12.5 | exact, not approximate ✓ |
 | Chinchilla constrained optimization | §15.2 | ✓, exponents recomputed |
 | **DPO, full derivation** | §16.5 | Gibbs optimum → invert → $Z(x)$ cancels ✓ |
-| Policy-gradient baseline is unbiased | §27.4 | $\nabla\sum_a\pi=0$ ✓ |
+| Policy-gradient baseline is unbiased | §27.4 | $`\nabla\sum_a\pi=0`$ ✓ |
 | **Policy gradient theorem** | §27.4 | dynamics term vanishes ✓ |
 | GAE as geometric average of $k$-step estimators | §27.6 | reduces to TD($\lambda$) on advantages ✓ |
 | **Bellman operator is a $\gamma$-contraction** | §26.4 | $\|\max f-\max g\|\le\max\|f-g\|$ step ✓ |
 | **GAN optimal discriminator → JSD** | §19.4 | $\arg\max$ of $a\log y+b\log(1-y)$ ✓ |
 | VAE closed-form Gaussian KL | §19.3 | ✓ |
 | **Diffusion forward closed form** (induction) | §20.2 | variance combination ✓ |
-| **Diffusion exact posterior** $\tilde\beta_t,\tilde\mu_t$ | §20.3 | verified symbolically and numerically |
+| **Diffusion exact posterior** $`\tilde\beta_t,\tilde\mu_t`$ | §20.3 | verified symbolically and numerically |
 | $\epsilon$-parameterized mean | §20.4 | ✓ |
-| Score $=-\epsilon/\sqrt{1-\bar\alpha_t}$ | §20.6 | ✓ |
+| Score $`=-\epsilon/\sqrt{1-\bar\alpha_t}`$ | §20.6 | ✓ |
 | CFG from classifier guidance | §20.8 | implicit-classifier substitution ✓ |
-| D3PM posterior and $\bar Q_t$ | §21.2 | ✓ |
-| Ridge SVD shrinkage $\sigma_j^2/(\sigma_j^2+\lambda)$ | §22.2 | ✓ |
+| D3PM posterior and $`\bar Q_t`$ | §21.2 | ✓ |
+| Ridge SVD shrinkage $`\sigma_j^2/(\sigma_j^2+\lambda)`$ | §22.2 | ✓ |
 | LASSO soft-threshold via subgradient | §22.3 | ✓ |
 | **SVM dual + KKT sparsity** | §22.5 | ✓ |
 | **Representer theorem** | §22.5 | orthogonal decomposition argument ✓ |
 | **AdaBoost = coordinate descent on exp loss** | §23.3 | weights emerge, not posited ✓ |
-| **XGBoost $w^*=-G/(H+\lambda)$ and gain** | §23.5 | ✓ |
+| **XGBoost $`w^*=-G/(H+\lambda)`$ and gain** | §23.5 | ✓ |
 | PCA three ways | §24.1 | ✓ |
 | **EM for GMM + monotonicity proof** | §24.4 | ✓ |
 | InfoNCE as MI bound | §25.3 | ✓ — with the honest caveat retained |
@@ -201,11 +201,11 @@ An analogy that is never qualified is a future misconception. Each was checked f
 | Relay race baton (normalization) | §7.1 | ✓ |
 | Rubber stamp (convolution) | §8.1 | ✓ — the "same stamp anywhere" *is* translation equivariance |
 | Tracked changes (residual connections) | §8.2 | ✓ — strongest analogy in the book; maps exactly onto $F=0$ being cheap |
-| Index card / filing cabinet (RNN → LSTM) | §9.1, §9.3 | ✓ — the "adding to a drawer vs rewriting the card" maps precisely onto $\mathrm{diag}(f_t)$ vs a full Jacobian |
+| Index card / filing cabinet (RNN → LSTM) | §9.1, §9.3 | ✓ — the "adding to a drawer vs rewriting the card" maps precisely onto $`\mathrm{diag}(f_t)`$ vs a full Jacobian |
 | Lego bricks (subword tokenization) | §10.4 | ✓ |
 | Poster session (attention) | §11.1 | ✓ — the second lap correctly corresponds to the second layer |
 | Reading a contract with a team (multi-head) | §11.3 | ✓ |
-| Two clock hands (RoPE) | §12.4 | ✓ — "angle between depends only on the difference" is exactly $R_m^\top R_n=R_{n-m}$ |
+| Two clock hands (RoPE) | §12.4 | ✓ — "angle between depends only on the difference" is exactly $`R_m^\top R_n=R_{n-m}`$ |
 | Radio spectrum crosstalk (superposition) | §32.2 | ✓ — sparsity ↔ stations rarely loud simultaneously; correct |
 | Ink diffusing in water (diffusion) | §20.1 | ✓ — "reversing one instant is easy" is the load-bearing claim and it is the right one |
 | Kneading dough (normalizing flows) | §19.5 | ✓ — "recorded every fold" ↔ tractable Jacobian |
@@ -260,7 +260,7 @@ Places where the honest answer is uncertain, and the book says so rather than pr
 ## 8. Known limitations
 
 1. **Currency.** Content reflects the field as of mid-2026. Chapters 13–18 and 32 are the fastest-moving; treat specific model names, benchmark numbers, and "current best" claims as dated even where the underlying mathematics is not.
-2. **Empirical constants are load-bearing but soft.** Values like $d_{\text{ff}}=4d$, $\alpha=0.1$ for label smoothing, $\lambda\approx0.01$ for the D3PM auxiliary term, $\tau\approx0.1$ for contrastive learning, and $\epsilon=0.2$ for PPO are conventions with empirical support, not derived quantities. They are marked as such but are worth re-checking against current practice.
+2. **Empirical constants are load-bearing but soft.** Values like $`d_{\text{ff}}=4d`$, $\alpha=0.1$ for label smoothing, $\lambda\approx0.01$ for the D3PM auxiliary term, $\tau\approx0.1$ for contrastive learning, and $\epsilon=0.2$ for PPO are conventions with empirical support, not derived quantities. They are marked as such but are worth re-checking against current practice.
 3. **Benchmark numbers** (ImageNet top-1, perplexities) are drawn from the original papers under their own training recipes. Chapter 8 §8.3's ConvNeXt discussion explains why cross-paper comparisons at unequal recipes are unreliable — that warning applies to this book's own tables.
 4. **Proof rigour.** Derivations are complete at the level of a working practitioner, not a measure theorist. Regularity conditions (interchange of limits and integrals, differentiability almost everywhere, existence of moments) are generally assumed rather than verified. Where a result  depends on a condition that is often violated — Gauss–Markov's homoskedasticity, conformal prediction's exchangeability, the deadly triad — the condition is stated explicitly.
 5. **The NTK and PAC-Bayes sections** present the results and their implications but not the full proofs, which are long. This is flagged in the text.

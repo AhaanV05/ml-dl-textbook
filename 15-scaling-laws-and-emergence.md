@@ -11,18 +11,18 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $L(N)$, $L(N,D)$ | "L of N", "L of N and D" | Test loss, **written as a function of** what you spent |
-| $\alpha_N,\ \alpha_D,\ \alpha_C$ | "alpha-N, alpha-D, alpha-C" | Power-law **exponents** — the slope of the line on a log-log plot |
-| $N_c,\ D_c,\ C_c$ | "N-c, D-c, C-c" | Fitted scale constants. They carry no meaning on their own |
+| $`\alpha_N,\ \alpha_D,\ \alpha_C`$ | "alpha-N, alpha-D, alpha-C" | Power-law **exponents** — the slope of the line on a log-log plot |
+| $`N_c,\ D_c,\ C_c`$ | "N-c, D-c, C-c" | Fitted scale constants. They carry no meaning on their own |
 | $E$ | "E" | The **irreducible loss** — the floor no model can go below |
 | $A,\ B$ | "A, B" | Fitted numerators in the Chinchilla law. **$B$ is not batch size here** |
 | $\alpha,\ \beta$ | "alpha, beta" | The Chinchilla exponents. **Not a learning rate and not Adam's momentum** |
 | $\propto$ | "is proportional to" | Equal after multiplying by some constant you don't care about |
-| $N_{\text{opt}},\ D_{\text{opt}}$ | "N-opt, D-opt" | The compute-optimal model size and token count |
+| $`N_{\text{opt}},\ D_{\text{opt}}`$ | "N-opt, D-opt" | The compute-optimal model size and token count |
 | $\Theta(1)$ | "big-theta of one" | "Of order exactly 1" — bounded **above and below**. Stronger than $\mathcal{O}$ |
 | $\mathrm{fan\_in}$ | "fan-in" | How many inputs feed a single unit — the width of the incoming layer |
 | $\mu$P | "mu-P" | Maximal Update Parametrization |
 | $p^k$ | "p to the k" | Per-token accuracy $p$, raised to the length $k$ of the required answer |
-| $D_{\text{inf}}$ | "D-inference" | Tokens the model will serve over its whole deployed life |
+| $`D_{\text{inf}}`$ | "D-inference" | Tokens the model will serve over its whole deployed life |
 | $\boxed{\ \cdot\ }$ | (a box) | The book's marker for "this is the result to carry away" |
 
 ▸ **A three-chapter Greek warning.** In Chapter 14, $\beta$ was Adam's momentum coefficient. Here it is the **data-scaling exponent** in the Chinchilla law. In Chapter 16 it will be the **weight on a KL penalty**. Similarly $\alpha$ is a scaling exponent here, a learning rate elsewhere, and the z-loss coefficient in §14.6. **The letters are recycled; take the meaning from the sentence.**
@@ -58,25 +58,25 @@ The learning curve of a manufacturing process. Every doubling of cumulative prod
 
 ▸ $$L(N) = \left(\frac{N_c}{N}\right)^{\alpha_N},\qquad L(D)=\left(\frac{D_c}{D}\right)^{\alpha_D},\qquad L(C)=\left(\frac{C_c}{C}\right)^{\alpha_C}$$
 
-with $\alpha_N\approx0.076$, $\alpha_D\approx0.095$, $\alpha_C\approx0.050$ for language modelling.
+with $`\alpha_N\approx0.076`$, $`\alpha_D\approx0.095`$, $`\alpha_C\approx0.050`$ for language modelling.
 
-▸ **Read the exponents as effort-per-improvement.** $\alpha_N = 0.076$ means a 10× larger model reduces loss by a factor $10^{-0.076} = 0.84$ — a **16% reduction**. To halve the loss you need $10^{\log_{10}2/0.076} = 10^{3.96} \approx 9{,}000\times$ the parameters. **Progress is real, cheap improvements are not.** This single calculation explains why frontier labs spend what they spend.
+▸ **Read the exponents as effort-per-improvement.** $`\alpha_N = 0.076`$ means a 10× larger model reduces loss by a factor $10^{-0.076} = 0.84$ — a **16% reduction**. To halve the loss you need $`10^{\log_{10}2/0.076} = 10^{3.96} \approx 9{,}000\times`$ the parameters. **Progress is real, cheap improvements are not.** This single calculation explains why frontier labs spend what they spend.
 
 #### Reading a power law
 
-**What the notation says.** $L(N) = \left(\frac{N_c}{N}\right)^{\alpha_N}$ reads: *"the loss you get from a model of size $N$ equals some fixed model size $N_c$ divided by yours, raised to a small power."* Three symbols, three jobs:
+**What the notation says.** $`L(N) = \left(\frac{N_c}{N}\right)^{\alpha_N}`$ reads: *"the loss you get from a model of size $N$ equals some fixed model size $`N_c`$ divided by yours, raised to a small power."* Three symbols, three jobs:
 
 | Symbol | What it is | Does it matter? |
 |---|---|---|
 | $N$ | Your model's parameter count | This is the thing you control |
-| $N_c$ | A fitted constant, in units of parameters | **Not really** — it just sets where the line sits vertically |
-| $\alpha_N$ | The exponent | **Everything.** It sets how fast the line falls |
+| $`N_c`$ | A fitted constant, in units of parameters | **Not really** — it just sets where the line sits vertically |
+| $`\alpha_N`$ | The exponent | **Everything.** It sets how fast the line falls |
 
 ▸ **A power law is a straight line on log-log axes, and the exponent is the slope.** Take logs of both sides:
 
 $$\log L = \alpha_N\log N_c - \alpha_N \log N$$
 
-That is $y = c - \alpha_N x$ — a straight line with slope $-\alpha_N$. **This is why every scaling plot you will ever see has logarithmic axes.** On ordinary linear axes a power law looks like an unremarkable curve that flattens out, and you cannot read anything off it. On log-log axes it is a ruler-straight line you can extend with a pencil, which is precisely what makes forecasting possible.
+That is $`y = c - \alpha_N x`$ — a straight line with slope $`-\alpha_N`$. **This is why every scaling plot you will ever see has logarithmic axes.** On ordinary linear axes a power law looks like an unremarkable curve that flattens out, and you cannot read anything off it. On log-log axes it is a ruler-straight line you can extend with a pencil, which is precisely what makes forecasting possible.
 
 > **Analogy — compound interest, running backwards.** Savings grow by a fixed *percentage* per year, so on a log axis the balance is a straight line. Scaling laws are the mirror image: loss falls by a fixed percentage per *doubling of spending*. In both cases the interesting number is not the balance or the loss, it is **the percentage** — and that percentage is the exponent.
 
@@ -89,9 +89,9 @@ That is $y = c - \alpha_N x$ — a straight line with slope $-\alpha_N$. **This 
 | 1,000× | $0.59$ | 41% |
 | 9,000× | $0.50$ | **half** |
 
-▸ **And the compute exponent is worse.** With $\alpha_C = 0.050$, halving the loss requires $10^{0.301/0.050} = 10^{6}$ — **a million times the compute.** Chapter 14's 9.6-day run becomes 26,000 years on the same cluster. **That number, more than any other in this book, explains both why the field's progress is real and why it is expensive.**
+▸ **And the compute exponent is worse.** With $`\alpha_C = 0.050`$, halving the loss requires $10^{0.301/0.050} = 10^{6}$ — **a million times the compute.** Chapter 14's 9.6-day run becomes 26,000 years on the same cluster. **That number, more than any other in this book, explains both why the field's progress is real and why it is expensive.**
 
-**One honest gap in the Kaplan form, worth noticing now.** As $N\to\infty$, $(N_c/N)^{\alpha_N}\to 0$. Written literally, the formula promises **zero loss** for an infinite model. That cannot be true: language has  irreducible uncertainty, and no predictor can beat the entropy of the source (Ch. 1 §1.4). The three-term Chinchilla law in §15.2 fixes exactly this by adding an explicit floor $E$. **Read the Kaplan form as an accurate description of the region that was measured, not as an extrapolation to infinity.**
+**One honest gap in the Kaplan form, worth noticing now.** As $N\to\infty$, $`(N_c/N)^{\alpha_N}\to 0`$. Written literally, the formula promises **zero loss** for an infinite model. That cannot be true: language has  irreducible uncertainty, and no predictor can beat the entropy of the source (Ch. 1 §1.4). The three-term Chinchilla law in §15.2 fixes exactly this by adding an explicit floor $E$. **Read the Kaplan form as an accurate description of the region that was measured, not as an extrapolation to infinity.**
 
 > **Where this came from.** The shape is much older than machine learning. In 1936 **Theodore Wright**, an aeronautical engineer, published an analysis of aircraft manufacturing costs showing that unit cost fell by a fixed percentage for every doubling of cumulative production — now called **Wright's law**, and since found to hold across a startling range of technologies including solar panels and transistors. The deep learning version has a similarly quiet origin: a team at **Baidu**, led by Joel Hestness, published *Deep Learning Scaling is Predictable, Empirically* in **2017**, three years before Kaplan et al., reporting power-law scaling across machine translation, speech recognition, and image classification. **It was largely ignored.** The 2020 OpenAI paper landed differently, partly because it was about language models and partly because by then someone was prepared to act on it. This is a recurring pattern: the observation and the willingness to bet on it are separate events, often years apart.
 
@@ -186,7 +186,7 @@ $$N_{\text{opt}}\propto C^{\frac{\beta}{\alpha+\beta}},\qquad D_{\text{opt}} = \
 
 ▸ **A free consistency check you should always run.** The two exponents *must* sum to exactly 1, because $N\times D\propto C$ and exponents add when powers multiply. Here: $0.452 + 0.548 = 1.000$. ✓ **If your algebra ever produces exponents that do not sum to 1, you dropped a term** — and this check costs nothing.
 
-▸ **Now the part that looks like a typo and is not.** $N_{\text{opt}}$'s exponent is $\beta$ — the **data** exponent — and $D_{\text{opt}}$'s is $\alpha$, the **model** exponent. They have swapped. The reason: **a large exponent means that resource is efficient, so a modest amount of it already flattens its term, and the budget should go to the other one.** Push it to the extreme to check. If $\alpha\to\infty$ — the model term vanishing the instant you add a parameter — then $\frac{\beta}{\alpha+\beta}\to 0$, so $N_{\text{opt}}$ stops growing with compute at all: you would use a tiny model and pour everything into data. That is exactly right, and it is what the formula says.
+▸ **Now the part that looks like a typo and is not.** $`N_{\text{opt}}`$'s exponent is $\beta$ — the **data** exponent — and $`D_{\text{opt}}`$'s is $\alpha$, the **model** exponent. They have swapped. The reason: **a large exponent means that resource is efficient, so a modest amount of it already flattens its term, and the budget should go to the other one.** Push it to the extreme to check. If $\alpha\to\infty$ — the model term vanishing the instant you add a parameter — then $\frac{\beta}{\alpha+\beta}\to 0$, so $`N_{\text{opt}}`$ stops growing with compute at all: you would use a tiny model and pour everything into data. That is exactly right, and it is what the formula says.
 
 **And the doubling arithmetic, checked.** $2^{0.452} = 1.368$ and $2^{0.548} = 1.462$ — both close to $\sqrt2 = 1.414$, which is where the headline comes from. Note that $1.368\times1.462 = 2.00$: the two increases multiply to the doubling you paid for, exactly as the budget requires.
 
@@ -202,7 +202,7 @@ $$N_{\text{opt}}\propto C^{\frac{\beta}{\alpha+\beta}},\qquad D_{\text{opt}} = \
 
 Chinchilla optimizes **training** compute only. Real deployments pay **inference** compute forever.
 
-▸ **Inference-aware scaling** (Sardana et al.): minimize $C_{\text{train}} + C_{\text{inference}}$ over the model's lifetime. If you will serve $D_{\text{inf}}$ tokens, total cost $\approx 6ND_{\text{train}} + 2ND_{\text{inf}}$. Since inference cost is linear in $N$ and independent of $D_{\text{train}}$, the optimum shifts sharply toward **smaller models trained on far more data.**
+▸ **Inference-aware scaling** (Sardana et al.): minimize $`C_{\text{train}} + C_{\text{inference}}`$ over the model's lifetime. If you will serve $`D_{\text{inf}}`$ tokens, total cost $`\approx 6ND_{\text{train}} + 2ND_{\text{inf}}`$. Since inference cost is linear in $N$ and independent of $`D_{\text{train}}`$, the optimum shifts sharply toward **smaller models trained on far more data.**
 
 This is why LLaMA-3-8B was trained on 15T tokens — a ratio of **1,875 tokens per parameter**, roughly 94× past Chinchilla-optimal. It is *not* compute-optimal to train, and it is *far* better to deploy. **A model trained past Chinchilla still improves, just with diminishing returns; a model too large to serve is worthless.**
 
@@ -235,7 +235,7 @@ Optimal learning rate depends on model width. Tuning a 70B model directly is una
 | **Hidden weight LR (Adam)** | $\eta$ | $\eta/\mathrm{fan\_in}$ |
 | **Output layer init** | $1/\mathrm{fan\_in}$ | $1/\mathrm{fan\_in}^2$ |
 | **Output logits** | — | multiply by $1/\mathrm{fan\_in}$ |
-| Attention scale | $1/\sqrt{d_k}$ | $1/d_k$ |
+| Attention scale | $`1/\sqrt{d_k}`$ | $`1/d_k`$ |
 
 ### The reasoning, in one line
 
@@ -243,7 +243,7 @@ If a layer's update is $\Delta W$ and it acts on an activation $x\in\mathbb{R}^{
 
 ▸ **Practical payoff:** tune LR, init scale, and warmup on a 40M-parameter model, transfer directly to 7B or 70B. This is now standard practice at every serious lab, and it saves an enormous fraction of a pretraining budget.
 
-Also note: $\mu$P changes attention to $1/d_k$ rather than $1/\sqrt{d_k}$ — worth knowing as a rare, principled exception to Chapter 11's rule.
+Also note: $\mu$P changes attention to $`1/d_k`$ rather than $`1/\sqrt{d_k}`$ — worth knowing as a rare, principled exception to Chapter 11's rule.
 
 ---
 
@@ -341,7 +341,7 @@ The workflow that a serious lab actually runs:
 
 - **The shape is older than machine learning by eighty years.** In 1936 the aeronautical engineer Theodore Wright found that aircraft unit costs fell by a fixed percentage per doubling of cumulative production. **Wright's law** has since been found to hold for solar panels, transistors, and a startling range of other technologies.
 
-- **Halving a language model's loss requires roughly a *million* times the compute.** With $\alpha_C \approx 0.05$, that's $10^{0.301/0.05} = 10^6$. A training run of ten days becomes twenty-six thousand years on the same hardware. This one number explains both why progress is real and why it costs what it costs.
+- **Halving a language model's loss requires roughly a *million* times the compute.** With $`\alpha_C \approx 0.05`$, that's $10^{0.301/0.05} = 10^6$. A training run of ten days becomes twenty-six thousand years on the same hardware. This one number explains both why progress is real and why it costs what it costs.
 
 - **About 77% of a well-trained model's loss is irreducible.** In the Chinchilla fit, the floor $E = 1.69$ nats out of a total near 2.18. Every architecture, data pipeline, and optimizer the entire industry competes over is fighting for the remaining 23% — which is why loss differences that look trivial correspond to large capability gaps.
 

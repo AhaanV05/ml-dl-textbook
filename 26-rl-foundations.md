@@ -12,24 +12,24 @@ Reinforcement learning brings its own alphabet, and almost none of it appears in
 |---|---|---|
 | $\mathcal{S}$, $\mathcal{A}$ | "script S, script A" | The set of all **states**, and the set of all **actions** |
 | $s,\ a,\ r,\ s'$ | "s, a, r, s-prime" | One state, one action, one reward, and the **next** state |
-| $S_t,\ A_t,\ R_t$ | "S-t, A-t, R-t" | The same things as **random variables** at time $t$. Capitals mean "not yet known" |
+| $`S_t,\ A_t,\ R_t`$ | "S-t, A-t, R-t" | The same things as **random variables** at time $t$. Capitals mean "not yet known" |
 | $\pi(a \mid s)$ | "pi of a **given** s" | The **policy** — the probability of choosing action $a$ when in state $s$ |
 | $P(s' \mid s,a)$ | "P of s-prime given s and a" | The **environment's** rule: where you land next, and how likely each landing is |
 | $\gamma$ | "gamma" | The **discount factor** — what a reward one step in the future is worth today |
-| $G_t$ | "G-t" | The **return**: the total discounted reward collected from time $t$ onward |
+| $`G_t`$ | "G-t" | The **return**: the total discounted reward collected from time $t$ onward |
 | $V^\pi(s)$ | "V-pi of s" | **How good state $s$ is**, assuming you follow policy $\pi$ from here on |
 | $Q^\pi(s,a)$ | "Q-pi of s, a" | How good it is to take action $a$ in $s$ **and then** follow $\pi$ |
 | $A^\pi(s,a)$ | "A-pi of s, a" | The **advantage**: how much better $a$ is than the policy's average action |
-| $V^*,\ Q^*,\ \pi^*$ | "V-star, Q-star, pi-star" | The **best achievable** value, action-value, and policy. A star means optimal |
+| $`V^*,\ Q^*,\ \pi^*`$ | "V-star, Q-star, pi-star" | The **best achievable** value, action-value, and policy. A star means optimal |
 | $\mathcal{T}$ | "script T" | The **Bellman operator** — the machine that performs one "look ahead one step" pass |
-| $\lVert V \rVert_\infty$ | "the sup norm of V" | The **largest single error anywhere**, across all states — worst case, not average |
-| $\delta_t$ | "delta-t" | The **TD error** — surprise: what actually happened minus what you predicted |
+| $`\lVert V \rVert_\infty`$ | "the sup norm of V" | The **largest single error anywhere**, across all states — worst case, not average |
+| $`\delta_t`$ | "delta-t" | The **TD error** — surprise: what actually happened minus what you predicted |
 | $\alpha$ | "alpha" | The **step size** of a value update. How much you move toward the new evidence |
 | $\lambda$ | "lambda" | The **trace decay** — how far back in time credit for a surprise is spread |
-| $e_t(s)$ | "e-t of s" | An **eligibility trace** — a fading memory of "I passed through here recently" |
-| $\rho_{t:T}$ | "rho, t to T" | An **importance-sampling ratio** — the correction for learning from another policy's data |
+| $`e_t(s)`$ | "e-t of s" | An **eligibility trace** — a fading memory of "I passed through here recently" |
+| $`\rho_{t:T}`$ | "rho, t to T" | An **importance-sampling ratio** — the correction for learning from another policy's data |
 | $\Phi(s)$ | "capital phi of s" | A **potential** — a hand-designed "how promising does this state look" score |
-| $N_a$, $\Delta_a$ | "N-a, Delta-a" | How many times option $a$ has been tried; how much worse it is than the best option |
+| $`N_a`$, $`\Delta_a`$ | "N-a, Delta-a" | How many times option $a$ has been tried; how much worse it is than the best option |
 | $\mathbb{1}[\,\cdot\,]$ | "indicator" | **1 if the statement inside is true, 0 if false.** A switch |
 
 **Every abbreviation in this chapter, spelled out.** Read the full form aloud once — most of these stop being intimidating the moment you hear what they stand for.
@@ -103,7 +103,7 @@ Five rows, five different ways RL breaks an assumption you have been relying on 
 
 ▸ An MDP is the tuple $\langle\mathcal{S},\mathcal{A},P,R,\gamma\rangle$: states, actions, transition kernel $P(s'\mid s,a)$, reward $R(s,a)$, discount $\gamma\in[0,1)$.
 
-**The Markov property:** $P(s_{t+1}\mid s_t,a_t) = P(s_{t+1}\mid s_1,a_1,\dots,s_t,a_t)$. The current state contains everything relevant about the past.
+**The Markov property:** $`P(s_{t+1}\mid s_t,a_t) = P(s_{t+1}\mid s_1,a_1,\dots,s_t,a_t)`$. The current state contains everything relevant about the past.
 
 ▸ **This is an assumption about the state representation, not about the world.** A single video frame is not Markov (you can't tell velocity); a stack of four frames nearly is. When it fails you have a **POMDP**, and the standard fix is to make the state a function of history — a frame stack, an RNN hidden state, or a transformer context.
 
@@ -175,13 +175,13 @@ Read the left side: *"the probability of the next state, given only the current 
 ▸ $$G_t = \sum_{k=0}^{\infty}\gamma^kR_{t+k+1}$$
 
 **Why $\gamma$ exists — three independent reasons:**
-1. **Convergence.** With bounded rewards $|R|\le R_{\max}$, $|G_t|\le\frac{R_{\max}}{1-\gamma}<\infty$. Undiscounted infinite sums may diverge.
+1. **Convergence.** With bounded rewards $`|R|\le R_{\max}`$, $`|G_t|\le\frac{R_{\max}}{1-\gamma}<\infty`$. Undiscounted infinite sums may diverge.
 2. **Uncertainty.** $\gamma$ is equivalent to a per-step $1-\gamma$ probability of episode termination.
 3. **Variance reduction.** Discounting truncates the effective horizon, and long-horizon returns have enormous variance.
 
 ▸ **The effective horizon is $\frac{1}{1-\gamma}$.** $\gamma=0.99$ → 100 steps; $\gamma=0.999$ → 1000. This is the number to reason with when choosing $\gamma$, not $\gamma$ itself. Higher $\gamma$ is more farsighted *and* harder to learn.
 
-#### Reading the return $G_t$ in plain English
+#### Reading the return $`G_t`$ in plain English
 
 $$G_t = \sum_{k=0}^{\infty}\gamma^kR_{t+k+1}$$
 
@@ -189,15 +189,15 @@ Read aloud: *"G-t equals the sum, over k from zero to infinity, of gamma-to-the-
 
 The pieces:
 
-- $\sum_{k=0}^\infty$ is a `for` loop over future time steps, starting at the next one (§0.3). $k$ is the loop counter; nothing else in the expression moves.
-- $R_{t+k+1}$ is the reward received $k+1$ steps from now. The off-by-one is a convention: the reward for acting at time $t$ arrives at time $t+1$, because you have to act before the world can pay you.
+- $`\sum_{k=0}^\infty`$ is a `for` loop over future time steps, starting at the next one (§0.3). $k$ is the loop counter; nothing else in the expression moves.
+- $`R_{t+k+1}`$ is the reward received $k+1$ steps from now. The off-by-one is a convention: the reward for acting at time $t$ arrives at time $t+1$, because you have to act before the world can pay you.
 - $\gamma^k$ is the **shrink factor**, applied $k$ times. Since $0 \le \gamma < 1$, raising it to a power makes it smaller.
 
 **Put real numbers in.** Take $\gamma = 0.9$ and suppose every step pays exactly $1$:
 
 $$G_t = 1 + 0.9 + 0.81 + 0.729 + \dots = \frac{1}{1-0.9} = 10$$
 
-An infinite stream of $+1$ is worth exactly $10$. That is the **geometric series** $\sum_k \gamma^k = \frac{1}{1-\gamma}$, and it is where the bound $\lvert G_t\rvert \le \frac{R_{\max}}{1-\gamma}$ in reason 1 comes from — the worst possible return is "maximum reward, forever."
+An infinite stream of $+1$ is worth exactly $10$. That is the **geometric series** $`\sum_k \gamma^k = \frac{1}{1-\gamma}`$, and it is where the bound $`\lvert G_t\rvert \le \frac{R_{\max}}{1-\gamma}`$ in reason 1 comes from — the worst possible return is "maximum reward, forever."
 
 > **Analogy: $\gamma$ is an interest rate, in reverse.** A bank offering 11% would turn £9 into £10 in a year; equivalently, £10 arriving next year is worth about £9 today. Discounting a future reward by $\gamma = 0.9$ is exactly this operation — the **present value** calculation from finance, imported wholesale. A reward far in the future is worth less not because it matters less, but because you might not survive to collect it and because you cannot spend it now.
 
@@ -223,7 +223,7 @@ Check it: $0.99^{100} = 0.366$. And $0.999^{1000} = 0.368$. **The effective hori
 
 ▸ $$V^\pi(s) = \mathbb{E}_\pi[G_t\mid S_t=s],\qquad Q^\pi(s,a) = \mathbb{E}_\pi[G_t\mid S_t=s, A_t=a]$$
 
-**Advantage:** $A^\pi(s,a) = Q^\pi(s,a)-V^\pi(s)$ — how much better than average this action is. ▸ Note $\mathbb{E}_{a\sim\pi}[A^\pi(s,a)]=0$ by construction, which is why the advantage is the right quantity for policy gradients (Ch. 27 §27.5).
+**Advantage:** $A^\pi(s,a) = Q^\pi(s,a)-V^\pi(s)$ — how much better than average this action is. ▸ Note $`\mathbb{E}_{a\sim\pi}[A^\pi(s,a)]=0`$ by construction, which is why the advantage is the right quantity for policy gradients (Ch. 27 §27.5).
 
 #### $V$, $Q$, and $A$ — decoded
 
@@ -236,13 +236,13 @@ $$V^\pi(s) = \mathbb{E}_\pi[G_t\mid S_t=s]$$
 Every symbol:
 
 - $\mathbb{E}$ is the probability-weighted average (§0.5). It is here because two things are random: the environment's dice ($P$) and the policy's own coin flips ($\pi$).
-- The subscript on $\mathbb{E}_\pi$ says **what is generating the randomness** — "average over the trajectories that $\pi$ produces."
-- The vertical bar $\mid$ means **"given,"** not "divide" and not "absolute value" (§0.9, Trap 5). It restricts the average to worlds where $S_t = s$.
-- The superscript $\pi$ on $V^\pi$ is **not a power**. It is a label: "the value function *belonging to* policy $\pi$." A different policy has a different $V$. This is why $V^*$ (star) is meaningful — it labels the best one.
+- The subscript on $`\mathbb{E}_\pi`$ says **what is generating the randomness** — "average over the trajectories that $\pi$ produces."
+- The vertical bar $\mid$ means **"given,"** not "divide" and not "absolute value" (§0.9, Trap 5). It restricts the average to worlds where $`S_t = s`$.
+- The superscript $\pi$ on $V^\pi$ is **not a power**. It is a label: "the value function *belonging to* policy $\pi$." A different policy has a different $V$. This is why $`V^*`$ (star) is meaningful — it labels the best one.
 
 $Q^\pi(s,a)$ adds one more condition: *"given that the state is $s$ **and** the action you take right now is $a$."*
 
-▸ **The difference between $V$ and $Q$ is exactly one action.** $Q$ lets you specify the first move and then hands control back to $\pi$; $V$ lets $\pi$ choose from the start. Formally $V^\pi(s) = \sum_a \pi(a\mid s)\,Q^\pi(s,a)$ — *"the value of a state is the policy-weighted average of the values of the actions available in it."*
+▸ **The difference between $V$ and $Q$ is exactly one action.** $Q$ lets you specify the first move and then hands control back to $\pi$; $V$ lets $\pi$ choose from the start. Formally $`V^\pi(s) = \sum_a \pi(a\mid s)\,Q^\pi(s,a)`$ — *"the value of a state is the policy-weighted average of the values of the actions available in it."*
 
 **Put numbers on it.** You are in a state with three actions. Suppose $Q^\pi(s, \text{left}) = 12$, $Q^\pi(s, \text{straight}) = 4$, $Q^\pi(s, \text{right}) = 2$, and the current policy picks each with probability $\tfrac13$. Then:
 
@@ -252,7 +252,7 @@ and the advantages are
 
 $$A(\text{left}) = 12 - 6 = +6,\qquad A(\text{straight}) = 4 - 6 = -2,\qquad A(\text{right}) = 2-6 = -4$$
 
-Notice $\tfrac13(6) + \tfrac13(-2) + \tfrac13(-4) = 0$. **That is the claim $\mathbb{E}_{a\sim\pi}[A^\pi(s,a)] = 0$, and now you can see it is not a theorem so much as an accounting identity**: you subtracted the average, so the average of what's left is zero.
+Notice $\tfrac13(6) + \tfrac13(-2) + \tfrac13(-4) = 0$. **That is the claim $`\mathbb{E}_{a\sim\pi}[A^\pi(s,a)] = 0`$, and now you can see it is not a theorem so much as an accounting identity**: you subtracted the average, so the average of what's left is zero.
 
 > **Analogy for the three functions.** $V(s)$ is the *par* for a hole in golf. $Q(s,a)$ is your expected total if you play this particular club off the tee and then play normally. $A(s,a)$ is **how many strokes that club choice gains or loses you relative to par.** Announcers quote "two under par," not the raw stroke count, for exactly the reason RL prefers advantages: the raw number is dominated by which hole you're on, and the interesting part is your decision.
 
@@ -262,7 +262,7 @@ Notice $\tfrac13(6) + \tfrac13(-2) + \tfrac13(-4) = 0$. **That is the claim $\ma
 
 Three words for three different objects, used interchangeably in casual conversation more often than any other trio in this book. Prising them apart is most of the vocabulary of the subject.
 
-**✅ Reward $R_t$ — one scalar, handed over by the environment at one time step**
+**✅ Reward $`R_t`$ — one scalar, handed over by the environment at one time step**
 
 | Example | Why it qualifies |
 |---|---|
@@ -270,11 +270,11 @@ Three words for three different objects, used interchangeably in casual conversa
 | $0$ on every step of a maze, then $+1$ at the exit | Sparse, but still exactly one number per step |
 | $-1$ per timestep, to encourage finishing quickly | Rewards may be negative — the informative ones often are |
 
-**✅ Return $G_t$ — the discounted sum of rewards from $t$ onward, along a single trajectory**
+**✅ Return $`G_t`$ — the discounted sum of rewards from $t$ onward, along a single trajectory**
 
 | Example | Why it qualifies |
 |---|---|
-| $G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2R_{t+3}+\dots$ | A number attached to one realized rollout, luck included |
+| $`G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2R_{t+3}+\dots`$ | A number attached to one realized rollout, luck included |
 | The final score of one particular episode | One sample of a random variable |
 
 **✅ Value $V^\pi(s)$ — the expectation of that return, over the randomness of both environment and policy**
@@ -282,7 +282,7 @@ Three words for three different objects, used interchangeably in casual conversa
 | Example | Why it qualifies |
 |---|---|
 | "Play from here under $\pi$ a thousand times and average the returns" | An average over trajectories, not one trajectory |
-| $V^\pi(s) = \sum_a \pi(a\mid s)\,Q^\pi(s,a)$ | Built out of expectations at every level |
+| $`V^\pi(s) = \sum_a \pi(a\mid s)\,Q^\pi(s,a)`$ | Built out of expectations at every level |
 
 **❌ Near-misses**
 
@@ -309,7 +309,7 @@ Three words for three different objects, used interchangeably in casual conversa
 
 $$V^\pi(s) = \mathbb{E}_\pi\left[\sum_{k\ge0}\gamma^kR_{t+k+1}\ \Big|\ S_t=s\right] = \mathbb{E}_\pi\left[R_{t+1}+\gamma\sum_{k\ge0}\gamma^kR_{t+k+2}\ \Big|\ S_t=s\right]$$
 
-The inner sum is $G_{t+1}$, and by the Markov property its expectation given $S_{t+1}=s'$ is $V^\pi(s')$:
+The inner sum is $`G_{t+1}`$, and by the Markov property its expectation given $`S_{t+1}=s'`$ is $V^\pi(s')$:
 
 ▸ $$\boxed{\ V^\pi(s) = \sum_a\pi(a\mid s)\sum_{s',r}P(s',r\mid s,a)\big[r+\gamma V^\pi(s')\big]\ }$$
 
@@ -325,9 +325,9 @@ This is the most important formula in the chapter and it looks far worse than it
 
 **The bracket first.** $\big[r + \gamma V^\pi(s')\big]$ is the whole idea: *"what I collect right now, plus a discounted version of how good the place I land is."* One immediate payment plus one estimate of everything after.
 
-**The inner sum.** $\sum_{s',r}P(s',r\mid s,a)[\cdot]$ says: *"you don't know where you'll land, so average over every possible landing, weighted by how likely it is."* This is an expectation written out longhand (§0.5). $P(s',r\mid s,a)$ is read *"the probability of landing in $s'$ and receiving reward $r$, given that you were in $s$ and did $a$."*
+**The inner sum.** $`\sum_{s',r}P(s',r\mid s,a)[\cdot]`$ says: *"you don't know where you'll land, so average over every possible landing, weighted by how likely it is."* This is an expectation written out longhand (§0.5). $P(s',r\mid s,a)$ is read *"the probability of landing in $s'$ and receiving reward $r$, given that you were in $s$ and did $a$."*
 
-**The outer sum.** $\sum_a \pi(a\mid s)[\cdot]$ says: *"you don't know which action you'll take either, because the policy is random, so average over the actions too, weighted by how often $\pi$ picks each."*
+**The outer sum.** $`\sum_a \pi(a\mid s)[\cdot]`$ says: *"you don't know which action you'll take either, because the policy is random, so average over the actions too, weighted by how often $\pi$ picks each."*
 
 ▸ **So the whole line reads: "the value of a state is the average, over every action you might take and every place you might land, of what you get plus what you'll go on to get."** Three words are doing all the work: **average**, **plus**, **discounted**.
 
@@ -348,7 +348,7 @@ $$G_t = R_{t+1} + \gamma\underbrace{\big(R_{t+2} + \gamma R_{t+3} + \dots\big)}_
 
 **This is just factoring out one $\gamma$.** Every term after the first has at least one factor of $\gamma$; pull it out and what remains is the same expression starting one step later. That algebraic triviality is the whole trick.
 
-The  non-trivial step is the next one: replacing $\mathbb{E}[G_{t+1}\mid S_{t+1}=s']$ with $V^\pi(s')$. **This is legal only because of the Markov property.** If the future depended on how you arrived at $s'$, then $V^\pi(s')$ would not be a well-defined number and the recursion would not close.
+The  non-trivial step is the next one: replacing $`\mathbb{E}[G_{t+1}\mid S_{t+1}=s']`$ with $V^\pi(s')$. **This is legal only because of the Markov property.** If the future depended on how you arrived at $s'$, then $V^\pi(s')$ would not be a well-defined number and the recursion would not close.
 
 ▸ **The Markov assumption is not a technicality — it is the load-bearing wall.** It is what lets a *single number per state* summarize an infinite future, which is what makes value functions storable, learnable, and finite. When Markov fails, the number $V(s)$ is an average over histories you cannot distinguish, and every algorithm downstream inherits that ambiguity as bias.
 
@@ -365,7 +365,7 @@ The  non-trivial step is the next one: replacing $\mathbb{E}[G_{t+1}\mid S_{t+1}
 
 The $\max$ replaces the policy average. **These are nonlinear** (because of the max), so unlike the expectation equations they cannot be solved by linear algebra.
 
-Given $Q^*$, the optimal policy is trivial: ▸ $\pi^*(s)=\arg\max_aQ^*(s,a)$. **This is why value-based methods are appealing — learn the value and the policy comes free.**
+Given $`Q^*`$, the optimal policy is trivial: ▸ $`\pi^*(s)=\arg\max_aQ^*(s,a)`$. **This is why value-based methods are appealing — learn the value and the policy comes free.**
 
 #### What the optimality equations actually say
 
@@ -373,12 +373,12 @@ Compare the two versions side by side. The **only** difference is what happens t
 
 | Expectation equation | Optimality equation |
 |---|---|
-| $\sum_a \pi(a\mid s)\,[\,\cdot\,]$ | $\max_a\,[\,\cdot\,]$ |
+| $`\sum_a \pi(a\mid s)\,[\,\cdot\,]`$ | $`\max_a\,[\,\cdot\,]`$ |
 | "average over what the policy would do" | "take the best one" |
 | Describes **a** policy | Describes **the best** policy |
 | Linear in $V$ — solvable by matrix inversion | Nonlinear — no closed form |
 
-▸ **Swapping $\sum_a \pi(a\mid s)$ for $\max_a$ is the entire content of the optimality equations.** It is the difference between "how well will I do?" and "how well *could* I do?"
+▸ **Swapping $`\sum_a \pi(a\mid s)`$ for $`\max_a`$ is the entire content of the optimality equations.** It is the difference between "how well will I do?" and "how well *could* I do?"
 
 **Why the $\max$ makes it nonlinear, concretely.** A sum is linear: $\text{avg}(2x) = 2\,\text{avg}(x)$, and $\text{avg}(x+y) = \text{avg}(x)+\text{avg}(y)$. A maximum obeys the first rule but breaks the second. Take $x = (3, 1)$ and $y = (1, 3)$:
 
@@ -388,13 +388,13 @@ $6 \ne 4$. **A $\max$ is a kink, and a kink is not a straight line.** That is wh
 
 #### Why "learn the value and the policy comes free" is such a big deal
 
-$\pi^*(s) = \arg\max_a Q^*(s,a)$ reads: *"the best policy in state $s$ is: whichever action has the highest Q-star."* Recall from §0.3 that $\arg\max$ returns **the input, not the value** — $\max$ tells you the height of the peak, $\arg\max$ tells you where it is. Here you want the action, so it is $\arg\max$.
+$`\pi^*(s) = \arg\max_a Q^*(s,a)`$ reads: *"the best policy in state $s$ is: whichever action has the highest Q-star."* Recall from §0.3 that $\arg\max$ returns **the input, not the value** — $\max$ tells you the height of the peak, $\arg\max$ tells you where it is. Here you want the action, so it is $\arg\max$.
 
-**Put numbers on it.** Suppose in some state, $Q^*(s,\text{north}) = 8.2$, $Q^*(s,\text{south}) = 3.1$, $Q^*(s,\text{east}) = 8.9$. Then $\max_a Q^*(s,a) = 8.9$ and $\arg\max_a Q^*(s,a) = \text{east}$. The policy is a one-line scan of a table.
+**Put numbers on it.** Suppose in some state, $`Q^*(s,\text{north}) = 8.2`$, $`Q^*(s,\text{south}) = 3.1`$, $`Q^*(s,\text{east}) = 8.9`$. Then $`\max_a Q^*(s,a) = 8.9`$ and $`\arg\max_a Q^*(s,a) = \text{east}`$. The policy is a one-line scan of a table.
 
-> **Analogy.** A really good restaurant guide replaces the need for a chef. If somebody hands you a perfectly accurate score for every dish in every restaurant in the city, you don't need to develop taste — you just read off the highest number. $Q^*$ is that guide, and the greedy policy is "always order the top-scoring dish."
+> **Analogy.** A really good restaurant guide replaces the need for a chef. If somebody hands you a perfectly accurate score for every dish in every restaurant in the city, you don't need to develop taste — you just read off the highest number. $`Q^*`$ is that guide, and the greedy policy is "always order the top-scoring dish."
 
-▸ **This is the appeal and the trap of value-based methods.** The appeal: you never have to represent a policy at all, only a value function. The trap: computing $\arg\max_a$ requires *enumerating every action*, which is instant for four Atari buttons and impossible for a robot arm with seven continuous joints. **That single line is the reason Chapter 27 splits into value-based methods (discrete actions) and policy-based methods (continuous actions).** When you cannot take an $\arg\max$, you must learn the policy directly.
+▸ **This is the appeal and the trap of value-based methods.** The appeal: you never have to represent a policy at all, only a value function. The trap: computing $`\arg\max_a`$ requires *enumerating every action*, which is instant for four Atari buttons and impossible for a robot arm with seven continuous joints. **That single line is the reason Chapter 27 splits into value-based methods (discrete actions) and policy-based methods (continuous actions).** When you cannot take an $\arg\max$, you must learn the policy directly.
 
 ---
 
@@ -402,8 +402,8 @@ $\pi^*(s) = \arg\max_a Q^*(s,a)$ reads: *"the best policy in state $s$ is: which
 
 Assume $P$ and $R$ are known.
 
-**Policy evaluation:** iterate $V_{k+1}(s)\leftarrow\sum_a\pi(a|s)\sum_{s'}P[r+\gamma V_k(s')]$.
-**Policy improvement:** $\pi'(s)=\arg\max_aQ^\pi(s,a)$.
+**Policy evaluation:** iterate $`V_{k+1}(s)\leftarrow\sum_a\pi(a|s)\sum_{s'}P[r+\gamma V_k(s')]`$.
+**Policy improvement:** $`\pi'(s)=\arg\max_aQ^\pi(s,a)`$.
 **Policy iteration:** alternate the two. Converges in finitely many iterations, since there are finitely many deterministic policies and each step strictly improves.
 **Value iteration:** apply the optimality operator directly — one sweep of evaluation fused with improvement.
 
@@ -415,9 +415,9 @@ Assume $P$ and $R$ are known.
 
 $$V_{k+1}(s)\leftarrow\sum_a\pi(a\mid s)\sum_{s'}P\big[r+\gamma V_k(s')\big]$$
 
-is the Bellman expectation equation with the arrow $\leftarrow$ instead of $=$. That change matters. Recall §0.11: **$\leftarrow$ is an assignment, a line of code, not an equation to solve.** It says "compute the right-hand side using your *current* guesses $V_k$, and store the result as your new guess $V_{k+1}$." You are repeatedly plugging your estimates back into themselves.
+is the Bellman expectation equation with the arrow $\leftarrow$ instead of $=$. That change matters. Recall §0.11: **$\leftarrow$ is an assignment, a line of code, not an equation to solve.** It says "compute the right-hand side using your *current* guesses $`V_k`$, and store the result as your new guess $`V_{k+1}`$." You are repeatedly plugging your estimates back into themselves.
 
-**Policy improvement** asks: *given accurate values, what should I do?* $\pi'(s) = \arg\max_a Q^\pi(s,a)$ — look one step ahead using the values you just computed, and act greedily.
+**Policy improvement** asks: *given accurate values, what should I do?* $`\pi'(s) = \arg\max_a Q^\pi(s,a)`$ — look one step ahead using the values you just computed, and act greedily.
 
 ▸ **Policy iteration alternates the two, and the claim that it terminates is stronger than it first appears.** With $\lvert\mathcal{A}\rvert$ actions and $\lvert\mathcal{S}\rvert$ states there are $\lvert\mathcal{A}\rvert^{\lvert\mathcal{S}\rvert}$ deterministic policies — an astronomically large but **finite** number. Each improvement step produces a policy that is strictly better (or you stop). A strictly increasing walk through a finite set must end. **That is the entire termination proof, and it is a counting argument, not an analytic one.**
 
@@ -434,13 +434,13 @@ $$(\mathcal{T}V)(s) = \max_a\sum_{s'}P(s'|s,a)\big[R(s,a)+\gamma V(s')\big]$$
 
 $$\|\mathcal{T}V-\mathcal{T}W\|_\infty = \max_s\left|\max_a\sum_{s'}P[R+\gamma V(s')] - \max_a\sum_{s'}P[R+\gamma W(s')]\right|$$
 
-Using $|\max_af(a)-\max_ag(a)|\le\max_a|f(a)-g(a)|$:
+Using $`|\max_af(a)-\max_ag(a)|\le\max_a|f(a)-g(a)|`$:
 
 $$\le\max_{s,a}\ \gamma\sum_{s'}P(s'|s,a)\,|V(s')-W(s')| \ \le\ \gamma\max_{s'}|V(s')-W(s')| = \gamma\|V-W\|_\infty$$
 
-using $\sum_{s'}P=1$. ∎
+using $`\sum_{s'}P=1`$. ∎
 
-▸ **By the Banach fixed-point theorem, $\mathcal{T}$ has a unique fixed point $V^*$ and value iteration converges to it geometrically: $\|V_k-V^*\|_\infty\le\gamma^k\|V_0-V^*\|_\infty$.**
+▸ **By the Banach fixed-point theorem, $\mathcal{T}$ has a unique fixed point $`V^*`$ and value iteration converges to it geometrically: $`\|V_k-V^*\|_\infty\le\gamma^k\|V_0-V^*\|_\infty`$.**
 
 **This is the theoretical foundation of all of RL, and it is why $\gamma<1$ matters mathematically rather than just practically.** It also shows the convergence rate degrades as $\gamma\to1$ — long horizons are provably harder.
 
@@ -450,7 +450,7 @@ using $\sum_{s'}P=1$. ∎
 
 This is the most theoretically loaded page in the chapter, and it rests on two ideas: a **norm** that measures worst-case error, and a **contraction** that shrinks it. Neither is hard.
 
-**First, the sup norm.** $\lVert V - W\rVert_\infty$ is read *"the infinity-norm of V minus W,"* also called the **sup norm** or **max norm**. From §1.1.4:
+**First, the sup norm.** $`\lVert V - W\rVert_\infty`$ is read *"the infinity-norm of V minus W,"* also called the **sup norm** or **max norm**. From §1.1.4:
 
 $$\lVert V - W\rVert_\infty = \max_s \lvert V(s) - W(s)\rvert$$
 
@@ -464,16 +464,16 @@ $$\lVert \mathcal{T}V - \mathcal{T}W\rVert_\infty \le \gamma\,\lVert V - W\rVert
 
 *"Take any two value functions. Apply one sweep to each. They are now at least $\gamma$ times closer together than they were."* With $\gamma = 0.9$, one sweep shrinks every disagreement by at least 10%.
 
-> **Analogy.** Photocopy a picture at 90% scale, then photocopy the copy, and again. Any two starting pictures, however different, converge to the same vanishing dot. Or, more precisely: take a map of the room you are standing in and drop it on the floor. **There is exactly one point on the map lying directly above the point of the room it represents** — and there is always exactly one, no matter how you crumple or rotate the map, as long as it is smaller than the room. That is the Banach fixed-point theorem, and $V^*$ is that point.
+> **Analogy.** Photocopy a picture at 90% scale, then photocopy the copy, and again. Any two starting pictures, however different, converge to the same vanishing dot. Or, more precisely: take a map of the room you are standing in and drop it on the floor. **There is exactly one point on the map lying directly above the point of the room it represents** — and there is always exactly one, no matter how you crumple or rotate the map, as long as it is smaller than the room. That is the Banach fixed-point theorem, and $`V^*`$ is that point.
 
 **Why the proof works, in words.** Two facts do all the labour:
 
-1. $\lvert\max_a f(a) - \max_a g(a)\rvert \le \max_a\lvert f(a)-g(a)\rvert$ — *"the best of one list can't differ from the best of another by more than the biggest single difference between them."* This is the step that survives the nonlinearity of the $\max$.
-2. $\sum_{s'}P(s'\mid s,a) = 1$ — probabilities sum to one, so averaging a set of numbers can never exceed the largest of them.
+1. $`\lvert\max_a f(a) - \max_a g(a)\rvert \le \max_a\lvert f(a)-g(a)\rvert`$ — *"the best of one list can't differ from the best of another by more than the biggest single difference between them."* This is the step that survives the nonlinearity of the $\max$.
+2. $`\sum_{s'}P(s'\mid s,a) = 1`$ — probabilities sum to one, so averaging a set of numbers can never exceed the largest of them.
 
 Everything else cancels. **The immediate reward $r$ appears identically on both sides and subtracts away**, which is why the $\gamma$ survives alone: the only thing that carries forward from one sweep to the next is the *discounted* future term.
 
-▸ **Put numbers on the convergence rate.** Start with $V_0 = 0$ everywhere when the true values are up to $100$, so the initial error is $100$. How many sweeps until the worst state is within $0.01$? You need $\gamma^k \cdot 100 < 0.01$, i.e. $\gamma^k < 10^{-4}$:
+▸ **Put numbers on the convergence rate.** Start with $`V_0 = 0`$ everywhere when the true values are up to $100$, so the initial error is $100$. How many sweeps until the worst state is within $0.01$? You need $\gamma^k \cdot 100 < 0.01$, i.e. $\gamma^k < 10^{-4}$:
 
 | $\gamma$ | Effective horizon | Sweeps needed |
 |---|---|---|
@@ -493,7 +493,7 @@ Everything else cancels. **The immediate reward $r$ appears identically on both 
 
 ### Monte Carlo
 
-Run a full episode, then set $V(s)\leftarrow V(s)+\alpha[G_t - V(s)]$.
+Run a full episode, then set $`V(s)\leftarrow V(s)+\alpha[G_t - V(s)]`$.
 
 Unbiased. **Zero bias, high variance.** Requires episodes to terminate. Cannot learn online.
 
@@ -501,7 +501,7 @@ Unbiased. **Zero bias, high variance.** Requires episodes to terminate. Cannot l
 
 ▸ $$V(S_t)\leftarrow V(S_t)+\alpha\underbrace{\big[\,\underbrace{R_{t+1}+\gamma V(S_{t+1})}_{\text{TD target}} - V(S_t)\,\big]}_{\text{TD error }\delta_t}$$
 
-**Bootstrapping:** the target uses the current estimate $V(S_{t+1})$ rather than the actual return.
+**Bootstrapping:** the target uses the current estimate $`V(S_{t+1})`$ rather than the actual return.
 
 ▸ **Biased (the target depends on a wrong estimate), but far lower variance** — one reward and one value estimate, instead of a sum of hundreds of random rewards. Learns online, from incomplete episodes, and empirically converges much faster.
 
@@ -525,9 +525,9 @@ Read it: *"move your current guess a fraction $\alpha$ of the way toward the new
 
 $$V(S_t)\leftarrow V(S_t)+\alpha\big[\underbrace{R_{t+1}+\gamma V(S_{t+1})}_{\text{TD target}} - V(S_t)\big]$$
 
-The TD target $R_{t+1} + \gamma V(S_{t+1})$ is *"the one reward I actually observed, plus my current guess about everything after that."* The bracket as a whole is the **TD error** $\delta_t$, read *"delta-t."*
+The TD target $`R_{t+1} + \gamma V(S_{t+1})`$ is *"the one reward I actually observed, plus my current guess about everything after that."* The bracket as a whole is the **TD error** $`\delta_t`$, read *"delta-t."*
 
-▸ **The TD error is literally surprise: what happened, minus what you expected.** If $\delta_t > 0$, things went better than predicted and you raise your estimate. If $\delta_t < 0$, worse than predicted; lower it. If $\delta_t = 0$, the world behaved exactly as forecast and nothing needs to change.
+▸ **The TD error is literally surprise: what happened, minus what you expected.** If $`\delta_t > 0`$, things went better than predicted and you raise your estimate. If $`\delta_t < 0`$, worse than predicted; lower it. If $`\delta_t = 0`$, the world behaved exactly as forecast and nothing needs to change.
 
 > **Analogy (this is the standard one, and it is very good).** You leave the office at 6:00 and predict you will be home at 6:30. At 6:10 you reach the motorway and it is jammed — you now predict 6:50. **Do you wait until you get home to learn something?** Monte Carlo says yes: only the actual arrival time counts as data. Temporal difference says no — the moment your own forecast jumps from 6:30 to 6:50, that revision *is* the signal. You learned "leaving at 6:00 is worse than I thought" at 6:10, twenty minutes before the evidence technically arrived. **Bootstrapping is the formal version of trusting your own updated forecast.**
 
@@ -562,7 +562,7 @@ This distinction sounds abstract until you see it produce two different answers 
 >
 > The method was isolated, named, and analysed by **Richard Sutton** in his 1984 PhD work with Andrew Barto and in the 1988 paper *Learning to Predict by the Methods of Temporal Differences*. The vindication arrived in the early 1990s from **Gerald Tesauro at IBM**, whose **TD-Gammon** combined TD($\lambda$) with a neural network and learned backgammon almost entirely from self-play, reaching a level competitive with the best human players. Its most remarkable legacy is that **human experts changed their opening theory in response to the program's preferences** — a machine-learning system that taught its own domain something new, in 1992.
 
-> **The story behind the dopamine connection.** In 1997, **Wolfram Schultz, Peter Dayan and Read Montague** published a paper in *Science* showing that the firing pattern of dopamine neurons in the primate midbrain matches the **temporal-difference error** with striking fidelity. The neurons fire when an unexpected reward arrives; after a cue reliably predicts the reward, they stop firing at the reward and fire at the *cue* instead; and if the predicted reward fails to appear, their firing rate **drops below baseline at exactly the expected time**. That is $\delta_t$, positive, shifted, and negative, in living tissue. An algorithm invented to make computers play backgammon turned out to describe a mechanism the brain had been running for a very long time — one of the few  bidirectional exchanges between machine learning and neuroscience.
+> **The story behind the dopamine connection.** In 1997, **Wolfram Schultz, Peter Dayan and Read Montague** published a paper in *Science* showing that the firing pattern of dopamine neurons in the primate midbrain matches the **temporal-difference error** with striking fidelity. The neurons fire when an unexpected reward arrives; after a cue reliably predicts the reward, they stop firing at the reward and fire at the *cue* instead; and if the predicted reward fails to appear, their firing rate **drops below baseline at exactly the expected time**. That is $`\delta_t`$, positive, shifted, and negative, in living tissue. An algorithm invented to make computers play backgammon turned out to describe a mechanism the brain had been running for a very long time — one of the few  bidirectional exchanges between machine learning and neuroscience.
 
 ### $n$-step and TD($\lambda$)
 
@@ -573,7 +573,7 @@ $n=1$ is TD, $n=\infty$ is MC. Intermediate $n$ (3–10) is usually best — an 
 **TD($\lambda$)** takes a geometrically weighted average of all $n$-step returns:
 ▸ $$G_t^\lambda = (1-\lambda)\sum_{n=1}^{\infty}\lambda^{n-1}G_t^{(n)}$$
 
-Implemented online with **eligibility traces**: $e_t(s)=\gamma\lambda e_{t-1}(s)+\mathbb{1}[S_t=s]$, then update every state by $\alpha\delta_te_t(s)$.
+Implemented online with **eligibility traces**: $`e_t(s)=\gamma\lambda e_{t-1}(s)+\mathbb{1}[S_t=s]`$, then update every state by $`\alpha\delta_te_t(s)`$.
 
 ▸ **The trace is a short-term memory of which states were recently visited, so one TD error can be assigned to all of them at once.** It is the elegant solution to credit assignment, and it reappears as GAE in Chapter 27 §27.6 — GAE *is* TD($\lambda$) applied to advantages.
 
@@ -597,7 +597,7 @@ Read aloud: *"the n-step return equals n real rewards, discounted, plus a discou
 
 $$G_t^\lambda = (1-\lambda)\sum_{n=1}^{\infty}\lambda^{n-1}G_t^{(n)}$$
 
-The weights are $(1-\lambda)$, $(1-\lambda)\lambda$, $(1-\lambda)\lambda^2$, … — a **geometric decay**. Check they are a legitimate weighting: $(1-\lambda)\sum_{n\ge1}\lambda^{n-1} = (1-\lambda)\cdot\frac{1}{1-\lambda} = 1$. Good — the weights sum to one, so this is a  weighted average and not a rescaling.
+The weights are $(1-\lambda)$, $(1-\lambda)\lambda$, $(1-\lambda)\lambda^2$, … — a **geometric decay**. Check they are a legitimate weighting: $`(1-\lambda)\sum_{n\ge1}\lambda^{n-1} = (1-\lambda)\cdot\frac{1}{1-\lambda} = 1`$. Good — the weights sum to one, so this is a  weighted average and not a rescaling.
 
 **Put numbers in with $\lambda = 0.9$:**
 
@@ -617,15 +617,15 @@ The two extremes fall out immediately: at $\lambda = 0$ all the weight lands on 
 
 $$e_t(s)=\gamma\lambda\, e_{t-1}(s)+\mathbb{1}[S_t=s]$$
 
-Read: *"the trace for state $s$ decays by a factor $\gamma\lambda$ each step, and gets $+1$ added whenever you are actually standing in $s$."* The indicator $\mathbb{1}[S_t = s]$ is 1 if you are in $s$ right now and 0 otherwise (§0.5) — an `if` statement written as a symbol.
+Read: *"the trace for state $s$ decays by a factor $\gamma\lambda$ each step, and gets $+1$ added whenever you are actually standing in $s$."* The indicator $`\mathbb{1}[S_t = s]`$ is 1 if you are in $s$ right now and 0 otherwise (§0.5) — an `if` statement written as a symbol.
 
-Then every state is updated by $\alpha\,\delta_t\,e_t(s)$: **one surprise, distributed across every state in proportion to how recently you were there.**
+Then every state is updated by $`\alpha\,\delta_t\,e_t(s)`$: **one surprise, distributed across every state in proportion to how recently you were there.**
 
 > **Analogy.** Walk across a floor with wet shoes. Each footprint starts dark and dries steadily. When something notable happens, you look down and blame each footprint in proportion to how wet it still is — the step you just took gets most of the credit, the one from ten paces back gets a little, and the one from a hundred paces back has dried and gets none. $\gamma\lambda$ is the drying rate.
 
 ▸ **Why this is the elegant solution to credit assignment.** The forward view ("average all $n$-step returns") requires waiting for the future. The backward view (traces) achieves the *same updates* while running strictly online, in one pass, with one extra number per state. **You never wait, and you never store the trajectory.** For an agent living in real time, that is the difference between an algorithm and a thought experiment.
 
-**A worked micro-example.** With $\gamma = 0.9$, $\lambda = 0.8$, so $\gamma\lambda = 0.72$. You visit states $s_1, s_2, s_3$ in order, and at $s_3$ receive a large surprise $\delta = +10$ with $\alpha = 0.1$. The traces are $e(s_3)=1$, $e(s_2)=0.72$, $e(s_1)=0.72^2 = 0.518$. So the updates are $+1.0$, $+0.72$, and $+0.52$ respectively. **The reward reaches back three states in a single step**, where one-step TD would have needed three separate visits to propagate the same information.
+**A worked micro-example.** With $\gamma = 0.9$, $\lambda = 0.8$, so $\gamma\lambda = 0.72$. You visit states $`s_1, s_2, s_3`$ in order, and at $`s_3`$ receive a large surprise $\delta = +10$ with $\alpha = 0.1$. The traces are $`e(s_3)=1`$, $`e(s_2)=0.72`$, $`e(s_1)=0.72^2 = 0.518`$. So the updates are $+1.0$, $+0.72$, and $+0.52$ respectively. **The reward reaches back three states in a single step**, where one-step TD would have needed three separate visits to propagate the same information.
 
 ---
 
@@ -647,9 +647,9 @@ A grid with a cliff along the bottom edge; the shortest path runs right along it
 
 ▸ **This is the whole on-policy/off-policy distinction in one picture, and it's the answer to give if asked.** SARSA optimizes what you will actually do; Q-learning optimizes what you would do if you stopped exploring.
 
-**Expected SARSA:** replace $Q(S_{t+1},A_{t+1})$ with $\sum_{a'}\pi(a'|S_{t+1})Q(S_{t+1},a')$. Removes the variance from sampling $A_{t+1}$; strictly better than SARSA at the same cost.
+**Expected SARSA:** replace $`Q(S_{t+1},A_{t+1})`$ with $`\sum_{a'}\pi(a'|S_{t+1})Q(S_{t+1},a')`$. Removes the variance from sampling $`A_{t+1}`$; strictly better than SARSA at the same cost.
 
-**Convergence guarantee (tabular):** Q-learning converges to $Q^*$ with probability 1 provided all state–action pairs are visited infinitely often and the step sizes satisfy the Robbins–Monro conditions $\sum_t\alpha_t=\infty$, $\sum_t\alpha_t^2<\infty$.
+**Convergence guarantee (tabular):** Q-learning converges to $`Q^*`$ with probability 1 provided all state–action pairs are visited infinitely often and the step sizes satisfy the Robbins–Monro conditions $`\sum_t\alpha_t=\infty`$, $`\sum_t\alpha_t^2<\infty`$.
 
 #### SARSA and Q-learning, decoded
 
@@ -657,12 +657,12 @@ Put the two updates side by side and cover everything except the target. That is
 
 | Algorithm | Target | In words |
 |---|---|---|
-| SARSA | $R_{t+1}+\gamma Q(S_{t+1},A_{t+1})$ | "…plus the value of **what I will actually do next**" |
-| Q-learning | $R_{t+1}+\gamma \max_{a'}Q(S_{t+1},a')$ | "…plus the value of **the best thing available next**" |
+| SARSA | $`R_{t+1}+\gamma Q(S_{t+1},A_{t+1})`$ | "…plus the value of **what I will actually do next**" |
+| Q-learning | $`R_{t+1}+\gamma \max_{a'}Q(S_{t+1},a')`$ | "…plus the value of **the best thing available next**" |
 
 ▸ **One uses the action you took; the other uses the action you wish you'd take.** Everything else about the two algorithms is identical.
 
-**Where the name SARSA comes from:** the update needs the quintuple $(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})$ — **S**tate, **A**ction, **R**eward, **S**tate, **A**ction. The algorithm is named after its own argument list. **Q-learning needs only $(S_t, A_t, R_{t+1}, S_{t+1})$** — no next action, because it takes a $\max$ instead of asking what you did. That difference of one symbol is what makes Q-learning off-policy, and it is worth being able to state that compactly.
+**Where the name SARSA comes from:** the update needs the quintuple $`(S_t, A_t, R_{t+1}, S_{t+1}, A_{t+1})`$ — **S**tate, **A**ction, **R**eward, **S**tate, **A**ction. The algorithm is named after its own argument list. **Q-learning needs only $`(S_t, A_t, R_{t+1}, S_{t+1})`$** — no next action, because it takes a $\max$ instead of asking what you did. That difference of one symbol is what makes Q-learning off-policy, and it is worth being able to state that compactly.
 
 **On-policy versus off-policy, said plainly:**
 
@@ -679,26 +679,26 @@ $$\sum_t\alpha_t=\infty \qquad\text{and}\qquad \sum_t\alpha_t^2<\infty$$
 
 Two conditions that look opposed and are not. Read them as **"big enough for long enough, but shrinking."**
 
-- $\sum_t \alpha_t = \infty$ — *"the total distance you are able to travel is unlimited."* If the step sizes shrank too fast, you could run out of movement before reaching the answer, like a runner whose stride halves every step and who therefore never crosses the finish line.
-- $\sum_t \alpha_t^2 < \infty$ — *"the accumulated noise is finite."* Errors contribute in proportion to $\alpha^2$ (variance scales with the square of a scale factor), so this says the random jitter you absorb over all time adds up to something bounded, and the estimate can settle.
+- $`\sum_t \alpha_t = \infty`$ — *"the total distance you are able to travel is unlimited."* If the step sizes shrank too fast, you could run out of movement before reaching the answer, like a runner whose stride halves every step and who therefore never crosses the finish line.
+- $`\sum_t \alpha_t^2 < \infty`$ — *"the accumulated noise is finite."* Errors contribute in proportion to $\alpha^2$ (variance scales with the square of a scale factor), so this says the random jitter you absorb over all time adds up to something bounded, and the estimate can settle.
 
-**Does anything satisfy both?** Yes: $\alpha_t = 1/t$. The harmonic series $\sum 1/t$ diverges (slowly — it grows like $\ln t$), while $\sum 1/t^2 = \pi^2/6 \approx 1.645$ converges. It is a narrow window, and $1/t$ sits almost exactly in it.
+**Does anything satisfy both?** Yes: $`\alpha_t = 1/t`$. The harmonic series $\sum 1/t$ diverges (slowly — it grows like $\ln t$), while $\sum 1/t^2 = \pi^2/6 \approx 1.645$ converges. It is a narrow window, and $1/t$ sits almost exactly in it.
 
-| Schedule | $\sum\alpha_t$ | $\sum\alpha_t^2$ | Converges? |
+| Schedule | $`\sum\alpha_t`$ | $`\sum\alpha_t^2`$ | Converges? |
 |---|---|---|---|
-| $\alpha_t = 1/t$ | $\infty$ ✓ | $1.645$ ✓ | **Yes** |
-| $\alpha_t = 1/t^2$ | $1.645$ ✗ | finite ✓ | No — stops moving too soon |
-| $\alpha_t = \alpha$ (constant) | $\infty$ ✓ | $\infty$ ✗ | No — never stops jittering |
+| $`\alpha_t = 1/t`$ | $\infty$ ✓ | $1.645$ ✓ | **Yes** |
+| $`\alpha_t = 1/t^2`$ | $1.645$ ✗ | finite ✓ | No — stops moving too soon |
+| $`\alpha_t = \alpha`$ (constant) | $\infty$ ✓ | $\infty$ ✗ | No — never stops jittering |
 
 ▸ **And yet essentially every practical implementation uses a constant $\alpha$**, knowingly violating the second condition. The reason is that a constant step size never stops adapting, which is exactly what you want when the environment is non-stationary — and in RL the environment *is* effectively non-stationary, because your own policy keeps changing. **You trade guaranteed convergence to a point for permanent tracking of a moving target.** That is a deliberate and almost universal choice, and it is worth knowing that the theory and the practice differ here on purpose.
 
 > **Where this came from.** The two conditions are from **Herbert Robbins and Sutton Monro's** 1951 paper *A Stochastic Approximation Method*, which asked a question with nothing to do with agents or rewards: how do you find the root of a function you can only observe through noise? Their answer — take shrinking steps in the direction the noisy measurement suggests — is the direct ancestor of stochastic gradient descent (Ch. 4) as well as of Q-learning. (A coincidence worth enjoying: the co-author's given name is Sutton, and the field's other Sutton, Richard, is unrelated.)
 
-> **The story behind Q-learning.** **Chris Watkins** introduced it in his 1989 Cambridge PhD thesis, *Learning from Delayed Rewards*, and the letter $Q$ is simply the symbol he used for the quality function — there is no deeper meaning. What made it land was the proof, published with **Peter Dayan in 1992**, that the tabular algorithm converges to $Q^*$ with probability one. **An off-policy method that provably converges without ever needing to know the environment's dynamics was a  surprising result**, and it is why Q-learning rather than SARSA became the default. SARSA itself was published by **Gavin Rummery and Mahesan Niranjan in 1994**, under the less memorable name "modified connectionist Q-learning"; the acronym SARSA was suggested by Richard Sutton and stuck immediately, which is a small lesson in the value of a good name.
+> **The story behind Q-learning.** **Chris Watkins** introduced it in his 1989 Cambridge PhD thesis, *Learning from Delayed Rewards*, and the letter $Q$ is simply the symbol he used for the quality function — there is no deeper meaning. What made it land was the proof, published with **Peter Dayan in 1992**, that the tabular algorithm converges to $`Q^*`$ with probability one. **An off-policy method that provably converges without ever needing to know the environment's dynamics was a  surprising result**, and it is why Q-learning rather than SARSA became the default. SARSA itself was published by **Gavin Rummery and Mahesan Niranjan in 1994**, under the less memorable name "modified connectionist Q-learning"; the acronym SARSA was suggested by Richard Sutton and stuck immediately, which is a small lesson in the value of a good name.
 
 ### Maximization bias
 
-▸ $\mathbb{E}[\max_a\hat Q(a)] \ge \max_a\mathbb{E}[\hat Q(a)]$ by Jensen — **the max of noisy estimates is systematically too large.** Q-learning uses the same values to *select* and to *evaluate* the best action, so it is biased upward.
+▸ $`\mathbb{E}[\max_a\hat Q(a)] \ge \max_a\mathbb{E}[\hat Q(a)]`$ by Jensen — **the max of noisy estimates is systematically too large.** Q-learning uses the same values to *select* and to *evaluate* the best action, so it is biased upward.
 
 **Double Q-learning** fixes it by maintaining two estimates and decoupling the roles:
 $$Q_1(s,a)\leftarrow Q_1(s,a)+\alpha\Big[r+\gamma\,Q_2\big(s',\ \arg\max_{a'}Q_1(s',a')\big)-Q_1(s,a)\Big]$$
@@ -733,7 +733,7 @@ It gets worse with more choices:
 
 $$Q_1(s,a)\leftarrow Q_1(s,a)+\alpha\Big[r+\gamma\,Q_2\big(s',\ \arg\max_{a'}Q_1(s',a')\big)-Q_1(s,a)\Big]$$
 
-Read the inner part: *"ask $Q_1$ which action looks best, then ask $Q_2$ how good that action actually is."* Since $Q_2$'s noise is independent of $Q_1$'s, the action that got lucky in $Q_1$ has no reason to be lucky in $Q_2$ as well. **The selection and the evaluation no longer share a coin flip.**
+Read the inner part: *"ask $`Q_1`$ which action looks best, then ask $`Q_2`$ how good that action actually is."* Since $`Q_2`$'s noise is independent of $`Q_1`$'s, the action that got lucky in $`Q_1`$ has no reason to be lucky in $`Q_2`$ as well. **The selection and the evaluation no longer share a coin flip.**
 
 > **Analogy.** Do not let the same person both nominate the winner and set the prize money. Have one panel pick, and an independent panel value.
 
@@ -751,7 +751,7 @@ To evaluate a target policy $\pi$ using data from a behaviour policy $b$:
 
 **Mitigations:** weighted (self-normalized) importance sampling — biased but dramatically lower variance and consistent; per-decision IS; and clipping the ratio, which is exactly what PPO does (Ch. 27 §27.7).
 
-▸ **Q-learning avoids importance sampling entirely** because its target uses $\max_{a'}$, which doesn't depend on which policy generated the data. That is the real reason it is the workhorse of off-policy RL.
+▸ **Q-learning avoids importance sampling entirely** because its target uses $`\max_{a'}`$, which doesn't depend on which policy generated the data. That is the real reason it is the workhorse of off-policy RL.
 
 ### The deadly triad
 
@@ -796,7 +796,7 @@ The three named mitigations, decoded:
 - **Per-decision IS** — notice that a reward at step $k$ only needs correcting for the decisions *up to* step $k$, not the whole episode. Shorter products, smaller variance, free.
 - **Clipping the ratio** — simply refuse to let $\rho$ exceed some bound. Crude, biased, and spectacularly effective. ▸ **This is exactly what PPO does** (Ch. 27 §27.7), which means the most widely deployed policy-gradient algorithm in the world is, at its core, a variance-control hack on a 1950s statistical technique.
 
-▸ **And now the reason Q-learning matters so much.** Its target is $\max_{a'}Q(s',a')$. Look at what is *absent*: there is no $\pi(a'\mid s')$, no $b(a'\mid s')$, no ratio. The $\max$ does not care which policy generated the data, because it is not averaging over a policy at all. **Q-learning gets off-policy learning for free by never taking an expectation over actions**, and that structural accident is why it, rather than importance-sampled Monte Carlo, became the workhorse.
+▸ **And now the reason Q-learning matters so much.** Its target is $`\max_{a'}Q(s',a')`$. Look at what is *absent*: there is no $\pi(a'\mid s')$, no $b(a'\mid s')$, no ratio. The $\max$ does not care which policy generated the data, because it is not averaging over a policy at all. **Q-learning gets off-policy learning for free by never taking an expectation over actions**, and that structural accident is why it, rather than importance-sampled Monte Carlo, became the workhorse.
 
 #### The deadly triad, decoded
 
@@ -831,14 +831,14 @@ Exploit what you know, or explore to learn more. **The information value of an a
 
 ### Multi-armed bandits — the clean case
 
-**$\epsilon$-greedy.** Simple; **linear regret** $\Theta(\epsilon T)$ if $\epsilon$ is fixed, since you keep exploring forever. Decay $\epsilon_t\propto1/t$ for logarithmic regret.
+**$\epsilon$-greedy.** Simple; **linear regret** $\Theta(\epsilon T)$ if $\epsilon$ is fixed, since you keep exploring forever. Decay $`\epsilon_t\propto1/t`$ for logarithmic regret.
 
 **UCB1:**
 ▸ $$a_t=\arg\max_a\left[\hat\mu_a + c\sqrt{\frac{\ln t}{N_a}}\right]$$
 
-**"Optimism in the face of uncertainty."** The bonus is a confidence-interval width from Hoeffding (Ch. 2 §2.3): it shrinks as $1/\sqrt{N_a}$ with more pulls and grows slowly with $t$ so no arm is abandoned forever.
+**"Optimism in the face of uncertainty."** The bonus is a confidence-interval width from Hoeffding (Ch. 2 §2.3): it shrinks as $`1/\sqrt{N_a}`$ with more pulls and grows slowly with $t$ so no arm is abandoned forever.
 
-▸ Regret bound: $O\!\left(\sum_{a:\Delta_a>0}\frac{\ln T}{\Delta_a}\right)$ — **logarithmic in $T$**, which matches the Lai–Robbins lower bound up to constants. UCB is essentially optimal.
+▸ Regret bound: $`O\!\left(\sum_{a:\Delta_a>0}\frac{\ln T}{\Delta_a}\right)`$ — **logarithmic in $T$**, which matches the Lai–Robbins lower bound up to constants. UCB is essentially optimal.
 
 **Thompson sampling.** Maintain a posterior over each arm's mean; sample one value per arm; play the argmax. Also achieves logarithmic regret, is trivially easy to implement (Beta–Bernoulli conjugacy), and **empirically outperforms UCB** in most practical settings. It naturally handles delayed feedback and batched decisions.
 
@@ -848,7 +848,7 @@ Before decoding UCB, decode **regret**, since every claim in this section is sta
 
 $$\text{Regret}(T) \;=\; \underbrace{T\mu^*}_{\text{what a genius would have scored}} \;-\; \underbrace{\mathbb{E}\Big[\textstyle\sum_{t=1}^{T} \text{reward}_t\Big]}_{\text{what you scored}}$$
 
-*"How much worse did you do than someone who knew the answer from the start?"* $\mu^*$ is the mean payoff of the best arm and $\Delta_a = \mu^* - \mu_a$ is arm $a$'s **gap** — how much you lose each time you pull it. Regret is therefore just $\sum_a \Delta_a \times (\text{times you pulled } a)$.
+*"How much worse did you do than someone who knew the answer from the start?"* $`\mu^*`$ is the mean payoff of the best arm and $`\Delta_a = \mu^* - \mu_a`$ is arm $a$'s **gap** — how much you lose each time you pull it. Regret is therefore just $`\sum_a \Delta_a \times (\text{times you pulled } a)`$.
 
 ▸ **The shape of the regret curve is what matters, not its height.** Regret that grows **linearly** in $T$ means you are losing a fixed amount per step forever — you never finish learning. Regret that grows **logarithmically** means the loss per step is going to zero; you make your mistakes early and then stop. **Logarithmic regret is the mathematical statement of "eventually figures it out."**
 
@@ -867,15 +867,15 @@ $$a_t=\arg\max_a\left[\hat\mu_a + c\sqrt{\frac{\ln t}{N_a}}\right]$$
 
 Read aloud: *"pick the arm that maximizes: its estimated mean, plus c times the square root of, log t over N-a."* Every symbol:
 
-- $\hat\mu_a$ — "mu-hat-a," your **current estimate** of arm $a$'s average payoff. The hat means estimate (§0.6).
-- $N_a$ — how many times you have pulled arm $a$ so far.
+- $`\hat\mu_a`$ — "mu-hat-a," your **current estimate** of arm $a$'s average payoff. The hat means estimate (§0.6).
+- $`N_a`$ — how many times you have pulled arm $a$ so far.
 - $t$ — how many pulls you have made in total, across all arms.
 - $c$ — a constant controlling how adventurous you are.
 - The square-root term — a **confidence-interval width**, a bonus for ignorance.
 
-▸ **"Optimism in the face of uncertainty" means: judge every option by the best it could plausibly be, not by your best guess of what it is.** An arm you have never tried gets an enormous bonus, so you try it. If it disappoints, $N_a$ grows, the bonus shrinks, and you stop. **The strategy explores exactly as much as its own ignorance justifies, and not one pull more.**
+▸ **"Optimism in the face of uncertainty" means: judge every option by the best it could plausibly be, not by your best guess of what it is.** An arm you have never tried gets an enormous bonus, so you try it. If it disappoints, $`N_a`$ grows, the bonus shrinks, and you stop. **The strategy explores exactly as much as its own ignorance justifies, and not one pull more.**
 
-**Watch the two forces.** The bonus shrinks as $\frac{1}{\sqrt{N_a}}$ — that is the standard-error law from §1.3.1, the same $\sqrt{n}$ that governs every estimate in the book. And it grows as $\sqrt{\ln t}$, very slowly, so that an arm ignored for a long time eventually gets one more look. **Neglect is punished, but only logarithmically.**
+**Watch the two forces.** The bonus shrinks as $`\frac{1}{\sqrt{N_a}}`$ — that is the standard-error law from §1.3.1, the same $\sqrt{n}$ that governs every estimate in the book. And it grows as $\sqrt{\ln t}$, very slowly, so that an arm ignored for a long time eventually gets one more look. **Neglect is punished, but only logarithmically.**
 
 Numbers, with $c=1$ and $t = 1000$ (so $\ln t = 6.9$):
 
@@ -890,7 +890,7 @@ An arm you have pulled once carries a bonus of $2.6$ — enough to beat almost a
 
 > **Analogy.** Interviewing candidates. The one with a long track record you judge on the track record. The one who has done almost nothing yet, you judge on their ceiling — because the cost of one more interview is small and the upside is unknown. **Once you have interviewed them enough times, their ceiling and their record converge, and the reason to keep looking evaporates.**
 
-**Reading the regret bound.** $O\!\left(\sum_{a:\Delta_a>0}\frac{\ln T}{\Delta_a}\right)$ says: for each *suboptimal* arm, you pay about $\frac{\ln T}{\Delta_a}$. Note the $\Delta_a$ is in the **denominator**, which looks backwards until you think about it: **an arm that is only slightly worse is expensive to rule out** (you need many samples to distinguish it) but each mistake costs little; an arm that is much worse is cheap to rule out but each mistake is costly. The two effects cancel to leave $\ln T / \Delta_a$, and the **Lai–Robbins lower bound** of 1985 proves no algorithm can do better. UCB is not merely good; it is essentially the end of the story for this problem.
+**Reading the regret bound.** $`O\!\left(\sum_{a:\Delta_a>0}\frac{\ln T}{\Delta_a}\right)`$ says: for each *suboptimal* arm, you pay about $`\frac{\ln T}{\Delta_a}`$. Note the $`\Delta_a`$ is in the **denominator**, which looks backwards until you think about it: **an arm that is only slightly worse is expensive to rule out** (you need many samples to distinguish it) but each mistake costs little; an arm that is much worse is cheap to rule out but each mistake is costly. The two effects cancel to leave $`\ln T / \Delta_a`$, and the **Lai–Robbins lower bound** of 1985 proves no algorithm can do better. UCB is not merely good; it is essentially the end of the story for this problem.
 
 > **Where "bandit" came from.** A slot machine was called a **one-armed bandit** — one lever, and it robs you. A row of them, each with unknown odds, is a *multi-armed* bandit. The formal problem was posed by **Herbert Robbins in 1952**, and the WWII-era interest in it was intense enough that **Peter Whittle** later joked that during the war the problem so consumed Allied analysts that someone suggested dropping it over Germany to sabotage German science. It is a joke, told as a joke, and worth knowing as an indicator of how  hard the problem was considered.
 
@@ -967,9 +967,9 @@ Read aloud: *"F of s, a, s-prime equals gamma times capital-phi of s-prime, minu
 
 $$\sum_{t\ge0}\gamma^t F(s_t,a_t,s_{t+1}) = \sum_{t\ge0}\Big[\gamma^{t+1}\Phi(s_{t+1}) - \gamma^{t}\Phi(s_t)\Big] = -\Phi(s_0)$$
 
-**Every interior term cancels with its neighbour.** The $+\gamma^{1}\Phi(s_1)$ from $t=0$ is destroyed by the $-\gamma^{1}\Phi(s_1)$ from $t=1$, and so on down the line. What survives is $-\Phi(s_0)$, which depends only on where you *started* — and every policy starts in the same place.
+**Every interior term cancels with its neighbour.** The $`+\gamma^{1}\Phi(s_1)`$ from $t=0$ is destroyed by the $`-\gamma^{1}\Phi(s_1)`$ from $t=1$, and so on down the line. What survives is $`-\Phi(s_0)`$, which depends only on where you *started* — and every policy starts in the same place.
 
-▸ **So potential-based shaping adds the same constant to every policy's total return.** Adding a constant to every score cannot change which score is largest. The rankings are untouched, so $\pi^*$ is untouched, while the *learning signal* is transformed from one number at the end into a dense stream. **That is a  free lunch, and it is nearly the only one in this chapter.**
+▸ **So potential-based shaping adds the same constant to every policy's total return.** Adding a constant to every score cannot change which score is largest. The rankings are untouched, so $`\pi^*`$ is untouched, while the *learning signal* is transformed from one number at the end into a dense stream. **That is a  free lunch, and it is nearly the only one in this chapter.**
 
 > **Analogy.** Give every hiker on a mountain £10 for each metre of altitude they gain and charge them £10 for each metre they lose. Whichever route they take, a hiker who ends at the summit has been paid exactly the same total — the height of the summit minus the height of the car park. **The payments make progress legible without making any route more profitable than another.** Now instead pay £10 for every metre *walked uphill*, with no charge for coming down, and you have invented a machine for making people walk up and down the same slope all day. That second scheme is non-potential-based shaping, and it is what goes wrong.
 
@@ -991,7 +991,7 @@ $$\sum_{t\ge0}\gamma^t F(s_t,a_t,s_{t+1}) = \sum_{t\ge0}\Big[\gamma^{t+1}\Phi(s_
 
 - **The first application of Markov chains was to Russian poetry.** To show that his dependent sequences described something real, Andrey Markov classified the first 20,000 letters of Pushkin's *Eugene Onegin* as vowels or consonants **by hand** and tabulated the transitions. He built the first statistical language model around 1913, with no computer and no intention of building one.
 
-- **Dopamine neurons compute a temporal-difference error.** A 1997 *Science* paper by Wolfram Schultz, Peter Dayan and Read Montague showed that midbrain dopamine neurons fire at unexpected rewards, shift their firing to the predictive cue once the cue is learned, and dip **below baseline** at the exact moment a predicted reward fails to arrive. That is $\delta_t$, positive and negative, in living tissue — an algorithm designed for backgammon turning out to describe neural hardware.
+- **Dopamine neurons compute a temporal-difference error.** A 1997 *Science* paper by Wolfram Schultz, Peter Dayan and Read Montague showed that midbrain dopamine neurons fire at unexpected rewards, shift their firing to the predictive cue once the cue is learned, and dip **below baseline** at the exact moment a predicted reward fails to arrive. That is $`\delta_t`$, positive and negative, in living tissue — an algorithm designed for backgammon turning out to describe neural hardware.
 
 - **A backgammon program changed human opening theory.** Gerald Tesauro's TD-Gammon (IBM, early 1990s) learned almost entirely from self-play and reached a level competitive with the world's best players. Human experts subsequently **revised standard opening moves** to match the program's preferences — machine learning teaching its own domain something new, in 1992.
 

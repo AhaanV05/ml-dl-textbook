@@ -15,17 +15,17 @@ This chapter is unusual: most of its difficulty is **vocabulary**, not mathemati
 | $\gamma$ | "gamma" | How many tokens the small draft model guesses before the big one checks |
 | $\alpha$ | "alpha" | **Three jobs in this chapter**: the speculative-decoding acceptance rate, the distillation mixing weight, and LoRA's scaling constant |
 | $\min\!\left(1,\ \frac{p(x)}{q(x)}\right)$ | "min of one and p over q" | The accept-or-reject coin flip in speculative decoding |
-| $x_q,\ s,\ z$ | "x-quantized, scale, zero-point" | The stored integer, the step size it represents, and the offset |
+| $`x_q,\ s,\ z`$ | "x-quantized, scale, zero-point" | The stored integer, the step size it represents, and the offset |
 | $\mathrm{round}(\cdot)$ | "round" | Snap to the nearest whole number |
 | $b$ | "b" | Bits per stored number ($b=4$ means 16 possible values) |
 | W4A16 | "W-four, A-sixteen" | 4-bit **W**eights, 16-bit **A**ctivations |
-| $\lVert WX-\widehat WX\rVert_F^2$ | "Frobenius norm squared of the difference" | Total squared gap between what the layer used to output and what it outputs now |
+| $`\lVert WX-\widehat WX\rVert_F^2`$ | "Frobenius norm squared of the difference" | Total squared gap between what the layer used to output and what it outputs now |
 | $H = 2XX^\top$ | "H equals two X X-transpose" | The curvature of that squared error — which weights are dangerous to move |
 | $\tau$ | "tau" | **Temperature** — divide the logits by it before softmax to flatten them |
-| $p_T^{(\tau)},\ p_S^{(\tau)}$ | "p-T, p-S at temperature tau" | **T**eacher and **S**tudent probability distributions, softened |
-| $W_0 + \frac{\alpha}{r}BA$ | "W-nought plus alpha-over-r, B A" | Frozen pretrained weights, plus a thin correction |
+| $`p_T^{(\tau)},\ p_S^{(\tau)}`$ | "p-T, p-S at temperature tau" | **T**eacher and **S**tudent probability distributions, softened |
+| $`W_0 + \frac{\alpha}{r}BA`$ | "W-nought plus alpha-over-r, B A" | Frozen pretrained weights, plus a thin correction |
 | $r$ | "r" | The **rank** of the LoRA correction — the width of the bottleneck |
-| $\tau_i$ | "tau-i" | A **task vector** (fine-tuned minus pretrained). *Not* the temperature — same letter, different job |
+| $`\tau_i`$ | "tau-i" | A **task vector** (fine-tuned minus pretrained). *Not* the temperature — same letter, different job |
 | 2:4 | "two-of-four" | Exactly two zeros in every four consecutive weights |
 | $\theta^{\text{pre}}$ | "theta pre" | The pretrained parameter vector, before any fine-tuning |
 
@@ -197,7 +197,7 @@ An assistant drafts a paragraph; the expert reads it and accepts everything up t
 
 1. Draft model $q$ generates $\gamma$ tokens autoregressively.
 2. Target model $p$ scores all $\gamma+1$ positions **in one forward pass** (parallel, because the tokens are already known).
-3. Accept token $i$ with probability $\min\left(1,\frac{p(x_i)}{q(x_i)}\right)$.
+3. Accept token $i$ with probability $`\min\left(1,\frac{p(x_i)}{q(x_i)}\right)`$.
 4. On the first rejection, resample from the residual distribution
 ▸ $$p'(x) = \frac{\max(0,\ p(x)-q(x))}{\sum_{x'}\max(0,\ p(x')-q(x'))}$$
 5. Continue.
@@ -206,7 +206,7 @@ An assistant drafts a paragraph; the expert reads it and accepts everything up t
 
 #### What the accept/reject rule actually says
 
-**The symbols.** $q$ is the **draft** model — small, fast, roughly right. $p$ is the **target** model — the big one whose output you are contractually obliged to reproduce. $q(x_i)$ and $p(x_i)$ are the probabilities the two models assign to the same candidate token. $\gamma$ (gamma) is how many tokens the draft guesses per round.
+**The symbols.** $q$ is the **draft** model — small, fast, roughly right. $p$ is the **target** model — the big one whose output you are contractually obliged to reproduce. $`q(x_i)`$ and $`p(x_i)`$ are the probabilities the two models assign to the same candidate token. $\gamma$ (gamma) is how many tokens the draft guesses per round.
 
 **Step 3 read aloud:** *"accept this token with probability: the minimum of one, and the target's probability divided by the draft's probability."*
 
@@ -332,8 +332,8 @@ $$x_q = \mathrm{round}\left(\frac{x}{s}\right)+z,\qquad \hat x = s(x_q - z)$$
 | $x$ | "x" | The real number you actually have — a weight, say $0.3142$ |
 | $s$ | "s", the **scale** | How much one integer step is worth. The size of one tick mark |
 | $z$ | "z", the **zero-point** | An integer offset, so that real zero lands exactly on an integer |
-| $x_q$ | "x-q" | The small integer you **store instead of** $x$ |
-| $\hat x$ | "x-hat" | What you get back when you decode $x_q$. The hat means *estimate* (§0.6) |
+| $`x_q`$ | "x-q" | The small integer you **store instead of** $x$ |
+| $\hat x$ | "x-hat" | What you get back when you decode $`x_q`$. The hat means *estimate* (§0.6) |
 | $b$ | "b" | Bits per stored number. $b$ bits give $2^b$ distinct values |
 
 Read the first equation aloud: *"divide by the step size, round to the nearest whole number, add the offset."* The second: *"subtract the offset, multiply by the step size."* They are inverses, apart from the rounding — **and the rounding is where all the loss lives**.
@@ -354,7 +354,7 @@ Quantize $x = 0.31$: $\mathrm{round}(0.31/0.1143) = \mathrm{round}(2.71) = 3$, a
 
 $$s = \frac{0.8 - (-0.6)}{15} = \frac{1.4}{15} = 0.0933,\qquad z = \mathrm{round}\!\left(\frac{0.6}{0.0933}\right) = 6$$
 
-Quantize $x=0.31$: $x_q = \mathrm{round}(3.32) + 6 = 9$, decoding to $\hat x = 0.0933\times(9-6) = 0.280$. **Error: 0.030**, with a 18% finer step size.
+Quantize $x=0.31$: $`x_q = \mathrm{round}(3.32) + 6 = 9`$, decoding to $\hat x = 0.0933\times(9-6) = 0.280$. **Error: 0.030**, with a 18% finer step size.
 
 ▸ **Asymmetric wins here because the distribution isn't centred**, and symmetric quantization wastes the unused stretch from $-0.8$ to $-0.6$. Symmetric wins on *speed*, because $z=0$ removes an addition from the innermost loop of the matrix multiply. This is the entire debate, and it is decided by hardware, not by mathematics.
 
@@ -380,7 +380,7 @@ The last column is the honest accounting: each fp16 scale costs 16 bits, spread 
 - **LLM.int8():** decompose — keep outlier channels in fp16, quantize the rest to int8. Exact where it matters.
 - **SmoothQuant:** migrate the difficulty from activations to weights with a per-channel rescaling $X\mathrm{diag}(s)^{-1}\cdot\mathrm{diag}(s)W$, which leaves the product unchanged but makes both factors easier to quantize.
 - **AWQ (Activation-aware Weight Quantization):** protect the ~1% of weight channels with the largest *activation* magnitudes by scaling them up before quantization. Fast, calibration-light, very widely used.
-- **GPTQ:** quantize weights column by column, using the inverse Hessian ($H = 2XX^\top$, from a calibration set) to compensate remaining columns for the error already introduced. Solves a layerwise reconstruction problem $\min_{\widehat W}\|WX-\widehat WX\|_F^2$. Excellent at 4-bit and even 3-bit.
+- **GPTQ:** quantize weights column by column, using the inverse Hessian ($H = 2XX^\top$, from a calibration set) to compensate remaining columns for the error already introduced. Solves a layerwise reconstruction problem $`\min_{\widehat W}\|WX-\widehat WX\|_F^2`$. Excellent at 4-bit and even 3-bit.
 
 #### The outlier problem, with numbers
 
@@ -425,11 +425,11 @@ $$\min_{\widehat W}\ \lVert WX-\widehat WX\rVert_F^2$$
 
 - $W$ is the original weight matrix; $\widehat W$ (W-hat) is the quantized replacement.
 - $X$ is a batch of **real activations**, harvested by running a small calibration set — a few hundred sequences — through the model.
-- $\lVert\cdot\rVert_F$ is the Frobenius norm (Ch. 1 §1.1.4): flatten the matrix into one long vector and take its length. Squaring it means "sum of squares of every entry."
+- $`\lVert\cdot\rVert_F`$ is the Frobenius norm (Ch. 1 §1.1.4): flatten the matrix into one long vector and take its length. Squaring it means "sum of squares of every entry."
 
 ▸ **The crucial move is that $X$ appears at all.** The naive approach quantizes $W$ to be close to $W$. GPTQ quantizes $W$ so that **$WX$ is close to $WX$** — it does not care about weights the data never activates, and it cares enormously about weights that sit in the path of common inputs. Rounding is a budget; this decides where to spend it.
 
-**Why a Hessian shows up.** The objective is quadratic in $\widehat W$, and the second derivative of $\lVert(W-\widehat W)X\rVert_F^2$ with respect to the weights is $2XX^\top$. That is the whole derivation. **This is not the Hessian of the training loss** — it is the curvature of *this layer's reconstruction error*, which is a far smaller and completely tractable object: for a layer of width 4096, it is a $4096\times4096$ matrix you can actually invert.
+**Why a Hessian shows up.** The objective is quadratic in $\widehat W$, and the second derivative of $`\lVert(W-\widehat W)X\rVert_F^2`$ with respect to the weights is $2XX^\top$. That is the whole derivation. **This is not the Hessian of the training loss** — it is the curvature of *this layer's reconstruction error*, which is a far smaller and completely tractable object: for a layer of width 4096, it is a $4096\times4096$ matrix you can actually invert.
 
 **What the algorithm does with it.** Quantize the columns one at a time, left to right. Each time you round a column, you have introduced a known error — so use the inverse Hessian to compute how to nudge the *not-yet-quantized* columns to cancel it out.
 
@@ -525,7 +525,7 @@ Option C wins on essentially every benchmark, and it is not close. **The reason 
 
 **Semi-structured (2:4):** exactly 2 of every 4 consecutive weights are zero. ▸ Supported natively by NVIDIA sparse tensor cores for **~2× matmul throughput**. The practical sweet spot.
 
-**SparseGPT / Wanda:** one-shot pruning with no retraining. Wanda's criterion is elegantly simple — prune by $|W_{ij}|\cdot\|X_j\|_2$, i.e. weight magnitude times the input activation norm. Reaches 50% sparsity on large LLMs with minimal loss and no gradient computation at all.
+**SparseGPT / Wanda:** one-shot pruning with no retraining. Wanda's criterion is elegantly simple — prune by $`|W_{ij}|\cdot\|X_j\|_2`$, i.e. weight magnitude times the input activation norm. Reaches 50% sparsity on large LLMs with minimal loss and no gradient computation at all.
 
 ▸ **The empirical regularity:** larger models are more prunable. Redundancy grows with scale, which is consistent with the lottery-ticket and superposition pictures (Ch. 31, 32).
 
@@ -558,11 +558,11 @@ $$4\ \text{weights}\ \longrightarrow\ 2\ \text{values} + 2\times2\ \text{bits of
 
 $$\text{score}_{ij} = \lvert W_{ij}\rvert \cdot \lVert X_j\rVert_2$$
 
-**Read aloud:** *"the importance of the weight in row $i$, column $j$ is its absolute value times the length of the vector of activations that arrive on input $j$."* The $\lVert X_j\rVert_2$ is the $\ell_2$ norm (Ch. 1 §1.1.4) of input feature $j$ measured across a calibration batch — "how loud is this input channel, typically?"
+**Read aloud:** *"the importance of the weight in row $i$, column $j$ is its absolute value times the length of the vector of activations that arrive on input $j$."* The $`\lVert X_j\rVert_2`$ is the $`\ell_2`$ norm (Ch. 1 §1.1.4) of input feature $j$ measured across a calibration batch — "how loud is this input channel, typically?"
 
 **Why the second factor changes everything.** Compare two weights:
 
-| Weight | $\lvert W_{ij}\rvert$ | $\lVert X_j\rVert_2$ | Score | Magnitude pruning says | Wanda says |
+| Weight | $`\lvert W_{ij}\rvert`$ | $`\lVert X_j\rVert_2`$ | Score | Magnitude pruning says | Wanda says |
 |---|---|---|---|---|---|
 | A | 0.50 | 0.1 | 0.05 | **keep** (it's big) | prune |
 | B | 0.05 | 20.0 | 1.00 | **prune** (it's small) | keep |
@@ -609,9 +609,9 @@ $$\mathcal{L} = \alpha\,\tau^2\,\mathrm{KL}\!\left(p_T^{(\tau)}\,\|\,p_S^{(\tau)
 | $\alpha$ | "alpha" | A mixing weight in $[0,1]$: how much you trust the teacher versus the label |
 | $\tau$ | "tau" | **Temperature.** Divide the logits by it before softmax |
 | $\mathrm{KL}(a\|b)$ | "KL of a from b" | Kullback–Leibler divergence (Ch. 1 §1.4) — how much you lose by believing $b$ when the truth is $a$ |
-| $p_T^{(\tau)}$ | "p-T at tau" | The **T**eacher's softened probability distribution |
-| $p_S^{(\tau)}$ | "p-S at tau" | The **S**tudent's, softened the same way |
-| $\mathrm{CE}(y, p_S)$ | "cross-entropy" | The ordinary loss against the true label $y$ |
+| $`p_T^{(\tau)}`$ | "p-T at tau" | The **T**eacher's softened probability distribution |
+| $`p_S^{(\tau)}`$ | "p-S at tau" | The **S**tudent's, softened the same way |
+| $`\mathrm{CE}(y, p_S)`$ | "cross-entropy" | The ordinary loss against the true label $y$ |
 
 **Read the whole thing aloud:** *"Loss equals: some fraction of 'match the teacher's full opinion', plus the remaining fraction of 'get the right answer'."* It is a weighted average of two teachers — one that is right by definition (the label), and one that is merely excellent but far more informative.
 
@@ -624,7 +624,7 @@ $$\mathcal{L} = \alpha\,\tau^2\,\mathrm{KL}\!\left(p_T^{(\tau)}\,\|\,p_S^{(\tau)
 
 At $\tau = 1$, the information about classes 3 and 4 is technically present — their ratio is a perfectly good $2.7$ — but they contribute about two thousandths of the loss, so **the gradient effectively ignores them**. At $\tau=4$ they carry a fifth of the mass and materially steer training.
 
-▸ **This is what "dark knowledge" means, and the name is well chosen: the information was always there, it was just too faint to see.** Temperature is a telescope. A hard label says "the answer is B" — that is $\log_2 4 = 2$ bits. The soft distribution says "B, with C nearby and D absurd," which encodes something about the *geometry of the problem*: which classes are confusable, and therefore what features actually distinguish them. That is why a student trained on soft targets often beats an identical student trained on the ground-truth labels alone.
+▸ **This is what "dark knowledge" means, and the name is well chosen: the information was always there, it was just too faint to see.** Temperature is a telescope. A hard label says "the answer is B" — that is $`\log_2 4 = 2`$ bits. The soft distribution says "B, with C nearby and D absurd," which encodes something about the *geometry of the problem*: which classes are confusable, and therefore what features actually distinguish them. That is why a student trained on soft targets often beats an identical student trained on the ground-truth labels alone.
 
 > **Analogy.** Two ways to be taught for a multiple-choice exam. Teacher one hands back your paper marked "the answer was B." Teacher two says "B — and I can see why you picked C, they differ only in the second clause; D was never in the running." **The second teacher is transmitting the structure of the subject, not just the answer key.** After a hundred questions the first student has memorized a hundred answers and the second has learned the subject.
 
@@ -632,7 +632,7 @@ At $\tau = 1$, the information about classes 3 and 4 is technically present — 
 
 The book's explanation is exact; here is the same argument slowly.
 
-**One factor of $1/\tau$ comes from the chain rule.** The student's softened distribution is $\mathrm{softmax}(z_S/\tau)$. Differentiating with respect to the *raw* logits $z_S$ means differentiating through the division by $\tau$, which drops a $1/\tau$ out front. Mechanical.
+**One factor of $1/\tau$ comes from the chain rule.** The student's softened distribution is $`\mathrm{softmax}(z_S/\tau)`$. Differentiating with respect to the *raw* logits $`z_S`$ means differentiating through the division by $\tau$, which drops a $1/\tau$ out front. Mechanical.
 
 **The second factor of $1/\tau$ comes from the probabilities themselves.** At large $\tau$ every softened probability approaches uniform, $1/K$, and expanding to first order gives roughly
 
@@ -652,7 +652,7 @@ so the *differences* between teacher and student probabilities — which is what
 - **Sequence-level KD:** for generative models, train the student on the teacher's *generated sequences* — usually more effective than token-level KL, because it fixes exposure bias too.
 - **On-policy / GKD:** compute the KL on the *student's own* samples, which fixes the train/inference distribution mismatch.
 - **Self-distillation:** teacher and student are the same size; still improves accuracy, which is evidence that the effect is regularization rather than compression.
-- **Reverse KL** $\mathrm{KL}(p_S\|p_T)$ is mode-seeking (Ch. 1 §1.4.1) and often preferable for generation, where you want the student to be sharp rather than to smear over everything the teacher considers possible.
+- **Reverse KL** $`\mathrm{KL}(p_S\|p_T)`$ is mode-seeking (Ch. 1 §1.4.1) and often preferable for generation, where you want the student to be sharp rather than to smear over everything the teacher considers possible.
 
 ---
 
@@ -680,18 +680,18 @@ $$W' = W_0 + \Delta W = W_0 + \frac{\alpha}{r}BA$$
 
 | Symbol | Shape | What it is |
 |---|---|---|
-| $W_0$ | $d\times k$ | The **frozen** pretrained weight matrix. Never updated. Read-only |
+| $`W_0`$ | $d\times k$ | The **frozen** pretrained weight matrix. Never updated. Read-only |
 | $\Delta W$ | $d\times k$ | "Delta W" — the *change* you want to make (§0.4) |
 | $B$ | $d\times r$ | A tall thin matrix. Trainable |
 | $A$ | $r\times k$ | A short wide matrix. Trainable |
 | $r$ | scalar | The **rank** — the width of the bottleneck. Typically 8–64 |
 | $\alpha$ | scalar | A scaling constant. *Not* the distillation $\alpha$; same letter, unrelated job |
 
-**Shape check** (Ch. 0 §0.8): $(d\times r)(r\times k) = d\times k$. The inner $r$'s match and vanish; $d$ and $k$ survive. So $BA$ has exactly the same shape as $W_0$ and can be added to it. ✓
+**Shape check** (Ch. 0 §0.8): $(d\times r)(r\times k) = d\times k$. The inner $r$'s match and vanish; $d$ and $k$ survive. So $BA$ has exactly the same shape as $`W_0`$ and can be added to it. ✓
 
 ▸ **The rank $r$ is a bottleneck the update must squeeze through**, and everything about LoRA follows from that. From Ch. 1 §1.1.3, a matrix of rank $r$ is a sum of $r$ rank-one pieces — $r$ simple patterns, each scaled. **So LoRA says: whatever fine-tuning needs to do to this layer, it can be written as eight patterns.** The claim is empirical and it holds remarkably well.
 
-> **Analogy.** A printed map and a sheet of tracing paper laid over it. The map ($W_0$) is expensive to produce and you never redraw it. Everything you learn about the new city — one-way streets, closures, your favourite café — goes onto the tracing paper, which costs nothing and can be swapped for a different sheet when you fly somewhere else. And when you finally want a single clean map, you **merge**: press the two together and print once. That is the "zero inference cost" bullet — after training you compute $W_0 + \frac{\alpha}{r}BA$ once, store the result, and the model is indistinguishable from a fully fine-tuned one at runtime.
+> **Analogy.** A printed map and a sheet of tracing paper laid over it. The map ($`W_0`$) is expensive to produce and you never redraw it. Everything you learn about the new city — one-way streets, closures, your favourite café — goes onto the tracing paper, which costs nothing and can be swapped for a different sheet when you fly somewhere else. And when you finally want a single clean map, you **merge**: press the two together and print once. That is the "zero inference cost" bullet — after training you compute $`W_0 + \frac{\alpha}{r}BA`$ once, store the result, and the model is indistinguishable from a fully fine-tuned one at runtime.
 
 **Now the parameter count, worked.** With $d = k = 4096$ and $r = 8$:
 
@@ -717,7 +717,7 @@ $$\frac{\partial\mathcal{L}}{\partial A} = B^\top\frac{\partial\mathcal{L}}{\par
 - Apply to **all** linear layers (Q, K, V, O, and the FFN), not just Q and V. This matters more than the rank.
 - $r=8$–64 is typical; higher $r$ helps for tasks requiring new knowledge rather than new style.
 - $\alpha/r$ is the effective scale; $\alpha=2r$ is a common default. Note that with this parameterization, the LR needed varies with $r$ — **rsLoRA** uses $\alpha/\sqrt r$ to fix this.
-- **Zero inference cost:** merge $W_0 + \frac\alpha r BA$ into a single matrix after training.
+- **Zero inference cost:** merge $`W_0 + \frac\alpha r BA`$ into a single matrix after training.
 - Many adapters can be hot-swapped on one base model — the basis of multi-tenant serving.
 
 **QLoRA:** base model in **NF4** (a 4-bit format whose levels are the quantiles of a normal distribution — information-theoretically optimal for normally distributed weights), LoRA adapters in bf16, plus double quantization of the scales and paged optimizers. Enables fine-tuning a 65B model on a single 48 GB GPU.
@@ -779,7 +779,7 @@ A uniform int4 grid spreads its 16 levels evenly across the range, say $-1.0, -0
 
 Combine multiple fine-tuned models **without any retraining**.
 
-**Task arithmetic.** Define a task vector $\tau_i = \theta_i^{\text{FT}} - \theta^{\text{pre}}$. Then
+**Task arithmetic.** Define a task vector $`\tau_i = \theta_i^{\text{FT}} - \theta^{\text{pre}}`$. Then
 ▸ $$\theta_{\text{merged}} = \theta^{\text{pre}} + \sum_i\lambda_i\tau_i$$
 
 Remarkably, this works: adding task vectors composes capabilities, and **negating** one ($-\tau$) reliably *removes* a behaviour (used for detoxification and unlearning). That such simple vector arithmetic works in a 10-billion-dimensional non-convex space is a  surprising empirical fact, and it's evidence for the linear-mode-connectivity picture in Ch. 31.
@@ -798,13 +798,13 @@ Remarkably, this works: adding task vectors composes capabilities, and **negatin
 
 $$\tau_i = \theta_i^{\text{FT}} - \theta^{\text{pre}}, \qquad \theta_{\text{merged}} = \theta^{\text{pre}} + \sum_i\lambda_i\tau_i$$
 
-**The symbols.** $\theta^{\text{pre}}$ ("theta pre") is the pretrained parameter vector — every weight in the model, flattened into one enormous list. $\theta_i^{\text{FT}}$ is the same list after fine-tuning on task $i$. $\tau_i$ is their difference — **a direction in weight space**. $\lambda_i$ ("lambda") is how strongly to apply it, usually somewhere between 0.3 and 1.0. And $\sum_i$ is the ordinary loop from §0.3.
+**The symbols.** $\theta^{\text{pre}}$ ("theta pre") is the pretrained parameter vector — every weight in the model, flattened into one enormous list. $`\theta_i^{\text{FT}}`$ is the same list after fine-tuning on task $i$. $`\tau_i`$ is their difference — **a direction in weight space**. $`\lambda_i`$ ("lambda") is how strongly to apply it, usually somewhere between 0.3 and 1.0. And $`\sum_i`$ is the ordinary loop from §0.3.
 
 ⚠ **Note the collision:** $\tau$ meant *temperature* in §17.6 and means *task vector* here. Same Greek letter, two unrelated jobs, three sections apart. This is normal and the book flags it because context is your only guide.
 
 **Read the first equation aloud:** *"the task vector is fine-tuned minus pretrained"* — that is, **everything that fine-tuning did, and nothing else.** The second: *"start from the pretrained model and add some amount of each task's changes."*
 
-> **Analogy.** Version control. $\theta^{\text{pre}}$ is the main branch, and $\tau_i$ is a **patch** — a diff describing exactly what one contributor changed. Adding two patches applies both sets of edits. Applying a patch with $\lambda = 0.5$ is a half-strength edit. And **negating a patch reverts the commit** — which is precisely how $-\tau$ is used to remove a behaviour a model learned. The remarkable claim of task arithmetic is that a 7-billion-dimensional patch, produced by thousands of steps of stochastic gradient descent through a wildly non-convex landscape, behaves like a well-mannered vector you can add, scale, and subtract.
+> **Analogy.** Version control. $\theta^{\text{pre}}$ is the main branch, and $`\tau_i`$ is a **patch** — a diff describing exactly what one contributor changed. Adding two patches applies both sets of edits. Applying a patch with $\lambda = 0.5$ is a half-strength edit. And **negating a patch reverts the commit** — which is precisely how $-\tau$ is used to remove a behaviour a model learned. The remarkable claim of task arithmetic is that a 7-billion-dimensional patch, produced by thousands of steps of stochastic gradient descent through a wildly non-convex landscape, behaves like a well-mannered vector you can add, scale, and subtract.
 
 ▸ **Why " surprising" is not an overstatement.** Nothing about training guarantees this. Two fine-tuning runs explore different regions of a landscape with no linear structure; there is no theorem saying their displacements should compose. That subtracting a toxicity task vector reliably makes a model less toxic — without retraining, without data, by *arithmetic* — is an empirical discovery about the geometry of trained networks, and it is one of the main pieces of evidence for the linear-mode-connectivity picture of Ch. 31: fine-tuning from a shared starting point stays inside one broad, flat basin, and inside a basin, the landscape is locally linear enough for vector algebra to mean something.
 

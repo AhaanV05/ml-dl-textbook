@@ -11,22 +11,22 @@ Skim this once now; every entry is unpacked properly where it first appears.
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $G=(V,E)$ | "G equals V, E" | A **graph**: a bag of nodes $V$ and a bag of edges $E$ joining them |
-| $A$ | "the adjacency matrix" | An $n\times n$ grid of 0s and 1s; $A_{ij}=1$ means "node $i$ is wired to node $j$" |
-| $d_i$ | "the degree of i" | How many neighbours node $i$ has — the row sum $\sum_j A_{ij}$ |
-| $D=\mathrm{diag}(d_i)$ | "the degree matrix" | The degrees laid down the diagonal, zeros everywhere else |
+| $A$ | "the adjacency matrix" | An $n\times n$ grid of 0s and 1s; $`A_{ij}=1`$ means "node $i$ is wired to node $j$" |
+| $`d_i`$ | "the degree of i" | How many neighbours node $i$ has — the row sum $`\sum_j A_{ij}`$ |
+| $`D=\mathrm{diag}(d_i)`$ | "the degree matrix" | The degrees laid down the diagonal, zeros everywhere else |
 | $L = D-A$ | "the graph Laplacian" | "Your own degree, minus your neighbours" — a difference operator on the graph |
-| $L_{\text{sym}}$ | "the symmetric normalized Laplacian" | The same operator rescaled so popular nodes don't shout down quiet ones |
+| $`L_{\text{sym}}`$ | "the symmetric normalized Laplacian" | The same operator rescaled so popular nodes don't shout down quiet ones |
 | $\mathcal{N}(i)$ | "the neighbourhood of i" | The set of nodes directly wired to $i$ |
 | $P$ | "a permutation matrix" | A relabelling: exactly one 1 per row and per column, zeros elsewhere |
 | $PAP^\top$ | "P A P transpose" | The very same graph, with its nodes renumbered |
 | $X \in \mathbb{R}^{n\times d}$ | "X in R n-by-d" | Node features: one row of $d$ numbers per node |
-| $h_i^{(l)}$ | "h-i at layer l" | Node $i$'s hidden vector after $l$ rounds of message passing |
-| $m_{ij}$ | "the message from j to i" | What neighbour $j$ posts to node $i$ this round |
+| $`h_i^{(l)}`$ | "h-i at layer l" | Node $i$'s hidden vector after $l$ rounds of message passing |
+| $`m_{ij}`$ | "the message from j to i" | What neighbour $j$ posts to node $i$ this round |
 | $\bigoplus$ | "the aggregator" | Any operation that ignores the order of its inputs — sum, mean, max |
 | $\tilde A = A+I$ | "A-tilde" | The adjacency matrix with a **self-loop** bolted onto every node |
-| $\alpha_{ij}$ | "alpha-i-j" | An attention weight — how much node $i$ chooses to listen to node $j$ |
-| $\vec r_i \in \mathbb{R}^3$ | "r-vector-i" | Node $i$'s position in 3-D space (an atom's coordinates) |
-| $\lambda_2$ | "lambda-two" | The second-largest eigenvalue — it governs how fast information spreads |
+| $`\alpha_{ij}`$ | "alpha-i-j" | An attention weight — how much node $i$ chooses to listen to node $j$ |
+| $`\vec r_i \in \mathbb{R}^3`$ | "r-vector-i" | Node $i$'s position in 3-D space (an atom's coordinates) |
+| $`\lambda_2`$ | "lambda-two" | The second-largest eigenvalue — it governs how fast information spreads |
 
 ### Full forms of every abbreviation in this chapter
 
@@ -117,7 +117,7 @@ Two words that sound like synonyms and mean  different things. Both are worth be
 **Now the symbols.** A **permutation matrix** $P$ is a relabelling machine: it has exactly one $1$ in every row and every column and zeros everywhere else. Multiplying by it shuffles rows; multiplying by $P^\top$ on the right shuffles columns.
 
 - $PX$ — "shuffle the rows of the feature table," i.e. renumber the nodes.
-- $PAP^\top$ — "shuffle **both** the rows and the columns of the adjacency matrix." Both, because $A_{ij}$ refers to node $i$ *and* node $j$; renumber the nodes and both indices have to move together.
+- $PAP^\top$ — "shuffle **both** the rows and the columns of the adjacency matrix." Both, because $`A_{ij}`$ refers to node $i$ *and* node $j$; renumber the nodes and both indices have to move together.
 
 **A concrete two-node example.** Take a graph with one edge between node 1 and node 2, and swap the labels:
 
@@ -140,30 +140,30 @@ The adjacency matrix came back unchanged, because "node 1 is joined to node 2" s
 
 Every aggregation step in the rest of this chapter must be one of these, so it is worth being able to sort candidates by eye.
 
-**✅  permutation-invariant** functions of a bag of vectors $\{v_1,\dots,v_k\}$
+**✅  permutation-invariant** functions of a bag of vectors $`\{v_1,\dots,v_k\}`$
 
 | Example | Why it qualifies |
 |---|---|
-| $\sum_j v_j$ | Addition is commutative — reorder the summands, same total |
-| $\frac{1}{k}\sum_j v_j$ | The same, divided by a count that also does not depend on order |
-| $\max_j v_j$, elementwise | The largest entry is the largest entry however you list them |
-| $\sum_j \alpha_j v_j$ with $\alpha_j=\mathrm{softmax}_j(f(v_j))$ | Each weight is computed **from its own vector**, then summed — this is GAT's aggregation |
-| $\log\sum_j e^{v_j}$ (log-sum-exp) | A smooth maximum; still a sum underneath |
-| $\big(\sum_j v_j,\ \max_j v_j,\ \min_j v_j\big)$ concatenated | Concatenating *several invariant summaries* is fine — nothing is indexed by $j$ |
+| $`\sum_j v_j`$ | Addition is commutative — reorder the summands, same total |
+| $`\frac{1}{k}\sum_j v_j`$ | The same, divided by a count that also does not depend on order |
+| $`\max_j v_j`$, elementwise | The largest entry is the largest entry however you list them |
+| $`\sum_j \alpha_j v_j`$ with $`\alpha_j=\mathrm{softmax}_j(f(v_j))`$ | Each weight is computed **from its own vector**, then summed — this is GAT's aggregation |
+| $`\log\sum_j e^{v_j}`$ (log-sum-exp) | A smooth maximum; still a sum underneath |
+| $`\big(\sum_j v_j,\ \max_j v_j,\ \min_j v_j\big)`$ concatenated | Concatenating *several invariant summaries* is fine — nothing is indexed by $j$ |
 
 **❌ Near-misses — look order-agnostic, but aren't**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| $[\,v_1 \Vert v_2 \Vert v_3\,]$ | $[v_1\Vert v_2]\neq[v_2\Vert v_1]$ — position inside the vector *is* the ordering | A set-to-sequence operation; it needs a canonical order you do not have |
+| $`[\,v_1 \Vert v_2 \Vert v_3\,]`$ | $`[v_1\Vert v_2]\neq[v_2\Vert v_1]`$ — position inside the vector *is* the ordering | A set-to-sequence operation; it needs a canonical order you do not have |
 | "Take the first neighbour" | Depends entirely on which one your data loader happened to list first | Reading the file system as though it were chemistry |
 | Sort the neighbours by norm, then run an LSTM | Sorting is invariant only if the sort key breaks all ties — equal vectors leave the order undetermined | Invariant *in expectation* at best. GraphSAGE's LSTM aggregator handles this by shuffling every pass |
-| Weights $\alpha_j$ read from a lookup table indexed by $j$ | The weight depends on the **label** $j$, not on $v_j$ | A per-position weight — exactly what a CNN may do and a GNN may not |
-| Subtract $v_1$ from every other neighbour | Singles out one element by index | A choice of origin, which the numbering was not entitled to make |
+| Weights $`\alpha_j`$ read from a lookup table indexed by $j$ | The weight depends on the **label** $j$, not on $`v_j`$ | A per-position weight — exactly what a CNN may do and a GNN may not |
+| Subtract $`v_1`$ from every other neighbour | Singles out one element by index | A choice of origin, which the numbering was not entitled to make |
 
 ▸ **The boundary:** a function is permutation-invariant when **every input reaches the output through the same channel** — no input can be reached *by its position*. The reliable test is a code test: write the operation as a loop accumulating into one running total, touching each element with identical code. If your loop needs `j` for anything other than fetching `v[j]`, it is not invariant.
 
-**What would break, concretely.** Take a nitrogen atom with three hydrogen neighbours whose feature vectors are $h_a,h_b,h_c$. Sum gives $h_a+h_b+h_c$ no matter how the loader ordered them. Concatenation gives one of $3!=6$ different vectors depending on the ordering, so **the same ammonia molecule produces six different predictions** — and during training the model would spend its capacity trying to make those six agree, learning by brute force a fact you could have made true by construction.
+**What would break, concretely.** Take a nitrogen atom with three hydrogen neighbours whose feature vectors are $`h_a,h_b,h_c`$. Sum gives $`h_a+h_b+h_c`$ no matter how the loader ordered them. Concatenation gives one of $3!=6$ different vectors depending on the ordering, so **the same ammonia molecule produces six different predictions** — and during training the model would spend its capacity trying to make those six agree, learning by brute force a fact you could have made true by construction.
 
 > **Common misconception.** *"A permutation-invariant model can't do node-level prediction — if the output doesn't change when you shuffle the nodes, how can it say anything about a particular node?"* The invariance is demanded at the **graph** level; at the **node** level the requirement is equivariance, which is a different condition. A node classifier returns $n$ predictions; shuffle the input and you get the same $n$ predictions, shuffled the same way. Nothing about individual nodes is lost. The belief is tempting because "invariant" sounds like "blind to individuals" — but the only thing discarded is the arbitrary numbering: the labels on the filing cabinet, not the files.
 
@@ -173,8 +173,8 @@ Every aggregation step in the rest of this chapter must be one of these, so it i
 
 ### Notation
 
-$G=(V,E)$, adjacency $A$, degree $D=\mathrm{diag}(d_i)$, node features $X\in\mathbb{R}^{n\times d}$, neighbourhood $\mathcal{N}(i)$.
-**Laplacian:** $L = D-A$; normalized $L_{\text{sym}}=I-D^{-1/2}AD^{-1/2}$, with eigenvalues in $[0,2]$.
+$G=(V,E)$, adjacency $A$, degree $`D=\mathrm{diag}(d_i)`$, node features $X\in\mathbb{R}^{n\times d}$, neighbourhood $\mathcal{N}(i)$.
+**Laplacian:** $L = D-A$; normalized $`L_{\text{sym}}=I-D^{-1/2}AD^{-1/2}`$, with eigenvalues in $[0,2]$.
 
 #### The graph vocabulary, with a worked example
 
@@ -186,7 +186,7 @@ $$A = \begin{pmatrix} 0&1&0 \\ 1&0&1 \\ 0&1&0\end{pmatrix}$$
 
 Read row 2: "node 2 is joined to node 1 and node 3." The diagonal is zero because no node is joined to itself. The matrix is symmetric because the graph is undirected — friendship goes both ways.
 
-**The degree $d_i$** — how many neighbours node $i$ has, which is simply that node's row sum. Here $d_1=1$, $d_2=2$, $d_3=1$. The two end nodes have one neighbour each; the middle node has two.
+**The degree $`d_i`$** — how many neighbours node $i$ has, which is simply that node's row sum. Here $`d_1=1`$, $`d_2=2`$, $`d_3=1`$. The two end nodes have one neighbour each; the middle node has two.
 
 **The degree matrix $D$** — those numbers on the diagonal and nothing else:
 
@@ -204,7 +204,7 @@ $$(Lx)_i = d_i x_i - \sum_{j\in\mathcal{N}(i)} x_j = \sum_{j \in \mathcal{N}(i)}
 
 > **Analogy.** Heat in a metal rod. The Laplacian is the operator that says "heat flows from hot spots to cold spots at a rate proportional to the temperature difference." Every node compares itself with its neighbours and the imbalance is the driving force. A uniform temperature gives zero flow, which is exactly $Lx=0$ for constant $x$. **The graph Laplacian is the discrete version of the second-derivative operator $\nabla^2$ from physics**, which is where the name comes from — Pierre-Simon Laplace's operator, transplanted from continuous space onto a network.
 
-**Why the "normalized" version exists.** In the raw Laplacian, a celebrity node with 10,000 followers produces enormous entries while a node with 2 neighbours produces tiny ones — the scale of the operator depends on how popular you are. $L_{\text{sym}} = I - D^{-1/2}AD^{-1/2}$ divides out the degrees, so that entry $(i,j)$ carries a factor $1/\sqrt{d_i d_j}$ instead of a raw count.
+**Why the "normalized" version exists.** In the raw Laplacian, a celebrity node with 10,000 followers produces enormous entries while a node with 2 neighbours produces tiny ones — the scale of the operator depends on how popular you are. $`L_{\text{sym}} = I - D^{-1/2}AD^{-1/2}`$ divides out the degrees, so that entry $(i,j)$ carries a factor $`1/\sqrt{d_i d_j}`$ instead of a raw count.
 
 ▸ **The payoff is the guarantee "eigenvalues in $[0,2]$."** The eigenvalues of the raw $L$ can be as large as the maximum degree, which for a social network might be $10^5$. Normalizing pins the whole spectrum into a fixed window regardless of the graph. That matters because you are about to *stack* these operators, and §1.1.2's $\lambda^k$ argument says anything with an eigenvalue above 1 explodes with depth. **Bounded spectrum is the licence to build a deep model.**
 
@@ -217,11 +217,11 @@ $$(Lx)_i = d_i x_i - \sum_{j\in\mathcal{N}(i)} x_j = \sum_{j \in \mathcal{N}(i)}
 
 | Fact | How you get it | On the path $1-2-3$ |
 |---|---|---|
-| Node $i$'s degree | The diagonal entry $L_{ii}$ | $L_{22}=2$ — the middle node has two neighbours |
-| Whether $i$ and $j$ are adjacent | $L_{ij}=-1$ if joined, $0$ if not | $L_{13}=0$: the two ends are not joined |
-| Total disagreement of a signal | $x^\top L x=\sum_{(i,j)\in E}(x_i-x_j)^2$ | $x=(10,0,10)$ gives $100+100=200$ |
+| Node $i$'s degree | The diagonal entry $`L_{ii}`$ | $`L_{22}=2`$ — the middle node has two neighbours |
+| Whether $i$ and $j$ are adjacent | $`L_{ij}=-1`$ if joined, $0$ if not | $`L_{13}=0`$: the two ends are not joined |
+| Total disagreement of a signal | $`x^\top L x=\sum_{(i,j)\in E}(x_i-x_j)^2`$ | $x=(10,0,10)$ gives $100+100=200$ |
 | The number of connected components | The multiplicity of eigenvalue $0$ | Multiplicity 1 — the path is connected |
-| How bottlenecked the graph is | $\lambda_2$, the spectral gap (§29.5) | Small for a long chain, large for a clique |
+| How bottlenecked the graph is | $`\lambda_2`$, the spectral gap (§29.5) | Small for a long chain, large for a clique |
 | The number of spanning trees | Delete any row and column, take the determinant | $1$ — a path is its own only spanning tree |
 
 **❌ Near-misses — things people expect $L$ to know, and it doesn't**
@@ -229,16 +229,16 @@ $$(Lx)_i = d_i x_i - \sum_{j\in\mathcal{N}(i)} x_j = \sum_{j \in \mathcal{N}(i)}
 | Assumed | Why it fails | What it actually is |
 |---|---|---|
 | "$L$ encodes distances between nodes" | $L$ has one entry per **edge** — it is a one-hop object | Distances live in $L^k$ and in the *spectrum*, not in a single entry |
-| "$L_{ij}=-1$ means $i$ and $j$ are far apart" | The minus sign is subtraction, not distance | $-1$ means **adjacent**; $0$ means not adjacent |
-| "The biggest eigenvalue counts the nodes" | $\lambda_{\max}\le 2\max_i d_i$, which has nothing to do with $n$ | A bound on the sharpest oscillation the graph supports |
+| "$`L_{ij}=-1`$ means $i$ and $j$ are far apart" | The minus sign is subtraction, not distance | $-1$ means **adjacent**; $0$ means not adjacent |
+| "The biggest eigenvalue counts the nodes" | $`\lambda_{\max}\le 2\max_i d_i`$, which has nothing to do with $n$ | A bound on the sharpest oscillation the graph supports |
 | "$L$ is invertible, so smoothing can be undone" | $L\mathbf{1}=\mathbf{0}$ always — $L$ is **singular** on every graph | The constant signal is in the null space, which is the mathematical form of over-smoothing (§29.5) |
-| "$L_{\text{sym}}$ is $L$ with the numbers made prettier" | The rescaling changes which operator you iterate, and so changes the fixed point | A different operator with a bounded spectrum — the thing that makes depth legal |
+| "$`L_{\text{sym}}`$ is $L$ with the numbers made prettier" | The rescaling changes which operator you iterate, and so changes the fixed point | A different operator with a bounded spectrum — the thing that makes depth legal |
 
 ▸ **The boundary:** $L$ is a strictly **local** operator — one number per edge — whose *powers and eigenvalues* encode global structure. Anything you can extract from a single multiplication by $L$ is a one-hop fact. Everything global costs you either a power of $L$ or an eigendecomposition.
 
-**What would break, in numbers.** Take a social graph whose most-followed account has $d_{\max}=10^5$. The raw Laplacian then has eigenvalues up to about $2\times10^5$. Stack three layers of it and §1.1.2's $\lambda^k$ argument predicts amplification of roughly $(2\times10^5)^3 = 8\times10^{15}$ before a single weight has been trained — every activation overflows fp16 on layer one. Normalizing pins the whole spectrum into $[0,2]$ regardless of how popular anyone is. **The normalization is not cosmetic; it is the difference between a network that runs and one that returns `NaN`.**
+**What would break, in numbers.** Take a social graph whose most-followed account has $`d_{\max}=10^5`$. The raw Laplacian then has eigenvalues up to about $2\times10^5$. Stack three layers of it and §1.1.2's $\lambda^k$ argument predicts amplification of roughly $(2\times10^5)^3 = 8\times10^{15}$ before a single weight has been trained — every activation overflows fp16 on layer one. Normalizing pins the whole spectrum into $[0,2]$ regardless of how popular anyone is. **The normalization is not cosmetic; it is the difference between a network that runs and one that returns `NaN`.**
 
-**And a second thing that breaks.** $L_{\text{sym}}=I-D^{-1/2}AD^{-1/2}$ needs $d_i>0$ for every node, because $D^{-1/2}$ takes $1/\sqrt{d_i}$. An **isolated node** — a molecule fragment with no bonds, a user with no friends — has $d_i=0$ and the expression divides by zero. This is not hypothetical: it is one of the two or three most common runtime errors in graph libraries, and it is the second reason (after spectral stability) that the GCN's self-loop trick $\tilde A=A+I$ exists. With self-loops, $\tilde d_i \ge 1$ always.
+**And a second thing that breaks.** $`L_{\text{sym}}=I-D^{-1/2}AD^{-1/2}`$ needs $`d_i>0`$ for every node, because $D^{-1/2}$ takes $`1/\sqrt{d_i}`$. An **isolated node** — a molecule fragment with no bonds, a user with no friends — has $`d_i=0`$ and the expression divides by zero. This is not hypothetical: it is one of the two or three most common runtime errors in graph libraries, and it is the second reason (after spectral stability) that the GCN's self-loop trick $\tilde A=A+I$ exists. With self-loops, $`\tilde d_i \ge 1`$ always.
 
 > **Where the graph Laplacian came from.** **Gustav Kirchhoff** wrote this matrix down in 1847, while analysing electrical circuits — the same Kirchhoff of Kirchhoff's current and voltage laws. He proved what is now called the **matrix-tree theorem**: delete any one row and column from $L$, take the determinant, and you get the exact number of spanning trees of the network. He was counting current paths, not doing data analysis, and the object is still sometimes called the Kirchhoff matrix. Graph theory itself begins a century earlier with **Leonhard Euler's** 1736 paper on the **Seven Bridges of Königsberg**, in which he proved you cannot walk a route crossing each of the city's seven bridges exactly once. Euler's insight was that the shapes and distances were irrelevant — only *what connects to what* mattered. That deliberate throwing-away of geometry is the founding act of the whole field, and it is precisely why a GNN is allowed to ignore how you drew the picture.
 
@@ -267,11 +267,11 @@ The recipe is always three steps: **transform → multiply → transform back.**
 |---|---|---|
 | $L = U\Lambda U^\top$ | "eigendecompose the Laplacian" | Find the graph's natural vibration patterns (§1.1.2) |
 | $U^\top x$ | "U transpose x" | **Forward transform.** Rewrite the node signal in terms of those patterns |
-| $g_\theta(\Lambda)$ | "g-theta of Lambda" | **The filter.** A learned number multiplying each pattern — turn this frequency up, that one down |
+| $`g_\theta(\Lambda)`$ | "g-theta of Lambda" | **The filter.** A learned number multiplying each pattern — turn this frequency up, that one down |
 | $U$ | "U" | **Inverse transform.** Convert back to per-node values |
 | $\star$ | "convolved with" | The operation being defined |
 
-**What are the "frequencies" of a graph?** The Laplacian's eigenvectors, sorted by eigenvalue. Recall from the worked example above that $x^\top L x = \sum_{(i,j)\in E}(x_i-x_j)^2$ measures total disagreement across edges. So:
+**What are the "frequencies" of a graph?** The Laplacian's eigenvectors, sorted by eigenvalue. Recall from the worked example above that $`x^\top L x = \sum_{(i,j)\in E}(x_i-x_j)^2`$ measures total disagreement across edges. So:
 
 - **Small $\lambda$** → eigenvectors that vary *slowly* across the graph. Neighbours hold similar values. **Low frequency = smooth.**
 - **Large $\lambda$** → eigenvectors that flip sign between adjacent nodes. **High frequency = jagged.**
@@ -282,14 +282,14 @@ The recipe is always three steps: **transform → multiply → transform back.**
 
 - **$O(n^3)$ eigendecomposition.** For a social graph with $n = 10^6$ nodes, that is $10^{18}$ operations — days on a fast machine. Worse, $U$ itself is $n\times n$: $10^{12}$ numbers, **4 terabytes in fp32.** You cannot even store the answer.
 - **$O(n^2)$ multiplication** per filter application, per layer. Also hopeless at scale.
-- **Filters are not localized.** $g_\theta(\Lambda)$ is free to do anything to any frequency, and a generic frequency-domain filter is *global* in node space — one node's value can influence a node on the far side of the graph. That throws away the locality prior that makes convolution work on images in the first place.
+- **Filters are not localized.** $`g_\theta(\Lambda)`$ is free to do anything to any frequency, and a generic frequency-domain filter is *global* in node space — one node's value can influence a node on the far side of the graph. That throws away the locality prior that makes convolution work on images in the first place.
 - **The eigenbasis is graph-specific.** $U$ is computed from *this* graph. Train a filter on caffeine and it is expressed in caffeine's vibration modes, which are meaningless for aspirin. **Nothing transfers.** For molecular machine learning, where every training example is a different graph, this is fatal on its own.
 
 ▸ **The whole rest of the chapter is the retreat from this formula.** ChebNet fixes localization and cost; GCN fixes everything but at the price of expressivity; message passing abandons the spectral picture entirely. The spectral derivation is worth knowing because it explains *why* the surviving formula has the shape it does — but nobody computes a graph Fourier transform in production.
 
 ### ChebNet
 
-Approximate $g_\theta(\Lambda)$ by a degree-$K$ Chebyshev polynomial. Because $L^k$ has support exactly on the $k$-hop neighbourhood, ▸ **a degree-$K$ polynomial filter is automatically $K$-hop localized**, and it needs no eigendecomposition — just $K$ sparse matrix–vector products.
+Approximate $`g_\theta(\Lambda)`$ by a degree-$K$ Chebyshev polynomial. Because $L^k$ has support exactly on the $k$-hop neighbourhood, ▸ **a degree-$K$ polynomial filter is automatically $K$-hop localized**, and it needs no eigendecomposition — just $K$ sparse matrix–vector products.
 
 #### Unpacking the polynomial trick
 
@@ -299,21 +299,21 @@ Two separate ideas are doing the work here. Take them one at a time.
 
 The key observation is about what powers of a matrix mean on a graph:
 
-▸ $(A^k)_{ij}$ **counts the number of walks of length exactly $k$ from node $i$ to node $j$.**
+▸ $`(A^k)_{ij}`$ **counts the number of walks of length exactly $k$ from node $i$ to node $j$.**
 
-Check it on the path $1-2-3$ from above. $A^2$ has $(A^2)_{13} = 1$: there is exactly one 2-step walk from node 1 to node 3, via node 2. And $(A^2)_{11}=1$: you can walk to node 2 and back. But $(A^3)_{14}$ doesn't exist because there's no node 4 — and in general, **if $j$ is more than $k$ hops from $i$, then $(A^k)_{ij}=0$, because no walk that short can get there.**
+Check it on the path $1-2-3$ from above. $A^2$ has $`(A^2)_{13} = 1`$: there is exactly one 2-step walk from node 1 to node 3, via node 2. And $`(A^2)_{11}=1`$: you can walk to node 2 and back. But $`(A^3)_{14}`$ doesn't exist because there's no node 4 — and in general, **if $j$ is more than $k$ hops from $i$, then $`(A^k)_{ij}=0`$, because no walk that short can get there.**
 
 The same is true of $L$, which is built from $A$. So:
 
 | Filter | Reaches | Cost |
 |---|---|---|
-| $c_0 I$ | the node itself | free |
-| $c_0 I + c_1 L$ | 1 hop | one sparse multiply |
-| $c_0I + c_1L + \dots + c_KL^K$ | exactly $K$ hops, no further | $K$ sparse multiplies |
+| $`c_0 I`$ | the node itself | free |
+| $`c_0 I + c_1 L`$ | 1 hop | one sparse multiply |
+| $`c_0I + c_1L + \dots + c_KL^K`$ | exactly $K$ hops, no further | $K$ sparse multiplies |
 
 ▸ **So "restrict the filter to a polynomial of degree $K$" and "make the filter $K$-hop local" are the same instruction.** You do not have to add locality as a constraint — you get it for free by choosing the function class. This is the single most elegant step in the chapter.
 
-**Idea 2 — you never need $U$ again.** A filter $g_\theta(\Lambda)$ that is a polynomial can be moved outside the transform entirely:
+**Idea 2 — you never need $U$ again.** A filter $`g_\theta(\Lambda)`$ that is a polynomial can be moved outside the transform entirely:
 
 $$U\,g_\theta(\Lambda)\,U^\top = U\left(\sum_k c_k \Lambda^k\right)U^\top = \sum_k c_k\, U\Lambda^k U^\top = \sum_k c_k L^k$$
 
@@ -321,13 +321,13 @@ The middle step uses the same cancellation as §1.1.2: $U\Lambda^kU^\top = (U\La
 
 **Concrete cost.** A graph with $n=10^6$ nodes and $10^7$ edges, filter width $K=3$: three sparse multiplies at $10^7$ operations each is $3\times10^7$ operations — versus $10^{18}$ for the eigendecomposition. That is a factor of **thirty billion**.
 
-**Why *Chebyshev* polynomials specifically, rather than just $1, L, L^2, \dots$?** The naive power basis is numerically appalling: $L^k$ for growing $k$ points more and more in the same direction (that is exactly what power iteration exploits, §1.1.2), so the coefficients $c_k$ become wildly ill-conditioned. Chebyshev polynomials are the family that stays maximally spread out over an interval — they minimize the worst-case deviation from zero — and they satisfy a cheap recurrence $T_k(x) = 2xT_{k-1}(x)-T_{k-2}(x)$, so you compute each term from the previous two with one multiply. Same function class, far better arithmetic.
+**Why *Chebyshev* polynomials specifically, rather than just $1, L, L^2, \dots$?** The naive power basis is numerically appalling: $L^k$ for growing $k$ points more and more in the same direction (that is exactly what power iteration exploits, §1.1.2), so the coefficients $`c_k`$ become wildly ill-conditioned. Chebyshev polynomials are the family that stays maximally spread out over an interval — they minimize the worst-case deviation from zero — and they satisfy a cheap recurrence $`T_k(x) = 2xT_{k-1}(x)-T_{k-2}(x)`$, so you compute each term from the previous two with one multiply. Same function class, far better arithmetic.
 
-> **Where Chebyshev polynomials came from.** **Pafnuty Chebyshev** introduced them in the 1850s while working on a problem in mechanical engineering: he was studying **linkages** — the jointed rod mechanisms that convert a steam engine's rotary motion into straight-line motion — and wanted to know how close to a perfect straight line such a mechanism could get. That question is "what polynomial of given degree deviates least from a target, in the worst case?", and its answer is the polynomial family that bears his name. Chebyshev's name is transliterated from Cyrillic in a famously large number of ways — Tchebychev, Tschebyscheff, Chebyshov, and many more — which is why the polynomials are universally written $T_k$ rather than $C_k$: the $T$ comes from the French spelling *Tchebychef*. A notation quirk in modern graph learning is a fossil of 19th-century transliteration practice.
+> **Where Chebyshev polynomials came from.** **Pafnuty Chebyshev** introduced them in the 1850s while working on a problem in mechanical engineering: he was studying **linkages** — the jointed rod mechanisms that convert a steam engine's rotary motion into straight-line motion — and wanted to know how close to a perfect straight line such a mechanism could get. That question is "what polynomial of given degree deviates least from a target, in the worst case?", and its answer is the polynomial family that bears his name. Chebyshev's name is transliterated from Cyrillic in a famously large number of ways — Tchebychev, Tschebyscheff, Chebyshov, and many more — which is why the polynomials are universally written $`T_k`$ rather than $`C_k`$: the $T$ comes from the French spelling *Tchebychef*. A notation quirk in modern graph learning is a fossil of 19th-century transliteration practice.
 
 ### GCN — the first-order simplification
 
-Take $K=1$, set $\lambda_{\max}\approx2$, tie the two coefficients, and add a **renormalization trick** ($\tilde A = A+I$, $\tilde D$ its degree matrix) to keep the spectrum stable under stacking:
+Take $K=1$, set $`\lambda_{\max}\approx2`$, tie the two coefficients, and add a **renormalization trick** ($\tilde A = A+I$, $\tilde D$ its degree matrix) to keep the spectrum stable under stacking:
 
 ▸ $$\boxed{\ H^{(l+1)} = \sigma\!\left(\tilde D^{-1/2}\tilde A\tilde D^{-1/2}H^{(l)}W^{(l)}\right)\ }$$
 
@@ -341,16 +341,16 @@ This one boxed formula is the most-implemented line in all of graph learning, so
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $H^{(l)}$ | "H at layer l" | The whole feature table at layer $l$: $n$ rows (one per node), $d_l$ columns |
-| $W^{(l)}$ | "W at layer l" | A learned $d_l \times d_{l+1}$ matrix, **shared by every node** |
+| $H^{(l)}$ | "H at layer l" | The whole feature table at layer $l$: $n$ rows (one per node), $`d_l`$ columns |
+| $W^{(l)}$ | "W at layer l" | A learned $`d_l \times d_{l+1}`$ matrix, **shared by every node** |
 | $\tilde A = A+I$ | "A-tilde" | Adjacency plus self-loops — "count yourself as your own neighbour" |
-| $\tilde D$ | "D-tilde" | Degrees computed from $\tilde A$, so $\tilde d_i = d_i + 1$ |
+| $\tilde D$ | "D-tilde" | Degrees computed from $\tilde A$, so $`\tilde d_i = d_i + 1`$ |
 | $\tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ | "the propagation matrix" | The mixing recipe: how much of each neighbour each node absorbs |
 | $\sigma$ | "sigma" | The activation function — here it is *not* a standard deviation or a singular value (§0.4) |
 
 ▸ **The reason $W$ is shared across all nodes is the permutation requirement from §29.1.** A per-node weight matrix would be a weight indexed by a node's *label*, which is exactly the arbitrary thing we are forbidden from reading. Weight sharing across nodes is the graph analogue of a CNN sharing one kernel across all pixel positions, and it is forced by the symmetry for exactly the same reason.
 
-**Now run it on the path $1-2-3$.** Add self-loops: $\tilde A$ has ones on the diagonal too, so $\tilde d_1 = 2$, $\tilde d_2 = 3$, $\tilde d_3 = 2$. The propagation matrix $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ has entries $\hat A_{ij} = 1/\sqrt{\tilde d_i \tilde d_j}$ wherever $\tilde A_{ij}=1$:
+**Now run it on the path $1-2-3$.** Add self-loops: $\tilde A$ has ones on the diagonal too, so $`\tilde d_1 = 2`$, $`\tilde d_2 = 3`$, $`\tilde d_3 = 2`$. The propagation matrix $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ has entries $`\hat A_{ij} = 1/\sqrt{\tilde d_i \tilde d_j}`$ wherever $`\tilde A_{ij}=1`$:
 
 $$\hat A = \begin{pmatrix} 1/2 & 1/\sqrt6 & 0 \\ 1/\sqrt6 & 1/3 & 1/\sqrt6 \\ 0 & 1/\sqrt6 & 1/2 \end{pmatrix} \approx \begin{pmatrix} 0.500 & 0.408 & 0 \\ 0.408 & 0.333 & 0.408 \\ 0 & 0.408 & 0.500\end{pmatrix}$$
 
@@ -360,15 +360,15 @@ $$0.408\,h_1 \;+\; 0.333\,h_2 \;+\; 0.408\,h_3$$
 
 **Read that as a sentence: "take 41% of each neighbour and 33% of yourself, and add them up."** No learned parameters are involved in the mixing at all — the mixing weights come entirely from the graph's shape. All the learning lives in $W^{(l)}$, which is applied identically to every node afterwards.
 
-**Why $1/\sqrt{d_i d_j}$ rather than $1/d_i$?** The symmetric form treats the edge, not the node, as the unit. A message crossing an edge is damped by *both* endpoints' popularity — half a discount from the sender, half from the receiver. The consequence is that $\hat A$ stays **symmetric**, which in turn guarantees real eigenvalues and an orthogonal eigenbasis (§1.1.2), which is what makes the depth analysis in §29.5 possible at all. Note it is *not* row-stochastic: row 2 above sums to $1.149$, not $1$. The design chose symmetry over exact averaging.
+**Why $`1/\sqrt{d_i d_j}`$ rather than $`1/d_i`$?** The symmetric form treats the edge, not the node, as the unit. A message crossing an edge is damped by *both* endpoints' popularity — half a discount from the sender, half from the receiver. The consequence is that $\hat A$ stays **symmetric**, which in turn guarantees real eigenvalues and an orthogonal eigenbasis (§1.1.2), which is what makes the depth analysis in §29.5 possible at all. Note it is *not* row-stochastic: row 2 above sums to $1.149$, not $1$. The design chose symmetry over exact averaging.
 
 ▸ **What the renormalization trick actually buys.** Without self-loops, the eigenvalues of the normalized operator live in $[-1, 1]$, and the $-1$ end is a disaster: an eigenvalue near $-1$ raised to the power of the depth *oscillates* rather than decaying, so features flip sign every layer and training destabilizes. Adding $I$ pulls the spectrum away from that boundary — the negative end contracts toward zero — so stacking layers damps signals smoothly instead of ringing. **Kipf and Welling reported this as an empirical trick, and it is the difference between a GCN that trains and one that does not.**
 
-**A tiny numerical sanity check on the self-loop.** Suppose node 2 is a carbon atom whose own feature says "I am carbon" and whose neighbours are both hydrogens. Without the self-loop, node 2's update would be $0.5h_1 + 0.5h_3$ — **pure hydrogen, with the carbon-ness erased.** A node that only listens to its neighbours forgets itself entirely after one layer. The self-loop is not bookkeeping; it is the mechanism by which a node's own identity survives the round.
+**A tiny numerical sanity check on the self-loop.** Suppose node 2 is a carbon atom whose own feature says "I am carbon" and whose neighbours are both hydrogens. Without the self-loop, node 2's update would be $`0.5h_1 + 0.5h_3`$ — **pure hydrogen, with the carbon-ness erased.** A node that only listens to its neighbours forgets itself entirely after one layer. The self-loop is not bookkeeping; it is the mechanism by which a node's own identity survives the round.
 
-> **Common misconception.** *"The GCN learns how much attention to pay to each neighbour."* It learns nothing of the sort. Every mixing coefficient in $\hat A$ is $1/\sqrt{\tilde d_i\tilde d_j}$ — determined entirely by the graph's shape and computed once, before training starts. The only learned object in the layer is $W^{(l)}$, which is applied **identically to every node after the mixing**. The misconception is tempting because the layer is written as one matrix product and everything in a neural network is usually learned; here, half the product is a fixed constant. The architecture that *does* learn neighbour weights is GAT, and the difference between the two is precisely this point.
+> **Common misconception.** *"The GCN learns how much attention to pay to each neighbour."* It learns nothing of the sort. Every mixing coefficient in $\hat A$ is $`1/\sqrt{\tilde d_i\tilde d_j}`$ — determined entirely by the graph's shape and computed once, before training starts. The only learned object in the layer is $W^{(l)}$, which is applied **identically to every node after the mixing**. The misconception is tempting because the layer is written as one matrix product and everything in a neural network is usually learned; here, half the product is a fixed constant. The architecture that *does* learn neighbour weights is GAT, and the difference between the two is precisely this point.
 
-> **Common misconception.** *"The GCN's propagation matrix is a weighted average, so each row sums to 1."* It does not. Row 2 of the worked example sums to $0.408+0.333+0.408=1.149$. The symmetric normalization $1/\sqrt{\tilde d_i \tilde d_j}$ was chosen so that $\hat A$ stays **symmetric** — which buys real eigenvalues and an orthogonal eigenbasis, and is what makes the over-smoothing analysis in §29.5 possible at all. The row-stochastic alternative $\tilde D^{-1}\tilde A$ is a  average and is what GraphSAGE's mean aggregator uses; it is a different design with a different spectrum. **"Averaging" is the right intuition and the wrong arithmetic.**
+> **Common misconception.** *"The GCN's propagation matrix is a weighted average, so each row sums to 1."* It does not. Row 2 of the worked example sums to $0.408+0.333+0.408=1.149$. The symmetric normalization $`1/\sqrt{\tilde d_i \tilde d_j}`$ was chosen so that $\hat A$ stays **symmetric** — which buys real eigenvalues and an orthogonal eigenbasis, and is what makes the over-smoothing analysis in §29.5 possible at all. The row-stochastic alternative $\tilde D^{-1}\tilde A$ is a  average and is what GraphSAGE's mean aggregator uses; it is a different design with a different spectrum. **"Averaging" is the right intuition and the wrong arithmetic.**
 
 #### Examples and non-examples: what one GCN layer can and cannot represent
 
@@ -378,7 +378,7 @@ $$0.408\,h_1 \;+\; 0.333\,h_2 \;+\; 0.408\,h_3$$
 |---|---|
 | "Predict this atom's type from its neighbours' types" | One round of neighbour mixing, then $W$ |
 | "Smooth a noisy per-node signal" | The mixing step *is* Laplacian smoothing — this is its original use |
-| "Detect a node whose neighbourhood differs from itself" | The self-loop keeps $h_i$ available alongside the neighbour average |
+| "Detect a node whose neighbourhood differs from itself" | The self-loop keeps $`h_i`$ available alongside the neighbour average |
 | "Project 1,433 bag-of-words features down to 16" | $W^{(l)}$ is an ordinary dense layer applied per node |
 
 **❌ Near-misses — things a single GCN layer is often assumed to do**
@@ -413,7 +413,7 @@ $$h_i^{(l+1)} = \psi\big(h_i^{(l)},\,a_i^{(l)}\big)$$
 
 These three lines subsume essentially every GNN ever published, so it is worth being able to recite them as a story rather than as algebra.
 
-**The story: a village of gossips.** Every node is a person holding an opinion (its feature vector $h_i$). Each round has three beats:
+**The story: a village of gossips.** Every node is a person holding an opinion (its feature vector $`h_i`$). Each round has three beats:
 
 1. **Compose.** Every person writes a note to each neighbour. The note depends on what they think, what the neighbour thinks, and the nature of their relationship.
 2. **Collect.** Every person gathers the pile of notes they received — *as an unordered pile*, because the order the postman delivered them is not information.
@@ -423,25 +423,25 @@ Repeat $L$ times. That is a graph neural network, completely.
 
 **Now the symbols, line by line.**
 
-**Line 1 — the message.** $m_{ij}^{(l)} = \phi(h_i^{(l)}, h_j^{(l)}, e_{ij})$
+**Line 1 — the message.** $`m_{ij}^{(l)} = \phi(h_i^{(l)}, h_j^{(l)}, e_{ij})`$
 
 - $\phi$ (phi) is a small learned network — usually an MLP (multi-layer perceptron). *"How do I turn a pair of opinions into a note?"*
-- $e_{ij}$ is the **edge feature**: what kind of relationship this is. For a molecule it is the bond type (single, double, aromatic). For a citation graph there may be none, and the term is dropped.
-- Note the subscript order: $m_{ij}$ is the message **from $j$ to $i$**, which is the opposite of what most people guess on first reading. The convention matches $A_{ij}$ — first index is the receiver.
+- $`e_{ij}`$ is the **edge feature**: what kind of relationship this is. For a molecule it is the bond type (single, double, aromatic). For a citation graph there may be none, and the term is dropped.
+- Note the subscript order: $`m_{ij}`$ is the message **from $j$ to $i$**, which is the opposite of what most people guess on first reading. The convention matches $`A_{ij}`$ — first index is the receiver.
 
-**Line 2 — the aggregation.** $a_i^{(l)} = \bigoplus_{j\in\mathcal{N}(i)} m_{ij}^{(l)}$
+**Line 2 — the aggregation.** $`a_i^{(l)} = \bigoplus_{j\in\mathcal{N}(i)} m_{ij}^{(l)}`$
 
 - $\bigoplus$ is a *placeholder* for whichever pooling operation you chose. It is written as a big generic operator precisely because the framework doesn't care which one you pick — only that it satisfies the constraint.
 - $\mathcal{N}(i)$ is the neighbour set, so this is a loop over "everyone wired to me."
 
 ▸ **This single line is where permutation invariance is enforced, and it is the only place it needs to be.** $\phi$ and $\psi$ can be arbitrarily complicated networks and the whole model stays equivariant, provided $\bigoplus$ ignores order. Sum, mean, and max all do. **Concatenation does not** — `[m1, m2]` and `[m2, m1]` are different vectors, so a concatenating aggregator would read the node numbering as data. That is the one design rule you cannot break.
 
-**Line 3 — the update.** $h_i^{(l+1)} = \psi(h_i^{(l)}, a_i^{(l)})$
+**Line 3 — the update.** $`h_i^{(l+1)} = \psi(h_i^{(l)}, a_i^{(l)})`$
 
 - $\psi$ (psi) is another small learned network. *"How do I fold the incoming pile into what I already believed?"*
-- $h_i^{(l)}$ appears on both sides, which is what keeps a node's own identity alive across rounds — the same job the self-loop did in the GCN.
+- $`h_i^{(l)}`$ appears on both sides, which is what keeps a node's own identity alive across rounds — the same job the self-loop did in the GCN.
 
-**Check the GCN against this template.** $\phi(h_i,h_j) = \frac{1}{\sqrt{\tilde d_i\tilde d_j}}h_j$ (the message is just a scaled copy of the neighbour), $\bigoplus$ is sum, and $\psi(h_i,a_i) = \sigma((a_i + \text{self term})W)$. **The GCN is the simplest possible instance of the framework** — which is exactly why the field reorganized around message passing rather than around the spectral derivation.
+**Check the GCN against this template.** $`\phi(h_i,h_j) = \frac{1}{\sqrt{\tilde d_i\tilde d_j}}h_j`$ (the message is just a scaled copy of the neighbour), $\bigoplus$ is sum, and $`\psi(h_i,a_i) = \sigma((a_i + \text{self term})W)`$. **The GCN is the simplest possible instance of the framework** — which is exactly why the field reorganized around message passing rather than around the spectral derivation.
 
 **Now the receptive-field claim, with numbers.** After one layer, node $i$'s vector depends on $i$ and its immediate neighbours. After two, on everything within two hops, because its neighbours' vectors already absorbed *their* neighbours. In general:
 
@@ -462,9 +462,9 @@ The three equations are broad enough that the interesting question is what falls
 
 | Example | $\phi$ (message) | $\bigoplus$ (aggregate) | $\psi$ (update) |
 |---|---|---|---|
-| GCN | scale the neighbour by $1/\sqrt{\tilde d_i\tilde d_j}$ | sum | linear map, then $\sigma$ |
-| GAT | scale the neighbour by a learned $\alpha_{ij}$ | sum | linear map, then $\sigma$ |
-| GIN | copy the neighbour unchanged | sum | MLP of $(1+\epsilon)h_i + a_i$ |
+| GCN | scale the neighbour by $`1/\sqrt{\tilde d_i\tilde d_j}`$ | sum | linear map, then $\sigma$ |
+| GAT | scale the neighbour by a learned $`\alpha_{ij}`$ | sum | linear map, then $\sigma$ |
+| GIN | copy the neighbour unchanged | sum | MLP of $`(1+\epsilon)h_i + a_i`$ |
 | A transformer layer | value vector times attention weight | sum over **all** tokens | the feed-forward block |
 | A CNN on an image, viewed abstractly | multiply the neighbour pixel by its kernel weight | sum over the $3\times3$ window | activation |
 | Belief propagation on a factor graph | the classical message update | product (or sum in log-space) | normalize |
@@ -476,7 +476,7 @@ Note the CNN row carefully: a CNN **is** message passing on a grid, with the cru
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
 | node2vec / DeepWalk embeddings | There is no message function and no update — you look up a stored vector per node | A **shallow embedding table** trained by a random-walk objective; nothing generalizes to a new node |
-| Full spectral convolution, $U g_\theta(\Lambda)U^\top x$ | A generic frequency filter is global; there is no local neighbourhood step | A graph Fourier filter, which is why §29.2 is a story of retreat |
+| Full spectral convolution, $`U g_\theta(\Lambda)U^\top x`$ | A generic frequency filter is global; there is no local neighbourhood step | A graph Fourier filter, which is why §29.2 is a story of retreat |
 | PageRank | Fixed update rule, no learned $\phi$ or $\psi$ | A **fixed-point iteration**; message passing with the learning removed |
 | Feeding $A$ into an MLP row by row | Reads node indices as features; not permutation-equivariant at all | An architecture that will learn your data loader |
 | ECFP fingerprint plus gradient boosting | The fingerprint step is WL colour refinement, but nothing is learned inside it | A **fixed featurizer** plus a tabular model — and often a very strong baseline (§29.9) |
@@ -494,7 +494,7 @@ Note the CNN row carefully: a CNN **is** message passing on a grid, with the cru
 |---|---|---|
 | **GCN** | degree-normalized mean | simple, strong baseline, transductive |
 | **GraphSAGE** | mean / LSTM / max-pool over a **sampled** fixed-size neighbourhood, then concatenate with self | **inductive** — generalizes to unseen nodes; neighbour sampling makes it scale to billions of edges |
-| **GAT** | attention-weighted sum | $\alpha_{ij}=\mathrm{softmax}_j\big(\mathrm{LeakyReLU}(a^\top[Wh_i\|Wh_j])\big)$; learned, anisotropic neighbour weighting; multi-head |
+| **GAT** | attention-weighted sum | $`\alpha_{ij}=\mathrm{softmax}_j\big(\mathrm{LeakyReLU}(a^\top[Wh_i\|Wh_j])\big)`$; learned, anisotropic neighbour weighting; multi-head |
 | **GIN** | **sum**, then an MLP | maximally expressive under the WL bound (§29.4) |
 | **MPNN / GINE** | edge features in the message | essential for molecules (bond types) |
 | **PNA** | multiple aggregators concatenated with degree scalers | one aggregator cannot capture everything |
@@ -510,7 +510,7 @@ Six rows, six  different bets about what matters. Here is each one in plain lang
 **GraphSAGE — Graph SAmple and aggreGatE.** Two changes, both decisive.
 
 - **Sampling.** Instead of aggregating over *all* neighbours, draw a fixed number — say 25 at layer 1 and 10 at layer 2. This caps the work per node at $25\times10 = 250$ regardless of whether a node has three neighbours or three million. Without it, a single celebrity node in a social graph makes one training step unbounded.
-- **Concatenate rather than merge.** $h_i^{(l+1)} = \sigma\big(W\cdot[\,h_i^{(l)} \,\Vert\, a_i^{(l)}\,]\big)$, where $\Vert$ means "stick the two vectors end to end." Keeping self and neighbourhood in separate slots means the model can weigh them differently, rather than having them pre-blended.
+- **Concatenate rather than merge.** $`h_i^{(l+1)} = \sigma\big(W\cdot[\,h_i^{(l)} \,\Vert\, a_i^{(l)}\,]\big)`$, where $\Vert$ means "stick the two vectors end to end." Keeping self and neighbourhood in separate slots means the model can weigh them differently, rather than having them pre-blended.
 
 ▸ **This is what makes it *inductive*: it learns a function of a neighbourhood, not a table of node embeddings.** Show it a node it has never seen and it computes an embedding on the spot. That is the difference between a research artifact and something you can run at Pinterest.
 
@@ -518,17 +518,17 @@ Six rows, six  different bets about what matters. Here is each one in plain lang
 
 $$\alpha_{ij}=\mathrm{softmax}_j\big(\mathrm{LeakyReLU}(a^\top[Wh_i \,\Vert\, Wh_j])\big)$$
 
-Read right to left: project both nodes with the shared $W$; glue the two projections together; squash the pair down to a *single number* with the learned vector $a$; pass it through LeakyReLU; then softmax across all of node $i$'s neighbours so the weights sum to one. The result $\alpha_{ij}$ is *"the fraction of node $i$'s attention that goes to node $j$."*
+Read right to left: project both nodes with the shared $W$; glue the two projections together; squash the pair down to a *single number* with the learned vector $a$; pass it through LeakyReLU; then softmax across all of node $i$'s neighbours so the weights sum to one. The result $`\alpha_{ij}`$ is *"the fraction of node $i$'s attention that goes to node $j$."*
 
 **"Anisotropic" is the word to remember.** It means "not the same in all directions." A GCN is *isotropic*: every neighbour gets a weight fixed by the graph's shape, and the model has no say. GAT lets the model decide, per pair, per head. For a molecule that means a carbon can learn to attend hard to an attached oxygen and barely at all to a hydrogen — a chemically sensible asymmetry that a GCN cannot express.
 
 **GIN — Graph Isomorphism Network.** Sum, then an MLP. The next section is entirely about why those two choices are exactly the right ones.
 
-**MPNN / GINE — Message Passing Neural Network / GIN with Edge features.** Puts $e_{ij}$ into the message, which for chemistry is not optional. Benzene and cyclohexane are the *same graph* — six carbons in a ring — and differ only in their bond types. A model that ignores edge features cannot tell them apart, and they behave completely differently.
+**MPNN / GINE — Message Passing Neural Network / GIN with Edge features.** Puts $`e_{ij}`$ into the message, which for chemistry is not optional. Benzene and cyclohexane are the *same graph* — six carbons in a ring — and differ only in their bond types. A model that ignores edge features cannot tell them apart, and they behave completely differently.
 
 **PNA — Principal Neighbourhood Aggregation.** Runs several aggregators at once (mean, max, min, standard deviation) and concatenates the results, then rescales by functions of the degree. The motivating theorem is that **no single aggregator can distinguish all multisets of neighbour features** when features are continuous — you need multiple views. The "degree scalers" exist because sum-like aggregators grow with degree and mean-like ones do not, so the network otherwise has no clean way to reason about how many neighbours it had.
 
-> **Common misconception.** *"GAT's attention weights tell you which neighbours matter."* They tell you which neighbours the model **routed information through**, which is a weaker and different claim. A neighbour can receive a large $\alpha_{ij}$ and carry a value vector that barely moves the output; a neighbour with a small weight can be the one whose absence flips the prediction. This is the same trap as reading transformer attention maps as explanations (Ch. 32), and it has the same source: attention weights are visible, legible, and sum to one, which makes them *feel* like an explanation. **The honest test of whether a neighbour matters is to remove it and re-run the model**, not to read a coefficient.
+> **Common misconception.** *"GAT's attention weights tell you which neighbours matter."* They tell you which neighbours the model **routed information through**, which is a weaker and different claim. A neighbour can receive a large $`\alpha_{ij}`$ and carry a value vector that barely moves the output; a neighbour with a small weight can be the one whose absence flips the prediction. This is the same trap as reading transformer attention maps as explanations (Ch. 32), and it has the same source: attention weights are visible, legible, and sum to one, which makes them *feel* like an explanation. **The honest test of whether a neighbour matters is to remove it and re-run the model**, not to read a coefficient.
 
 > **Common misconception.** *"GraphSAGE is 'GCN with sampling.'"* Sampling is the famous part, but the load-bearing change is **inductivity** — learning a function of a neighbourhood rather than a table of per-node embeddings. A transductive model must be retrained when a node arrives; an inductive one embeds the newcomer on the spot. That distinction is what let graph learning move from fixed academic citation networks to social platforms where a hundred thousand nodes appear per hour.
 
@@ -542,7 +542,7 @@ Line up the definitions and they coincide:
 |---|---|
 | Tokens | Nodes |
 | Every token attends to every other | The graph is **complete** — every node adjacent to every node |
-| $\mathrm{softmax}(q_i^\top k_j/\sqrt{d})$ | $\alpha_{ij}$, an attention weight over neighbours |
+| $`\mathrm{softmax}(q_i^\top k_j/\sqrt{d})`$ | $`\alpha_{ij}`$, an attention weight over neighbours |
 | Weighted sum of values | Attention-weighted aggregation, $\bigoplus$ |
 | The feed-forward block | The update function $\psi$ |
 | Positional encodings | Structural encodings (§29.7) |
@@ -570,7 +570,7 @@ An algorithm for graph isomorphism testing: initialize each node's colour by its
 
 **Now run it.** Take a triangle with a tail: nodes $\{1,2,3\}$ form a triangle, and node 4 hangs off node 3.
 
-**Round 0 — colour by degree.** $d_1=2, d_2=2, d_3=3, d_4=1$.
+**Round 0 — colour by degree.** $`d_1=2, d_2=2, d_3=3, d_4=1`$.
 
 | Node | Colour |
 |---|---|
@@ -615,9 +615,9 @@ The proof sketch in one sentence: **a message-passing layer takes in (my current
 **Now the counterexample you should be able to draw on a napkin.** Take two graphs, each with **6 nodes, 9 edges, every node of degree exactly 3**:
 
 - **The triangular prism** — two triangles joined by three rungs, like a Toblerone box.
-- **$K_{3,3}$** — three nodes on the left, three on the right, every left node joined to every right node (the "three utilities" graph).
+- **$`K_{3,3}`$** — three nodes on the left, three on the right, every left node joined to every right node (the "three utilities" graph).
 
-They are unmistakably different objects. The prism is stuffed with triangles; $K_{3,3}$ is **bipartite** and therefore contains no odd cycle at all — **not a single triangle.** A chemist would call these completely different molecules.
+They are unmistakably different objects. The prism is stuffed with triangles; $`K_{3,3}`$ is **bipartite** and therefore contains no odd cycle at all — **not a single triangle.** A chemist would call these completely different molecules.
 
 **But watch WL fail.** Round 0: every node has degree 3, so everyone is colour **A** — in *both* graphs. Round 1: every node's signature is $(\text{A}, \{\text{A},\text{A},\text{A}\})$ — again identical everywhere, in both graphs. Round 2: the same. **The refinement never splits anything, in either graph, forever.** Both histograms read "6 nodes of one colour," and the test reports no difference.
 
@@ -635,7 +635,7 @@ They are unmistakably different objects. The prism is stuffed with triangles; $K
 |---|---|---|
 | Benzene (6-ring) vs hexane (6-chain) | Degree sequence: all 2s versus $1,2,2,2,2,1$ | Round 0 |
 | A triangle vs a 3-node path | Degrees $3\times2$ versus $1,2,1$ | Round 0 |
-| A star $K_{1,5}$ vs a 6-cycle | One node of degree 5 versus all degree 2 | Round 0 |
+| A star $`K_{1,5}`$ vs a 6-cycle | One node of degree 5 versus all degree 2 | Round 0 |
 | A triangle-with-a-tail vs a 4-path | Degrees $2,2,3,1$ versus $1,2,2,1$ | Round 0 |
 | Two trees of the same size but different shape | Colours refine differently after one or two rounds | Round 1–2 |
 
@@ -644,7 +644,7 @@ They are unmistakably different objects. The prism is stuffed with triangles; $K
 | Pair | Why WL is blind | What it would take |
 |---|---|---|
 | One 6-cycle vs **two disjoint triangles** | Every node has degree 2 in both, forever. Chemically: cyclohexane versus two molecules of cyclopropane | A ring-size feature, or a cycle counter |
-| Triangular prism vs $K_{3,3}$ | Both 3-regular on 6 nodes; the prism is full of triangles, $K_{3,3}$ has none | 3-WL, a subgraph GNN, or triangle counts as input |
+| Triangular prism vs $`K_{3,3}`$ | Both 3-regular on 6 nodes; the prism is full of triangles, $`K_{3,3}`$ has none | 3-WL, a subgraph GNN, or triangle counts as input |
 | Any two non-isomorphic $d$-regular graphs on $n$ nodes | Regularity means every node's signature is identical at every round | Structural encodings, or random node identifiers |
 | Two molecules differing only in bond order (benzene vs cyclohexane as bare graphs) | $A$ is binary; bond type never enters the message | Edge features (MPNN / GINE) |
 | Two 3-D conformations with the same bond graph | Connectivity is identical; only coordinates differ | 3-D geometry and the machinery of §29.8 |
@@ -697,12 +697,12 @@ $$h_i^{(l+1)} = \mathrm{MLP}^{(l)}\left((1+\epsilon^{(l)})\,h_i^{(l)} + \sum_{j\
 
 | Piece | Job |
 |---|---|
-| $\sum_{j\in\mathcal{N}(i)}h_j^{(l)}$ | **Injectivity.** Plain sum, so the bag of neighbours survives intact |
-| $(1+\epsilon^{(l)})h_i^{(l)}$ | **Self-distinction.** Scale your own vector differently from your neighbours' so "me" and "one of my neighbours" don't blur |
+| $`\sum_{j\in\mathcal{N}(i)}h_j^{(l)}`$ | **Injectivity.** Plain sum, so the bag of neighbours survives intact |
+| $`(1+\epsilon^{(l)})h_i^{(l)}`$ | **Self-distinction.** Scale your own vector differently from your neighbours' so "me" and "one of my neighbours" don't blur |
 | $\mathrm{MLP}^{(l)}$ | **Universality.** By the universal approximation theorem an MLP can represent any function of the aggregate, so nothing is lost downstream |
 | $\epsilon^{(l)}$ | A scalar, either learned or fixed at 0 |
 
-▸ **Why $\epsilon$ matters, in one example.** Set $\epsilon = 0$ and the formula becomes $\mathrm{MLP}(h_i + \sum_j h_j)$ — you have added yourself into the same pot as your neighbours, and a node with feature $a$ and one neighbour $a$ becomes indistinguishable from a node with feature $2a$ and no neighbours. **Any $\epsilon \ne 0$ (even an irrational constant) restores the distinction**, which is why the paper notes that a fixed nonzero value works nearly as well as a learned one. The parameter is doing a job that requires only that it not be zero.
+▸ **Why $\epsilon$ matters, in one example.** Set $\epsilon = 0$ and the formula becomes $`\mathrm{MLP}(h_i + \sum_j h_j)`$ — you have added yourself into the same pot as your neighbours, and a node with feature $a$ and one neighbour $a$ becomes indistinguishable from a node with feature $2a$ and no neighbours. **Any $\epsilon \ne 0$ (even an irrational constant) restores the distinction**, which is why the paper notes that a fixed nonzero value works nearly as well as a learned one. The parameter is doing a job that requires only that it not be zero.
 
 **The design in one sentence:** *sum for injectivity, MLP for expressiveness, $\epsilon$ for self-awareness.* Three components, three separate jobs, no redundancy.
 
@@ -717,7 +717,7 @@ $$h_i^{(l+1)} = \mathrm{MLP}^{(l)}\left((1+\epsilon^{(l)})\,h_i^{(l)} + \sum_{j\
 | Sum, over one-hot node types | Any finite multiset of one-hot vectors | The total is literally a count vector: $\{$C,C,H$\}\mapsto(2,1,0,\dots)$ |
 | Sum, over countable features | Multisets drawn from a countable set | The GIN paper's stated condition — the proof needs countability |
 | Sum + max + min + std, concatenated (PNA) | Far more multisets than any one of them | Different aggregators fail on different pairs; concatenating covers more |
-| Sum of $f(v_j)$ for a learned injective $f$ | The general construction | This is exactly GIN: MLP outside, sum inside |
+| Sum of $`f(v_j)`$ for a learned injective $f$ | The general construction | This is exactly GIN: MLP outside, sum inside |
 
 **❌ Near-misses — aggregators that quietly destroy information**
 
@@ -766,7 +766,7 @@ The cost is brutal. On a graph with $n=1000$ nodes:
 
 ▸ **The random-identifier trick breaks permutation invariance, and the fix is to accept it in expectation.** Sample fresh identifiers every forward pass and average: any single run is not invariant, but the *distribution* of outputs is, so the expected prediction is. It is the same bargain as dropout — deliberately injected randomness whose bias cancels in aggregate.
 
-**3. Subgraph GNNs.** Represent the graph as a *bag of subgraphs* — for example, the $n$ graphs you get by marking one node as special — run a GNN on each, and pool. Marking a node breaks the symmetry that was blinding you, so the prism and $K_{3,3}$ become distinguishable. Cost: $n$ forward passes per graph.
+**3. Subgraph GNNs.** Represent the graph as a *bag of subgraphs* — for example, the $n$ graphs you get by marking one node as special — run a GNN on each, and pool. Marking a node breaks the symmetry that was blinding you, so the prism and $`K_{3,3}`$ become distinguishable. Cost: $n$ forward passes per graph.
 
 **4. Substructure counting.** Count the triangles, the 5-rings, the 6-rings, and staple those numbers onto each node's feature vector before the first layer.
 
@@ -780,7 +780,7 @@ The cost is brutal. On a graph with $n=1000$ nodes:
 
 ▸ Repeated neighbourhood averaging is a diffusion process. As $L\to\infty$, node representations converge to a limit determined only by degree — **all nodes become identical** and the model loses discriminative power.
 
-**The mathematics:** the GCN propagation matrix $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ has $\lambda_{\max}=1$ with all other $|\lambda_i|<1$. So $\hat A^L$ converges to a rank-one projection onto the dominant eigenvector, and everything else decays as $|\lambda_2|^L$. **Exponential collapse in depth.**
+**The mathematics:** the GCN propagation matrix $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ has $`\lambda_{\max}=1`$ with all other $`|\lambda_i|<1`$. So $\hat A^L$ converges to a rank-one projection onto the dominant eigenvector, and everything else decays as $`|\lambda_2|^L`$. **Exponential collapse in depth.**
 
 **Consequence:** most GNNs are 2–4 layers deep. **This is the single biggest structural difference from CNNs and transformers**, which get better with depth.
 
@@ -792,22 +792,22 @@ The cost is brutal. On a graph with $n=1000$ nodes:
 
 > **Analogy.** A room of people, each holding a paint colour. Every minute, everyone mixes their paint with their neighbours'. After one round, local patches blur. After twenty, the entire room is the same shade of brown. Nothing was lost by accident and no step was wrong — **averaging is a lossy operation, and iterating a lossy operation converges to the loss.** The information wasn't destroyed by a bug; it was destroyed by doing exactly what you asked.
 
-**The mathematics, unpacked.** $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ is symmetric, so §1.1.2 applies: it has an eigendecomposition $\hat A = Q\Lambda Q^\top$, and $\hat A^L = Q\Lambda^L Q^\top$. Its eigenvalues satisfy $\lambda_1 = 1$ (with eigenvector proportional to $\sqrt{\tilde d}$, the degree profile) and $\lvert\lambda_i\rvert < 1$ for every other $i$ on a connected graph.
+**The mathematics, unpacked.** $\hat A = \tilde D^{-1/2}\tilde A\tilde D^{-1/2}$ is symmetric, so §1.1.2 applies: it has an eigendecomposition $\hat A = Q\Lambda Q^\top$, and $\hat A^L = Q\Lambda^L Q^\top$. Its eigenvalues satisfy $`\lambda_1 = 1`$ (with eigenvector proportional to $\sqrt{\tilde d}$, the degree profile) and $`\lvert\lambda_i\rvert < 1`$ for every other $i$ on a connected graph.
 
 Now raise them to the power $L$:
 
-| $\lambda_i$ | $\lambda_i^{4}$ | $\lambda_i^{10}$ | $\lambda_i^{30}$ |
+| $`\lambda_i`$ | $`\lambda_i^{4}`$ | $`\lambda_i^{10}`$ | $`\lambda_i^{30}`$ |
 |---|---|---|---|
 | $1.0$ | $1.0$ | $1.0$ | $1.0$ |
 | $0.9$ | $0.656$ | $0.349$ | $0.042$ |
 | $0.7$ | $0.240$ | $0.028$ | $2\times10^{-5}$ |
 | $0.5$ | $0.063$ | $0.001$ | $9\times10^{-10}$ |
 
-▸ **One eigenvalue survives and every other decays geometrically.** After enough layers, $\hat A^L \approx q_1q_1^\top$ — a **rank-one** matrix, meaning every node's representation is a scalar multiple of the *same* vector. The only thing distinguishing node $i$ from node $j$ is the scalar, and that scalar is fixed by degree. **Two atoms with the same number of bonds become literally indistinguishable, whatever the rest of the molecule looks like.**
+▸ **One eigenvalue survives and every other decays geometrically.** After enough layers, $`\hat A^L \approx q_1q_1^\top`$ — a **rank-one** matrix, meaning every node's representation is a scalar multiple of the *same* vector. The only thing distinguishing node $i$ from node $j$ is the scalar, and that scalar is fixed by degree. **Two atoms with the same number of bonds become literally indistinguishable, whatever the rest of the molecule looks like.**
 
 **This is the same $\lambda^k$ argument as vanishing gradients in Chapter 6 and adversarial amplification in §1.1.4** — the third appearance in this book of "repeatedly applying a matrix amplifies its top eigenvector and annihilates everything else." Once you have the pattern, all three are one fact.
 
-**The size of $1-\lambda_2$ is called the spectral gap, and it sets the timescale.** A well-connected graph has a large gap and smooths fast; a stringy, bottlenecked graph has a tiny gap and smooths slowly. Counterintuitively, **the better-connected your graph, the fewer layers you can afford.**
+**The size of $`1-\lambda_2`$ is called the spectral gap, and it sets the timescale.** A well-connected graph has a large gap and smooths fast; a stringy, bottlenecked graph has a tiny gap and smooths slowly. Counterintuitively, **the better-connected your graph, the fewer layers you can afford.**
 
 ▸ **Why this is the single biggest structural difference from CNNs and transformers.** Both of those get monotonically better with depth: ResNet-152 beats ResNet-50, and a 96-layer transformer beats a 12-layer one. A GCN typically peaks at **2 layers** and degrades past 4. That is not a tuning failure; it is the operator converging. Every mitigation below is an attempt to stop a fixed point from being reached.
 
@@ -827,7 +827,7 @@ Now raise them to the power $L$:
 
 ▸ A node's $L$-hop neighbourhood can grow exponentially, but its representation is a **fixed-size vector**. Information from an exponentially large receptive field is squashed through $O(d)$ bits.
 
-**The mathematics:** the sensitivity $\left\|\frac{\partial h_i^{(L)}}{\partial x_j}\right\|$ for a node $j$ at distance $L$ decays with the **normalized adjacency powers**, and it is controlled by the graph's **Cheeger constant / spectral gap** — a bottleneck edge in the graph is a bottleneck in information flow. This is why long-range tasks on tree-like or bottlenecked graphs fail even when the model is deep enough to reach.
+**The mathematics:** the sensitivity $`\left\|\frac{\partial h_i^{(L)}}{\partial x_j}\right\|`$ for a node $j$ at distance $L$ decays with the **normalized adjacency powers**, and it is controlled by the graph's **Cheeger constant / spectral gap** — a bottleneck edge in the graph is a bottleneck in information flow. This is why long-range tasks on tree-like or bottlenecked graphs fail even when the model is deep enough to reach.
 
 **Mitigations:** graph rewiring (add edges to improve the spectral gap — e.g. stochastic discrete Ricci flow, expander-graph augmentation), a **fully-connected "virtual node"** connected to everything (a cheap global shortcut), and graph transformers.
 
@@ -857,13 +857,13 @@ Over-smoothing and over-squashing sound similar and are opposite problems. Keep 
 
 > **Analogy.** A funnel. Pour in a bucket and it passes fine. Pour in a swimming pool through the same neck and most of it goes over the sides. **The neck did not get narrower; the volume got larger.** A GNN's hidden dimension is the neck, and every layer you add pours in exponentially more.
 
-**Reading the sensitivity formula.** $\left\lVert\dfrac{\partial h_i^{(L)}}{\partial x_j}\right\rVert$ asks: *"if I nudge the input feature of node $j$, how much does node $i$'s final representation move?"* It is exactly the influence of $j$ on $i$ (§0.7 — a partial derivative is a sensitivity). If it is near zero, node $j$ is invisible to node $i$ no matter what the loss wants, because **no gradient can flow along a path whose derivative has already vanished.**
+**Reading the sensitivity formula.** $`\left\lVert\dfrac{\partial h_i^{(L)}}{\partial x_j}\right\rVert`$ asks: *"if I nudge the input feature of node $j$, how much does node $i$'s final representation move?"* It is exactly the influence of $j$ on $i$ (§0.7 — a partial derivative is a sensitivity). If it is near zero, node $j$ is invisible to node $i$ no matter what the loss wants, because **no gradient can flow along a path whose derivative has already vanished.**
 
 That quantity is bounded by entries of the powered normalized adjacency, and those entries decay with distance. So the model can *reach* node $j$ in $L$ hops while being unable to *feel* it.
 
 **The spectral gap and the Cheeger constant, in plain terms.** The **Cheeger constant** $h(G)$ measures the worst bottleneck in a graph: consider every way of cutting the graph into two pieces, and report the smallest ratio of (edges cut) to (nodes on the smaller side). A dumbbell — two dense blobs joined by a single edge — has a tiny Cheeger constant. A well-mixed random graph has a large one.
 
-Cheeger's inequality ties this shape fact to the spectrum: **a small Cheeger constant forces a small spectral gap $\lambda_2$, and a small spectral gap means slow mixing.** So:
+Cheeger's inequality ties this shape fact to the spectrum: **a small Cheeger constant forces a small spectral gap $`\lambda_2`$, and a small spectral gap means slow mixing.** So:
 
 ▸ **A structural bottleneck in the graph is, provably, a bottleneck in information flow.** This is why long-range tasks fail on trees and molecules-with-long-chains even when the model is deep enough to reach across. The obstruction is in the graph, not in the network.
 
@@ -1016,8 +1016,8 @@ A message-passing GNN can only send information along edges. A graph transformer
 |---|---|---|
 | **Laplacian eigenvectors** | The first $k$ eigenvectors of $L$, one coordinate per node | "Here is roughly where you sit in the graph's global shape" |
 | **Random-walk encodings** | The diagonal of $(D^{-1}A)^k$ for several $k$ | "Here is how likely you are to return home in $k$ steps" — i.e. your local cycle structure |
-| **Shortest-path bias** | Add a learned scalar $b_{\text{dist}(i,j)}$ to the attention logit | "This node is 4 hops away; discount it accordingly" |
-| **Degree centrality** | $d_i$ as a feature | "You are a hub" / "you are a leaf" |
+| **Shortest-path bias** | Add a learned scalar $`b_{\text{dist}(i,j)}`$ to the attention logit | "This node is 4 hops away; discount it accordingly" |
+| **Degree centrality** | $`d_i`$ as a feature | "You are a hub" / "you are a leaf" |
 
 **The sign ambiguity, and why it needs handling.** If $v$ is an eigenvector, so is $-v$ — flipping every entry gives an equally valid eigenvector with the same eigenvalue. Standard eigensolvers pick a sign essentially arbitrarily, so **the same graph can produce positional encodings that are the exact negatives of each other on two different runs.** The usual fix is to randomly flip the sign of each eigenvector during training, forcing the model to learn a function that is invariant to the flip. It is the same style of solution as the random node identifiers in §29.4: when a symmetry cannot be removed, average over it.
 
@@ -1073,13 +1073,13 @@ So there is one learned scalar for "1 hop apart," another for "2 hops," and so o
 
 ## 29.8 Equivariance in 3-D
 
-For molecules, proteins, and physical systems, node positions $\vec r_i\in\mathbb{R}^3$ matter, and predictions must respect **E(3)** (rotation, translation, reflection) or **SE(3)** (no reflection — important for chirality).
+For molecules, proteins, and physical systems, node positions $`\vec r_i\in\mathbb{R}^3`$ matter, and predictions must respect **E(3)** (rotation, translation, reflection) or **SE(3)** (no reflection — important for chirality).
 
 ▸ **Energy must be invariant; forces must be equivariant** ($\vec F\to R\vec F$ under a rotation $R$).
 
 **Three strategies:**
 
-1. **Invariant features only.** Use distances $\|\vec r_i-\vec r_j\|$, angles, and dihedrals — all invariant by construction. SchNet (distances via radial basis functions), DimeNet (adds angles), GemNet (adds dihedrals). ▸ Simple and effective; the limitation is that distance-only descriptors are provably incomplete — some distinct geometries share all pairwise distances.
+1. **Invariant features only.** Use distances $`\|\vec r_i-\vec r_j\|`$, angles, and dihedrals — all invariant by construction. SchNet (distances via radial basis functions), DimeNet (adds angles), GemNet (adds dihedrals). ▸ Simple and effective; the limitation is that distance-only descriptors are provably incomplete — some distinct geometries share all pairwise distances.
 
 2. **Equivariant vector features.** Keep vector-valued node states alongside scalars and combine them only in ways that preserve equivariance: scalars scale vectors, dot products of vectors give scalars, cross products give vectors. **EGNN** is the minimal version:
 ▸ $$m_{ij}=\phi_e\big(h_i,h_j,\|\vec r_i-\vec r_j\|^2\big),\qquad \vec r_i \leftarrow \vec r_i + \sum_{j\ne i}(\vec r_i-\vec r_j)\,\phi_r(m_{ij})$$
@@ -1093,7 +1093,7 @@ Positions are updated only along **differences of positions** scaled by invarian
 
 #### Equivariance in 3-D, decoded
 
-Everything so far treated a graph as pure connectivity. For a molecule that is not enough: **the same bonds arranged in different shapes are different substances.** So each node now carries a position $\vec r_i \in \mathbb{R}^3$, and a new symmetry group arrives.
+Everything so far treated a graph as pure connectivity. For a molecule that is not enough: **the same bonds arranged in different shapes are different substances.** So each node now carries a position $`\vec r_i \in \mathbb{R}^3`$, and a new symmetry group arrives.
 
 **The groups, spelled out.**
 
@@ -1110,13 +1110,13 @@ Everything so far treated a graph as pure connectivity. For a molecule that is n
 - Its **energy** is one number and it does not change. Physics has no preferred orientation. → **invariant**.
 - The **force on each atom** is an arrow, and the arrows rotate with the molecule. → **equivariant**: $\vec F \to R\vec F$.
 
-▸ **And the two are not independent, which is the elegant part: force is the negative gradient of energy, $\vec F_i = -\partial E/\partial \vec r_i$.** Differentiating an invariant scalar with respect to a vector *automatically* produces an equivariant vector. So a network that predicts a rotation-invariant energy and obtains forces by autodiff gets force equivariance for free, and gets energy conservation for free as well — a machine-learned force field built this way cannot violate conservation of energy, because it is a gradient by construction.
+▸ **And the two are not independent, which is the elegant part: force is the negative gradient of energy, $`\vec F_i = -\partial E/\partial \vec r_i`$.** Differentiating an invariant scalar with respect to a vector *automatically* produces an equivariant vector. So a network that predicts a rotation-invariant energy and obtains forces by autodiff gets force equivariance for free, and gets energy conservation for free as well — a machine-learned force field built this way cannot violate conservation of energy, because it is a gradient by construction.
 
 **Strategy 1 — invariant features only.** Never look at coordinates; look only at quantities that don't care about orientation.
 
 | Descriptor | What it is | Invariant to |
 |---|---|---|
-| Distance $\lVert \vec r_i - \vec r_j\rVert$ | how far apart two atoms are | rotation, translation, reflection |
+| Distance $`\lVert \vec r_i - \vec r_j\rVert`$ | how far apart two atoms are | rotation, translation, reflection |
 | Angle $\angle(i,j,k)$ | the bend at atom $j$ | rotation, translation, reflection |
 | Dihedral | the twist about the $j$–$k$ bond in a chain $i$–$j$–$k$–$l$ | rotation, translation — **but flips sign under reflection** |
 
@@ -1128,10 +1128,10 @@ Everything so far treated a graph as pure connectivity. For a molecule that is n
 
 $$m_{ij}=\phi_e\big(h_i,h_j,\lVert\vec r_i-\vec r_j\rVert^2\big),\qquad \vec r_i \leftarrow \vec r_i + \sum_{j\ne i}(\vec r_i-\vec r_j)\,\phi_r(m_{ij})$$
 
-- The message $m_{ij}$ depends on positions **only through the squared distance** — an invariant scalar. So $m_{ij}$ is invariant, and $\phi_r(m_{ij})$ is just a number.
-- The position update adds up **difference vectors $(\vec r_i - \vec r_j)$, each scaled by that invariant number.**
+- The message $`m_{ij}`$ depends on positions **only through the squared distance** — an invariant scalar. So $`m_{ij}`$ is invariant, and $`\phi_r(m_{ij})`$ is just a number.
+- The position update adds up **difference vectors $`(\vec r_i - \vec r_j)`$, each scaled by that invariant number.**
 
-▸ **Now the magic, in one line of algebra.** Rotate everything by $R$. Each difference becomes $R(\vec r_i - \vec r_j)$, distances are unchanged so the scalars $\phi_r$ are unchanged, and the sum becomes $R\sum_j(\vec r_i-\vec r_j)\phi_r$ — **the same update, rotated.** Equivariance is not enforced by a penalty or learned from augmentation; it is a consequence of the only two operations allowed. **You cannot write down a non-equivariant EGNN.**
+▸ **Now the magic, in one line of algebra.** Rotate everything by $R$. Each difference becomes $`R(\vec r_i - \vec r_j)`$, distances are unchanged so the scalars $`\phi_r`$ are unchanged, and the sum becomes $`R\sum_j(\vec r_i-\vec r_j)\phi_r`$ — **the same update, rotated.** Equivariance is not enforced by a penalty or learned from augmentation; it is a consequence of the only two operations allowed. **You cannot write down a non-equivariant EGNN.**
 
 > **Analogy.** Giving directions using only "walk 30 metres toward the church" rather than "walk 30 metres north." Spin the whole town on a turntable and your instructions still work perfectly, because they were phrased in terms of *relationships between things in the town* rather than an external reference frame. Equivariant architectures are exactly this discipline: never name an absolute direction, only ratios and differences of things already inside the system.
 
@@ -1149,23 +1149,23 @@ This is the most mechanical example-set in the chapter, and the most useful: giv
 
 | Operation | Output type | Why it is safe |
 |---|---|---|
-| $\lVert \vec r_i - \vec r_j\rVert$ | scalar (**invariant**) | Rotation preserves lengths |
-| $(\vec r_i - \vec r_j)\cdot(\vec r_i-\vec r_k)$ | scalar (**invariant**) | Dot products are preserved: $(Ru)\cdot(Rv)=u\cdot v$ |
+| $`\lVert \vec r_i - \vec r_j\rVert`$ | scalar (**invariant**) | Rotation preserves lengths |
+| $`(\vec r_i - \vec r_j)\cdot(\vec r_i-\vec r_k)`$ | scalar (**invariant**) | Dot products are preserved: $(Ru)\cdot(Rv)=u\cdot v$ |
 | $s \cdot \vec v$ for an invariant scalar $s$ | vector (**equivariant**) | Scaling commutes with rotation |
-| $\vec v_1 + \vec v_2$ for two equivariant vectors | vector (**equivariant**) | $Rv_1+Rv_2 = R(v_1+v_2)$ |
+| $`\vec v_1 + \vec v_2`$ for two equivariant vectors | vector (**equivariant**) | $`Rv_1+Rv_2 = R(v_1+v_2)`$ |
 | $\vec u \times \vec v$ | vector (**equivariant**, sign-flips under reflection) | The cross product is how chirality enters |
-| $-\partial E/\partial \vec r_i$ where $E$ is invariant | vector (**equivariant**) | The gradient of an invariant scalar is automatically equivariant |
+| $`-\partial E/\partial \vec r_i`$ where $E$ is invariant | vector (**equivariant**) | The gradient of an invariant scalar is automatically equivariant |
 
 **❌ Near-misses — operations that break equivariance, some of them subtly**
 
 | Operation | Why it breaks | Symptom |
 |---|---|---|
-| $\mathrm{MLP}(\vec r_i)$ applied to raw coordinates | The MLP has no idea $R\vec r$ means the same thing as $\vec r$ | Rotate the input molecule, get a different energy |
+| $`\mathrm{MLP}(\vec r_i)`$ applied to raw coordinates | The MLP has no idea $R\vec r$ means the same thing as $\vec r$ | Rotate the input molecule, get a different energy |
 | Adding a learned constant vector $\vec b$ to positions | $\vec b$ names an absolute direction in space | Introduces a preferred "up" that physics does not have |
 | $\mathrm{ReLU}(\vec v)$, elementwise | Clipping is per-coordinate, and coordinates are frame-dependent | A vector's clipped version depends on how you drew the axes |
-| LayerNorm over the three coordinates of $\vec r_i$ | Subtracting the mean of $(x,y,z)$ mixes axes in a frame-dependent way | Same failure, harder to spot in code |
-| $\lVert\vec r_i\rVert$ (distance from the origin) | Invariant to rotation but **not to translation** — it names a special point | Move the whole molecule and the features change |
-| Concatenating $[\,\vec r_i \Vert h_i\,]$ and feeding it to an MLP | The MLP again sees raw coordinates | The classic way an "equivariant" implementation quietly isn't |
+| LayerNorm over the three coordinates of $`\vec r_i`$ | Subtracting the mean of $(x,y,z)$ mixes axes in a frame-dependent way | Same failure, harder to spot in code |
+| $`\lVert\vec r_i\rVert`$ (distance from the origin) | Invariant to rotation but **not to translation** — it names a special point | Move the whole molecule and the features change |
+| Concatenating $`[\,\vec r_i \Vert h_i\,]`$ and feeding it to an MLP | The MLP again sees raw coordinates | The classic way an "equivariant" implementation quietly isn't |
 | Rotation augmentation instead of a constraint | Approximately equivariant, never exactly | Predictions differ by a few percent between orientations of the same molecule |
 
 ▸ **The boundary:** you may build **scalars from invariant quantities** (lengths, dot products, angles) and **vectors only as invariant-scalar multiples of difference vectors** you already had. The moment a raw coordinate reaches a nonlinearity, equivariance is gone. That single rule explains the shape of the EGNN update and is the fastest way to audit an implementation.
@@ -1258,7 +1258,7 @@ $$10^8 \times 256 \times 3 \times 4\ \text{bytes} \approx 300\ \text{GB}$$
 
 - **Raising $k$ in $k$-WL does not eventually solve graph isomorphism.** Cai, Fürer and Immerman constructed in 1992 pairs of graphs that defeat $k$-WL for every fixed $k$. So "just use higher-order GNNs" is not a road to completeness — it is a treadmill you pay $O(n^k)$ to run on.
 
-- **Chebyshev polynomials are written $T_k$ because of a French spelling.** Chebyshev's surname has been transliterated from Cyrillic in dozens of ways; the $T$ comes from *Tchebychef*. He derived the polynomials in the 1850s while studying steam-engine linkages — asking how close a jointed mechanism could come to drawing a straight line.
+- **Chebyshev polynomials are written $`T_k`$ because of a French spelling.** Chebyshev's surname has been transliterated from Cyrillic in dozens of ways; the $T$ comes from *Tchebychef*. He derived the polynomials in the 1850s while studying steam-engine linkages — asking how close a jointed mechanism could come to drawing a straight line.
 
 - **A GCN layer was already a known tool for erasing detail.** It is Laplacian smoothing, which computer graphics had used for years to smooth bumpy 3-D meshes. Framing it that way is what made over-smoothing obvious in retrospect.
 
@@ -1288,7 +1288,7 @@ The test of understanding is conversational: could you explain each of these to 
 4. **Why does restricting a filter to a polynomial of degree $K$ automatically make it $K$-hop local?** (The answer is about what powers of the adjacency matrix count.)
 5. **Describe a GCN layer as a sentence about neighbours,** without writing the formula. Then say what would go wrong if you removed the self-loop.
 6. **Why must the aggregator ignore the order of its inputs, and why is concatenation therefore forbidden?**
-7. **Why can't a message-passing GNN tell a triangular prism from $K_{3,3}$?** What information does the architecture simply never receive?
+7. **Why can't a message-passing GNN tell a triangular prism from $`K_{3,3}`$?** What information does the architecture simply never receive?
 8. **Why sum rather than mean?** Give the three-neighbour counting example that mean fails.
 9. **Explain over-smoothing and over-squashing to someone who has confused them,** and say which one pushes you toward more layers.
 10. **Why is choosing sum versus mean readout a modelling decision rather than a detail?** Use molecular weight versus solubility.

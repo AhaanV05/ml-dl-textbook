@@ -10,22 +10,22 @@ This chapter fuses Chapter 26's vocabulary with Chapter 6's, so a symbol may be 
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $Q_\theta(s,a)$ | "Q-theta of s, a" | A **neural network** standing in for the Q-table. $\theta$ is its weights |
+| $`Q_\theta(s,a)`$ | "Q-theta of s, a" | A **neural network** standing in for the Q-table. $\theta$ is its weights |
 | $\theta^-$ | "theta-minus" | The **target network** — a frozen, out-of-date copy of $\theta$ |
 | $\mathcal{D}$ | "script D" | The **replay buffer** — a big box of past transitions to sample from |
 | $(s,a,r,s')$ | "s, a, r, s-prime" | One **transition**: where you were, what you did, what you got, where you ended up |
 | $\tau$ | "tau" | Either a **trajectory** (a whole episode) or the **Polyak rate**. Context tells you which |
 | $J(\theta)$ | "J of theta" | The **objective being maximized** — expected total reward. RL climbs; it does not descend |
-| $\Psi_t$ | "psi-t" | A **placeholder** for whatever weight multiplies the log-probability. §27.4 is a menu of choices |
-| $\nabla_\theta\log\pi_\theta(a\mid s)$ | "grad log pi" | The **score function** — which way to nudge $\theta$ to make this action more likely |
-| $\hat A_t$ | "A-hat-t" | An **estimate** of the advantage. The hat means estimate, not truth |
-| $\delta_t$ | "delta-t" | The **TD residual** $r_t+\gamma V(s_{t+1})-V(s_t)$ — one step's worth of surprise |
-| $\rho_t$ | "rho-t" | The **probability ratio** $\pi_{\text{new}}/\pi_{\text{old}}$ — how much the policy changed on this action |
+| $`\Psi_t`$ | "psi-t" | A **placeholder** for whatever weight multiplies the log-probability. §27.4 is a menu of choices |
+| $`\nabla_\theta\log\pi_\theta(a\mid s)`$ | "grad log pi" | The **score function** — which way to nudge $\theta$ to make this action more likely |
+| $`\hat A_t`$ | "A-hat-t" | An **estimate** of the advantage. The hat means estimate, not truth |
+| $`\delta_t`$ | "delta-t" | The **TD residual** $`r_t+\gamma V(s_{t+1})-V(s_t)`$ — one step's worth of surprise |
+| $`\rho_t`$ | "rho-t" | The **probability ratio** $`\pi_{\text{new}}/\pi_{\text{old}}`$ — how much the policy changed on this action |
 | $\mathrm{clip}(x,\,l,\,u)$ | "clip x between l and u" | Squash $x$ into the interval: return $l$ if too small, $u$ if too big, else $x$ |
 | $\mathrm{KL}(p\,\lVert\,q)$ | "KL of p from q" | How far apart two distributions are (Ch. 1 §1.4) |
 | $F$ | "the Fisher matrix" | The curvature of KL — the local geometry of *policy* space rather than parameter space |
 | $H[\pi]$, $\mathcal{H}(\pi)$ | "the entropy of pi" | How undecided the policy is. High entropy = spread out; zero = fully committed |
-| $\mu_\theta(s)$ | "mu-theta of s" | A **deterministic** policy — outputs the action itself, not a distribution over actions |
+| $`\mu_\theta(s)`$ | "mu-theta of s" | A **deterministic** policy — outputs the action itself, not a distribution over actions |
 | $Z(s,a)$ | "Z of s, a" | The **whole distribution** of returns, not just its mean $Q(s,a)$ |
 | $\stackrel{D}{=}$ | "equals in distribution" | The two sides have the same distribution, not the same value |
 | $\odot$ | "elementwise product" | Multiply matching entries and keep them separate (§0.8) |
@@ -66,13 +66,13 @@ This chapter fuses Chapter 26's vocabulary with Chapter 6's, so a symbol may be 
 
 ## 27.1 The problem with function approximation
 
-Tabular methods store $Q(s,a)$ for every pair. Atari from pixels has $\sim256^{84\times84\times4}$ states. So approximate: $Q_\theta(s,a)$ with a neural network.
+Tabular methods store $Q(s,a)$ for every pair. Atari from pixels has $\sim256^{84\times84\times4}$ states. So approximate: $`Q_\theta(s,a)`$ with a neural network.
 
 ▸ **This immediately activates the deadly triad** (Ch. 26 §26.7). Naive Q-learning with a neural network diverges. The history of deep RL is largely the history of stabilizing tricks.
 
 The two families:
 - **Value-based** — learn $Q$, act greedily. Sample-efficient, off-policy, discrete actions.
-- **Policy-based** — learn $\pi_\theta$ directly. Handles continuous actions and stochastic policies, but is on-policy and sample-hungry.
+- **Policy-based** — learn $`\pi_\theta`$ directly. Handles continuous actions and stochastic policies, but is on-policy and sample-hungry.
 - **Actor–critic** — both. This is where nearly everything modern lives.
 
 #### Unpacking "so approximate"
@@ -85,7 +85,7 @@ $$256^{28{,}224} \approx 10^{68{,}000}$$
 
 ▸ **The move that saves you is not compression, it is *generalization*.** A table treats every state as unrelated to every other; a network treats similar states similarly, so experience in one state teaches you about states you have never seen. **That is the entire reason function approximation works, and it is also exactly why it is dangerous**: the same sharing that lets a useful update spread also lets a bad update spread.
 
-$Q_\theta(s,a)$ read aloud is *"Q, parameterized by theta, of s and a."* The subscript $\theta$ is not an index — it means "this function's behaviour is determined by the weight vector $\theta$." Learning changes $\theta$; $\theta$ changes the function; the function changes the policy.
+$`Q_\theta(s,a)`$ read aloud is *"Q, parameterized by theta, of s and a."* The subscript $\theta$ is not an index — it means "this function's behaviour is determined by the weight vector $\theta$." Learning changes $\theta$; $\theta$ changes the function; the function changes the policy.
 
 > **Analogy.** A tabular value function is a phone book: one entry per person, and knowing Smith's number tells you nothing about Smyth's. A neural value function is a *rule* for guessing numbers from names. The rule generalizes — which is wonderful when names carry signal, and catastrophic when correcting one entry silently corrupts a thousand others you never checked.
 
@@ -93,8 +93,8 @@ $Q_\theta(s,a)$ read aloud is *"Q, parameterized by theta, of s and a."* The sub
 
 | Family | What it learns | What it can't easily do |
 |---|---|---|
-| **Value-based** | $Q_\theta(s,a)$; the policy is $\arg\max_a Q$ | Continuous actions — you cannot enumerate a $\max$ over $\mathbb{R}^7$ |
-| **Policy-based** | $\pi_\theta(a\mid s)$ directly | Reuse old data — the gradient is only valid for the current policy |
+| **Value-based** | $`Q_\theta(s,a)`$; the policy is $`\arg\max_a Q`$ | Continuous actions — you cannot enumerate a $\max$ over $\mathbb{R}^7$ |
+| **Policy-based** | $`\pi_\theta(a\mid s)`$ directly | Reuse old data — the gradient is only valid for the current policy |
 | **Actor–critic** | Both, each helping the other | Nothing in particular; hence its dominance |
 
 ▸ **The dividing line is the $\arg\max$.** With four Atari buttons, scanning every action is free. With a robot arm's seven continuous joints there are infinitely many actions and no scan is possible — so you must represent the policy explicitly instead. **Every architectural choice in this chapter descends from whether that $\arg\max$ is computable.**
@@ -117,7 +117,7 @@ Network: pixels → conv stack → FC → $|\mathcal{A}|$ outputs (one forward p
 
 **Trick 2 — Target network.** A frozen copy $\theta^-$, updated every $C\approx10^4$ steps (or by a slow Polyak average $\theta^-\leftarrow\tau\theta+(1-\tau)\theta^-$).
 
-▸ **Why the target network is essential:** without it, the regression target $r+\gamma\max_{a'}Q_\theta(s',a')$ depends on the same parameters being updated. Increasing $Q(s,a)$ increases the target for $Q(s',a')$, which feeds back — a positive feedback loop that diverges. **Freezing the target turns RL back into a sequence of ordinary supervised regression problems.** This is the single most important idea in DQN.
+▸ **Why the target network is essential:** without it, the regression target $`r+\gamma\max_{a'}Q_\theta(s',a')`$ depends on the same parameters being updated. Increasing $Q(s,a)$ increases the target for $Q(s',a')$, which feeds back — a positive feedback loop that diverges. **Freezing the target turns RL back into a sequence of ordinary supervised regression problems.** This is the single most important idea in DQN.
 
 **Other essentials:** reward clipping to $[-1,1]$ (one learning rate across games — but it destroys reward magnitude information), frame stacking (4 frames, to restore the Markov property), frame skipping, and **Huber loss** (quadratic near zero, linear far away — bounds the gradient from large TD errors).
 
@@ -134,14 +134,14 @@ The pieces, one at a time:
 | Piece | Read aloud | Job |
 |---|---|---|
 | $(s,a,r,s')\sim\mathcal{D}$ | "sampled from script D" | Pull a random past transition out of the replay buffer |
-| $r+\gamma\max_{a'}Q_{\theta^-}(s',a')$ | "the target" | The Bellman optimality right-hand side (Ch. 26 §26.3), estimated |
+| $`r+\gamma\max_{a'}Q_{\theta^-}(s',a')`$ | "the target" | The Bellman optimality right-hand side (Ch. 26 §26.3), estimated |
 | $\theta^-$ | "theta-minus" | The **frozen** weights. The minus is a label meaning "old", not a negation |
-| $Q_\theta(s,a)$ | "the prediction" | What the live network currently believes |
+| $`Q_\theta(s,a)`$ | "the prediction" | What the live network currently believes |
 | $(\cdot)^2$ | "squared" | Ordinary squared error — this is a regression problem |
 
 **Notice what this equation is.** Strip the RL vocabulary and it is $\mathbb{E}[(y - \hat y)^2]$: mean squared error, the most ordinary loss in the book. **DQN's entire design is an effort to make Q-learning look like supervised regression**, because supervised regression is a thing we know how to make stable.
 
-**Where the two tricks fit into that sentence.** The target $y = r + \gamma\max_{a'}Q_{\theta^-}(s',a')$ has two properties that ordinary regression targets have and RL targets do not: it must be **fixed** while you fit it (that is the target network), and the training examples must be **shuffled** rather than arriving in temporal order (that is the replay buffer). The tricks are not clever heuristics; each restores one assumption of supervised learning that RL had broken.
+**Where the two tricks fit into that sentence.** The target $`y = r + \gamma\max_{a'}Q_{\theta^-}(s',a')`$ has two properties that ordinary regression targets have and RL targets do not: it must be **fixed** while you fit it (that is the target network), and the training examples must be **shuffled** rather than arriving in temporal order (that is the replay buffer). The tricks are not clever heuristics; each restores one assumption of supervised learning that RL had broken.
 
 #### Trick 1, decoded: why a buffer of memories
 
@@ -157,7 +157,7 @@ Three benefits, and they are  distinct:
 
 #### Trick 2, decoded: why freezing the target is the crucial idea
 
-Suppose you drop the target network and use $\theta$ on both sides. Now watch what a single gradient step does. You raise $Q_\theta(s,a)$ because the target said to. But $s$ and $s'$ are similar states — that is the whole point of generalization — so raising $Q_\theta(s,a)$ **also raises $Q_\theta(s',a')$**. Which raises the target. Which tells you to raise $Q_\theta(s,a)$ further.
+Suppose you drop the target network and use $\theta$ on both sides. Now watch what a single gradient step does. You raise $`Q_\theta(s,a)`$ because the target said to. But $s$ and $s'$ are similar states — that is the whole point of generalization — so raising $`Q_\theta(s,a)`$ **also raises $`Q_\theta(s',a')`$**. Which raises the target. Which tells you to raise $`Q_\theta(s,a)`$ further.
 
 ▸ **You are chasing a target that runs away from you at a speed proportional to how fast you chase it.** That is a positive feedback loop, and positive feedback loops do not settle; they diverge. This is the deadly triad of Ch. 26 §26.7 made mechanical.
 
@@ -200,7 +200,7 @@ The online network chooses, the target network evaluates. Removes most of the ma
 ▸ $$Q(s,a) = V(s) + \Big(A(s,a)-\frac{1}{|\mathcal{A}|}\sum_{a'}A(s,a')\Big)$$
 The mean subtraction resolves the identifiability problem (otherwise $V$ and $A$ are only determined up to a constant). ▸ **Why it helps:** in many states the action doesn't matter much, and this architecture learns $V(s)$ from *every* transition rather than only from the action taken.
 
-**Prioritized Experience Replay.** Sample transitions with probability $\propto|\delta_i|^\alpha$. Corrects the resulting bias with importance weights $w_i=\left(\frac{1}{N}\cdot\frac{1}{P(i)}\right)^\beta$, annealing $\beta\to1$. Learns most from surprising transitions.
+**Prioritized Experience Replay.** Sample transitions with probability $`\propto|\delta_i|^\alpha`$. Corrects the resulting bias with importance weights $`w_i=\left(\frac{1}{N}\cdot\frac{1}{P(i)}\right)^\beta`$, annealing $\beta\to1$. Learns most from surprising transitions.
 
 **Multi-step returns:** $n=3$ typically. Faster reward propagation.
 
@@ -227,13 +227,13 @@ $$Q(s,a) = V(s) + \Big(A(s,a)-\tfrac{1}{\lvert\mathcal{A}\rvert}\sum_{a'}A(s,a')
 
 The **identifiability problem** it fixes: if you only ever observe $Q$, you cannot recover $V$ and $A$ separately, because $V+5$ paired with $A-5$ gives exactly the same $Q$. An infinite family of $(V, A)$ pairs explains the same data, so gradient descent has no reason to settle on any of them — a recipe for drifting, unstable heads.
 
-Subtracting the mean of $A$ pins it down. Average both sides over actions: the two $A$ terms cancel and you get $V(s) = \frac{1}{\lvert\mathcal{A}\rvert}\sum_a Q(s,a)$. ▸ **The mean-subtraction is a *definition*: it decrees that $V$ shall be the average action value and $A$ shall be the deviation from it.** No ambiguity remains.
+Subtracting the mean of $A$ pins it down. Average both sides over actions: the two $A$ terms cancel and you get $`V(s) = \frac{1}{\lvert\mathcal{A}\rvert}\sum_a Q(s,a)`$. ▸ **The mean-subtraction is a *definition*: it decrees that $V$ shall be the average action value and $A$ shall be the deviation from it.** No ambiguity remains.
 
 **Put numbers on why this helps.** Suppose a state has action values $(102, 100, 98)$. The dueling decomposition gives $V = 100$ and $A = (+2, 0, -2)$. A single transition in which you took the middle action teaches the $V$ head that this state is worth about 100 — and **that lesson applies to all three actions**, because $V$ is shared. Plain DQN would have updated only the entry for the action taken. In states where the choice barely matters (most states, in most games), you have tripled the effective data for the part of the estimate that carries almost all the magnitude.
 
-**Prioritized Experience Replay, decoded.** Sample transitions with probability $\propto\lvert\delta_i\rvert^\alpha$ — *"the bigger the surprise, the more often you revisit it."* The exponent $\alpha$ (typically $0.6$) controls how aggressive that is: $\alpha=0$ is uniform sampling, $\alpha=1$ is fully proportional to surprise.
+**Prioritized Experience Replay, decoded.** Sample transitions with probability $`\propto\lvert\delta_i\rvert^\alpha`$ — *"the bigger the surprise, the more often you revisit it."* The exponent $\alpha$ (typically $0.6$) controls how aggressive that is: $\alpha=0$ is uniform sampling, $\alpha=1$ is fully proportional to surprise.
 
-But non-uniform sampling **biases the expectation** — you are no longer averaging over the distribution you meant to. The importance weight $w_i = \big(\frac{1}{N}\cdot\frac{1}{P(i)}\big)^\beta$ is the correction from Ch. 26 §26.7, applied to the buffer instead of to the policy. Annealing $\beta$ from about $0.4$ to $1$ means: **correct the bias only partially at first (when the estimates are all wrong anyway and speed matters more than exactness) and fully at the end (when you need the right answer).**
+But non-uniform sampling **biases the expectation** — you are no longer averaging over the distribution you meant to. The importance weight $`w_i = \big(\frac{1}{N}\cdot\frac{1}{P(i)}\big)^\beta`$ is the correction from Ch. 26 §26.7, applied to the buffer instead of to the policy. Annealing $\beta$ from about $0.4$ to $1$ means: **correct the bias only partially at first (when the estimates are all wrong anyway and speed matters more than exactness) and fully at the end (when you need the right answer).**
 
 > **Analogy.** Revising for an exam by re-reading the topics you keep getting wrong, rather than working front-to-back through the textbook. Obviously better — but if you *only* ever study your weak spots, your sense of which topics are common on the exam becomes distorted. The importance weight is the correction that keeps your priorities honest.
 
@@ -257,7 +257,7 @@ Why bother, when you only need the mean to act? Because a mean can be a lie. **I
 
 ### The setup
 
-Parameterize the policy directly: $\pi_\theta(a\mid s)$. Objective $J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}[R(\tau)]$.
+Parameterize the policy directly: $`\pi_\theta(a\mid s)`$. Objective $`J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}[R(\tau)]`$.
 
 **The difficulty:** the distribution being sampled from depends on $\theta$, so we can't just move the gradient inside.
 
@@ -271,7 +271,7 @@ $$\nabla_\theta J = \nabla_\theta\int p_\theta(\tau)R(\tau)d\tau = \int p_\theta
 Now expand the trajectory probability:
 $$\log p_\theta(\tau)=\log\rho(s_0)+\sum_{t}\Big[\log\pi_\theta(a_t\mid s_t) + \log P(s_{t+1}\mid s_t,a_t)\Big]$$
 
-▸ **The environment dynamics $P$ and the initial distribution $\rho$ do not depend on $\theta$, so they vanish under $\nabla_\theta$.** This is the crucial step, and it is why policy gradients are **model-free** — you never need to know the transition probabilities.
+▸ **The environment dynamics $P$ and the initial distribution $\rho$ do not depend on $\theta$, so they vanish under $`\nabla_\theta`$.** This is the crucial step, and it is why policy gradients are **model-free** — you never need to know the transition probabilities.
 
 ▸ $$\boxed{\ \nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta}\left[\sum_{t=0}^{T}\nabla_\theta\log\pi_\theta(a_t\mid s_t)\ \Psi_t\right]\ }$$
 
@@ -281,9 +281,9 @@ $$\log p_\theta(\tau)=\log\rho(s_0)+\sum_{t}\Big[\log\pi_\theta(a_t\mid s_t) + \
 
 This is the most important derivation in the chapter, and it is four steps long. Take them slowly.
 
-**Step 0 — what we want and why it's awkward.** $J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}[R(\tau)]$ reads: *"J of theta equals the expected total reward of a trajectory tau, when trajectories are drawn from the policy pi-theta."* Note that $J$ is a thing to **maximize** — RL climbs hills while supervised learning descends them, so expect $+\eta\nabla$ rather than $-\eta\nabla$.
+**Step 0 — what we want and why it's awkward.** $`J(\theta) = \mathbb{E}_{\tau\sim\pi_\theta}[R(\tau)]`$ reads: *"J of theta equals the expected total reward of a trajectory tau, when trajectories are drawn from the policy pi-theta."* Note that $J$ is a thing to **maximize** — RL climbs hills while supervised learning descends them, so expect $+\eta\nabla$ rather than $-\eta\nabla$.
 
-The difficulty in one line: **the thing we are differentiating is hiding inside the thing we are averaging over.** In supervised learning, $\theta$ affects the *value* of the loss but not which data you see. Here, $\theta$ affects **which trajectories exist at all**. You cannot pull $\nabla_\theta$ through an expectation whose distribution depends on $\theta$.
+The difficulty in one line: **the thing we are differentiating is hiding inside the thing we are averaging over.** In supervised learning, $\theta$ affects the *value* of the loss but not which data you see. Here, $\theta$ affects **which trajectories exist at all**. You cannot pull $`\nabla_\theta`$ through an expectation whose distribution depends on $\theta$.
 
 > **Analogy.** You run a restaurant and want to know how a menu change affects average customer satisfaction. Easy if the same customers come regardless. But changing the menu **changes who walks in**. The change to the menu and the change to the clientele are entangled, and you cannot measure one while holding the other fixed.
 
@@ -291,11 +291,11 @@ The difficulty in one line: **the thing we are differentiating is hiding inside 
 
 $$\nabla_\theta p_\theta(\tau) = p_\theta(\tau)\,\frac{\nabla_\theta p_\theta(\tau)}{p_\theta(\tau)} = p_\theta(\tau)\nabla_\theta\log p_\theta(\tau)$$
 
-The first equality is **multiplying and dividing by $p_\theta(\tau)$**, which changes nothing. The second uses the chain rule backwards: $\nabla \log f = \frac{\nabla f}{f}$, so $\frac{\nabla f}{f} = \nabla\log f$.
+The first equality is **multiplying and dividing by $`p_\theta(\tau)`$**, which changes nothing. The second uses the chain rule backwards: $\nabla \log f = \frac{\nabla f}{f}$, so $\frac{\nabla f}{f} = \nabla\log f$.
 
-▸ **That is the whole trick, and it looks like it accomplishes nothing.** What it accomplishes is enormous: the right-hand side has the form "$p_\theta(\tau)$ times something," and *a probability times something is an expectation*. **The trick converts a derivative-of-a-distribution into an expectation you can estimate by sampling.**
+▸ **That is the whole trick, and it looks like it accomplishes nothing.** What it accomplishes is enormous: the right-hand side has the form "$`p_\theta(\tau)`$ times something," and *a probability times something is an expectation*. **The trick converts a derivative-of-a-distribution into an expectation you can estimate by sampling.**
 
-**Step 2 — swap the integral for an average.** Once you have $\int p_\theta(\tau)\,[\cdot]\,d\tau$, that *is* $\mathbb{E}_{\tau\sim\pi_\theta}[\cdot]$ by definition (§0.5). And an expectation can be estimated by running the policy and averaging. You have gone from an unsampleable object to a sampleable one without approximating anything.
+**Step 2 — swap the integral for an average.** Once you have $`\int p_\theta(\tau)\,[\cdot]\,d\tau`$, that *is* $`\mathbb{E}_{\tau\sim\pi_\theta}[\cdot]`$ by definition (§0.5). And an expectation can be estimated by running the policy and averaging. You have gone from an unsampleable object to a sampleable one without approximating anything.
 
 **Step 3 — the environment disappears.** Expand the log-probability of a whole trajectory:
 
@@ -303,7 +303,7 @@ $$\log p_\theta(\tau)=\log\rho(s_0)+\sum_{t}\Big[\log\pi_\theta(a_t\mid s_t) + \
 
 Read it: *"the log-probability of an entire episode is the log-probability of the start state, plus, for each step, the log-probability that the policy chose that action and the log-probability that the world produced that next state."* The sum appears because $\log$ turns products into sums (§0.3) — trajectories are chains of independent-given-the-past events, so their probabilities multiply.
 
-Now differentiate with respect to $\theta$. **$\rho(s_0)$ has no $\theta$ in it. $P(s_{t+1}\mid s_t,a_t)$ has no $\theta$ in it.** Anything without $\theta$ differentiates to zero.
+Now differentiate with respect to $\theta$. **$`\rho(s_0)`$ has no $\theta$ in it. $`P(s_{t+1}\mid s_t,a_t)`$ has no $\theta$ in it.** Anything without $\theta$ differentiates to zero.
 
 $$\nabla_\theta\log p_\theta(\tau) = \sum_t \nabla_\theta \log\pi_\theta(a_t\mid s_t)$$
 
@@ -313,9 +313,9 @@ $$\nabla_\theta\log p_\theta(\tau) = \sum_t \nabla_\theta \log\pi_\theta(a_t\mid
 
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\pi_\theta}\left[\sum_{t=0}^{T}\nabla_\theta\log\pi_\theta(a_t\mid s_t)\ \Psi_t\right]$$
 
-$\nabla_\theta\log\pi_\theta(a\mid s)$ is called the **score function**. Read it as: *"the direction in weight space that makes this exact action, in this exact state, more likely."* It is entirely about the policy and says nothing about whether the action was any good — that judgement is $\Psi_t$'s job.
+$`\nabla_\theta\log\pi_\theta(a\mid s)`$ is called the **score function**. Read it as: *"the direction in weight space that makes this exact action, in this exact state, more likely."* It is entirely about the policy and says nothing about whether the action was any good — that judgement is $`\Psi_t`$'s job.
 
-**Put real numbers in.** Say a softmax policy over three actions currently assigns $(0.5, 0.3, 0.2)$. You sample action 2 and the episode scores $\Psi = +4$. The update pushes $\theta$ along $+4\times$ the direction that raises $\log\pi(a_2)$ — so next time the distribution might be $(0.47, 0.35, 0.18)$. If instead $\Psi = -4$, it moves the other way. If $\Psi = 0$, nothing happens at all.
+**Put real numbers in.** Say a softmax policy over three actions currently assigns $(0.5, 0.3, 0.2)$. You sample action 2 and the episode scores $\Psi = +4$. The update pushes $\theta$ along $+4\times$ the direction that raises $`\log\pi(a_2)`$ — so next time the distribution might be $(0.47, 0.35, 0.18)$. If instead $\Psi = -4$, it moves the other way. If $\Psi = 0$, nothing happens at all.
 
 ▸ **"Weighted maximum likelihood, where the weights are the returns" is the sentence to memorize.** Ordinary supervised learning does maximum likelihood on a fixed dataset of correct answers. Policy gradient does maximum likelihood on **its own past behaviour, with each example weighted by how well it turned out.** Good episodes become training data to imitate; bad episodes become training data to avoid. That reframing makes the whole family intuitive, and it is exactly the mental model to carry into RLHF (Ch. 16).
 
@@ -325,32 +325,32 @@ $\nabla_\theta\log\pi_\theta(a\mid s)$ is called the **score function**. Read it
 >
 > The **policy gradient theorem** in its general, discounted, function-approximation form is due to **Richard Sutton, David McAllester, Satinder Singh and Yishay Mansour** in 1999 — the result that established policy-based methods as a principled family rather than a heuristic.
 
-### The choices of $\Psi_t$ — this is the whole design space
+### The choices of $`\Psi_t`$ — this is the whole design space
 
-| $\Psi_t$ | Name | Bias | Variance |
+| $`\Psi_t`$ | Name | Bias | Variance |
 |---|---|---|---|
 | $R(\tau)$ | REINFORCE | none | enormous |
-| $\sum_{t'\ge t}r_{t'}$ | reward-to-go | none | very high |
-| $\sum_{t'\ge t}r_{t'} - b(s_t)$ | with baseline | none | high |
-| $Q^\pi(s_t,a_t)$ | Q actor–critic | low | medium |
-| $A^\pi(s_t,a_t)$ | **advantage AC** | low | **lowest** |
-| $r_t+\gamma V(s_{t+1})-V(s_t)$ | TD residual | higher | very low |
+| $`\sum_{t'\ge t}r_{t'}`$ | reward-to-go | none | very high |
+| $`\sum_{t'\ge t}r_{t'} - b(s_t)`$ | with baseline | none | high |
+| $`Q^\pi(s_t,a_t)`$ | Q actor–critic | low | medium |
+| $`A^\pi(s_t,a_t)`$ | **advantage AC** | low | **lowest** |
+| $`r_t+\gamma V(s_{t+1})-V(s_t)`$ | TD residual | higher | very low |
 | GAE($\lambda$) | §27.6 | tunable | tunable |
 
 **Reward-to-go** uses causality: an action at time $t$ cannot affect rewards before $t$, so including them adds only variance.
 
-#### Reading the $\Psi_t$ table
+#### Reading the $`\Psi_t`$ table
 
 Every row is the same algorithm with a different answer to one question: **"how do I score the action I just took?"** The rows are ordered from "most honest, most useless" to "slightly biased, actually works."
 
-| $\Psi_t$ | What it says | Why it's bad or good |
+| $`\Psi_t`$ | What it says | Why it's bad or good |
 |---|---|---|
 | $R(\tau)$ | "The whole episode scored 400, so every action in it was worth 400" | Blames the opening move for a mistake on turn 90. Unbiased and nearly unusable |
-| $\sum_{t'\ge t}r_{t'}$ | "Only count rewards that came *after* this action" | Free improvement — the past is not caused by the present |
-| $\sum_{t'\ge t}r_{t'} - b(s_t)$ | "…and compare it to how well this state usually goes" | Free again, and the biggest single win |
-| $Q^\pi(s_t,a_t)$ | "Use a learned estimate instead of a noisy sample" | Trades sampling noise for approximation error |
-| $A^\pi(s_t,a_t)$ | "Use how much better than average this action is" | The canonical choice, for the reasons in Ch. 26 §26.2 |
-| $r_t+\gamma V(s_{t+1})-V(s_t)$ | "One step of reality, then trust the critic" | Lowest variance, most bias — TD taken to its extreme |
+| $`\sum_{t'\ge t}r_{t'}`$ | "Only count rewards that came *after* this action" | Free improvement — the past is not caused by the present |
+| $`\sum_{t'\ge t}r_{t'} - b(s_t)`$ | "…and compare it to how well this state usually goes" | Free again, and the biggest single win |
+| $`Q^\pi(s_t,a_t)`$ | "Use a learned estimate instead of a noisy sample" | Trades sampling noise for approximation error |
+| $`A^\pi(s_t,a_t)`$ | "Use how much better than average this action is" | The canonical choice, for the reasons in Ch. 26 §26.2 |
+| $`r_t+\gamma V(s_{t+1})-V(s_t)`$ | "One step of reality, then trust the critic" | Lowest variance, most bias — TD taken to its extreme |
 | GAE($\lambda$) | "Blend all of the above" | The dial. §27.6 |
 
 ▸ **Reward-to-go, made concrete.** An episode pays $(1, 0, 0, 5)$ and the action in question was taken at $t=2$. Plain REINFORCE credits it with the full $6$. Reward-to-go credits it with $5$ — dropping the $1$ that was collected *before* the action existed. **That $1$ was never affected by the action, so including it contributes exactly zero signal and a full share of noise.** Removing terms that cannot possibly depend on your decision is variance reduction with no cost whatsoever, which is a rare thing.
@@ -372,8 +372,8 @@ The proof is three equalities and each one is a single move. Read it right to le
 
 $$\mathbb{E}_{a\sim\pi_\theta}\big[\nabla_\theta\log\pi_\theta(a\mid s)\,b(s)\big] = b(s)\sum_a\pi_\theta(a\mid s)\frac{\nabla_\theta\pi_\theta(a\mid s)}{\pi_\theta(a\mid s)} = b(s)\,\nabla_\theta\underbrace{\sum_a\pi_\theta(a\mid s)}_{=1} = 0$$
 
-1. **Pull $b(s)$ out.** It doesn't depend on $a$, and we are averaging over $a$, so it is a constant with respect to the averaging. Then write the expectation longhand as $\sum_a \pi_\theta(a\mid s)[\cdot]$, and expand $\nabla\log\pi$ back into $\frac{\nabla\pi}{\pi}$ — the log-derivative trick, run in reverse.
-2. **The $\pi_\theta(a\mid s)$ cancels** top and bottom, leaving $\sum_a \nabla_\theta \pi_\theta(a\mid s) = \nabla_\theta\sum_a\pi_\theta(a\mid s)$.
+1. **Pull $b(s)$ out.** It doesn't depend on $a$, and we are averaging over $a$, so it is a constant with respect to the averaging. Then write the expectation longhand as $`\sum_a \pi_\theta(a\mid s)[\cdot]`$, and expand $\nabla\log\pi$ back into $\frac{\nabla\pi}{\pi}$ — the log-derivative trick, run in reverse.
+2. **The $`\pi_\theta(a\mid s)`$ cancels** top and bottom, leaving $`\sum_a \nabla_\theta \pi_\theta(a\mid s) = \nabla_\theta\sum_a\pi_\theta(a\mid s)`$.
 3. **Probabilities sum to 1**, always, for every $\theta$. And the derivative of a constant is zero.
 
 ▸ **The whole proof rests on the single fact that a probability distribution sums to one no matter what the parameters are.** Nothing about rewards, dynamics, or neural networks enters. That is why the result is so robust: you can subtract *any* function of the state — a learned value network, a running average, the mean over a batch of samples, the number 7 — and the gradient stays exactly correct in expectation.
@@ -396,8 +396,8 @@ Here is the situation the baseline is fixing. Suppose you are in a state where a
 
 ## 27.5 Actor–critic
 
-**Actor:** $\pi_\theta$, updated by the policy gradient.
-**Critic:** $V_\phi$ or $Q_\phi$, updated by TD regression.
+**Actor:** $`\pi_\theta`$, updated by the policy gradient.
+**Critic:** $`V_\phi`$ or $`Q_\phi`$, updated by TD regression.
 
 ```
 δ = r + γ V_φ(s') − V_φ(s)          # TD error, an estimate of the advantage
@@ -405,7 +405,7 @@ Here is the situation the baseline is fixing. Suppose you are in a state where a
 φ ← φ + α_φ δ ∇_φ V_φ(s)            # critic
 ```
 
-**A2C/A3C:** run many parallel environments to decorrelate data (A3C did it asynchronously; A2C synchronously and works just as well on a GPU). Add an **entropy bonus** $+\beta H(\pi_\theta(\cdot\mid s))$ to the objective — a direct, cheap, and effective exploration mechanism that prevents premature determinism.
+**A2C/A3C:** run many parallel environments to decorrelate data (A3C did it asynchronously; A2C synchronously and works just as well on a GPU). Add an **entropy bonus** $`+\beta H(\pi_\theta(\cdot\mid s))`$ to the objective — a direct, cheap, and effective exploration mechanism that prevents premature determinism.
 
 #### Reading the actor–critic loop
 
@@ -421,9 +421,9 @@ Three lines, and they are worth reading as a conversation between two networks.
 
 ▸ **Why $\delta$ is a legitimate advantage estimate.** Recall $A(s,a) = Q(s,a) - V(s)$, and $r + \gamma V(s')$ is a one-sample estimate of $Q(s,a)$. Substitute and you get exactly $\delta$. **The TD error *is* the advantage, sampled once** — a fact that looks like a coincidence and is actually the reason actor–critic exists as a coherent method.
 
-**Line 2 — the actor takes the note.** If $\delta > 0$ the action beat expectations, so make it more likely; if $\delta < 0$, less likely. This is the policy gradient of §27.4 with $\Psi_t = \delta_t$.
+**Line 2 — the actor takes the note.** If $\delta > 0$ the action beat expectations, so make it more likely; if $\delta < 0$, less likely. This is the policy gradient of §27.4 with $`\Psi_t = \delta_t`$.
 
-**Line 3 — the critic corrects itself.** Ordinary TD regression: move $V_\phi(s)$ toward the target by $\alpha_\phi \delta$.
+**Line 3 — the critic corrects itself.** Ordinary TD regression: move $`V_\phi(s)`$ toward the target by $`\alpha_\phi \delta`$.
 
 > **Analogy.** A footballer and a coach. The **coach** (critic) watches and says "that pass was better than I expected from that position" — one number, immediately, without waiting for the final score. The **player** (actor) adjusts their instincts accordingly. And the coach, watching how things actually unfold, keeps refining their own sense of what to expect. **Neither is trustworthy alone: an unrehearsed coach gives nonsense feedback, and a player with no feedback learns only from final scores, which arrive far too rarely.** They bootstrap each other, which is the appeal and also, as always, the risk.
 
@@ -431,7 +431,7 @@ Three lines, and they are worth reading as a conversation between two networks.
 
 #### Parallel environments and the entropy bonus, decoded
 
-**Why parallel environments do replay's job.** Policy gradients are **on-policy**: the derivation in §27.4 is only valid for data generated by the *current* $\pi_\theta$, so a replay buffer full of old policies' experience is not usable. But you still need decorrelated batches. The fix is to step 16 (or 64, or 1024) independent copies of the environment simultaneously and take one transition from each. **Sixteen environments at different points in different episodes give you sixteen  unrelated samples — the same decorrelation replay provides, obtained through space instead of through time.**
+**Why parallel environments do replay's job.** Policy gradients are **on-policy**: the derivation in §27.4 is only valid for data generated by the *current* $`\pi_\theta`$, so a replay buffer full of old policies' experience is not usable. But you still need decorrelated batches. The fix is to step 16 (or 64, or 1024) independent copies of the environment simultaneously and take one transition from each. **Sixteen environments at different points in different episodes give you sixteen  unrelated samples — the same decorrelation replay provides, obtained through space instead of through time.**
 
 A3C did this **asynchronously**: separate workers each with their own copy, pushing gradients to a shared parameter server whenever they finished. A2C does it **synchronously**: step all environments, batch, one update. Synchronous turned out to work just as well and vectorizes cleanly on a GPU, so the asynchrony — the "A" that gave A3C its name — quietly turned out not to be the important part.
 
@@ -445,7 +445,7 @@ A3C did this **asynchronously**: separate workers each with their own copy, push
 
 Adding $+\beta H$ to the objective (typically $\beta \approx 0.01$) pays the agent a small bribe for staying undecided.
 
-▸ **Why this matters more than it sounds: policy collapse is an absorbing state.** If $\pi_\theta(a\mid s)$ drifts to $0.0001$, you will sample that action roughly once in ten thousand visits — so you almost never get a gradient for it, so its probability almost never recovers. **An action whose probability reaches zero is deleted from the agent's universe, permanently, regardless of how good it was.** The entropy bonus is a floor that prevents that deletion. It costs one term in the loss and prevents an entire class of silent, unrecoverable failure.
+▸ **Why this matters more than it sounds: policy collapse is an absorbing state.** If $`\pi_\theta(a\mid s)`$ drifts to $0.0001$, you will sample that action roughly once in ten thousand visits — so you almost never get a gradient for it, so its probability almost never recovers. **An action whose probability reaches zero is deleted from the agent's universe, permanently, regardless of how good it was.** The entropy bonus is a floor that prevents that deletion. It costs one term in the loss and prevents an entire class of silent, unrecoverable failure.
 
 > **Where this came from.** **A3C** (Volodymyr Mnih and colleagues at DeepMind, 2016) was startling for a reason unrelated to its algorithm: it matched or beat DQN on Atari while training on **a single multi-core CPU**, in less wall-clock time than DQN needed on a GPU. At a moment when the field's assumption was that deep RL required expensive accelerators, a paper showing that parallel CPU workers sufficed changed what people believed was possible on a modest budget — and the synchronous simplification (A2C) that followed made even the asynchrony unnecessary.
 
@@ -455,7 +455,7 @@ Adding $+\beta H$ to the objective (typically $\beta \approx 0.01$) pays the age
 
 We need an advantage estimate that trades bias against variance smoothly.
 
-Define the TD residual $\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)$. The $k$-step advantage estimator is
+Define the TD residual $`\delta_t = r_t+\gamma V(s_{t+1})-V(s_t)`$. The $k$-step advantage estimator is
 $$\hat A_t^{(k)} = \sum_{l=0}^{k-1}\gamma^l\delta_{t+l}$$
 
 ($k=1$: low variance, high bias from the imperfect $V$. $k=\infty$: unbiased, huge variance.)
@@ -464,8 +464,8 @@ $$\hat A_t^{(k)} = \sum_{l=0}^{k-1}\gamma^l\delta_{t+l}$$
 
 ▸ $$\boxed{\ \hat A_t^{\mathrm{GAE}(\gamma,\lambda)} = \sum_{l=0}^{\infty}(\gamma\lambda)^l\,\delta_{t+l}\ }$$
 
-- $\lambda=0$: $\hat A_t=\delta_t$ — maximum bias, minimum variance.
-- $\lambda=1$: $\hat A_t=\sum_l\gamma^l r_{t+l} - V(s_t)$ — unbiased Monte Carlo.
+- $\lambda=0$: $`\hat A_t=\delta_t`$ — maximum bias, minimum variance.
+- $\lambda=1$: $`\hat A_t=\sum_l\gamma^l r_{t+l} - V(s_t)`$ — unbiased Monte Carlo.
 - **$\lambda=0.95$ is the near-universal default.**
 
 ▸ **GAE is TD($\lambda$) applied to advantages** (Ch. 26 §26.5) — the same geometric-averaging idea, and it computes in one backward pass over the trajectory:
@@ -486,9 +486,9 @@ Read aloud: *"A-hat-t equals the sum over l of gamma-lambda to the l, times delt
 
 That is the whole formula. One symbol at a time:
 
-- $\delta_{t+l} = r_{t+l}+\gamma V(s_{t+l+1})-V(s_{t+l})$ — the surprise at step $t+l$. Positive means "better than the critic expected."
+- $`\delta_{t+l} = r_{t+l}+\gamma V(s_{t+l+1})-V(s_{t+l})`$ — the surprise at step $t+l$. Positive means "better than the critic expected."
 - $(\gamma\lambda)^l$ — the fading weight. Note it is the **product** of the two, so both parameters shrink the window.
-- $\hat A_t$ — the hat means **estimate**. You are estimating the advantage, not computing it.
+- $`\hat A_t`$ — the hat means **estimate**. You are estimating the advantage, not computing it.
 
 ▸ **The core intuition: how good was your action at time $t$? Look at every surprise that followed it, and give more weight to the surprises that came soon after.** A pleasant surprise three steps later is probably something you caused. A pleasant surprise three hundred steps later probably is not.
 
@@ -506,11 +506,11 @@ The effective window is $\frac{1}{1-\gamma\lambda} \approx 17$ steps. **Your act
 
 #### Why $\lambda=1$ really is Monte Carlo — the telescoping
 
-The claim "$\lambda=1$ gives $\hat A_t=\sum_l\gamma^l r_{t+l} - V(s_t)$" looks like it needs work, and it does not. Substitute the definition of $\delta$ and watch the value terms cancel:
+The claim "$\lambda=1$ gives $`\hat A_t=\sum_l\gamma^l r_{t+l} - V(s_t)`$" looks like it needs work, and it does not. Substitute the definition of $\delta$ and watch the value terms cancel:
 
 $$\sum_l \gamma^l\big[r_{t+l} + \gamma V(s_{t+l+1}) - V(s_{t+l})\big] = \sum_l \gamma^l r_{t+l} + \sum_l\big[\gamma^{l+1} V(s_{t+l+1}) - \gamma^{l} V(s_{t+l})\big]$$
 
-**Every value term destroys its neighbour** — the $+\gamma^1 V(s_{t+1})$ from $l=0$ is cancelled by the $-\gamma^1 V(s_{t+1})$ from $l=1$, and so on — leaving only $-V(s_t)$ from the very first term. What survives is "actual discounted rewards, minus the critic's opening prediction," which is precisely the Monte Carlo advantage.
+**Every value term destroys its neighbour** — the $`+\gamma^1 V(s_{t+1})`$ from $l=0$ is cancelled by the $`-\gamma^1 V(s_{t+1})`$ from $l=1$, and so on — leaving only $`-V(s_t)`$ from the very first term. What survives is "actual discounted rewards, minus the critic's opening prediction," which is precisely the Monte Carlo advantage.
 
 ▸ **This is the same telescoping trick as potential-based reward shaping (Ch. 26 §26.9), and the same structure as the driving-home story.** A chain of one-step revisions to a forecast, summed, equals the total revision from start to finish. It is worth recognising because it appears repeatedly once you know the shape.
 
@@ -524,7 +524,7 @@ for t in reversed(range(T)):
     A[t] = adv
 ```
 
-**Why backwards?** Because $\hat A_t$ depends on everything *after* $t$. Written as a recursion, $\hat A_t = \delta_t + \gamma\lambda\,\hat A_{t+1}$ — *"my advantage is my own surprise, plus a discounted copy of the advantage of the step after me."* Once you have $\hat A_{t+1}$, computing $\hat A_t$ is one multiply and one add. Walking the trajectory from the end gives you all $T$ advantages in $O(T)$ time.
+**Why backwards?** Because $`\hat A_t`$ depends on everything *after* $t$. Written as a recursion, $`\hat A_t = \delta_t + \gamma\lambda\,\hat A_{t+1}`$ — *"my advantage is my own surprise, plus a discounted copy of the advantage of the step after me."* Once you have $`\hat A_{t+1}`$, computing $`\hat A_t`$ is one multiply and one add. Walking the trajectory from the end gives you all $T$ advantages in $O(T)$ time.
 
 ▸ **A naive forward implementation would be $O(T^2)$** — for each of $T$ timesteps, sum over all subsequent steps. For $T=2048$ (the standard PPO rollout length) that is 4 million operations instead of 2 thousand. **The recursion is not a micro-optimization; it is what makes GAE free.**
 
@@ -568,8 +568,8 @@ Monotonic-improvement guarantee, and it works — but it is complex, second-orde
 
 **Read the $\min$ carefully — this is the part people get wrong.**
 
-- **If $\hat A_t>0$** (a good action): the unclipped term grows with $\rho$; the clipped term saturates at $(1+\epsilon)\hat A$. The $\min$ picks the smaller, so **the objective stops rewarding you past $\rho=1+\epsilon$.** No incentive to move further.
-- **If $\hat A_t<0$** (a bad action): the terms are negative; the $\min$ picks the *more negative*, which is the unclipped term when $\rho>1$. So **there is no ceiling on pushing a bad action's probability down**, but once $\rho<1-\epsilon$ the clip kicks in and the gradient vanishes.
+- **If $`\hat A_t>0`$** (a good action): the unclipped term grows with $\rho$; the clipped term saturates at $(1+\epsilon)\hat A$. The $\min$ picks the smaller, so **the objective stops rewarding you past $\rho=1+\epsilon$.** No incentive to move further.
+- **If $`\hat A_t<0`$** (a bad action): the terms are negative; the $\min$ picks the *more negative*, which is the unclipped term when $\rho>1$. So **there is no ceiling on pushing a bad action's probability down**, but once $\rho<1-\epsilon$ the clip kicks in and the gradient vanishes.
 
 ▸ **The $\min$ makes the objective a pessimistic lower bound on the unclipped surrogate**: it removes the incentive to move far, without ever preventing a correction back toward the old policy. That asymmetry is the design, and $\epsilon=0.2$ is the standard.
 
@@ -594,9 +594,9 @@ $$\mathcal{L} = \mathcal{L}^{\text{CLIP}} - c_1\underbrace{(V_\phi(s_t)-V^{\text
 
 TRPO's whole design rests on one observation, and it is easiest to see with numbers.
 
-Take a softmax policy over two actions with logits $(z_1, z_2)$, and add exactly $1$ to the first logit:
+Take a softmax policy over two actions with logits $`(z_1, z_2)`$, and add exactly $1$ to the first logit:
 
-| Starting logits | Policy before | Policy after $z_1 \mathbin{+}= 1$ | How much changed |
+| Starting logits | Policy before | Policy after $`z_1 \mathbin{+}= 1`$ | How much changed |
 |---|---|---|---|
 | $(0,\,0)$ | $(0.500,\ 0.500)$ | $(0.731,\ 0.269)$ | **Enormously** |
 | $(10,\,0)$ | $(0.99995,\ 0.00005)$ | $(0.99998,\ 0.00002)$ | **Almost nothing** |
@@ -611,7 +611,7 @@ $$\max_\theta\ \mathbb{E}\left[\frac{\pi_\theta(a\mid s)}{\pi_{\theta_{\text{old
 
 Read aloud: *"maximize the expected ratio times advantage, subject to the expected KL divergence between old and new policies being at most delta."* "s.t." means **"subject to"** — everything after it is a constraint the answer must satisfy, not part of the thing being maximized.
 
-- **The ratio** $\frac{\pi_\theta(a\mid s)}{\pi_{\theta_{\text{old}}}(a\mid s)}$ is the importance-sampling correction of Ch. 26 §26.7, over a *single* action rather than a whole trajectory. It lets you evaluate a proposed new policy using data the old one collected.
+- **The ratio** $`\frac{\pi_\theta(a\mid s)}{\pi_{\theta_{\text{old}}}(a\mid s)}`$ is the importance-sampling correction of Ch. 26 §26.7, over a *single* action rather than a whole trajectory. It lets you evaluate a proposed new policy using data the old one collected.
 - **The constraint** measures distance in **policy space** using KL divergence (Ch. 1 §1.4), which is scale-free and does not care how the parameters happen to be arranged. $\delta$ is typically about $0.01$ — a very small permitted change per update.
 
 ▸ **"Trust region" means exactly what it says: a neighbourhood around the current policy inside which your approximation is trustworthy.** Optimize freely inside it; refuse to leave it.
@@ -628,7 +628,7 @@ $\mathrm{clip}(x, l, u)$ is read *"clip x to between l and u"* — return $l$ if
 
 **Here is the table that makes the $\min$ obvious.** Set $\epsilon = 0.2$ and work out both terms.
 
-**Case $\hat A_t = +1$ (the action was good — we want $\rho$ to go up):**
+**Case $`\hat A_t = +1`$ (the action was good — we want $\rho$ to go up):**
 
 | $\rho$ | Unclipped $\rho\hat A$ | Clipped term | $\min$ | Gradient? |
 |---|---|---|---|---|
@@ -637,7 +637,7 @@ $\mathrm{clip}(x, l, u)$ is read *"clip x to between l and u"* — return $l$ if
 | $1.2$ | $1.20$ | $1.20$ | $1.20$ | Yes |
 | $1.5$ | $1.50$ | $1.20$ | $1.20$ | **No** — flat, gradient is zero |
 
-**Case $\hat A_t = -1$ (the action was bad — we want $\rho$ to go down):**
+**Case $`\hat A_t = -1`$ (the action was bad — we want $\rho$ to go down):**
 
 | $\rho$ | Unclipped $\rho\hat A$ | Clipped term | $\min$ | Gradient? |
 |---|---|---|---|---|
@@ -684,16 +684,16 @@ The book is right that these matter as much as the algorithm. Briefly, each one 
 
 ### DDPG
 
-Deterministic policy $\mu_\theta(s)$; the critic's gradient flows through the actor via the chain rule:
+Deterministic policy $`\mu_\theta(s)`$; the critic's gradient flows through the actor via the chain rule:
 ▸ $$\nabla_\theta J = \mathbb{E}\Big[\nabla_aQ_\phi(s,a)\big|_{a=\mu_\theta(s)}\ \nabla_\theta\mu_\theta(s)\Big]$$
 
 Off-policy with replay and target networks. Exploration by adding noise to the action. **Notoriously brittle** and sensitive to hyperparameters.
 
 ### TD3 — three fixes to DDPG
 
-1. **Clipped double Q:** learn two critics, use $\min(Q_1,Q_2)$ in the target. Directly counters overestimation bias — a deliberately *pessimistic* estimate.
+1. **Clipped double Q:** learn two critics, use $`\min(Q_1,Q_2)`$ in the target. Directly counters overestimation bias — a deliberately *pessimistic* estimate.
 2. **Delayed policy updates:** update the actor once per two critic updates, so the actor chases a more converged critic.
-3. **Target policy smoothing:** add clipped noise to the target action, $a'=\mu_{\theta^-}(s')+\mathrm{clip}(\epsilon,-c,c)$. This smooths the value estimate over nearby actions and prevents the actor from exploiting sharp, spurious peaks in $Q$.
+3. **Target policy smoothing:** add clipped noise to the target action, $`a'=\mu_{\theta^-}(s')+\mathrm{clip}(\epsilon,-c,c)`$. This smooths the value estimate over nearby actions and prevents the actor from exploiting sharp, spurious peaks in $Q$.
 
 ### SAC — maximum entropy RL
 
@@ -704,7 +704,7 @@ Off-policy with replay and target networks. Exploration by adding noise to the a
 The soft value functions become
 $$Q(s,a)=r+\gamma\,\mathbb{E}_{s'}\big[V(s')\big],\qquad V(s)=\mathbb{E}_{a\sim\pi}\big[Q(s,a)-\alpha\log\pi(a\mid s)\big]$$
 
-and the optimal policy is a **Boltzmann distribution** $\pi^*(a\mid s)\propto\exp\!\big(\tfrac1\alpha Q(s,a)\big)$.
+and the optimal policy is a **Boltzmann distribution** $`\pi^*(a\mid s)\propto\exp\!\big(\tfrac1\alpha Q(s,a)\big)`$.
 
 ▸ **That is exactly the KL-regularized optimum from Ch. 16 §16.5 with a uniform reference policy.** RLHF's KL-to-reference and SAC's entropy bonus are the same mathematical object; recognizing this is a strong cross-domain connection to be able to draw.
 
@@ -714,17 +714,17 @@ and the optimal policy is a **Boltzmann distribution** $\pi^*(a\mid s)\propto\ex
 
 #### Why continuous actions need a different idea entirely
 
-Everything in §§27.2–27.3 ended with $\arg\max_a Q(s,a)$: scan every action, pick the best. **A robot arm with seven joints, each taking any real value, has infinitely many actions.** You cannot scan them. So value-based methods, as written, simply do not apply.
+Everything in §§27.2–27.3 ended with $`\arg\max_a Q(s,a)`$: scan every action, pick the best. **A robot arm with seven joints, each taking any real value, has infinitely many actions.** You cannot scan them. So value-based methods, as written, simply do not apply.
 
 DDPG's answer is one of the more elegant moves in the chapter: **if you cannot search for the best action, differentiate your way toward it.**
 
 $$\nabla_\theta J = \mathbb{E}\Big[\underbrace{\nabla_aQ_\phi(s,a)\big|_{a=\mu_\theta(s)}}_{\text{"which way should the action move?"}}\ \underbrace{\nabla_\theta\mu_\theta(s)}_{\text{"which way should }\theta\text{ move to do that?"}}\Big]$$
 
-Read aloud: *"the gradient of J with respect to theta equals the expectation of: the gradient of Q with respect to a, evaluated at a equals mu-theta of s, times the gradient of mu-theta with respect to theta."* The vertical bar with a subscript, $\big|_{a=\mu_\theta(s)}$, means **"evaluated at"** — compute the derivative first, then plug in this particular action.
+Read aloud: *"the gradient of J with respect to theta equals the expectation of: the gradient of Q with respect to a, evaluated at a equals mu-theta of s, times the gradient of mu-theta with respect to theta."* The vertical bar with a subscript, $`\big|_{a=\mu_\theta(s)}`$, means **"evaluated at"** — compute the derivative first, then plug in this particular action.
 
 This is nothing but the **chain rule**, applied across the seam between two networks.
 
-> **Analogy.** The critic is a hillside drawn over the space of possible actions, and the actor is a knob that positions you on that hillside. Ask the hill which way is up ($\nabla_a Q$), then ask the knob how to turn to move you that way ($\nabla_\theta\mu$). **The gradient physically flows out of the critic, across the action, and into the actor's weights.**
+> **Analogy.** The critic is a hillside drawn over the space of possible actions, and the actor is a knob that positions you on that hillside. Ask the hill which way is up ($`\nabla_a Q`$), then ask the knob how to turn to move you that way ($`\nabla_\theta\mu`$). **The gradient physically flows out of the critic, across the action, and into the actor's weights.**
 
 ▸ **Notice what is absent: there is no $\log\pi$ and no log-derivative trick.** Those existed in §27.4 only because the policy was random and you cannot differentiate through a coin flip. **A deterministic policy has no coin flip, so the gradient passes straight through** — which is far lower variance, and is exactly why DDPG can be dramatically more sample-efficient than REINFORCE. The price is that a deterministic policy explores nothing by itself, so exploration has to be bolted on as additive noise, and a policy that must be told how to explore is a policy that is easy to mistune. Hence "notoriously brittle."
 
@@ -732,13 +732,13 @@ This is nothing but the **chain rule**, applied across the seam between two netw
 
 **TD3** stands for **T**win **D**elayed **D**DPG, and the name lists two of the three fixes.
 
-**1. Clipped double Q.** Learn two critics and use $\min(Q_1, Q_2)$ in the target. This is Double Q-learning (Ch. 26 §26.6) pushed one step further: rather than merely decoupling selection from evaluation, **take the more pessimistic of two independent opinions.**
+**1. Clipped double Q.** Learn two critics and use $`\min(Q_1, Q_2)`$ in the target. This is Double Q-learning (Ch. 26 §26.6) pushed one step further: rather than merely decoupling selection from evaluation, **take the more pessimistic of two independent opinions.**
 
 ▸ **Why deliberate underestimation is safe when overestimation is not.** The $\max$ in the Bellman target actively *seeks out* whichever estimate is too high, so overestimation is amplified and propagated backwards through bootstrapping. Underestimation gets no such amplification — the $\max$ does not hunt for it. **The asymmetry of the error is what makes a biased-low estimator the safer choice**, and this reasoning reappears in offline RL (§27.10) as conservatism.
 
 **2. Delayed policy updates.** Update the actor once per two critic updates. The actor is climbing a hill that the critic is still drawing; if the actor moves as fast as the map is being redrawn, it chases artefacts. **Slowing one side of a two-sided feedback loop is the same medicine as the target network in §27.2.**
 
-**3. Target policy smoothing.** Add clipped noise to the *target* action: $a'=\mu_{\theta^-}(s')+\mathrm{clip}(\epsilon,-c,c)$.
+**3. Target policy smoothing.** Add clipped noise to the *target* action: $`a'=\mu_{\theta^-}(s')+\mathrm{clip}(\epsilon,-c,c)`$.
 
 ▸ **This is the most interesting of the three, because it is a regularizer disguised as noise.** A neural critic fitted to finite data will have sharp spurious peaks — narrow spikes where $Q$ happens to be large for no good reason. A deterministic actor doing gradient ascent on $Q$ will find those spikes and sit on them, because finding maxima is precisely its job. Averaging the target over a small neighbourhood of actions **smooths those spikes away before the actor can exploit them.**
 
@@ -758,7 +758,7 @@ Read: *"the probability of an action is proportional to e-to-the Q-over-alpha."*
 
 **Put numbers on the temperature.** Two actions with $Q = 10$ and $Q = 8$:
 
-| $\alpha$ | $\pi^*$ | Behaviour |
+| $\alpha$ | $`\pi^*`$ | Behaviour |
 |---|---|---|
 | $0.1$ | $(0.9999,\ 0.0001)$ | Effectively greedy |
 | $1$ | $(0.88,\ 0.12)$ | Prefers the better one, still tries the other |
@@ -774,7 +774,7 @@ Read: *"the probability of an action is proportional to e-to-the Q-over-alpha."*
 - **A squashed Gaussian policy $a=\tanh(\mu+\sigma\epsilon)$** — sample $\epsilon$ from a standard normal, scale and shift it by the network's outputs, then squash through $\tanh$ into the valid action range $[-1,1]$. Crucially, **the randomness enters as an input $\epsilon$ rather than as a sampling step**, so the gradient flows straight through — this is the **reparameterization trick** of Ch. 19 §19.3, and it is why SAC gets low-variance gradients through a *stochastic* policy, which DDPG could only manage by giving up stochasticity entirely.
 - **Automatic temperature tuning** — rather than hand-tuning $\alpha$, set a target entropy (usually $-\dim(\mathcal{A})$, so $-6$ for a six-joint arm) and adjust $\alpha$ up whenever the policy is too decisive and down when it is too vague. ▸ **This converts the single most sensitive hyperparameter into a thermostat**, and it is the main reason SAC has a reputation for working out of the box.
 
-▸ **And the cross-domain connection the book flags is worth stating in full.** SAC maximizes $r + \alpha\mathcal{H}(\pi)$; RLHF maximizes $r - \beta\,\mathrm{KL}(\pi\,\lVert\,\pi_{\text{ref}})$ (Ch. 16 §16.5). Since $\mathrm{KL}(\pi\,\lVert\,\text{uniform}) = -\mathcal{H}(\pi) + \text{const}$, **entropy regularization is KL-regularization against a uniform reference.** They are the same objective with a different choice of what to stay close to: SAC stays close to "no opinion," RLHF stays close to "the pretrained model." **Recognizing that one identity connects continuous robot control to language-model alignment**, and it is exactly the kind of link worth being able to draw on demand.
+▸ **And the cross-domain connection the book flags is worth stating in full.** SAC maximizes $r + \alpha\mathcal{H}(\pi)$; RLHF maximizes $`r - \beta\,\mathrm{KL}(\pi\,\lVert\,\pi_{\text{ref}})`$ (Ch. 16 §16.5). Since $\mathrm{KL}(\pi\,\lVert\,\text{uniform}) = -\mathcal{H}(\pi) + \text{const}$, **entropy regularization is KL-regularization against a uniform reference.** They are the same objective with a different choice of what to stay close to: SAC stays close to "no opinion," RLHF stays close to "the pretrained model." **Recognizing that one identity connects continuous robot control to language-model alignment**, and it is exactly the kind of link worth being able to draw on demand.
 
 > **Where this came from.** **DDPG** (Timothy Lillicrap and colleagues at DeepMind, 2016) built directly on the **deterministic policy gradient theorem** proved by David Silver and colleagues in 2014 — the result establishing that a deterministic policy has a well-defined gradient at all, which was not obvious. **TD3** came from Scott Fujimoto, Herke van Hoof and David Meger in 2018, and its lasting contribution is as much diagnostic as algorithmic: it *demonstrated* the overestimation in DDPG's critics rather than assuming it, then fixed it. **SAC** came from Tuomas Haarnoja and colleagues at Berkeley in 2018, out of a research line on maximum-entropy control that had been running for years before deep RL existed. **All three appeared within about three years of each other, and the field's default for continuous control moved twice in that window** — a good illustration of how fast this particular corner was moving.
 

@@ -14,9 +14,9 @@ Skim once now; each is unpacked properly where it first appears.
 |---|---|---|
 | $\hat p$ | "p-hat" | The **confidence** the model states — a number in $[0,1]$ |
 | $\hat y$ | "y-hat" | The label the model predicts, versus the truth $y$ |
-| $B_m$ | "B-m" | The $m$-th **confidence bin** — all predictions whose confidence falls in one range |
-| $\lvert B_m\rvert$ | "size of B-m" | **How many** predictions landed in that bin. The bars are a count, not absolute value |
-| $\mathrm{acc}(B_m)$, $\mathrm{conf}(B_m)$ | "accuracy / confidence of bin m" | Fraction actually correct, and average stated confidence, inside that bin |
+| $`B_m`$ | "B-m" | The $m$-th **confidence bin** — all predictions whose confidence falls in one range |
+| $`\lvert B_m\rvert`$ | "size of B-m" | **How many** predictions landed in that bin. The bars are a count, not absolute value |
+| $`\mathrm{acc}(B_m)`$, $`\mathrm{conf}(B_m)`$ | "accuracy / confidence of bin m" | Fraction actually correct, and average stated confidence, inside that bin |
 | $z$ | "z" | The **logits** — raw pre-softmax scores, any real number |
 | $T$ | "T" | **Temperature.** Divide the logits by it before the softmax |
 | $H[p]$ | "entropy of p" | How spread out a distribution is (Ch. 1 §1.4). Big = uncertain |
@@ -27,9 +27,9 @@ Skim once now; each is unpacked properly where it first appears.
 | $C(x)$ | "C of x" | The predicted **set** of labels, not a single label |
 | $\lceil\,\cdot\,\rceil$ | "ceiling" | Round **up** to the next whole number |
 | $\delta$ | "delta" | The adversarial **perturbation** added to an input |
-| $\|\delta\|_\infty \le \epsilon$ | "infinity-norm at most epsilon" | **No single pixel** moves by more than $\epsilon$ |
+| $`\|\delta\|_\infty \le \epsilon`$ | "infinity-norm at most epsilon" | **No single pixel** moves by more than $\epsilon$ |
 | $\mathrm{sign}(\cdot)$ | "sign" | $+1$, $0$, or $-1$ — keeps direction, throws away magnitude |
-| $\Pi_{B_\epsilon(x)}$ | "project onto the epsilon-ball" | Snap back inside the allowed perturbation region |
+| $`\Pi_{B_\epsilon(x)}`$ | "project onto the epsilon-ball" | Snap back inside the allowed perturbation region |
 | $\Phi^{-1}$ | "phi-inverse" | Inverse Gaussian CDF: *"how many standard deviations out is this probability?"* |
 
 **Full forms for the abbreviations in this chapter** (the complete book-wide list is in §0.13):
@@ -127,8 +127,8 @@ $$\hat p \times 100 \;>\; 2 \qquad\Longleftrightarrow\qquad \hat p > 0.02$$
 - **Only measures top-label calibration** by default; the full predicted distribution can be badly wrong. Use classwise-ECE or adaptive binning (equal-mass bins).
 
 **Proper scoring rules** avoid binning entirely and are strictly better as objectives:
-- **Brier score:** $\frac1n\sum_i(p_i-y_i)^2$. Decomposes as reliability − resolution + uncertainty.
-- **Negative log-likelihood:** $-\frac1n\sum_i\log p_i(y_i)$ — the training loss itself.
+- **Brier score:** $`\frac1n\sum_i(p_i-y_i)^2`$. Decomposes as reliability − resolution + uncertainty.
+- **Negative log-likelihood:** $`-\frac1n\sum_i\log p_i(y_i)`$ — the training loss itself.
 
 ▸ A **proper** scoring rule is one whose expectation is uniquely minimized by reporting the true probability. **Cross-entropy and Brier are proper; accuracy is not** — which is precisely why optimizing accuracy produces miscalibrated models.
 
@@ -138,13 +138,13 @@ $$\hat p \times 100 \;>\; 2 \qquad\Longleftrightarrow\qquad \hat p > 0.02$$
 
 $$\mathrm{ECE} = \sum_{m=1}^{M}\frac{|B_m|}{n}\Big|\mathrm{acc}(B_m)-\mathrm{conf}(B_m)\Big|$$
 
-**Every symbol.** $M$ is the number of bins; $B_m$ is the set of predictions in bin $m$; $\lvert B_m\rvert$ is **how many** predictions that is (bars as a count, not absolute value — the *outer* bars, around the difference, are the ordinary absolute value); $n$ is the total. $\mathrm{acc}(B_m)$ is the fraction actually correct in that bin, $\mathrm{conf}(B_m)$ the average confidence stated in it.
+**Every symbol.** $M$ is the number of bins; $`B_m`$ is the set of predictions in bin $m$; $`\lvert B_m\rvert`$ is **how many** predictions that is (bars as a count, not absolute value — the *outer* bars, around the difference, are the ordinary absolute value); $n$ is the total. $`\mathrm{acc}(B_m)`$ is the fraction actually correct in that bin, $`\mathrm{conf}(B_m)`$ the average confidence stated in it.
 
 ▸ **In English:** *"chop the confidence range into buckets; in each bucket compute how far the truth is from the claim; average those gaps, weighting each bucket by how many predictions fell into it."*
 
 **Do it.** $n = 1000$ predictions, $M = 3$ bins:
 
-| Bin | Range | $\lvert B_m\rvert$ | $\mathrm{conf}$ | $\mathrm{acc}$ | Gap | Weight | Contribution |
+| Bin | Range | $`\lvert B_m\rvert`$ | $\mathrm{conf}$ | $\mathrm{acc}$ | Gap | Weight | Contribution |
 |---|---|---|---|---|---|---|---|
 | 1 | $[0,\,0.6)$ | $200$ | $0.55$ | $0.50$ | $0.05$ | $0.2$ | $0.010$ |
 | 2 | $[0.6,\,0.9)$ | $300$ | $0.75$ | $0.70$ | $0.05$ | $0.3$ | $0.015$ |
@@ -316,7 +316,7 @@ $$\underbrace{H\big[\bar p(y\mid x)\big]}_{\text{total}} = \underbrace{\mathbb{E
 - $\theta$ indexes **which member** of the ensemble you are talking about (§0.4: parameters).
 - $p(y\mid x,\theta)$ is **one member's** prediction. $\bar p(y\mid x)$ is the **average** over members — the ensemble's answer.
 - $H[\cdot]$ is entropy (§1.4.1): how spread out a distribution is. $0$ = certain, $\log K$ = maximally unsure over $K$ classes.
-- $\mathbb{E}_\theta[\cdot]$ averages over members. So $\mathbb{E}_\theta[H[\cdot]]$ is **"average how confused each individual member is."**
+- $`\mathbb{E}_\theta[\cdot]`$ averages over members. So $`\mathbb{E}_\theta[H[\cdot]]`$ is **"average how confused each individual member is."**
 - $I(y;\theta\mid x)$ is mutual information (§1.4.3) between the answer and the choice of model — **"how much does knowing which member you asked tell you about the answer?"**
 
 ▸ **In English: total confusion = the confusion everyone shares + the confusion caused by them disagreeing.** Rearranged, epistemic uncertainty is *total minus shared*, which is exactly **disagreement**.
@@ -411,9 +411,9 @@ A weather service that, instead of guessing tomorrow's temperature, gives a rang
 1. Split the data into training and **calibration** sets.
 2. Train any model on the training set.
 3. Define a **nonconformity score** $s(x,y)$ — higher means worse agreement. E.g. $s = 1-\hat p(y\mid x)$.
-4. Compute scores $s_1,\dots,s_n$ on the calibration set.
+4. Compute scores $`s_1,\dots,s_n`$ on the calibration set.
 5. Let $\hat q$ be the $\lceil(n+1)(1-\alpha)\rceil/n$ empirical quantile of those scores.
-6. **Predict the set** $C(x_{\text{new}}) = \{y : s(x_{\text{new}},y)\le\hat q\}$.
+6. **Predict the set** $`C(x_{\text{new}}) = \{y : s(x_{\text{new}},y)\le\hat q\}`$.
 
 #### Running split conformal on actual numbers
 
@@ -455,9 +455,9 @@ $$\frac{\lceil (n+1)(1-\alpha)\rceil}{n} = \frac{\lceil 1001 \times 0.9\rceil}{1
 
 ### The proof, in three lines
 
-Under exchangeability, $s_{\text{new}}$ is exchangeable with $s_1,\dots,s_n$. So the rank of $s_{\text{new}}$ among the $n+1$ scores is uniform on $\{1,\dots,n+1\}$. Hence
+Under exchangeability, $`s_{\text{new}}`$ is exchangeable with $`s_1,\dots,s_n`$. So the rank of $`s_{\text{new}}`$ among the $n+1$ scores is uniform on $\{1,\dots,n+1\}$. Hence
 $$\mathbb{P}\big(s_{\text{new}}\le s_{(\lceil(n+1)(1-\alpha)\rceil)}\big) = \frac{\lceil(n+1)(1-\alpha)\rceil}{n+1}\ \ge\ 1-\alpha$$
-and $s_{\text{new}}\le\hat q$ is exactly the event $y_{\text{new}}\in C(x_{\text{new}})$. ∎
+and $`s_{\text{new}}\le\hat q`$ is exactly the event $`y_{\text{new}}\in C(x_{\text{new}})`$. ∎
 
 ▸ **That is the entire proof.** It is a statement about ranks, which is why it needs nothing from the model. This makes conformal prediction one of the few  rigorous guarantees available in modern ML, and it is increasingly the standard for high-stakes deployment.
 
@@ -475,7 +475,7 @@ and $s_{\text{new}}\le\hat q$ is exactly the event $y_{\text{new}}\in C(x_{\text
 **Scores, in rough order of strength:**
 
 - **Maximum softmax probability.** The baseline. ▸ **Fails badly** because a network can be confidently wrong far from the data — ReLU networks are provably arbitrarily confident sufficiently far from the training data (Hein et al.).
-- **Energy score:** $E(x) = -T\log\sum_j e^{z_j/T}$. Theoretically better aligned with $\log p(x)$ than the softmax, which normalizes away the very magnitude that carries the signal. Simple, strong, and free.
+- **Energy score:** $`E(x) = -T\log\sum_j e^{z_j/T}`$. Theoretically better aligned with $\log p(x)$ than the softmax, which normalizes away the very magnitude that carries the signal. Simple, strong, and free.
 - **ODIN:** temperature scaling plus a small input perturbation in the direction that increases the max logit — in-distribution inputs respond more.
 - **Mahalanobis distance** in feature space, per class, with a shared covariance. Strong, especially on far-OOD.
 - **kNN distance** in a normalized feature space — remarkably strong and nonparametric.
@@ -498,7 +498,7 @@ and $s_{\text{new}}\le\hat q$ is exactly the event $y_{\text{new}}\in C(x_{\text
 | **Domain shift** | joint change | sim → real |
 | **Subpopulation shift** | group proportions change | deployment demographics differ |
 
-▸ **The distinction is not academic:** covariate shift is correctable by importance weighting $\frac{p_{\text{test}}(x)}{p_{\text{train}}(x)}$; label shift by prior correction (BBSE/EM on the confusion matrix); **concept drift by nothing except new labels.** Diagnosing which one you have determines whether the problem is solvable without relabelling.
+▸ **The distinction is not academic:** covariate shift is correctable by importance weighting $`\frac{p_{\text{test}}(x)}{p_{\text{train}}(x)}`$; label shift by prior correction (BBSE/EM on the confusion matrix); **concept drift by nothing except new labels.** Diagnosing which one you have determines whether the problem is solvable without relabelling.
 
 **Detection:** monitor input statistics (drift tests on features), monitor confidence and prediction distributions, and — the only reliable signal — collect labels on a sample of production data.
 
@@ -510,15 +510,15 @@ and $s_{\text{new}}\le\hat q$ is exactly the event $y_{\text{new}}\in C(x_{\text
 
 ### The phenomenon
 
-▸ An imperceptible perturbation $\|\delta\|_\infty\le8/255$ flips a classifier from 99% "panda" to 99% "gibbon."
+▸ An imperceptible perturbation $`\|\delta\|_\infty\le8/255`$ flips a classifier from 99% "panda" to 99% "gibbon."
 
-**Why it happens (Goodfellow's linear explanation):** for a linear model, $w^\top(x+\delta)=w^\top x + w^\top\delta$, and with $\delta=\epsilon\,\mathrm{sign}(w)$ the change is $\epsilon\|w\|_1$ — which grows with dimension. **In high dimensions, many tiny coordinated changes sum to a large logit change.** Networks are locally near-linear enough for this to apply.
+**Why it happens (Goodfellow's linear explanation):** for a linear model, $w^\top(x+\delta)=w^\top x + w^\top\delta$, and with $\delta=\epsilon\,\mathrm{sign}(w)$ the change is $`\epsilon\|w\|_1`$ — which grows with dimension. **In high dimensions, many tiny coordinated changes sum to a large logit change.** Networks are locally near-linear enough for this to apply.
 
 ▸ **The deeper account (Ilyas et al., 2019): adversarial examples arise from *non-robust features* that are  predictive.** They demonstrated this by constructing a dataset labelled only via non-robust features, on which standard training yields good accuracy on the *clean* test set. **Adversarial vulnerability is not a bug in the model; it is a property of the data that the model faithfully learned.** This is the answer that distinguishes a deep understanding from a superficial one.
 
 ### Attacks
 
-**FGSM:** $x' = x+\epsilon\,\mathrm{sign}(\nabla_x\mathcal{L})$ — one step.
+**FGSM:** $`x' = x+\epsilon\,\mathrm{sign}(\nabla_x\mathcal{L})`$ — one step.
 **PGD** (the standard): iterated FGSM with random start and projection back into the $\epsilon$-ball:
 ▸ $$x^{t+1} = \Pi_{B_\epsilon(x)}\Big(x^t + \alpha\,\mathrm{sign}\big(\nabla_x\mathcal{L}(x^t,y)\big)\Big)$$
 **C&W:** an optimization-based attack minimizing perturbation size subject to misclassification; the strongest white-box attack.
@@ -533,7 +533,7 @@ Solve the inner max with PGD each step. **Costs 5–10× training time**, and re
 
 **TRADES** decomposes the objective into natural error plus a boundary term, giving an explicit, tunable accuracy/robustness knob.
 
-▸ **Certified defences** give *provable* guarantees. **Randomized smoothing** is the practical one: define $g(x)=\arg\max_c\mathbb{P}_{\eta\sim\mathcal{N}(0,\sigma^2I)}\big[f(x+\eta)=c\big]$. Then $g$ is provably constant within an $\ell_2$ ball of radius
+▸ **Certified defences** give *provable* guarantees. **Randomized smoothing** is the practical one: define $`g(x)=\arg\max_c\mathbb{P}_{\eta\sim\mathcal{N}(0,\sigma^2I)}\big[f(x+\eta)=c\big]`$. Then $g$ is provably constant within an $`\ell_2`$ ball of radius
 $$R = \frac{\sigma}{2}\big(\Phi^{-1}(\underline{p_A}) - \Phi^{-1}(\overline{p_B})\big)$$
 Scales to ImageNet. Interval-bound propagation and convex relaxations give tighter certificates on smaller models.
 

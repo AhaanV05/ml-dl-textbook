@@ -13,12 +13,12 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 |---|---|---|
 | $A \in \mathbb{R}^{m\times n}$ | "A in R m-by-n" | A grid of numbers, $m$ rows by $n$ columns |
 | $Q\Lambda Q^\top$ | "Q Lambda Q-transpose" | "Rotate → stretch along axes → rotate back" |
-| $\lambda_i$ | "lambda-i" | An **eigenvalue** — a stretch factor |
-| $\sigma_i$ | "sigma-i" | A **singular value** — a stretch factor for non-square matrices |
+| $`\lambda_i`$ | "lambda-i" | An **eigenvalue** — a stretch factor |
+| $`\sigma_i`$ | "sigma-i" | A **singular value** — a stretch factor for non-square matrices |
 | $U\Sigma V^\top$ | "the SVD" | "Rotate → stretch (and reshape) → rotate" |
 | $\|x\|$ | "norm of x" | The **length** of a vector |
-| $\|A\|_2$ | "spectral norm" | The **largest stretch** a matrix can apply |
-| $\nabla_\theta \mathcal{L}$ | "grad theta L" | Which way to nudge each parameter to increase the loss |
+| $`\|A\|_2`$ | "spectral norm" | The **largest stretch** a matrix can apply |
+| $`\nabla_\theta \mathcal{L}`$ | "grad theta L" | Which way to nudge each parameter to increase the loss |
 | $J$ | "the Jacobian" | The table of *all* input→output sensitivities |
 | $H$ | "the Hessian" | The table of curvatures (how the slope itself changes) |
 | $\bar{y}$ | "y-bar" | **Shorthand for $\partial\mathcal{L}/\partial y$** — the gradient arriving at $y$ |
@@ -42,9 +42,9 @@ A matrix is a machine that stretches, squashes, and rotates space. Eigenvectors 
 For $A \in \mathbb{R}^{m \times n}$:
 
 - **A linear map** $\mathbb{R}^n \to \mathbb{R}^m$.
-- **A collection of $n$ column vectors** in $\mathbb{R}^m$. $Ax = \sum_j x_j a_{:,j}$ — matrix-vector multiply is a *weighted sum of columns*. This is the single most useful reinterpretation in deep learning; an embedding lookup is exactly this with $x$ a one-hot vector.
-- **A collection of $m$ row vectors.** $(Ax)_i = \langle a_{i,:}, x\rangle$ — each output is a dot product, i.e. a *similarity measurement*. Attention is built on this reading.
-- **A sum of rank-one pieces**: $A = \sum_k \sigma_k u_k v_k^\top$ (the SVD). LoRA is built on this reading.
+- **A collection of $n$ column vectors** in $\mathbb{R}^m$. $`Ax = \sum_j x_j a_{:,j}`$ — matrix-vector multiply is a *weighted sum of columns*. This is the single most useful reinterpretation in deep learning; an embedding lookup is exactly this with $x$ a one-hot vector.
+- **A collection of $m$ row vectors.** $`(Ax)_i = \langle a_{i,:}, x\rangle`$ — each output is a dot product, i.e. a *similarity measurement*. Attention is built on this reading.
+- **A sum of rank-one pieces**: $`A = \sum_k \sigma_k u_k v_k^\top`$ (the SVD). LoRA is built on this reading.
 
 #### Unpacking those four readings
 
@@ -56,23 +56,23 @@ $$A = \begin{pmatrix} 1 & 2 \\ 0 & 3 \\ 4 & 1\end{pmatrix} \in \mathbb{R}^{3\tim
 
 **Reading 1 — "a linear map $\mathbb{R}^n \to \mathbb{R}^m$."** This says: *$A$ is a machine that eats a 2-number list and spits out a 3-number list.* "Linear" means it obeys two rules: doubling the input doubles the output, and feeding in a sum gives the sum of the outputs. That's it — that is the entire definition of linear, and it is why so much is provable about these objects.
 
-**Reading 2 — "a weighted sum of columns."** The formula $Ax = \sum_j x_j a_{:,j}$ uses $a_{:,j}$ to mean "**column $j$ of $A$**" (the colon means "all rows," exactly as in NumPy). So:
+**Reading 2 — "a weighted sum of columns."** The formula $`Ax = \sum_j x_j a_{:,j}`$ uses $`a_{:,j}`$ to mean "**column $j$ of $A$**" (the colon means "all rows," exactly as in NumPy). So:
 
 $$Ax = 5\begin{pmatrix}1\\0\\4\end{pmatrix} + 10\begin{pmatrix}2\\3\\1\end{pmatrix} = \begin{pmatrix}25\\30\\30\end{pmatrix}$$
 
 ▸ **The input vector is a recipe of how much of each column to mix.** Now the payoff: if $x$ is **one-hot** (all zeros except a single 1 in position $j$), the mixture is just *column $j$, unchanged*. That is why "an embedding lookup is exactly this" — an embedding table is a matrix, a token ID is a one-hot vector, and looking up a word's vector *is* a matrix multiply. In practice nobody actually multiplies (it would be wasteful); they index into the array. But mathematically it's the same operation, which is why gradients flow through embedding layers correctly.
 
-**Reading 3 — "a collection of $m$ row vectors."** Here $a_{i,:}$ means "**row $i$**," and $\langle\cdot,\cdot\rangle$ is the dot product. So output entry $i$ is the dot product of row $i$ with $x$:
+**Reading 3 — "a collection of $m$ row vectors."** Here $`a_{i,:}`$ means "**row $i$**," and $\langle\cdot,\cdot\rangle$ is the dot product. So output entry $i$ is the dot product of row $i$ with $x$:
 
 $$(Ax)_1 = \langle (1,2),\ (5,10)\rangle = 1(5)+2(10) = 25 \ \checkmark$$
 
 ▸ Since a dot product measures **alignment**, each row is a *question being asked of the input*: "how much does $x$ look like me?" A layer with 3 rows asks 3 such questions. This is the reading that makes attention make sense — attention scores are literally "how much does this query look like that key."
 
-**Reading 4 — "a sum of rank-one pieces."** A **rank-one matrix** is any matrix you can build from one column vector times one row vector ($uv^\top$, the outer product from §0.8). It's the simplest possible non-trivial matrix — a single pattern, scaled. The claim is that *any* matrix is a **stack of such simple patterns**, each weighted by $\sigma_k$:
+**Reading 4 — "a sum of rank-one pieces."** A **rank-one matrix** is any matrix you can build from one column vector times one row vector ($uv^\top$, the outer product from §0.8). It's the simplest possible non-trivial matrix — a single pattern, scaled. The claim is that *any* matrix is a **stack of such simple patterns**, each weighted by $`\sigma_k`$:
 
 $$A = \sigma_1 u_1v_1^\top + \sigma_2u_2v_2^\top + \dots$$
 
-▸ Since the $\sigma_k$ come out sorted **largest first**, the early terms carry most of the matrix. Keep the first few and drop the rest and you have a very good approximation using far fewer numbers. That is compression, PCA, and LoRA — all three are this one sentence.
+▸ Since the $`\sigma_k`$ come out sorted **largest first**, the early terms carry most of the matrix. Keep the first few and drop the rest and you have a very good approximation using far fewer numbers. That is compression, PCA, and LoRA — all three are this one sentence.
 
 > **Analogy for the four readings.** A recipe can be read as (1) a process that turns ingredients into a dish, (2) a shopping list of ingredients with quantities, (3) a set of taste-tests you perform, or (4) "it's basically a carbonara plus a small tweak." Each reading is complete, and each makes a different question easy to answer. Fluency is knowing which to reach for.
 
@@ -85,7 +85,7 @@ $$A = \sigma_1 u_1v_1^\top + \sigma_2u_2v_2^\top + \dots$$
 | Rotate a 2-D vector 90° | $\begin{pmatrix}0&-1\\1&0\end{pmatrix}$ sends $(1,0)\mapsto(0,1)$ |
 | Scale one axis | $\mathrm{diag}(3,1)$ triples the $x$-coordinate, leaves $y$ |
 | Project onto a line | $\mathrm{diag}(1,0)$ flattens everything onto the $x$-axis |
-| Look up an embedding | $E^\top e_i$ = row $i$ of the table |
+| Look up an embedding | $`E^\top e_i`$ = row $i$ of the table |
 | Mix features | Any dense layer, before the activation |
 
 **❌ Near-misses — things people assume matrices do, but they can't**
@@ -99,7 +99,7 @@ $$A = \sigma_1 u_1v_1^\top + \sigma_2u_2v_2^\top + \dots$$
 
 ▸ **The boundary:** a matrix does exactly one thing — **it takes weighted sums of its inputs.** Everything a network does beyond weighted sums (thresholding, normalizing, gating, selecting) is contributed by the *non*-linear parts. This is why removing all activations collapses a deep network to a single layer.
 
-> **Common misconception.** *"A deeper network is more expressive because it has more layers."* Only if the layers are separated by nonlinearities. $W_3W_2W_1x$ is a single matrix wearing three hats — a 50-layer purely-linear network can represent nothing that a 1-layer network can't. **Depth without nonlinearity buys exactly zero expressive power.** The reason this misconception is tempting is that depth *does* buy enormous power in real networks; it's easy to credit the depth rather than the interaction between depth and nonlinearity.
+> **Common misconception.** *"A deeper network is more expressive because it has more layers."* Only if the layers are separated by nonlinearities. $`W_3W_2W_1x`$ is a single matrix wearing three hats — a 50-layer purely-linear network can represent nothing that a 1-layer network can't. **Depth without nonlinearity buys exactly zero expressive power.** The reason this misconception is tempting is that depth *does* buy enormous power in real networks; it's easy to credit the depth rather than the interaction between depth and nonlinearity.
 
 > **Common misconception.** *"An embedding layer is a matrix multiplication, so it's expensive."* Mathematically it is a multiplication by a one-hot vector; computationally it is an array index. Doing it literally with $\lvert V\rvert = 128{,}000$ and $d = 4096$ would be 524 million multiply-adds — almost all by zero — to fetch 4,096 numbers. Frameworks index instead, at $O(1)$. **The math and the implementation deliberately diverge here**, which is why `nn.Embedding` exists as its own layer type rather than being an `nn.Linear`.
 
@@ -114,8 +114,8 @@ The columns of $Q$ are orthonormal eigenvectors. Every symmetric real matrix has
 Key consequences you'll use constantly:
 
 - $A^k = Q\Lambda^k Q^\top$. Repeated application amplifies the largest-$|\lambda|$ direction exponentially. *This is exactly why gradients vanish or explode in deep nets* (Ch. 6) and why power iteration works.
-- $A$ is **positive semi-definite** (PSD) iff all $\lambda_i \ge 0$ iff $x^\top A x \ge 0\ \forall x$. A local minimum of a loss has PSD Hessian.
-- $\mathrm{tr}(A) = \sum_i \lambda_i$, $\det(A) = \prod_i \lambda_i$.
+- $A$ is **positive semi-definite** (PSD) iff all $`\lambda_i \ge 0`$ iff $x^\top A x \ge 0\ \forall x$. A local minimum of a loss has PSD Hessian.
+- $`\mathrm{tr}(A) = \sum_i \lambda_i`$, $`\det(A) = \prod_i \lambda_i`$.
 
 #### Reading $A = Q\Lambda Q^\top$ in plain English
 
@@ -128,25 +128,25 @@ Now the decomposition, term by term:
 | Piece | Shape | What it does |
 |---|---|---|
 | $Q^\top$ | $n\times n$ | **Rotate** into the special coordinate system where $A$ is simple |
-| $\Lambda$ | $n\times n$ | **Stretch** each axis independently by $\lambda_1,\dots,\lambda_n$ |
+| $\Lambda$ | $n\times n$ | **Stretch** each axis independently by $`\lambda_1,\dots,\lambda_n`$ |
 | $Q$ | $n\times n$ | **Rotate back** to the original coordinates |
 
 ▸ **So $A = Q\Lambda Q^\top$ says: "every symmetric matrix is secretly just a stretch, viewed from a tilted angle."** Rotate so the tilt goes away, stretch along the axes, rotate back. A complicated-looking matrix is a simple one in disguise, and $Q$ is the disguise.
 
 **Decoding the surrounding notation:**
 
-- $\mathrm{diag}(\lambda_1,\dots,\lambda_n)$ — a matrix that is **zero everywhere except the diagonal**. Zeros off-diagonal mean the axes don't interact: each is scaled on its own. That is exactly what makes $\Lambda$ easy.
+- $`\mathrm{diag}(\lambda_1,\dots,\lambda_n)`$ — a matrix that is **zero everywhere except the diagonal**. Zeros off-diagonal mean the axes don't interact: each is scaled on its own. That is exactly what makes $\Lambda$ easy.
 - $Q^\top Q = I$ — this says $Q$ is **orthonormal**: its columns are all length 1 ("normal") and mutually perpendicular ("ortho"). A matrix like this is a pure rotation/reflection — it never changes any length, it only re-aims. It also means $Q^\top = Q^{-1}$, so "rotate back" is free: just transpose.
 - **Symmetric** means $A = A^\top$: the entry at row $i$ column $j$ equals the one at row $j$ column $i$. The grid is a mirror image across its diagonal.
 
-**Why $A^k = Q\Lambda^k Q^\top$ matters so much.** Apply $A$ $k$ times and the middle rotations cancel in pairs ($Q^\top Q = I$), leaving only $\Lambda^k$ — and raising a diagonal matrix to a power just raises each diagonal entry: $\lambda_i^k$.
+**Why $A^k = Q\Lambda^k Q^\top$ matters so much.** Apply $A$ $k$ times and the middle rotations cancel in pairs ($Q^\top Q = I$), leaving only $\Lambda^k$ — and raising a diagonal matrix to a power just raises each diagonal entry: $`\lambda_i^k`$.
 
 ▸ **Now put numbers on it.** With $\lambda = 1.1$ and $k = 50$: $1.1^{50}\approx 117$. With $\lambda = 0.9$: $0.9^{50}\approx 0.005$. The *same* matrix applied fifty times amplifies one direction 117-fold while crushing another to nothing. **That is the vanishing/exploding gradient problem in a single line** — a deep network applies related matrices over and over, and any eigenvalue not very close to 1 gets raised to the power of the depth.
 
 **Positive semi-definite (PSD), demystified.** $x^\top A x \ge 0$ for every $x$ means: *whatever direction you probe in, the answer is never negative.* The scalar $x^\top A x$ is called a **quadratic form**; think of it as "the height of a bowl in direction $x$."
 
-- All $\lambda_i > 0$ → a bowl curving up in every direction → **a minimum**.
-- All $\lambda_i < 0$ → a dome → a maximum.
+- All $`\lambda_i > 0`$ → a bowl curving up in every direction → **a minimum**.
+- All $`\lambda_i < 0`$ → a dome → a maximum.
 - Mixed signs → a **saddle**: up one way, down another (a Pringle). Saddles, not local minima, are the dominant stationary points in high-dimensional deep learning — with millions of eigenvalues, having *all* of them be positive by chance is vanishingly unlikely.
 
 **Trace and determinant, intuitively.** $\mathrm{tr}(A)$ is just the sum of the diagonal entries, and it equals the sum of eigenvalues — the *total* stretch. $\det(A)$ is the product — the **volume scale factor**. If $\det = 0$, some eigenvalue is 0, the matrix squashes space flat into a lower dimension, and the operation cannot be undone (that's what "singular" / "non-invertible" means).
@@ -157,15 +157,15 @@ Now the decomposition, term by term:
 
 ▸ $$A = U\Sigma V^\top,\quad U \in \mathbb{R}^{m\times m},\ \Sigma \in \mathbb{R}^{m\times n} \text{ diagonal},\ V \in \mathbb{R}^{n\times n}$$
 
-$\sigma_i \ge 0$ are the singular values, $\sigma_i^2$ are the eigenvalues of $A^\top A$.
+$`\sigma_i \ge 0`$ are the singular values, $`\sigma_i^2`$ are the eigenvalues of $A^\top A$.
 
-**Why you care:** the *best rank-$r$ approximation* of $A$ in Frobenius norm is $A_r = \sum_{k\le r}\sigma_k u_k v_k^\top$ (Eckart–Young theorem). This is:
+**Why you care:** the *best rank-$r$ approximation* of $A$ in Frobenius norm is $`A_r = \sum_{k\le r}\sigma_k u_k v_k^\top`$ (Eckart–Young theorem). This is:
 
 - PCA (Ch. 15),
 - LoRA fine-tuning (a weight update $\Delta W$ constrained to rank $r$),
 - the reason "effective rank" of a weight matrix is a meaningful diagnostic.
 
-**Effective rank / stable rank:** $\displaystyle \mathrm{srank}(A) = \frac{\|A\|_F^2}{\|A\|_2^2} = \frac{\sum_i\sigma_i^2}{\sigma_1^2}$. A $1024\times1024$ matrix can have full mathematical rank but stable rank 12 — meaning it  only uses 12 directions. Worth logging during training.
+**Effective rank / stable rank:** $`\displaystyle \mathrm{srank}(A) = \frac{\|A\|_F^2}{\|A\|_2^2} = \frac{\sum_i\sigma_i^2}{\sigma_1^2}`$. A $1024\times1024$ matrix can have full mathematical rank but stable rank 12 — meaning it  only uses 12 directions. Worth logging during training.
 
 #### What the SVD actually says
 
@@ -176,25 +176,25 @@ Same "rotate → stretch → rotate" story as before, with one new move:
 | Piece | What it does |
 |---|---|
 | $V^\top$ | **Rotate** in the input space ($\mathbb{R}^n$) |
-| $\Sigma$ | **Stretch** each axis by $\sigma_i \ge 0$, *and change the number of dimensions* |
+| $\Sigma$ | **Stretch** each axis by $`\sigma_i \ge 0`$, *and change the number of dimensions* |
 | $U$ | **Rotate** in the output space ($\mathbb{R}^m$) |
 
 ▸ **The difference from eigendecomposition:** the entry and exit rotations are now *different matrices* ($V$ and $U$), because the input and output live in differently-sized spaces. A $3\times 2$ matrix takes 2-D things to 3-D things, so "rotate back" isn't even a meaningful instruction — you have to rotate in the destination space instead.
 
-**Why singular values are never negative.** $\sigma_i \ge 0$ by construction; any minus sign gets absorbed into the direction of $u_i$ or $v_i$ (flipping an arrow is a rotation, which belongs in $U$ or $V$). So $\sigma_i$ is a pure *magnitude* — "how much stretch," never "which way."
+**Why singular values are never negative.** $`\sigma_i \ge 0`$ by construction; any minus sign gets absorbed into the direction of $`u_i`$ or $`v_i`$ (flipping an arrow is a rotation, which belongs in $U$ or $V$). So $`\sigma_i`$ is a pure *magnitude* — "how much stretch," never "which way."
 
-**"$\sigma_i^2$ are the eigenvalues of $A^\top A$"** — a bookkeeping fact you'll use constantly. $A^\top A$ is always square and symmetric no matter what shape $A$ is, so it *does* have an eigendecomposition. Squaring appears for the same reason it does in Pythagoras: it's the natural currency of lengths.
+**"$`\sigma_i^2`$ are the eigenvalues of $A^\top A$"** — a bookkeeping fact you'll use constantly. $A^\top A$ is always square and symmetric no matter what shape $A$ is, so it *does* have an eigendecomposition. Squaring appears for the same reason it does in Pythagoras: it's the natural currency of lengths.
 
-**Reading Eckart–Young.** "The best rank-$r$ approximation of $A$ is $A_r = \sum_{k \le r}\sigma_k u_kv_k^\top$" means: **to approximate a matrix with a simpler one, keep the biggest few rank-one pieces and throw the rest away — and no cleverer method exists.** The theorem's real force is the *no cleverer method exists* part. It converts "compress this matrix" from an open-ended search problem into a sorting problem.
+**Reading Eckart–Young.** "The best rank-$r$ approximation of $A$ is $`A_r = \sum_{k \le r}\sigma_k u_kv_k^\top`$" means: **to approximate a matrix with a simpler one, keep the biggest few rank-one pieces and throw the rest away — and no cleverer method exists.** The theorem's real force is the *no cleverer method exists* part. It converts "compress this matrix" from an open-ended search problem into a sorting problem.
 
 **Concrete magnitudes.** A $1000\times 1000$ matrix holds $10^6$ numbers. Its rank-10 approximation needs $10 \times (1000 + 1000 + 1) \approx 2\times10^4$ — a **50× saving**. This is exactly the LoRA bargain: rather than updating all of a $\Delta W$, constrain the update to rank $r$ and store two thin matrices instead of one fat one.
 
-**Stable rank, unpacked.** Ordinary ("mathematical") rank counts how many $\sigma_i$ are *nonzero* — a brittle measure, since $\sigma = 10^{-9}$ counts exactly as much as $\sigma = 10^{3}$. Stable rank asks the better question: **"how many directions actually carry meaningful weight?"**
+**Stable rank, unpacked.** Ordinary ("mathematical") rank counts how many $`\sigma_i`$ are *nonzero* — a brittle measure, since $\sigma = 10^{-9}$ counts exactly as much as $\sigma = 10^{3}$. Stable rank asks the better question: **"how many directions actually carry meaningful weight?"**
 
-Work through the ratio $\sum_i \sigma_i^2 / \sigma_1^2$:
+Work through the ratio $`\sum_i \sigma_i^2 / \sigma_1^2`$:
 
-- If one direction dominates ($\sigma_1$ huge, rest tiny) → ratio $\approx 1$ → the matrix is essentially rank one.
-- If $k$ directions are equally strong → the sum is $k\sigma_1^2$ → ratio $= k$.
+- If one direction dominates ($`\sigma_1`$ huge, rest tiny) → ratio $\approx 1$ → the matrix is essentially rank one.
+- If $k$ directions are equally strong → the sum is $`k\sigma_1^2`$ → ratio $= k$.
 
 ▸ So stable rank is an **"effective number of directions in use,"** the same style of quantity as perplexity in §1.4.2 — a count that responds smoothly to how spread-out a distribution of magnitudes is. A weight matrix whose stable rank collapses during training is telling you the layer has stopped using most of its capacity.
 
@@ -204,15 +204,15 @@ Work through the ratio $\sum_i \sigma_i^2 / \sigma_1^2$:
 
 | Norm | Definition | Where it appears |
 |---|---|---|
-| $\ell_2$ | $\|x\|_2 = \sqrt{\sum x_i^2}$ | weight decay, gradient clipping |
-| $\ell_1$ | $\|x\|_1 = \sum_i \lvert x_i \rvert$ | sparsity, LASSO, sparse autoencoders |
-| $\ell_\infty$ | $\|x\|_\infty = \max_i \lvert x_i \rvert$ | adversarial robustness, Adam's implicit bias |
-| Frobenius | $\|A\|_F = \sqrt{\sum_{ij}A_{ij}^2}$ | weight norm |
-| Spectral | $\|A\|_2 = \sigma_{\max}(A)$ | Lipschitz constants, spectral norm regularization |
+| $`\ell_2`$ | $`\|x\|_2 = \sqrt{\sum x_i^2}`$ | weight decay, gradient clipping |
+| $`\ell_1`$ | $`\|x\|_1 = \sum_i \lvert x_i \rvert`$ | sparsity, LASSO, sparse autoencoders |
+| $`\ell_\infty`$ | $`\|x\|_\infty = \max_i \lvert x_i \rvert`$ | adversarial robustness, Adam's implicit bias |
+| Frobenius | $`\|A\|_F = \sqrt{\sum_{ij}A_{ij}^2}`$ | weight norm |
+| Spectral | $`\|A\|_2 = \sigma_{\max}(A)`$ | Lipschitz constants, spectral norm regularization |
 
 #### What a norm is, and what each one is for
 
-**A norm is a way of answering "how big is this thing?" with a single number.** The double bars $\|\cdot\|$ are the notation for it; the subscript says *which* notion of size you mean. (In $\ell_p$, the $\ell$ is a script "L," and the subscript $p$ picks the family member.)
+**A norm is a way of answering "how big is this thing?" with a single number.** The double bars $\|\cdot\|$ are the notation for it; the subscript says *which* notion of size you mean. (In $`\ell_p`$, the $\ell$ is a script "L," and the subscript $p$ picks the family member.)
 
 There is more than one norm because "big" is  ambiguous. If a delivery van drives 3 blocks east and 4 blocks north, is the distance travelled 5 (as the crow flies) or 7 (as the van drives)? Both answers are correct; they answer different questions.
 
@@ -220,35 +220,35 @@ Take $x = (3, -4)$ throughout:
 
 | Norm | Computed on $x=(3,-4)$ | Read aloud | What it measures |
 |---|---|---|---|
-| $\ell_2$ | $\sqrt{9+16} = 5$ | "the two-norm" | **Straight-line length.** Ordinary Pythagoras. |
-| $\ell_1$ | $3 + 4 = 7$ | "the one-norm" | **Total absolute size**, city-block distance. |
-| $\ell_\infty$ | $\max(3,4) = 4$ | "the infinity-norm" | **The single worst entry.** |
+| $`\ell_2`$ | $\sqrt{9+16} = 5$ | "the two-norm" | **Straight-line length.** Ordinary Pythagoras. |
+| $`\ell_1`$ | $3 + 4 = 7$ | "the one-norm" | **Total absolute size**, city-block distance. |
+| $`\ell_\infty`$ | $\max(3,4) = 4$ | "the infinity-norm" | **The single worst entry.** |
 
 Decoding the pieces:
 
-- $\lvert x_i\rvert$ means **absolute value** — drop the minus sign. (Note: this is a *different* use of vertical bars from "given" in probability. Context distinguishes them; single bars around a number mean magnitude.)
-- $\max_i \lvert x_i\rvert$ means "scan every entry, report the largest magnitude." The name "infinity-norm" comes from a limit: the general $\ell_p$ norm is $(\sum_i \lvert x_i\rvert^p)^{1/p}$, and as $p \to \infty$ the largest term overwhelms all others, so the whole expression converges to the maximum.
+- $`\lvert x_i\rvert`$ means **absolute value** — drop the minus sign. (Note: this is a *different* use of vertical bars from "given" in probability. Context distinguishes them; single bars around a number mean magnitude.)
+- $`\max_i \lvert x_i\rvert`$ means "scan every entry, report the largest magnitude." The name "infinity-norm" comes from a limit: the general $`\ell_p`$ norm is $`(\sum_i \lvert x_i\rvert^p)^{1/p}`$, and as $p \to \infty$ the largest term overwhelms all others, so the whole expression converges to the maximum.
 
-▸ **Why $\ell_1$ causes sparsity and $\ell_2$ doesn't** — the one fact to take from this table. Suppose you must shrink a total "budget" of weights. Under $\ell_1$, moving a weight from $0.1$ to $0$ saves exactly $0.1$ of penalty — *the same saving as moving from $10.1$ to $10.0$*. The reward for zeroing out a small weight is undiminished, so small weights get driven to exactly zero. Under $\ell_2$ the penalty is *squared*, so shrinking $0.1 \to 0$ saves only $0.01$ while shrinking $10.1\to 10.0$ saves about $2$. $\ell_2$ therefore spends its effort on large weights and leaves small ones hovering near — but never at — zero. **$\ell_1$ gives you exact zeros; $\ell_2$ gives you uniformly small numbers.** That single asymmetry is the whole basis of LASSO, of sparse autoencoders, and of most of interpretability research's tooling.
+▸ **Why $`\ell_1`$ causes sparsity and $`\ell_2`$ doesn't** — the one fact to take from this table. Suppose you must shrink a total "budget" of weights. Under $`\ell_1`$, moving a weight from $0.1$ to $0$ saves exactly $0.1$ of penalty — *the same saving as moving from $10.1$ to $10.0$*. The reward for zeroing out a small weight is undiminished, so small weights get driven to exactly zero. Under $`\ell_2`$ the penalty is *squared*, so shrinking $0.1 \to 0$ saves only $0.01$ while shrinking $10.1\to 10.0$ saves about $2$. $`\ell_2`$ therefore spends its effort on large weights and leaves small ones hovering near — but never at — zero. **$`\ell_1`$ gives you exact zeros; $`\ell_2`$ gives you uniformly small numbers.** That single asymmetry is the whole basis of LASSO, of sparse autoencoders, and of most of interpretability research's tooling.
 
 **The two matrix norms.**
 
-- **Frobenius** $\|A\|_F = \sqrt{\sum_{ij}A_{ij}^2}$ — pretend the matrix is one long vector and take its $\ell_2$ length. It ignores structure entirely; it just asks "how much stuff is in here?" The double subscript $A_{ij}$ means "the entry in row $i$, column $j$," and $\sum_{ij}$ is the nested loop over the whole grid.
-- **Spectral** $\|A\|_2 = \sigma_{\max}(A)$ — the **largest singular value**, i.e. the biggest stretch the matrix can apply to any input. This one is about worst-case behaviour, not total content.
+- **Frobenius** $`\|A\|_F = \sqrt{\sum_{ij}A_{ij}^2}`$ — pretend the matrix is one long vector and take its $`\ell_2`$ length. It ignores structure entirely; it just asks "how much stuff is in here?" The double subscript $`A_{ij}`$ means "the entry in row $i$, column $j$," and $`\sum_{ij}`$ is the nested loop over the whole grid.
+- **Spectral** $`\|A\|_2 = \sigma_{\max}(A)`$ — the **largest singular value**, i.e. the biggest stretch the matrix can apply to any input. This one is about worst-case behaviour, not total content.
 
 > **Analogy.** Frobenius is the *total weight* of a car. Spectral is its *top speed*. Two very different questions about the same object, and you would not use one to answer the other.
 
-▸ The **spectral norm is the Lipschitz constant of the linear map**: $\|Ax\| \le \|A\|_2\|x\|$, with equality for $x = v_1$. A network of $L$ layers has Lipschitz constant at most $\prod_\ell \|W_\ell\|_2 \cdot \prod_\ell \mathrm{Lip}(\sigma_\ell)$. If each $\|W_\ell\|_2 = 1.2$ and $L=50$, the network can amplify an input perturbation by $1.2^{50} \approx 9100\times$. That is the entire theory of adversarial examples in one line.
+▸ The **spectral norm is the Lipschitz constant of the linear map**: $`\|Ax\| \le \|A\|_2\|x\|`$, with equality for $`x = v_1`$. A network of $L$ layers has Lipschitz constant at most $`\prod_\ell \|W_\ell\|_2 \cdot \prod_\ell \mathrm{Lip}(\sigma_\ell)`$. If each $`\|W_\ell\|_2 = 1.2`$ and $L=50$, the network can amplify an input perturbation by $1.2^{50} \approx 9100\times$. That is the entire theory of adversarial examples in one line.
 
 #### Reading the Lipschitz result
 
 A **Lipschitz constant** is a speed limit on how fast a function's output can change when its input changes. If a function has Lipschitz constant $K$, then nudging the input by $\epsilon$ can move the output by at most $K\epsilon$ — never more. Formally, $\|f(a) - f(b)\| \le K\|a - b\|$.
 
-So $\|Ax\| \le \|A\|_2\|x\|$ reads: *"the output can never be longer than the input times the largest available stretch."* And "with equality for $x = v_1$" means that bound is **actually reached** — feed in the top right-singular vector and you get the full stretch. It's a tight speed limit, not a loose one.
+So $`\|Ax\| \le \|A\|_2\|x\|`$ reads: *"the output can never be longer than the input times the largest available stretch."* And "with equality for $`x = v_1`$" means that bound is **actually reached** — feed in the top right-singular vector and you get the full stretch. It's a tight speed limit, not a loose one.
 
-**Why the constants multiply through a network.** Layer 1 can amplify by at most $\|W_1\|_2$; layer 2 takes that already-amplified signal and can amplify by $\|W_2\|_2$ again. Amplifications *compound* — same as compound interest, and same as $\lambda^k$ in §1.1.2. The $\mathrm{Lip}(\sigma_\ell)$ term covers the activation functions ($\mathrm{Lip} = 1$ for ReLU and tanh, so they don't make it worse).
+**Why the constants multiply through a network.** Layer 1 can amplify by at most $`\|W_1\|_2`$; layer 2 takes that already-amplified signal and can amplify by $`\|W_2\|_2`$ again. Amplifications *compound* — same as compound interest, and same as $\lambda^k$ in §1.1.2. The $`\mathrm{Lip}(\sigma_\ell)`$ term covers the activation functions ($\mathrm{Lip} = 1$ for ReLU and tanh, so they don't make it worse).
 
-▸ **Sit with the number: $1.2^{50}\approx 9100$.** Each layer is only mildly expansive — a 20% stretch, which no one would flag as pathological. Yet fifty of them compose into a system where a change to the input invisible to a human can produce a completely different output. **Adversarial examples are not a bug in any particular network; they are what happens when you multiply fifty numbers slightly larger than one.** This is also precisely why spectral normalization (forcing $\|W\|_2 \approx 1$) is a defence: keep every factor at 1 and the product stays at 1.
+▸ **Sit with the number: $1.2^{50}\approx 9100$.** Each layer is only mildly expansive — a 20% stretch, which no one would flag as pathological. Yet fifty of them compose into a system where a change to the input invisible to a human can produce a completely different output. **Adversarial examples are not a bug in any particular network; they are what happens when you multiply fifty numbers slightly larger than one.** This is also precisely why spectral normalization (forcing $`\|W\|_2 \approx 1`$) is a defence: keep every factor at 1 and the product stays at 1.
 
 #### Examples and non-examples: norms and "size"
 
@@ -256,23 +256,23 @@ So $\|Ax\| \le \|A\|_2\|x\|$ reads: *"the output can never be longer than the in
 
 | Example | Value on $x = (3,-4)$ |
 |---|---|
-| $\ell_2$ (Euclidean length) | $5$ |
-| $\ell_1$ (sum of magnitudes) | $7$ |
-| $\ell_\infty$ (largest entry) | $4$ |
+| $`\ell_2`$ (Euclidean length) | $5$ |
+| $`\ell_1`$ (sum of magnitudes) | $7$ |
+| $`\ell_\infty`$ (largest entry) | $4$ |
 
 **❌ Near-misses — measure "size" but aren't norms**
 
 | Looks like a norm | Why it fails | Consequence |
 |---|---|---|
-| $\sum_i x_i$ (plain sum, no absolute value) | $(3,-4)$ gives $-1$ — **negative**, and $(1,-1)$ gives 0 for a nonzero vector | Not a size at all |
+| $`\sum_i x_i`$ (plain sum, no absolute value) | $(3,-4)$ gives $-1$ — **negative**, and $(1,-1)$ gives 0 for a nonzero vector | Not a size at all |
 | Variance | $\mathrm{Var}(x+y)\ne\mathrm{Var}(x)+\mathrm{Var}(y)$ in general | Fails the triangle inequality |
 | Cosine **similarity** | Bigger means *more alike*, not *larger* | It's an angle, and it ignores length entirely |
-| Squared $\ell_2$, $\|x\|^2$ | $\|2x\|^2 = 4\|x\|^2$, not $2\|x\|^2$ | Not a norm, though constantly used as a loss |
+| Squared $`\ell_2`$, $\|x\|^2$ | $\|2x\|^2 = 4\|x\|^2$, not $2\|x\|^2$ | Not a norm, though constantly used as a loss |
 | KL divergence | Asymmetric, no triangle inequality | A **divergence**, not a distance (§1.4.1) |
 
-▸ **The boundary:** a norm must be zero only at zero, scale linearly ($\|ax\| = \lvert a\rvert\|x\|$), and satisfy the triangle inequality. **Squared $\ell_2$ fails the scaling rule** — which is why "$\ell_2$ loss" and "the $\ell_2$ norm" are  different objects despite the shared name.
+▸ **The boundary:** a norm must be zero only at zero, scale linearly ($\|ax\| = \lvert a\rvert\|x\|$), and satisfy the triangle inequality. **Squared $`\ell_2`$ fails the scaling rule** — which is why "$`\ell_2`$ loss" and "the $`\ell_2`$ norm" are  different objects despite the shared name.
 
-> **Common misconception.** *"$\ell_1$ and $\ell_2$ regularization do the same thing, one's just harsher."* They do qualitatively different things. $\ell_2$ shrinks all weights toward zero but essentially never *to* zero; $\ell_1$ drives a large fraction to **exactly** zero. If you want feature selection or an interpretable sparse code, $\ell_2$ will not deliver it no matter how large you set the coefficient. The reason is the constant-versus-vanishing gradient argument above.
+> **Common misconception.** *"$`\ell_1`$ and $`\ell_2`$ regularization do the same thing, one's just harsher."* They do qualitatively different things. $`\ell_2`$ shrinks all weights toward zero but essentially never *to* zero; $`\ell_1`$ drives a large fraction to **exactly** zero. If you want feature selection or an interpretable sparse code, $`\ell_2`$ will not deliver it no matter how large you set the coefficient. The reason is the constant-versus-vanishing gradient argument above.
 
 > **Common misconception.** *"A large Frobenius norm means the layer is doing something drastic."* Not necessarily. Frobenius measures total content; **spectral** norm measures worst-case amplification. A matrix can have a big Frobenius norm spread harmlessly across a thousand directions, or a small one concentrated into a single explosive direction. For stability questions — gradient explosion, adversarial robustness, Lipschitz bounds — the spectral norm is the one that matters, and the two can point in opposite directions.
 
@@ -323,7 +323,7 @@ Differentiating with respect to a vector gives you a vector of the same shape; d
 
 ### 1.2.1 The shape rule
 
-If $\mathcal{L} \in \mathbb{R}$ (a scalar loss) and $\theta \in \mathbb{R}^{m\times n}$, then $\nabla_\theta \mathcal{L} \in \mathbb{R}^{m\times n}$. Always. Every backprop bug you will ever have is a shape or transpose error, and this rule catches most of them.
+If $\mathcal{L} \in \mathbb{R}$ (a scalar loss) and $\theta \in \mathbb{R}^{m\times n}$, then $`\nabla_\theta \mathcal{L} \in \mathbb{R}^{m\times n}`$. Always. Every backprop bug you will ever have is a shape or transpose error, and this rule catches most of them.
 
 ### 1.2.2 The identities you need
 
@@ -332,11 +332,11 @@ Let $x \in \mathbb{R}^n$, $A \in \mathbb{R}^{m\times n}$, $y = Ax$.
 | Function | Derivative |
 |---|---|
 | $y = Ax$ | $\dfrac{\partial y}{\partial x} = A$ (Jacobian, $m\times n$) |
-| $s = a^\top x$ | $\nabla_x s = a$ |
-| $s = x^\top A x$ | $\nabla_x s = (A + A^\top)x$; $= 2Ax$ if symmetric |
-| $s = \|x\|^2$ | $\nabla_x s = 2x$ |
-| $s = \mathrm{tr}(A^\top B)$ | $\nabla_A s = B$ |
-| $y = Ax$, given $\bar y = \partial\mathcal{L}/\partial y$ | $\nabla_A \mathcal{L} = \bar y\, x^\top$, $\ \nabla_x\mathcal{L} = A^\top \bar y$ |
+| $s = a^\top x$ | $`\nabla_x s = a`$ |
+| $s = x^\top A x$ | $`\nabla_x s = (A + A^\top)x`$; $= 2Ax$ if symmetric |
+| $s = \|x\|^2$ | $`\nabla_x s = 2x`$ |
+| $s = \mathrm{tr}(A^\top B)$ | $`\nabla_A s = B`$ |
+| $y = Ax$, given $\bar y = \partial\mathcal{L}/\partial y$ | $`\nabla_A \mathcal{L} = \bar y\, x^\top`$, $`\ \nabla_x\mathcal{L} = A^\top \bar y`$ |
 
 That last row **is** backprop through a linear layer. Memorize it. The two rules are:
 
@@ -358,13 +358,13 @@ Setting: a linear layer computes $y = Ax$. Someone hands you $\bar y$ (how much 
 
 **Rule 1 — the weight gradient: $\bar A = \bar y\,x^\top$.**
 
-Read entry by entry: $\bar A_{ij} = \bar y_i \, x_j$. In words: **"the gradient for the weight connecting input $j$ to output $i$ is (how wrong output $i$ was) × (how active input $j$ was)."**
+Read entry by entry: $`\bar A_{ij} = \bar y_i \, x_j`$. In words: **"the gradient for the weight connecting input $j$ to output $i$ is (how wrong output $i$ was) × (how active input $j$ was)."**
 
 ▸ This is one of the most intuitive facts in all of deep learning, and it is worth saying without symbols: **blame is assigned in proportion to participation.** If input $j$ was zero, it contributed nothing to output $i$, so it receives no blame and its weight isn't updated. If input $j$ was large and output $i$ was badly wrong, that connection gets a large correction. Hebbian learning ("neurons that fire together wire together") is this formula with the error signal in place of the second firing rate.
 
 **Rule 2 — the input gradient: $\bar x = A^\top \bar y$.**
 
-This is what gets passed to the previous layer, so that it can run the same two rules itself. Read entry by entry: $\bar x_j = \sum_i A_{ij}\bar y_i$ — *"how much the loss cares about input $j$ = sum over all the outputs it fed, of (its connection strength) × (how much the loss cares about that output)."*
+This is what gets passed to the previous layer, so that it can run the same two rules itself. Read entry by entry: $`\bar x_j = \sum_i A_{ij}\bar y_i`$ — *"how much the loss cares about input $j$ = sum over all the outputs it fed, of (its connection strength) × (how much the loss cares about that output)."*
 
 ▸ **Why the transpose appears.** Forward, $A$ sends information from inputs to outputs. Backward, you need to send information from outputs back to inputs — **the same connections, traversed the other way.** Transposing a matrix is exactly "reverse the direction of every arrow." The $^\top$ is not an algebraic trick; it is the statement that backpropagation runs the network's wiring in reverse.
 
@@ -374,7 +374,7 @@ This is what gets passed to the previous layer, so that it can run the same two 
 
 ### 1.2.3 Jacobians and the two modes of autodiff
 
-For $f: \mathbb{R}^n \to \mathbb{R}^m$, the Jacobian is $J_{ij} = \partial f_i/\partial x_j \in \mathbb{R}^{m\times n}$.
+For $f: \mathbb{R}^n \to \mathbb{R}^m$, the Jacobian is $`J_{ij} = \partial f_i/\partial x_j \in \mathbb{R}^{m\times n}`$.
 
 **You never build $J$.** For a network with $p = 10^8$ parameters and scalar loss, $J$ would be $1 \times 10^8$ — that one is fine — but intermediate Jacobians are catastrophically large. Instead autodiff computes products:
 
@@ -383,11 +383,11 @@ For $f: \mathbb{R}^n \to \mathbb{R}^m$, the Jacobian is $J_{ij} = \partial f_i/\
 
 ▸ Deep learning has $m = 1$ (scalar loss) and $n = p$ (millions of parameters). So reverse mode wins by a factor of $p$. **That's the whole reason backpropagation is reverse-mode.** It is not a deep insight about neural networks; it's a statement about the shape of the problem.
 
-**Cost:** reverse-mode AD gives $\nabla_\theta\mathcal{L}$ at roughly $2$–$3\times$ the cost of a forward pass, *independent of $p$*. This is the Baur–Strassen result and it is  remarkable.
+**Cost:** reverse-mode AD gives $`\nabla_\theta\mathcal{L}`$ at roughly $2$–$3\times$ the cost of a forward pass, *independent of $p$*. This is the Baur–Strassen result and it is  remarkable.
 
 #### What a Jacobian is, and why there are two modes
 
-**The Jacobian is a table of every input→output sensitivity.** For $f:\mathbb{R}^n\to\mathbb{R}^m$, the entry $J_{ij} = \partial f_i/\partial x_j$ answers: *"if I nudge input $j$, how much does output $i$ move?"* Row $i$ collects everything affecting output $i$; column $j$ collects everything input $j$ affects.
+**The Jacobian is a table of every input→output sensitivity.** For $f:\mathbb{R}^n\to\mathbb{R}^m$, the entry $`J_{ij} = \partial f_i/\partial x_j`$ answers: *"if I nudge input $j$, how much does output $i$ move?"* Row $i$ collects everything affecting output $i$; column $j$ collects everything input $j$ affects.
 
 It is simply the gradient generalized to functions with many outputs. If $m = 1$ (one output), the Jacobian is a single row — and that row is the gradient.
 
@@ -409,7 +409,7 @@ It is simply the gradient generalized to functions with many outputs. If $m = 1$
 
 ▸ **That is the whole reason backpropagation is reverse-mode**, and the text's point deserves emphasis: it is not a fact about neural networks at all. It is a fact about the *shape* of the problem — many knobs, one number to minimize. Any optimization with that shape wants reverse mode, whether it involves neural networks, fluid dynamics, or financial models.
 
-**Why the loss must be a scalar.** Now you can see why every objective in this book collapses to one number. If your loss were a 10-vector, reverse mode would cost 10 passes. Scalar losses aren't an aesthetic preference — they are what makes training affordable. When you see a multi-objective setup, note that it is always reduced to a *weighted sum* first: $\mathcal{L} = \lambda_1\mathcal{L}_1 + \lambda_2\mathcal{L}_2$. That sum exists to preserve this property.
+**Why the loss must be a scalar.** Now you can see why every objective in this book collapses to one number. If your loss were a 10-vector, reverse mode would cost 10 passes. Scalar losses aren't an aesthetic preference — they are what makes training affordable. When you see a multi-objective setup, note that it is always reduced to a *weighted sum* first: $`\mathcal{L} = \lambda_1\mathcal{L}_1 + \lambda_2\mathcal{L}_2`$. That sum exists to preserve this property.
 
 **The Baur–Strassen result, and why it is astonishing.** The cost of the gradient is $2$–$3\times$ a forward pass **regardless of how many parameters you have.** Naively, computing $10^8$ derivatives ought to cost roughly $10^8$ times more than computing one value. Instead you get all hundred million of them for the price of about two forward passes.
 
@@ -419,13 +419,13 @@ It is simply the gradient generalized to functions with many outputs. If $m = 1$
 
 ### 1.2.4 The Hessian and what "sharpness" means
 
-$H_{ij} = \partial^2\mathcal{L}/\partial\theta_i\partial\theta_j$, symmetric, $p \times p$. You cannot store it ($p=10^8 \Rightarrow 10^{16}$ entries $= 40$ petabytes in fp32). You *can* compute Hessian–vector products cheaply:
+$`H_{ij} = \partial^2\mathcal{L}/\partial\theta_i\partial\theta_j`$, symmetric, $p \times p$. You cannot store it ($p=10^8 \Rightarrow 10^{16}$ entries $= 40$ petabytes in fp32). You *can* compute Hessian–vector products cheaply:
 
 ▸ $$Hv = \nabla_\theta\big(\langle \nabla_\theta\mathcal{L},\ v\rangle\big)$$
 
-i.e. differentiate the dot product of the gradient with a constant vector. Cost: one extra backward pass. This is the **Pearlmutter trick**, and it's how people actually measure $\lambda_{\max}(H)$ (power iteration on $Hv$) to study sharpness, flat minima, and Edge of Stability (Ch. 5, 19).
+i.e. differentiate the dot product of the gradient with a constant vector. Cost: one extra backward pass. This is the **Pearlmutter trick**, and it's how people actually measure $`\lambda_{\max}(H)`$ (power iteration on $Hv$) to study sharpness, flat minima, and Edge of Stability (Ch. 5, 19).
 
-**Gauss–Newton / Fisher decomposition.** For a loss $\mathcal{L} = \ell(f_\theta(x), y)$,
+**Gauss–Newton / Fisher decomposition.** For a loss $`\mathcal{L} = \ell(f_\theta(x), y)`$,
 
 $$H = \underbrace{J_f^\top \nabla^2_f \ell\, J_f}_{\text{Gauss–Newton, PSD}} + \underbrace{\sum_k (\nabla_f \ell)_k \nabla^2_\theta f_k}_{\text{curvature of the model}}$$
 
@@ -433,30 +433,30 @@ Near a good fit the second term is small (residuals $\to 0$), so $H \approx$ GGN
 
 #### The Hessian in plain English
 
-If the gradient is the **slope**, the Hessian is the **curvature** — how fast the slope itself is changing. $H_{ij} = \partial^2\mathcal{L}/\partial\theta_i\partial\theta_j$ is a second derivative: *"as I nudge parameter $j$, how much does the gradient with respect to parameter $i$ change?"*
+If the gradient is the **slope**, the Hessian is the **curvature** — how fast the slope itself is changing. $`H_{ij} = \partial^2\mathcal{L}/\partial\theta_i\partial\theta_j`$ is a second derivative: *"as I nudge parameter $j$, how much does the gradient with respect to parameter $i$ change?"*
 
 > **Analogy.** Driving: position is the loss, speed is the gradient, acceleration is the Hessian. The gradient tells you which way is downhill. The Hessian tells you whether the hill is a gentle bowl you can stride across or a narrow ravine where a normal-sized step overshoots and lands you on the opposite wall.
 
-**Why "sharpness" is an eigenvalue.** Because $H$ is symmetric it has an eigendecomposition (§1.1.2), and its eigenvalues are the curvature along each principal direction. $\lambda_{\max}(H)$ is the curvature in the *most sharply curving* direction — the narrowest part of the ravine.
+**Why "sharpness" is an eigenvalue.** Because $H$ is symmetric it has an eigendecomposition (§1.1.2), and its eigenvalues are the curvature along each principal direction. $`\lambda_{\max}(H)`$ is the curvature in the *most sharply curving* direction — the narrowest part of the ravine.
 
-▸ **This directly sets your maximum stable learning rate.** For a quadratic bowl, gradient descent diverges once $\eta > 2/\lambda_{\max}$. Too big a step in the sharpest direction and you bounce up the far wall higher than you started, then higher again, and the loss explodes. **When a training run diverges after a learning-rate increase, this inequality is the reason.** Chapter 5's "Edge of Stability" is the observation that real training tends to hover right at this boundary rather than staying safely below it.
+▸ **This directly sets your maximum stable learning rate.** For a quadratic bowl, gradient descent diverges once $`\eta > 2/\lambda_{\max}`$. Too big a step in the sharpest direction and you bounce up the far wall higher than you started, then higher again, and the loss explodes. **When a training run diverges after a learning-rate increase, this inequality is the reason.** Chapter 5's "Edge of Stability" is the observation that real training tends to hover right at this boundary rather than staying safely below it.
 
 **Why you cannot store it.** $H$ is $p\times p$. For $p = 10^8$ that is $10^{16}$ entries — **40 petabytes**, versus roughly 0.4 GB for the gradient. This is the whole reason second-order optimization is hard: the information is wonderful, and completely unaffordable.
 
-**Reading the Pearlmutter trick.** $Hv = \nabla_\theta(\langle\nabla_\theta\mathcal{L}, v\rangle)$ looks circular but is a clean piece of sleight of hand:
+**Reading the Pearlmutter trick.** $`Hv = \nabla_\theta(\langle\nabla_\theta\mathcal{L}, v\rangle)`$ looks circular but is a clean piece of sleight of hand:
 
-1. Compute the gradient $\nabla_\theta\mathcal{L}$ — a vector, as usual.
-2. Dot it with a **fixed** vector $v$ to get a single number, $\langle\nabla_\theta\mathcal{L}, v\rangle$.
+1. Compute the gradient $`\nabla_\theta\mathcal{L}`$ — a vector, as usual.
+2. Dot it with a **fixed** vector $v$ to get a single number, $`\langle\nabla_\theta\mathcal{L}, v\rangle`$.
 3. Differentiate *that number* again.
 
 Since $v$ is constant, differentiating the dot product hands you exactly $Hv$. **You obtain a Hessian-vector product without ever forming the Hessian** — the same discipline as never building the Jacobian, for the same reason. Cost: one extra backward pass.
 
-▸ And $Hv$ is enough to find $\lambda_{\max}$ via **power iteration**: repeatedly apply $H$ to a random vector and renormalize. By §1.1.2, $H^k v$ amplifies the largest-eigenvalue direction exponentially over all others, so after a few dozen iterations the vector has swung round to point along the top eigenvector. The exponential amplification that ruins gradient flow in deep networks is, here, a useful measuring instrument.
+▸ And $Hv$ is enough to find $`\lambda_{\max}`$ via **power iteration**: repeatedly apply $H$ to a random vector and renormalize. By §1.1.2, $H^k v$ amplifies the largest-eigenvalue direction exponentially over all others, so after a few dozen iterations the vector has swung round to point along the top eigenvector. The exponential amplification that ruins gradient flow in deep networks is, here, a useful measuring instrument.
 
 **The Gauss–Newton decomposition, term by term.** The formula splits the curvature into two sources:
 
-- $J_f^\top\nabla_f^2\ell\,J_f$ — curvature that comes from **the loss function's own shape**, viewed through the model. Always PSD (curves upward everywhere).
-- $\sum_k(\nabla_f\ell)_k\nabla^2_\theta f_k$ — curvature from **the model itself bending**, weighted by how wrong each output currently is. Can be negative.
+- $`J_f^\top\nabla_f^2\ell\,J_f`$ — curvature that comes from **the loss function's own shape**, viewed through the model. Always PSD (curves upward everywhere).
+- $`\sum_k(\nabla_f\ell)_k\nabla^2_\theta f_k`$ — curvature from **the model itself bending**, weighted by how wrong each output currently is. Can be negative.
 
 The second term carries a factor of the residual — *how wrong you are*. Fit the data well and the residuals go to zero, so this term fades and $H \approx$ GGN, which is guaranteed PSD.
 
@@ -475,7 +475,7 @@ $$\mathbb{E}[X] = \int x\,p(x)\,dx,\qquad \mathrm{Var}(X) = \mathbb{E}[X^2] - \m
 **Linearity of expectation holds always** (even for dependent variables): $\mathbb{E}[aX+bY] = a\mathbb{E}[X]+b\mathbb{E}[Y]$.
 **Variance is not linear**: $\mathrm{Var}(aX+bY) = a^2\mathrm{Var}(X)+b^2\mathrm{Var}(Y) + 2ab\,\mathrm{Cov}(X,Y)$.
 
-▸ For $n$ i.i.d. variables, $\mathrm{Var}\!\left(\frac{1}{n}\sum X_i\right) = \frac{\sigma^2}{n}$, so the **standard error is $\sigma/\sqrt{n}$.** To halve your error bars you need $4\times$ the data. This single fact governs Chapter 3 entirely, and it is why a 16-batch validation estimate is noisy.
+▸ For $n$ i.i.d. variables, $`\mathrm{Var}\!\left(\frac{1}{n}\sum X_i\right) = \frac{\sigma^2}{n}`$, so the **standard error is $\sigma/\sqrt{n}$.** To halve your error bars you need $4\times$ the data. This single fact governs Chapter 3 entirely, and it is why a 16-batch validation estimate is noisy.
 
 #### Decoding the three-line core
 
@@ -541,7 +541,7 @@ $$\mathbb{E}[X] = \mathbb{E}_Y\big[\mathbb{E}[X\mid Y]\big]$$
 
 The variance decomposition is the engine behind:
 - the **bias–variance decomposition** (Ch. 2),
-- why a diffusion model's validation loss is extra noisy: one samples a random timestep $t$ per batch, so the between-$t$ variance $\mathrm{Var}_t(\mathbb{E}[\text{loss}\mid t])$ gets *added* on top of the within-batch sampling variance. Loss at $t=999$ and loss at $t=5$ are wildly different numbers. (Ch. 3, Ch. 12.)
+- why a diffusion model's validation loss is extra noisy: one samples a random timestep $t$ per batch, so the between-$t$ variance $`\mathrm{Var}_t(\mathbb{E}[\text{loss}\mid t])`$ gets *added* on top of the within-batch sampling variance. Loss at $t=999$ and loss at $t=5$ are wildly different numbers. (Ch. 3, Ch. 12.)
 
 ### 1.3.3 Gaussians
 
@@ -551,9 +551,9 @@ The two facts that make diffusion models tractable:
 
 ▸ **Closure under affine maps:** if $x\sim\mathcal{N}(\mu,\Sigma)$ then $Ax+b \sim \mathcal{N}(A\mu+b,\ A\Sigma A^\top)$.
 
-▸ **Closure under convolution:** if $x_1\sim\mathcal{N}(\mu_1,\sigma_1^2)$ and $x_2\sim\mathcal{N}(\mu_2,\sigma_2^2)$ independent, then $x_1+x_2 \sim \mathcal{N}(\mu_1+\mu_2,\ \sigma_1^2+\sigma_2^2)$.
+▸ **Closure under convolution:** if $`x_1\sim\mathcal{N}(\mu_1,\sigma_1^2)`$ and $`x_2\sim\mathcal{N}(\mu_2,\sigma_2^2)`$ independent, then $`x_1+x_2 \sim \mathcal{N}(\mu_1+\mu_2,\ \sigma_1^2+\sigma_2^2)`$.
 
-Together these give the closed-form $q(x_t\mid x_0)$ in DDPM (Ch. 11) — you can jump to any noise level in one step instead of simulating $t$ steps. Without this, diffusion training would be intractable.
+Together these give the closed-form $`q(x_t\mid x_0)`$ in DDPM (Ch. 11) — you can jump to any noise level in one step instead of simulating $t$ steps. Without this, diffusion training would be intractable.
 
 **Reparameterization.** $x\sim\mathcal{N}(\mu,\sigma^2) \iff x = \mu + \sigma\epsilon,\ \epsilon\sim\mathcal{N}(0,1)$. This is what makes VAEs and diffusion differentiable — you move the randomness out of the computational path so gradients can flow through $\mu$ and $\sigma$ (Ch. 10).
 
@@ -567,7 +567,7 @@ The density formula is decoded piece by piece in [§0.12 of the primer](00-notat
 
 **Closure under convolution** — add two independent Gaussians and you get a Gaussian, with **means adding and variances adding**. Note carefully: *variances* add, not standard deviations. So combining two noise sources of $\sigma = 1$ each gives $\sigma = \sqrt{2} \approx 1.41$, not 2. Noise accumulates by $\sqrt{\cdot}$ — the same law as §1.3.1, and for the same reason.
 
-▸ **Why these two facts make diffusion models possible.** A diffusion model's forward process adds a little Gaussian noise, a thousand times over. Naively, finding the image at step 500 requires simulating 500 steps. But "add Gaussian noise" is an affine map plus an independent Gaussian — *both* closure properties — so all thousand steps collapse into a single Gaussian you can write down in closed form. **You jump straight to any noise level in one step.** Training samples a random $t$ and needs $x_t$ immediately; without closure that would mean simulating hundreds of steps per training example, and diffusion models would be computationally hopeless. Chapter 20's $q(x_t\mid x_0)$ is this collapse.
+▸ **Why these two facts make diffusion models possible.** A diffusion model's forward process adds a little Gaussian noise, a thousand times over. Naively, finding the image at step 500 requires simulating 500 steps. But "add Gaussian noise" is an affine map plus an independent Gaussian — *both* closure properties — so all thousand steps collapse into a single Gaussian you can write down in closed form. **You jump straight to any noise level in one step.** Training samples a random $t$ and needs $`x_t`$ immediately; without closure that would mean simulating hundreds of steps per training example, and diffusion models would be computationally hopeless. Chapter 20's $`q(x_t\mid x_0)`$ is this collapse.
 
 **The reparameterization trick, and the problem it solves.** The notation $x = \mu + \sigma\epsilon$ says: *instead of drawing $x$ from a distribution whose parameters you're trying to learn, draw a fixed, parameter-free noise sample $\epsilon\sim\mathcal{N}(0,1)$ and then* **deterministically** *reshape it.*
 
@@ -586,14 +586,14 @@ $$\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$
 Its Jacobian (needed constantly):
 ▸ $$\frac{\partial\, \mathrm{softmax}(z)_i}{\partial z_j} = p_i(\delta_{ij} - p_j)$$
 
-Combined with cross-entropy loss $\mathcal{L} = -\log p_y$, the gradient collapses beautifully:
+Combined with cross-entropy loss $`\mathcal{L} = -\log p_y`$, the gradient collapses beautifully:
 ▸ $$\frac{\partial \mathcal{L}}{\partial z_j} = p_j - \mathbb{1}[j=y]$$
 
-**Derivation.** $\mathcal{L} = -z_y + \log\sum_k e^{z_k}$. Then $\partial\mathcal{L}/\partial z_j = -\delta_{jy} + \frac{e^{z_j}}{\sum_k e^{z_k}} = p_j - \delta_{jy}$. ∎
+**Derivation.** $`\mathcal{L} = -z_y + \log\sum_k e^{z_k}`$. Then $`\partial\mathcal{L}/\partial z_j = -\delta_{jy} + \frac{e^{z_j}}{\sum_k e^{z_k}} = p_j - \delta_{jy}`$. ∎
 
 This is why the softmax–cross-entropy pair is numerically well behaved: **the gradient is just "predicted minus actual."** Never implement them separately; the fused version avoids computing $\log$ of a possibly-zero probability.
 
-**Numerical stability:** always compute $\mathrm{logsumexp}(z) = z_{\max} + \log\sum_j e^{z_j - z_{\max}}$. Without the shift, $e^{z}$ overflows fp32 at $z \approx 88$.
+**Numerical stability:** always compute $`\mathrm{logsumexp}(z) = z_{\max} + \log\sum_j e^{z_j - z_{\max}}`$. Without the shift, $e^{z}$ overflows fp32 at $z \approx 88$.
 
 **Temperature:** $\mathrm{softmax}(z/T)$. As $T\to 0$ it becomes argmax; as $T\to\infty$ it becomes uniform. Entropy is monotonically increasing in $T$.
 
@@ -606,7 +606,7 @@ $$\mathrm{softmax}(z)_i = \frac{e^{z_i}}{\sum_j e^{z_j}}$$
 Two steps only:
 
 1. **Exponentiate** every logit. $e^{z}$ is positive for any input, which handles the "non-negative" requirement, and it magnifies differences — turning a modest lead in logits into a large lead in probability.
-2. **Divide by the total.** Now they sum to 1. The denominator $\sum_j e^{z_j}$ is the same for every $i$; it is purely a normalizer.
+2. **Divide by the total.** Now they sum to 1. The denominator $`\sum_j e^{z_j}`$ is the same for every $i$; it is purely a normalizer.
 
 Worked example with $z = (2, 1, 0)$: exponentiate → $(7.39, 2.72, 1.00)$, total $11.11$, divide → $(0.67, 0.24, 0.09)$. A 1-unit logit lead became roughly a 3:1 probability ratio.
 
@@ -614,10 +614,10 @@ Worked example with $z = (2, 1, 0)$: exponentiate → $(7.39, 2.72, 1.00)$, tota
 
 **Why "$e$" specifically?** Because it makes the derivative clean, which is the next result.
 
-**Reading the Jacobian $\partial p_i/\partial z_j = p_i(\delta_{ij} - p_j)$.** The Kronecker delta $\delta_{ij}$ is 1 when $i=j$ and 0 otherwise (§0.6), so this is two cases in one line:
+**Reading the Jacobian $`\partial p_i/\partial z_j = p_i(\delta_{ij} - p_j)`$.** The Kronecker delta $`\delta_{ij}`$ is 1 when $i=j$ and 0 otherwise (§0.6), so this is two cases in one line:
 
-- $i = j$: $p_i(1 - p_i)$ — **positive.** Raising a logit raises its own probability.
-- $i \ne j$: $-p_ip_j$ — **negative.** Raising one logit lowers everyone else's.
+- $i = j$: $`p_i(1 - p_i)`$ — **positive.** Raising a logit raises its own probability.
+- $i \ne j$: $`-p_ip_j`$ — **negative.** Raising one logit lowers everyone else's.
 
 ▸ That negative off-diagonal term is softmax's defining behaviour: **probabilities compete.** Because they must total 1, one class can only gain at another's expense. This is why softmax classifiers handle mutually-exclusive labels well and multi-label problems badly — for "this image contains both a dog and a beach" you want independent sigmoids, since those facts don't compete.
 
@@ -629,15 +629,15 @@ where $\mathbb{1}[j=y]$ is 1 for the correct class and 0 otherwise. So the gradi
 
 | Case | Gradient | Effect |
 |---|---|---|
-| Correct class | $p_y - 1$ (negative) | Push this logit **up** |
-| Wrong class | $p_j - 0$ (positive) | Push these logits **down** |
+| Correct class | $`p_y - 1`$ (negative) | Push this logit **up** |
+| Wrong class | $`p_j - 0`$ (positive) | Push these logits **down** |
 | Perfect prediction | $0$ | No update — nothing to learn |
 
-▸ Notice how the messy $p_i(\delta_{ij}-p_j)$ Jacobian and the $-\log$ of cross-entropy **annihilate each other**, leaving pure subtraction. The $\log$ in cross-entropy and the $\exp$ in softmax are inverses; pairing them cancels both. This is not a coincidence — cross-entropy is the loss *designed* to pair with softmax, and the whole reason to use it over, say, squared error.
+▸ Notice how the messy $`p_i(\delta_{ij}-p_j)`$ Jacobian and the $-\log$ of cross-entropy **annihilate each other**, leaving pure subtraction. The $\log$ in cross-entropy and the $\exp$ in softmax are inverses; pairing them cancels both. This is not a coincidence — cross-entropy is the loss *designed* to pair with softmax, and the whole reason to use it over, say, squared error.
 
-**Why you must fuse them in code.** Computing softmax then $\log$ separately means computing $\log(p)$ where $p$ might have underflowed to exactly $0$, giving $-\infty$ and a NaN that poisons the run. The fused version never forms $p$ at all, using $\mathcal{L} = -z_y + \mathrm{logsumexp}(z)$ instead. This is why every framework provides `cross_entropy_with_logits` and why passing it already-softmaxed inputs is a classic bug.
+**Why you must fuse them in code.** Computing softmax then $\log$ separately means computing $\log(p)$ where $p$ might have underflowed to exactly $0$, giving $-\infty$ and a NaN that poisons the run. The fused version never forms $p$ at all, using $`\mathcal{L} = -z_y + \mathrm{logsumexp}(z)`$ instead. This is why every framework provides `cross_entropy_with_logits` and why passing it already-softmaxed inputs is a classic bug.
 
-**The logsumexp shift, concretely.** $\mathrm{logsumexp}(z) = z_{\max} + \log\sum_j e^{z_j - z_\max}$. Subtracting the max makes the largest exponent exactly $e^0 = 1$, so nothing can overflow; the identity holds because factoring $e^{z_\max}$ out of the sum turns into an additive $z_{\max}$ once you take the log. Without it, $e^{89}$ overflows fp32 to infinity — and logits of 90 are entirely reachable in a large model.
+**The logsumexp shift, concretely.** $`\mathrm{logsumexp}(z) = z_{\max} + \log\sum_j e^{z_j - z_\max}`$. Subtracting the max makes the largest exponent exactly $e^0 = 1$, so nothing can overflow; the identity holds because factoring $`e^{z_\max}`$ out of the sum turns into an additive $`z_{\max}`$ once you take the log. Without it, $e^{89}$ overflows fp32 to infinity — and logits of 90 are entirely reachable in a large model.
 
 **Temperature, intuitively.** Dividing logits by $T$ before the softmax rescales how decisive the distribution is:
 
@@ -678,9 +678,9 @@ Properties:
 - $\mathrm{KL}(p\|q)$ ("forward", used in MLE): the expectation is over $p$. Wherever $p$ has mass, $q$ *must* have mass, or you pay $\log(p/0) = \infty$. ⇒ **mode-covering**, $q$ spreads out and blurs. This is why maximum-likelihood generative models produce blurry samples.
 - $\mathrm{KL}(q\|p)$ ("reverse", used in variational inference and some RL): the expectation is over $q$. $q$ can safely ignore regions of $p$ by putting zero mass there. ⇒ **mode-seeking**, $q$ collapses onto one mode. This is why VI underestimates posterior variance, and why some RLHF objectives collapse diversity.
 
-▸ **Maximum likelihood = minimizing forward KL.** Proof: $\arg\max_\theta \frac1n\sum_i \log p_\theta(x_i) \to \arg\max_\theta \mathbb{E}_{p_{\text{data}}}[\log p_\theta(x)] = \arg\min_\theta \mathrm{KL}(p_{\text{data}}\|p_\theta)$ because $H(p_{\text{data}})$ is a constant w.r.t. $\theta$. ∎
+▸ **Maximum likelihood = minimizing forward KL.** Proof: $`\arg\max_\theta \frac1n\sum_i \log p_\theta(x_i) \to \arg\max_\theta \mathbb{E}_{p_{\text{data}}}[\log p_\theta(x)] = \arg\min_\theta \mathrm{KL}(p_{\text{data}}\|p_\theta)`$ because $`H(p_{\text{data}})`$ is a constant w.r.t. $\theta$. ∎
 
-So **every time you minimize cross-entropy loss, you are minimizing a KL divergence to the data distribution.** Your `val_realCE` is literally an estimate of $H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)$ — the first term is a fixed floor you can never get below.
+So **every time you minimize cross-entropy loss, you are minimizing a KL divergence to the data distribution.** Your `val_realCE` is literally an estimate of $`H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)`$ — the first term is a fixed floor you can never get below.
 
 #### The three quantities, built from scratch
 
@@ -700,7 +700,7 @@ $$\text{surprise}(x) = -\log p(x)$$
 
 Check that it behaves correctly: $p = 1$ gives $-\log 1 = 0$ (certain, no surprise). $p = 0.001$ gives $-\log(0.001) = 6.9$ (very surprising). As $p\to 0$, surprise $\to\infty$.
 
-Why the logarithm specifically? Because surprise should **add** when independent things happen. Two unrelated events with probabilities $p_1$ and $p_2$ have joint probability $p_1p_2$, and $\log$ is the unique function turning that product into a sum: $-\log(p_1p_2) = -\log p_1 - \log p_2$. Learning two independent facts should be twice the information of learning one, and only the logarithm delivers that.
+Why the logarithm specifically? Because surprise should **add** when independent things happen. Two unrelated events with probabilities $`p_1`$ and $`p_2`$ have joint probability $`p_1p_2`$, and $\log$ is the unique function turning that product into a sum: $`-\log(p_1p_2) = -\log p_1 - \log p_2`$. Learning two independent facts should be twice the information of learning one, and only the logarithm delivers that.
 
 **Entropy $H(p)$ — your *expected* surprise.**
 
@@ -742,15 +742,15 @@ $$\mathrm{KL}(p\|q) = H(p,q) - H(p)$$
 
 > **Analogy.** You must describe "food people eat for breakfast" with one dish. Forward KL forces you to cover everything — you invent an unappetizing average of cereal, eggs, and toast that nobody actually eats (blurry). Reverse KL lets you say "toast" and ignore the rest — a real breakfast, but you've silently dropped most of the distribution (mode collapse). **Neither is wrong; they answer different questions.** Blurry maximum-likelihood samples and collapsed reinforcement-learning diversity are the same mathematical fact wearing two hats.
 
-**"Maximum likelihood = minimizing forward KL," read slowly.** The proof line says: maximizing average log-probability of your data is the same as minimizing $\mathrm{KL}(p_{\text{data}}\|p_\theta)$, because the two differ only by $H(p_{\text{data}})$ — a property of the *dataset*, not of $\theta$. Adding a constant doesn't move an argmin.
+**"Maximum likelihood = minimizing forward KL," read slowly.** The proof line says: maximizing average log-probability of your data is the same as minimizing $`\mathrm{KL}(p_{\text{data}}\|p_\theta)`$, because the two differ only by $`H(p_{\text{data}})`$ — a property of the *dataset*, not of $\theta$. Adding a constant doesn't move an argmin.
 
-▸ **Consequence for reading your own training logs.** Your loss is $H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)$: an **irreducible floor** plus **your model's error**. Only the second term is trainable. This is why a loss curve flattening at 1.4 rather than 0 may mean the model has *finished*, not that it has *failed*, and why "how close am I to the floor?" is a far more useful question than "how close am I to zero?" A cross-entropy of zero would require the data to be perfectly predictable, which for natural language it emphatically is not.
+▸ **Consequence for reading your own training logs.** Your loss is $`H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)`$: an **irreducible floor** plus **your model's error**. Only the second term is trainable. This is why a loss curve flattening at 1.4 rather than 0 may mean the model has *finished*, not that it has *failed*, and why "how close am I to the floor?" is a far more useful question than "how close am I to zero?" A cross-entropy of zero would require the data to be perfectly predictable, which for natural language it emphatically is not.
 
 #### Examples and non-examples: entropy, cross-entropy, and KL
 
 **✅ Worked numeric examples** — a 4-class problem, true label = class 1.
 
-| Model's prediction $q$ | Cross-entropy $-\log q_1$ | Reading |
+| Model's prediction $q$ | Cross-entropy $`-\log q_1`$ | Reading |
 |---|---|---|
 | $(1.00,\ 0,\ 0,\ 0)$ | $0$ | Perfect and certain |
 | $(0.90,\ 0.05,\ 0.03,\ 0.02)$ | $0.105$ | Confident and right |
@@ -766,11 +766,11 @@ $$\mathrm{KL}(p\|q) = H(p,q) - H(p)$$
 |---|---|---|
 | Accuracy | Ignores confidence entirely — 51% and 99% both count as "right" | A **threshold** metric, not a proper scoring rule |
 | $\mathrm{KL}(p\|q)$ as a "distance" | Asymmetric, violates the triangle inequality | A **divergence** |
-| Cross-entropy of zero as the goal | Impossible whenever data is  ambiguous | The goal is $H(p_{\text{data}})$, the irreducible floor |
+| Cross-entropy of zero as the goal | Impossible whenever data is  ambiguous | The goal is $`H(p_{\text{data}})`$, the irreducible floor |
 | Perplexity compared across tokenizers | Different vocabularies, different $K$ | Not comparable — a smaller vocabulary flatters perplexity |
-| Entropy of the model's output | That's the model's *confidence* | Not $H(p_{\text{data}})$, which is a property of the world |
+| Entropy of the model's output | That's the model's *confidence* | Not $`H(p_{\text{data}})`$, which is a property of the world |
 
-▸ **The boundary:** entropy is a property of a **distribution**; cross-entropy involves **two** distributions (reality and belief); KL is the **gap** between them. Confusing "the model is uncertain" (high output entropy) with "the data is ambiguous" (high $H(p_\text{data})$) is the most consequential mix-up here — the first is fixable by training, the second is not.
+▸ **The boundary:** entropy is a property of a **distribution**; cross-entropy involves **two** distributions (reality and belief); KL is the **gap** between them. Confusing "the model is uncertain" (high output entropy) with "the data is ambiguous" (high $`H(p_\text{data})`$) is the most consequential mix-up here — the first is fixable by training, the second is not.
 
 > **Common misconception.** *"A perfect model reaches zero loss."* Only if the world is deterministic. For next-token prediction on natural text, many continuations are  valid; the entropy of the data is a hard floor that no architecture or scale can breach. A model at 1.52 nats against a floor of 1.40 has captured nearly everything available — and a team chasing the remaining 0.12 without knowing the floor exists can burn a quarter for nothing.
 
@@ -798,7 +798,7 @@ Cross-entropy in nats. **Perplexity** $= e^{H}$, interpretable as "effective num
 
 #### Making cross-entropy numbers mean something
 
-**Nats versus bits.** A **nat** ("natural unit of information") is the unit you get using natural logarithm $\log_e$; a **bit** ("binary digit") uses $\log_2$. They differ only by a constant: $1$ nat $= 1/\ln 2 \approx 1.44$ bits. Machine learning uses nats because $\log_e$ differentiates cleanly; information theory traditionally uses bits because they correspond to yes/no answers. Same quantity, different rulers — like metres and feet.
+**Nats versus bits.** A **nat** ("natural unit of information") is the unit you get using natural logarithm $`\log_e`$; a **bit** ("binary digit") uses $`\log_2`$. They differ only by a constant: $1$ nat $= 1/\ln 2 \approx 1.44$ bits. Machine learning uses nats because $`\log_e`$ differentiates cleanly; information theory traditionally uses bits because they correspond to yes/no answers. Same quantity, different rulers — like metres and feet.
 
 **Perplexity, and why it is the useful number.** $\text{perplexity} = e^{H}$ converts a cross-entropy back into an intuitive count:
 
@@ -857,16 +857,16 @@ And the **gap is exactly a KL**:
 
 $$\log p_\theta(x) - \mathrm{ELBO} = \mathrm{KL}\big(q_\phi(z\mid x)\,\|\,p_\theta(z\mid x)\big) \ \ge 0$$
 
-*Proof of the gap:* expand $\mathrm{ELBO} = \mathbb{E}_q[\log p_\theta(z\mid x) + \log p_\theta(x) - \log q_\phi(z\mid x)] = \log p_\theta(x) - \mathrm{KL}(q_\phi\|p_\theta(\cdot\mid x))$. ∎
+*Proof of the gap:* expand $`\mathrm{ELBO} = \mathbb{E}_q[\log p_\theta(z\mid x) + \log p_\theta(x) - \log q_\phi(z\mid x)] = \log p_\theta(x) - \mathrm{KL}(q_\phi\|p_\theta(\cdot\mid x))`$. ∎
 
-**Why this matters:** maximizing the ELBO does two things at once — it pushes up the true log-likelihood *and* pushes $q_\phi$ toward the true posterior. You never need the intractable posterior. Every diffusion loss in Chapters 11 and 12 is a rearranged ELBO.
+**Why this matters:** maximizing the ELBO does two things at once — it pushes up the true log-likelihood *and* pushes $`q_\phi`$ toward the true posterior. You never need the intractable posterior. Every diffusion loss in Chapters 11 and 12 is a rearranged ELBO.
 
 Standard rewriting:
 $$\mathrm{ELBO} = \underbrace{\mathbb{E}_q[\log p_\theta(x\mid z)]}_{\text{reconstruction}} - \underbrace{\mathrm{KL}(q_\phi(z\mid x)\,\|\,p(z))}_{\text{regularization}}$$
 
 #### Jensen's inequality and the ELBO, decoded
 
-**ELBO** stands for **Evidence Lower BOund**. "Evidence" is the statistician's name for $p_\theta(x)$ — how probable your model thinks the observed data is — and this quantity is a *lower bound* on it. The name is a literal description.
+**ELBO** stands for **Evidence Lower BOund**. "Evidence" is the statistician's name for $`p_\theta(x)`$ — how probable your model thinks the observed data is — and this quantity is a *lower bound* on it. The name is a literal description.
 
 **Jensen's inequality first.** For a **concave** function like $\log$ (one that curves downward, like a hill):
 
@@ -876,12 +876,12 @@ $$\log\mathbb{E}[X] \ge \mathbb{E}[\log X]$$
 
 > **Analogy.** Average two points on a dome and the midpoint sits *inside* the dome — below the surface. Reading the surface height at the average position gives a higher number than averaging the two heights. That gap is Jensen's inequality, and it is nothing more than the geometric fact that a curved surface lies above its own chords.
 
-**The problem the ELBO solves.** You want to maximize $\log p_\theta(x)$ — make the observed data probable. But computing it requires $\int p_\theta(x,z)\,dz$: summing over **every possible value of the hidden variable $z$**. For a latent vector of even modest size that integral has no closed form and cannot be computed. You are stuck before you begin.
+**The problem the ELBO solves.** You want to maximize $`\log p_\theta(x)`$ — make the observed data probable. But computing it requires $`\int p_\theta(x,z)\,dz`$: summing over **every possible value of the hidden variable $z$**. For a latent vector of even modest size that integral has no closed form and cannot be computed. You are stuck before you begin.
 
 **The three-step trick.** Follow the chain in the derivation above:
 
-1. **Multiply by 1.** Insert $\frac{q_\phi(z\mid x)}{q_\phi(z\mid x)}$ — legal, changes nothing, but now a distribution $q_\phi$ you *do* control appears in the expression.
-2. **Recognize an expectation.** $\int q_\phi(z\mid x)\,[\cdots]\,dz$ is by definition $\mathbb{E}_{q_\phi}[\cdots]$ — and expectations can be *estimated by sampling*, even when integrals can't be computed.
+1. **Multiply by 1.** Insert $`\frac{q_\phi(z\mid x)}{q_\phi(z\mid x)}`$ — legal, changes nothing, but now a distribution $`q_\phi`$ you *do* control appears in the expression.
+2. **Recognize an expectation.** $`\int q_\phi(z\mid x)\,[\cdots]\,dz`$ is by definition $`\mathbb{E}_{q_\phi}[\cdots]`$ — and expectations can be *estimated by sampling*, even when integrals can't be computed.
 3. **Apply Jensen.** Move the $\log$ inside the expectation. It's an inequality, so you get a quantity that is guaranteed **less than or equal to** what you wanted.
 
 ▸ **The move in one sentence: you cannot compute the thing you want, so you construct something computable that is guaranteed to sit below it, and push *that* up instead.** Since your bound never exceeds the true value, driving the bound up drives the true value up with it.
@@ -892,17 +892,17 @@ $$\log\mathbb{E}[X] \ge \mathbb{E}[\log X]$$
 
 $$\log p_\theta(x) - \mathrm{ELBO} = \mathrm{KL}\big(q_\phi(z\mid x)\,\|\,p_\theta(z\mid x)\big)\ \ge 0$$
 
-The slack between your bound and the truth is precisely *how wrong your guessed distribution $q_\phi$ is about the true posterior $p_\theta(z\mid x)$*. Two consequences:
+The slack between your bound and the truth is precisely *how wrong your guessed distribution $`q_\phi`$ is about the true posterior $`p_\theta(z\mid x)`$*. Two consequences:
 
 - Because Kullback–Leibler divergence is never negative, the ELBO is **always** a valid lower bound. No conditions.
-- Maximizing the ELBO does **two useful things at once**: raises the true log-likelihood, *and* squeezes the gap by dragging $q_\phi$ toward the true posterior. You get approximate inference for free as a side effect of fitting.
+- Maximizing the ELBO does **two useful things at once**: raises the true log-likelihood, *and* squeezes the gap by dragging $`q_\phi`$ toward the true posterior. You get approximate inference for free as a side effect of fitting.
 
 **The standard rewriting, in plain terms.** The final form splits into two competing jobs:
 
 | Term | Reads as | Wants |
 |---|---|---|
-| $\mathbb{E}_q[\log p_\theta(x\mid z)]$ | **reconstruction** | "From the code $z$, rebuild the input accurately" |
-| $-\mathrm{KL}(q_\phi(z\mid x)\|p(z))$ | **regularization** | "Keep the codes close to a simple prior distribution" |
+| $`\mathbb{E}_q[\log p_\theta(x\mid z)]`$ | **reconstruction** | "From the code $z$, rebuild the input accurately" |
+| $`-\mathrm{KL}(q_\phi(z\mid x)\|p(z))`$ | **regularization** | "Keep the codes close to a simple prior distribution" |
 
 ▸ **These pull against each other, productively.** Reconstruction alone would memorize, giving every input its own private code in a scattered, meaningless latent space. The regularizer forces codes into a tidy, well-populated region — which is what makes it possible to *sample* a new code and decode it into something plausible. **The tension between the two terms is what turns an autoencoder into a generative model.** Chapters 19 and 20 are, in large part, variations on how to weight and rearrange these two terms.
 
@@ -914,31 +914,31 @@ The slack between your bound and the truth is precisely *how wrong your guessed 
 
 **Setup.** Your model outputs logits $z \in \mathbb{R}^{K}$ over $K$ atom types for each position. True type is $y$. Loss is CE.
 
-1. Forward: $p = \mathrm{softmax}(z)$, $\mathcal{L} = -\log p_y$.
-2. Gradient w.r.t. logits: $\bar z = p - e_y$ (§1.3.4). Note $\|\bar z\|\le\sqrt2$ always — **cross-entropy has bounded logit gradients**, which is why it's stable and why MSE on logits isn't.
+1. Forward: $p = \mathrm{softmax}(z)$, $`\mathcal{L} = -\log p_y`$.
+2. Gradient w.r.t. logits: $`\bar z = p - e_y`$ (§1.3.4). Note $\|\bar z\|\le\sqrt2$ always — **cross-entropy has bounded logit gradients**, which is why it's stable and why MSE on logits isn't.
 3. If $z = Wh + b$ with hidden state $h$: $\bar W = \bar z h^\top$, $\bar h = W^\top\bar z$, $\bar b = \bar z$ (§1.2.2).
-4. If the model is perfect, $p = e_y$, so $\bar z = 0$ and training stops. If the model is uniform, $p_y = 1/K$, $\mathcal{L} = \log K$, and $\bar z$ has magnitude $\approx 1$.
-5. In expectation over the data, $\mathbb{E}[\mathcal{L}] = H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)$. The floor $H(p_{\text{data}})$ is the **irreducible entropy of the data** — for molecules with  chemical ambiguity at a given noise level, this is not small.
+4. If the model is perfect, $`p = e_y`$, so $\bar z = 0$ and training stops. If the model is uniform, $`p_y = 1/K`$, $\mathcal{L} = \log K$, and $\bar z$ has magnitude $\approx 1$.
+5. In expectation over the data, $`\mathbb{E}[\mathcal{L}] = H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)`$. The floor $`H(p_{\text{data}})`$ is the **irreducible entropy of the data** — for molecules with  chemical ambiguity at a given noise level, this is not small.
 
-▸ **Practical implication:** if $H(p_{\text{data}} \mid \text{noise level } t) \approx 1.4$ nats, then a measured CE of $1.524$ means the model is only $0.12$ nats from optimal — and further gains are necessarily tiny and hard to measure. Estimating the irreducible floor (e.g. by fitting a much larger model, or by measuring CE at $t\to 0$) tells you whether the remaining headroom actually exists.
+▸ **Practical implication:** if $`H(p_{\text{data}} \mid \text{noise level } t) \approx 1.4`$ nats, then a measured CE of $1.524$ means the model is only $0.12$ nats from optimal — and further gains are necessarily tiny and hard to measure. Estimating the irreducible floor (e.g. by fitting a much larger model, or by measuring CE at $t\to 0$) tells you whether the remaining headroom actually exists.
 
 ### Walking through the worked example
 
 This example is where the whole chapter converges, so here is each step with its notation spelled out.
 
-**The setup.** The model emits $K$ **logits** — raw, unconstrained scores, one per atom type. $y$ is the correct type. $e_y$ is the **one-hot vector** for $y$: all zeros except a single 1 at position $y$.
+**The setup.** The model emits $K$ **logits** — raw, unconstrained scores, one per atom type. $y$ is the correct type. $`e_y`$ is the **one-hot vector** for $y$: all zeros except a single 1 at position $y$.
 
 **Step 1 — forward.** Softmax turns logits into probabilities (§1.3.4); the loss is $-\log$ of the probability assigned to the correct answer. Assign it 90% and you pay $-\log(0.9) = 0.105$. Assign it 10% and you pay $2.303$. **The loss is your surprise at the truth.**
 
-**Step 2 — the gradient, and why it is bounded.** $\bar z = p - e_y$ is "predicted minus actual." The claim $\|\bar z\|\le\sqrt2$ follows from $p$ being a probability vector: the worst case is total confidence in the wrong class, giving a vector with a $+1$ and a $-1$, whose length is $\sqrt{1^2+1^2}=\sqrt2$.
+**Step 2 — the gradient, and why it is bounded.** $`\bar z = p - e_y`$ is "predicted minus actual." The claim $\|\bar z\|\le\sqrt2$ follows from $p$ being a probability vector: the worst case is total confidence in the wrong class, giving a vector with a $+1$ and a $-1$, whose length is $\sqrt{1^2+1^2}=\sqrt2$.
 
 ▸ **This bound is why cross-entropy trains stably.** No matter how catastrophically wrong the model is, the gradient at the logits cannot exceed $\sqrt2$ — errors can't produce unbounded updates. Squared error on logits has no such ceiling: being wrong by 100 produces a gradient of 200, and one bad batch can destroy a run. **Bounded gradients are a safety property, not an accident**, and they are the main reason cross-entropy rather than squared error is used for classification.
 
 **Step 3 — backprop.** Apply the two rules from §1.2.2 to $z = Wh + b$. Note $\bar b = \bar z$ because the bias adds directly to the output, so its sensitivity passes through unchanged.
 
-**Step 4 — the two extremes.** Perfect model: $p = e_y$, so $\bar z = 0$ and updates stop — **there is nothing left to learn, and the mathematics knows it.** Ignorant model: $p_j = 1/K$ for all $j$, loss $= \log K$, gradients of order 1. The gradient's *size* is itself a readout of how wrong the model is.
+**Step 4 — the two extremes.** Perfect model: $`p = e_y`$, so $\bar z = 0$ and updates stop — **there is nothing left to learn, and the mathematics knows it.** Ignorant model: $`p_j = 1/K`$ for all $j$, loss $= \log K$, gradients of order 1. The gradient's *size* is itself a readout of how wrong the model is.
 
-**Step 5 — the decomposition, in practical terms.** $\mathbb{E}[\mathcal{L}] = H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)$ splits your loss into **the world's inherent randomness** plus **your model's error**. Only the second is trainable.
+**Step 5 — the decomposition, in practical terms.** $`\mathbb{E}[\mathcal{L}] = H(p_{\text{data}}) + \mathrm{KL}(p_{\text{data}}\|p_\theta)`$ splits your loss into **the world's inherent randomness** plus **your model's error**. Only the second is trainable.
 
 ▸ **The practical implication is the most useful paragraph in this chapter.** If the irreducible floor is 1.4 nats and you measure 1.524, you have 0.12 nats of headroom left — and your measurement noise (§1.3.1) is about 0.03 nats. You are within a factor of four of the noise floor. **Knowing this saves months.** The common failure is spending a quarter chasing an improvement that was never mathematically available, because nobody estimated the floor. Whenever a loss curve flattens, the first question is not "what should I try next?" but "how do I know there is anything left to get?"
 
@@ -982,7 +982,7 @@ The real test of understanding is conversational: could you explain each of thes
 
 1. **Why is a matrix multiply "a weighted sum of columns," and why does that make an embedding lookup a matrix multiply?**
 2. **What is an eigenvector, in terms of stretching rather than equations?** Why does $\lambda^k$ explain both vanishing gradients and power iteration?
-3. **Why does $\ell_1$ regularization produce exact zeros when $\ell_2$ doesn't?**
+3. **Why does $`\ell_1`$ regularization produce exact zeros when $`\ell_2`$ doesn't?**
 4. **Why is backpropagation reverse-mode?** (Correct answer: because there are many parameters and one loss. It is a fact about shape, not about neural networks.)
 5. **Why can you fit millions of near-orthogonal directions into 768 dimensions?**
 6. **Why does halving your error bars require four times the data?**

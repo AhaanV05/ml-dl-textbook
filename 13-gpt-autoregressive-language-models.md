@@ -10,20 +10,20 @@ Skim once; each is unpacked properly where it first appears. This chapter has le
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $x_{1:T}$ | "x one through T" | The **whole sequence** of $T$ tokens |
-| $x_{<t}$ | "x less than t" | Everything **before** position $t$ — the prefix, the context so far |
-| $p_\theta(x_t \mid x_{<t})$ | "p theta of x-t given x-before-t" | The probability the model assigns to the next token, **having seen** the prefix |
-| $\prod_{t=1}^{T}$ | "product from t equals 1 to T" | **Multiply** over every position — a `for` loop that multiplies (§0.3) |
+| $`x_{1:T}`$ | "x one through T" | The **whole sequence** of $T$ tokens |
+| $`x_{<t}`$ | "x less than t" | Everything **before** position $t$ — the prefix, the context so far |
+| $`p_\theta(x_t \mid x_{<t})`$ | "p theta of x-t given x-before-t" | The probability the model assigns to the next token, **having seen** the prefix |
+| $`\prod_{t=1}^{T}`$ | "product from t equals 1 to T" | **Multiply** over every position — a `for` loop that multiplies (§0.3) |
 | $\mathcal{L}$ | "script L" | The **loss** — here, the average negative log-probability of the true next token |
 | $N,\ L,\ d,\ T$ | — | **P**arameter count, **l**ayer count, model **width**, context **length** |
-| $\arg\max_x$ | "arg max over x" | The **input** that achieves the maximum, not the maximum itself (§0.3) |
+| $`\arg\max_x`$ | "arg max over x" | The **input** that achieves the maximum, not the maximum itself (§0.3) |
 | $\tau$ | "tau" | **Temperature** — how flat or peaked the sampling distribution is |
 | $\propto$ | "is proportional to" | Equal up to a normalizing constant we don't care about |
 | $\mathrm{PPL}$ | "perplexity" | $e^{\text{loss}}$ — the **effective branching factor** |
 | $\mathcal{M}$ | "script M" | The **set of masked positions** in BERT-style training |
-| $x_{\setminus\mathcal{M}}$ | "x not M" | Every token **except** the masked ones |
+| $`x_{\setminus\mathcal{M}}`$ | "x not M" | Every token **except** the masked ones |
 | $\lvert y\rvert^{\alpha}$ | "length of y, to the alpha" | Sequence length raised to a power — beam search's **length normalization** |
-| $p_{\min}$ | "p min" | Min-$p$'s relative cutoff |
+| $`p_{\min}`$ | "p min" | Min-$p$'s relative cutoff |
 | $H$ | "H" | **Entropy** — the model's average surprise (§1.4) |
 | $\mathcal{N}(0, 0.02^2)$ | "normal, mean 0, sd 0.02" | The **initialization** distribution for weights |
 
@@ -95,9 +95,9 @@ $$p_\theta(x_{1:T}) = \prod_{t=1}^{T}p_\theta(x_t\mid x_{<t})$$
 
 | Piece | Read aloud | Meaning |
 |---|---|---|
-| $p_\theta(x_{1:T})$ | "p theta of x-one-through-T" | How likely the model thinks **this entire document** is |
-| $\prod_{t=1}^{T}$ | "product from t = 1 to T" | Multiply the following, once per position |
-| $p_\theta(x_t \mid x_{<t})$ | "…of x-t **given** everything before it" | How likely **the next token** is, having read the prefix |
+| $`p_\theta(x_{1:T})`$ | "p theta of x-one-through-T" | How likely the model thinks **this entire document** is |
+| $`\prod_{t=1}^{T}`$ | "product from t = 1 to T" | Multiply the following, once per position |
+| $`p_\theta(x_t \mid x_{<t})`$ | "…of x-t **given** everything before it" | How likely **the next token** is, having read the prefix |
 | $\mid$ | "given" | Conditional probability (§0.9, Trap 5) — **not** division, not absolute value |
 
 ▸ **In one sentence: the probability of a whole document equals the probability of its first word, times the probability of its second word given the first, times the probability of its third given the first two, and so on to the end.**
@@ -182,8 +182,8 @@ Consider the token the model must predict at the end of each of these:
 
 | Example | Why it qualifies |
 |---|---|
-| GPT predicting token $t$ from tokens $1..t-1$ behind a causal mask | The factorization $p(x) = \prod_t p(x_t \mid x_{<t})$ is exact, and no term peeks forward |
-| A bigram model $p(x_t \mid x_{t-1})$ trained by counting | Same left-to-right factorization, with the conditioning set truncated to one token |
+| GPT predicting token $t$ from tokens $1..t-1$ behind a causal mask | The factorization $`p(x) = \prod_t p(x_t \mid x_{<t})`$ is exact, and no term peeks forward |
+| A bigram model $`p(x_t \mid x_{t-1})`$ trained by counting | Same left-to-right factorization, with the conditioning set truncated to one token |
 | WaveNet over raw audio samples, PixelCNN over pixels | Nothing in the objective is about language; it is about ordering the variables and conditioning on the prefix |
 | Next-token prediction on Python source | Same loss, same mask, different corpus |
 | An LSTM language model (Ch. 9) | Architecture is irrelevant to whether the objective is autoregressive |
@@ -216,7 +216,7 @@ Consider the token the model must predict at the end of each of these:
 | LLaMA-3 | 2024 | 8–405B | | | 8k–128k | 15T tokens; GQA; 128k vocab |
 | Frontier (2025–26) | | sparse MoE | | | 128k–1M+ | MoE, long context, reasoning post-training |
 
-▸ **The stable modern recipe**, worth being able to recite: decoder-only, pre-norm **RMSNorm**, **SwiGLU** FFN with $d_{\text{ff}}=\frac83 d$, **RoPE**, **GQA**, no biases anywhere, no dropout during pretraining, weight-tied or untied embeddings, AdamW with cosine or WSD schedule, bf16 with fp32 master weights.
+▸ **The stable modern recipe**, worth being able to recite: decoder-only, pre-norm **RMSNorm**, **SwiGLU** FFN with $`d_{\text{ff}}=\frac83 d`$, **RoPE**, **GQA**, no biases anywhere, no dropout during pretraining, weight-tied or untied embeddings, AdamW with cosine or WSD schedule, bf16 with fp32 master weights.
 
 #### Reading the lineage table
 
@@ -263,7 +263,7 @@ Worth being able to recite, so worth understanding rather than memorizing. Each 
 | **Pre-norm** | Normalize *before* the block, not after | The residual path stays clean, so gradients reach layer 1 — this is what made 48+ layers trainable (Ch. 7) |
 | **RMSNorm** | Root Mean Square Normalization: divide by the root-mean-square, **skip the mean subtraction** | Same benefit as LayerNorm, one fewer pass over the data, measurably faster |
 | **SwiGLU** | A gated feed-forward network | Empirically a point or two better than plain ReLU at equal parameters |
-| $d_{\text{ff}} = \tfrac83 d$ | The hidden width of the FFN | SwiGLU uses **three** weight matrices instead of two, so $\tfrac83$ keeps the parameter count matched to a conventional $4d$ FFN. **The odd fraction is a fair-comparison correction, not a magic number.** |
+| $`d_{\text{ff}} = \tfrac83 d`$ | The hidden width of the FFN | SwiGLU uses **three** weight matrices instead of two, so $\tfrac83$ keeps the parameter count matched to a conventional $4d$ FFN. **The odd fraction is a fair-comparison correction, not a magic number.** |
 | **RoPE** | Rotary position embedding (Ch. 12) | Relative position, KV-cache compatible, extensible |
 | **GQA** | Grouped-Query Attention (Ch. 12) | 8× smaller KV cache at near-MHA quality |
 | **No biases** | Drop the $+b$ everywhere | They contribute almost nothing and cost memory traffic and stability |
@@ -430,17 +430,17 @@ What the examples *do* convey, and what breaks when you remove it:
 
 ## 13.4 Decoding strategies
 
-The model gives you $p(x_t\mid x_{<t})$. Turning it into text is a separate, consequential design choice.
+The model gives you $`p(x_t\mid x_{<t})`$. Turning it into text is a separate, consequential design choice.
 
 ### Deterministic
 
-**Greedy:** $x_t=\arg\max p$. Fast; repetitive and dull; **not** the highest-probability *sequence* (a locally-best token can foreclose a better continuation).
+**Greedy:** $`x_t=\arg\max p`$. Fast; repetitive and dull; **not** the highest-probability *sequence* (a locally-best token can foreclose a better continuation).
 
 **Beam search:** keep $k$ partial sequences, expand all, retain the top $k$ by cumulative log-probability.
 - Needs **length normalization**: $\frac{1}{|y|^\alpha}\sum\log p$, $\alpha\approx0.6$–1.0. Without it, shorter sequences always win because every added token multiplies by a probability $<1$.
 #### Greedy and beam search, decoded
 
-**Greedy**, first. $x_t = \arg\max p$ reads *"pick the single most likely next token, every time."* Remember §0.3: $\arg\max$ returns the **token**, not the probability.
+**Greedy**, first. $`x_t = \arg\max p`$ reads *"pick the single most likely next token, every time."* Remember §0.3: $\arg\max$ returns the **token**, not the probability.
 
 ▸ **The subtle and important part is "not the highest-probability *sequence*."** Greedy is locally optimal and globally not. Work a two-step example:
 
@@ -482,24 +482,24 @@ This is the most counterintuitive claim in the chapter: **searching harder for t
 
 ### Stochastic
 
-**Temperature:** $p_i\propto \exp(z_i/\tau)$. $\tau<1$ sharpens, $\tau>1$ flattens, $\tau\to0$ is greedy.
-▸ Note $\tau$ acts on **logits**, so it is not a linear reweighting of probabilities: $p_i^{(\tau)} \propto p_i^{1/\tau}$.
+**Temperature:** $`p_i\propto \exp(z_i/\tau)`$. $\tau<1$ sharpens, $\tau>1$ flattens, $\tau\to0$ is greedy.
+▸ Note $\tau$ acts on **logits**, so it is not a linear reweighting of probabilities: $`p_i^{(\tau)} \propto p_i^{1/\tau}`$.
 
 **Top-$k$:** sample from the $k$ most probable tokens. Problem: $k$ is fixed, but the appropriate number of plausible tokens varies enormously by context (after "the capital of France is" there is one; after "she opened the door and saw" there are thousands).
 
-**Top-$p$ / nucleus (Holtzman et al.):** sample from the smallest set $S$ with $\sum_{i\in S}p_i\ge p$. ▸ **Adaptive to the distribution's entropy** — this is precisely the fix for top-$k$'s flaw, and it is the reason nucleus sampling became the default. Typical $p=0.9$–0.95.
+**Top-$p$ / nucleus (Holtzman et al.):** sample from the smallest set $S$ with $`\sum_{i\in S}p_i\ge p`$. ▸ **Adaptive to the distribution's entropy** — this is precisely the fix for top-$k$'s flaw, and it is the reason nucleus sampling became the default. Typical $p=0.9$–0.95.
 
-**Min-$p$:** keep tokens with $p_i \ge p_{\min}\cdot\max_j p_j$. A relative threshold; more robust at high temperature.
+**Min-$p$:** keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$. A relative threshold; more robust at high temperature.
 
-**Typical sampling:** keep tokens whose surprisal $-\log p_i$ is close to the distribution's entropy $H$ — an information-theoretic criterion motivated by the observation that natural human text has locally near-uniform information density.
+**Typical sampling:** keep tokens whose surprisal $`-\log p_i`$ is close to the distribution's entropy $H$ — an information-theoretic criterion motivated by the observation that natural human text has locally near-uniform information density.
 
 **Contrastive decoding / search:** penalize tokens that a smaller "amateur" model also finds likely, or penalize similarity to already-generated context. Reduces degeneration without sacrificing coherence.
 
 #### Temperature, decoded
 
-$p_i \propto \exp(z_i/\tau)$. The $z_i$ are **logits** — the raw scores the final layer produces, before softmax. $\tau$ divides them before exponentiating.
+$`p_i \propto \exp(z_i/\tau)`$. The $`z_i`$ are **logits** — the raw scores the final layer produces, before softmax. $\tau$ divides them before exponentiating.
 
-▸ **The crucial and frequently-missed point is the one the book flags: $\tau$ acts on the logits, so $p_i^{(\tau)} \propto p_i^{1/\tau}$ — it raises probabilities to a power, it does not scale them.** Powers reshape a distribution in a way multiplication cannot.
+▸ **The crucial and frequently-missed point is the one the book flags: $\tau$ acts on the logits, so $`p_i^{(\tau)} \propto p_i^{1/\tau}`$ — it raises probabilities to a power, it does not scale them.** Powers reshape a distribution in a way multiplication cannot.
 
 **Put numbers in.** Three tokens with probabilities $0.6, 0.3, 0.1$:
 
@@ -540,9 +540,9 @@ With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$
 
 > **Analogy.** Top-$k$ is "always interview the top 5 candidates." Top-$p$ is "interview candidates until you have covered 90% of the qualified pool" — which is 1 person when there's an obvious hire and 40 when the field is even.
 
-**Min-$p$**: keep tokens with $p_i \ge p_{\min}\cdot\max_j p_j$ — a threshold **relative to the leader** rather than an absolute mass. With $p_{\min}=0.1$ and a top token at $0.5$, everything above $0.05$ survives; with a top token at $0.02$ (a flat distribution), everything above $0.002$ survives. It adapts the same way top-$p$ does, and it degrades more gracefully at high temperature, where flattening can otherwise let top-$p$'s cumulative sum sweep in a long tail of near-equal junk.
+**Min-$p$**: keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$ — a threshold **relative to the leader** rather than an absolute mass. With $`p_{\min}=0.1`$ and a top token at $0.5$, everything above $0.05$ survives; with a top token at $0.02$ (a flat distribution), everything above $0.002$ survives. It adapts the same way top-$p$ does, and it degrades more gracefully at high temperature, where flattening can otherwise let top-$p$'s cumulative sum sweep in a long tail of near-equal junk.
 
-**Typical sampling**, decoded. **Surprisal** is $-\log p_i$ — how startled you are by a token, in nats. **Entropy** $H$ is the *average* surprisal (§1.4). Typical sampling keeps tokens whose surprisal is close to $H$ — that is, it **discards tokens that are too predictable as well as tokens that are too surprising.**
+**Typical sampling**, decoded. **Surprisal** is $`-\log p_i`$ — how startled you are by a token, in nats. **Entropy** $H$ is the *average* surprisal (§1.4). Typical sampling keeps tokens whose surprisal is close to $H$ — that is, it **discards tokens that are too predictable as well as tokens that are too surprising.**
 
 > **Analogy.** Conversation. Say only the obvious and you are boring; say only the bizarre and you are incoherent. Fluent speech runs at a roughly steady rate of new information — that is the "uniform information density" observation from psycholinguistics, and typical sampling is its direct implementation.
 
@@ -670,7 +670,7 @@ $$\mathcal{L} = -\log(1/K) = \log K, \qquad \mathrm{PPL} = e^{\log K} = K$$
 
 > **Analogy.** A game of Twenty Questions. A perplexity of 16 means that at each word, the model is in the position of someone who has narrowed it to 16 equally-plausible candidates — four yes/no questions from certainty. A perplexity of 50,000 means they have not started.
 
-▸ **The unit matters and the book uses nats.** $\log$ here is natural log, so the loss is in **nats**; exponentiating with $e$ recovers a count. If you use $\log_2$ the loss is in **bits** and you exponentiate with 2. The perplexity is the same number either way — $e^{\ln K} = 2^{\log_2 K} = K$ — but mixing the two is a classic and embarrassing error, and it is why a loss figure without a stated base is not a figure.
+▸ **The unit matters and the book uses nats.** $\log$ here is natural log, so the loss is in **nats**; exponentiating with $e$ recovers a count. If you use $`\log_2`$ the loss is in **bits** and you exponentiate with 2. The perplexity is the same number either way — $`e^{\ln K} = 2^{\log_2 K} = K`$ — but mixing the two is a classic and embarrassing error, and it is why a loss figure without a stated base is not a figure.
 
 ▸ **Pitfalls that make cross-model perplexity comparisons meaningless unless controlled:**
 1. **Tokenizer-dependent.** Fewer, larger tokens ⇒ each carries more information ⇒ higher per-token perplexity, for an identical model. **Compare bits-per-byte or bits-per-character instead:** $\mathrm{BPB} = \frac{\text{total nats}}{\ln 2 \cdot \text{total bytes}}$.
@@ -807,8 +807,8 @@ $$\mathcal{L} = -\sum_{i\in\mathcal{M}}\log p(x_i\mid x_{\setminus\mathcal{M}})$
 |---|---|---|
 | $\mathcal{M}$ | "script M" | The **set of positions we chose to mask** — about 15% of them |
 | $i \in \mathcal{M}$ | "i in M" | Sum only over the masked positions (§0.2) |
-| $x_{\setminus\mathcal{M}}$ | "x, set-minus M" | **All the other tokens** — the visible ones. The backslash means "excluding" |
-| $p(x_i \mid x_{\setminus\mathcal{M}})$ | "…given everything unmasked" | Recover the hidden token from **both** sides of it |
+| $`x_{\setminus\mathcal{M}}`$ | "x, set-minus M" | **All the other tokens** — the visible ones. The backslash means "excluding" |
+| $`p(x_i \mid x_{\setminus\mathcal{M}})`$ | "…given everything unmasked" | Recover the hidden token from **both** sides of it |
 
 ▸ **The one-sentence version: hide one word in seven and train the model to guess it from everything around it — before *and* after.** Compare §13.1, where the model may only look left.
 
@@ -980,7 +980,7 @@ Scale each layer's output projection by $1/\sqrt{2L}$ at initialization (the 2 i
 
 > **Analogy.** Navigating to a distant mountain. At the start you barely need a compass; any rough bearing works, so take fast steps. Near the summit you are trying to detect a slight upward slope, and you must average many careful readings to tell it from noise.
 
-**Item 10 — EMA** is **Exponential Moving Average**: keep a slowly-updated running average of the weights alongside the live ones, $\theta_{\text{EMA}} \leftarrow \beta\theta_{\text{EMA}} + (1-\beta)\theta$. The averaged weights are usually slightly better than any individual checkpoint, because averaging along the trajectory cancels the last-step noise and lands nearer the centre of the basin rather than on its wall.
+**Item 10 — EMA** is **Exponential Moving Average**: keep a slowly-updated running average of the weights alongside the live ones, $`\theta_{\text{EMA}} \leftarrow \beta\theta_{\text{EMA}} + (1-\beta)\theta`$. The averaged weights are usually slightly better than any individual checkpoint, because averaging along the trajectory cancels the last-step noise and lands nearer the centre of the basin rather than on its wall.
 
 ---
 
@@ -1002,7 +1002,7 @@ Scale each layer's output projection by $1/\sqrt{2L}$ at initialization (the 2 i
 
 - **In-context learning appears in a narrow window during training, and you can see it happen.** Induction heads form in that same window, visible as a small bump in an otherwise smooth loss curve. Ablate the heads and the capability disappears. It is one of the few clean causal links from a specific circuit to a specific behaviour.
 
-- **Temperature is literally temperature.** $p_i \propto \exp(z_i/\tau)$ is the Boltzmann distribution from 1868 statistical mechanics, where $\tau$ is the temperature of a gas. Turning up an LLM's temperature to make it more creative applies a 19th-century physics equation with its original meaning nearly intact: more heat, more disorder.
+- **Temperature is literally temperature.** $`p_i \propto \exp(z_i/\tau)`$ is the Boltzmann distribution from 1868 statistical mechanics, where $\tau$ is the temperature of a gas. Turning up an LLM's temperature to make it more creative applies a 19th-century physics equation with its original meaning nearly intact: more heat, more disorder.
 
 - **Perplexity was invented at IBM to describe how hard a speech-recognition task was**, in Frederick Jelinek's group in the 1970s. That group is also the source of the field's most-repeated anecdote, about performance improving each time a linguist was fired — the exact wording is disputed and has been retold in several forms, but the underlying methodological argument was real, and the statistical side won it decisively.
 

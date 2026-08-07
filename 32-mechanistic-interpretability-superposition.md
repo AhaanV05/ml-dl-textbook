@@ -21,11 +21,11 @@ Skim this once now; every entry is unpacked properly where it first appears.
 | $\mathrm{ReLU}(z)$ | "rel-you of z" | $\max(0,z)$ — keep positive numbers, flatten negative ones to zero |
 | $\cos\vartheta$ | "cosine theta" | **Alignment** of two directions: $1$ = identical, $0$ = perpendicular, $-1$ = opposite |
 | $\epsilon$ | "epsilon" | A small tolerance — here, how far from perpendicular we are willing to accept |
-| $\|f(x)\|_1$ | "the $\ell_1$ norm of f" | Add up the sizes of all the entries — the **sparsity penalty** |
+| $`\|f(x)\|_1`$ | "the $`\ell_1`$ norm of f" | Add up the sizes of all the entries — the **sparsity penalty** |
 | $\lambda$ | "lambda" | How hard that sparsity penalty pushes |
-| $L_0$ | "L-zero" | **How many entries are nonzero.** A count, not a length |
-| $W_{QK}=W_Q^\top W_K$ | "the Q-K circuit" | The one matrix that decides *where* an attention head reads from |
-| $W_{OV}=W_OW_V$ | "the O-V circuit" | The one matrix that decides *what* that head writes back |
+| $`L_0`$ | "L-zero" | **How many entries are nonzero.** A count, not a length |
+| $`W_{QK}=W_Q^\top W_K`$ | "the Q-K circuit" | The one matrix that decides *where* an attention head reads from |
+| $`W_{OV}=W_OW_V`$ | "the O-V circuit" | The one matrix that decides *what* that head writes back |
 | $L$ | "L" | Number of transformer layers. All $2L$ sub-layers share one stream |
 | $\alpha v$ | "alpha times v" | A **steering vector**, scaled by $\alpha$, added into the residual stream |
 
@@ -60,7 +60,7 @@ Interpretability by saliency map is like determining what a program does by watc
 
 #### What a "saliency map" is, and why the analogy is unkind on purpose
 
-A **saliency map** answers: *which input pixels, if nudged, would change the output most?* Mechanically it is $\nabla_x \mathcal{L}$ — the gradient of the loss with respect to the **input** rather than the parameters (§0.7: the subscript on $\nabla$ says what you differentiate with respect to). Take the absolute value, reshape it back to the image grid, and colour it in. Bright pixels "mattered."
+A **saliency map** answers: *which input pixels, if nudged, would change the output most?* Mechanically it is $`\nabla_x \mathcal{L}`$ — the gradient of the loss with respect to the **input** rather than the parameters (§0.7: the subscript on $\nabla$ says what you differentiate with respect to). Take the absolute value, reshape it back to the image grid, and colour it in. Bright pixels "mattered."
 
 The trouble is that this tells you about **sensitivity at one point**, not about **computation**. A thermostat's output is highly sensitive to the room temperature; that fact tells you nothing about whether it contains a bimetallic strip or a microcontroller.
 
@@ -184,7 +184,7 @@ $$d = 12{,}288 \quad\Rightarrow\quad \tfrac{1}{\sqrt{d}} = \tfrac{1}{110.85} \ap
 
 ### The toy model
 
-Anthropic's setup: sparse features $x\in\mathbb{R}^{n}$ (each active with probability $S$, with importance weights $I_i$), a bottleneck $h = Wx$ with $W\in\mathbb{R}^{d\times n}$, $d\ll n$, and reconstruction $\hat x = \mathrm{ReLU}(W^\top h + b)$. Train on weighted MSE.
+Anthropic's setup: sparse features $x\in\mathbb{R}^{n}$ (each active with probability $S$, with importance weights $`I_i`$), a bottleneck $h = Wx$ with $W\in\mathbb{R}^{d\times n}$, $d\ll n$, and reconstruction $\hat x = \mathrm{ReLU}(W^\top h + b)$. Train on weighted MSE.
 
 #### Unpacking the toy model
 
@@ -196,7 +196,7 @@ This is a one-sentence description of an experiment you could code in twenty lin
 |---|---|---|
 | $x\in\mathbb{R}^n$ | "x in R-n" | The **ground truth**: a list of $n$ feature strengths, almost all exactly $0$ |
 | $S$ | "S" | Probability that any one feature is active on any one sample. Small |
-| $I_i$ | "I-i" | **Importance weight** of feature $i$ — how much you are penalized for getting it wrong |
+| $`I_i`$ | "I-i" | **Importance weight** of feature $i$ — how much you are penalized for getting it wrong |
 | $W\in\mathbb{R}^{d\times n}$ | "W in R d-by-n" | The squeeze. Its $n$ **columns** are the directions assigned to the $n$ features |
 | $h = Wx$ | "h equals W x" | The stored state: $d$ numbers, the bottleneck |
 | $W^\top$ | "W transpose" | Rows become columns (§0.6). Reading with the *same* directions used for writing |
@@ -205,7 +205,7 @@ This is a one-sentence description of an experiment you could code in twenty lin
 
 **What the model is doing, in English.** *"I have $n$ concepts but only $d$ slots. Give each concept a direction. To store a set of concepts, add up their directions with the right strengths. To read a concept back out, dot the stored vector against that concept's direction, subtract a threshold, and clip anything negative to zero."*
 
-Note something important: $h = Wx$ with the columns reading $W_{:,1},\dots,W_{:,n}$ is exactly **Reading 2 from §1.1.1** — a matrix-vector product is a *weighted sum of columns*. Storing three features means adding three arrows.
+Note something important: $h = Wx$ with the columns reading $`W_{:,1},\dots,W_{:,n}`$ is exactly **Reading 2 from §1.1.1** — a matrix-vector product is a *weighted sum of columns*. Storing three features means adding three arrows.
 
 **Now make it small enough to hold in your head: $n = 5$, $d = 2$.** Five concepts, two numbers of storage. Set $S = 0.05$, so each feature is on 5% of the time.
 
@@ -217,7 +217,7 @@ Note something important: $h = Wx$ with the columns reading $W_{:,1},\dots,W_{:,
 
 **The solution it finds: a pentagon.** Place the five columns of $W$ as unit arrows in the plane, evenly spaced $72°$ apart. Then for any two features, $\cos\vartheta$ is either $\cos 72° = 0.309$ (the two neighbours) or $\cos 144° = -0.809$ (the two non-neighbours).
 
-**Watch one feature go in and come out.** Set $x_1 = 1$ and everything else $0$. Then $h = W_{:,1}$, and reading back with $W^\top$ gives the five alignments
+**Watch one feature go in and come out.** Set $`x_1 = 1`$ and everything else $0$. Then $`h = W_{:,1}`$, and reading back with $W^\top$ gives the five alignments
 
 $$W^\top h = (\underbrace{1.000}_{\text{feature }1},\ \underbrace{0.309}_{2},\ \underbrace{-0.809}_{3},\ \underbrace{-0.809}_{4},\ \underbrace{0.309}_{5})$$
 
@@ -230,7 +230,7 @@ $$\hat x = \mathrm{ReLU}(1.000-0.31,\ -0.001,\ -1.119,\ -1.119,\ -0.001) = (0.69
 - The two **positive** overlaps ($+0.309$) were killed by the bias, which acts as a **noise gate**: anything quieter than $0.31$ is treated as crosstalk and silenced.
 - The price is **shrinkage**: feature 1 comes back as $0.69$, not $1.0$. The same threshold that removes the noise also shaves the signal. (Hold that thought — the identical trade reappears in §32.3 as the SAE's biggest known flaw.)
 
-**And the failure, honestly.** Fire features $1$ and $3$ together — the pair at $-0.809$. Then $(W^\top h)_1 = 1 - 0.809 = 0.191$, which is below the $0.31$ gate, so ReLU zeroes it. **Both features vanish completely.** That happens on $S^2 = 0.25\%$ of samples, and the network judges it a fair price. This is what "accepting a little interference in exchange for a lot of capacity" means arithmetically.
+**And the failure, honestly.** Fire features $1$ and $3$ together — the pair at $-0.809$. Then $`(W^\top h)_1 = 1 - 0.809 = 0.191`$, which is below the $0.31$ gate, so ReLU zeroes it. **Both features vanish completely.** That happens on $S^2 = 0.25\%$ of samples, and the network judges it a fair price. This is what "accepting a little interference in exchange for a lot of capacity" means arithmetically.
 
 > **Analogy.** A noise gate on a microphone. Set the threshold above the hum of the air conditioning and the hum disappears — but a whispered word disappears with it, and if two speakers cancel each other you get silence where there should have been two voices. **ReLU plus a negative bias is a noise gate, and superposition is only survivable because there is one.**
 
@@ -250,9 +250,9 @@ $$\hat x = \mathrm{ReLU}(1.000-0.31,\ -0.001,\ -1.119,\ -1.119,\ -0.001) = (0.69
 
 The word **phase** is not decoration. As you slide the sparsity dial, the solution does not deform smoothly — it **jumps**, the way water does not gradually become ice. Here is what each regime means with numbers attached.
 
-A useful single statistic is **dimensions per feature**, $D^* = d/n$ — how much of a dimension each stored feature gets. Below $1$, the model is overbooking.
+A useful single statistic is **dimensions per feature**, $`D^* = d/n`$ — how much of a dimension each stored feature gets. Below $1$, the model is overbooking.
 
-| Regime | Sparsity | Geometry it picks | $D^*$ | Why |
+| Regime | Sparsity | Geometry it picks | $`D^*`$ | Why |
 |---|---|---|---|---|
 | **Dense** | $S \approx 1$ — everything on at once | top $d$ features on orthogonal axes, rest discarded | $1.0$ | Interference would be *constant*, so it is never worth paying |
 | **Moderately sparse** | $S \approx 0.1$ | **antipodal pairs** — two features on one line, opposite signs | $0.5$ | $\cos\vartheta = -1$, and ReLU deletes negative crosstalk for free |
@@ -260,7 +260,7 @@ A useful single statistic is **dimensions per feature**, $D^* = d/n$ — how muc
 
 **Dense, decoded.** If every feature is on in every sample, then every pair collides in every sample. Interference stops being an occasional accident and becomes a permanent tax. The optimal move is to give up: keep the $d$ most important features on clean perpendicular axes and throw the other $n-d$ away. ▸ **Notice what this is — it is PCA.** Keep the top $d$ components, discard the tail, exactly the Eckart–Young result from §1.1.3. **A dense network is a linear compressor. Sparsity is what makes it something more interesting.**
 
-**Antipodal pairs, decoded.** Two features $i$ and $j$ share one line: $W_{:,j} = -W_{:,i}$, so $\cos\vartheta = -1$. Store feature $i$ at strength $2$ and read out feature $j$: you get $-2$, and ReLU turns that into $0$. **A perfectly hostile overlap is a perfectly harmless one**, provided the readout can only see positive numbers. The pair only breaks when both fire at once — probability $S^2 = 0.01$ at $S = 0.1$ — and then the larger one survives and the smaller is erased.
+**Antipodal pairs, decoded.** Two features $i$ and $j$ share one line: $`W_{:,j} = -W_{:,i}`$, so $\cos\vartheta = -1$. Store feature $i$ at strength $2$ and read out feature $j$: you get $-2$, and ReLU turns that into $0$. **A perfectly hostile overlap is a perfectly harmless one**, provided the readout can only see positive numbers. The pair only breaks when both fire at once — probability $S^2 = 0.01$ at $S = 0.1$ — and then the larger one survives and the smaller is erased.
 
 **The exotic geometries, decoded.** With $n = 4$ features and $d = 3$ dimensions, the arrangement that keeps every pairwise overlap as negative as possible is the **regular tetrahedron**: four unit arrows with $\cos\vartheta = -\tfrac13 \approx -0.333$ between *every* pair. Every overlap is negative, so ReLU absorbs all of it for free. With $n = 5$ and $d = 3$, the answer is the **triangular bipyramid** — two poles plus a triangle round the equator.
 
@@ -268,7 +268,7 @@ A useful single statistic is **dimensions per feature**, $D^* = d/n$ — how muc
 
 #### Why both conditions are needed — a two-line proof
 
-**Drop the nonlinearity.** Suppose $\hat x = W^\top W x$ with no ReLU and no bias. Then the reconstruction of feature $j$ is $\hat x_j = x_j + \sum_{i\ne j}(\cos\vartheta_{ij})\,x_i$ — the true value **plus every crosstalk term, permanently, with no way to remove any of it.** The best you can do is minimize the total squared error, and the answer to that is PCA again. ▸ **Without a nonlinearity there is no gate, and without a gate superposition has no upside.** ReLU is not a detail here; it is the mechanism.
+**Drop the nonlinearity.** Suppose $\hat x = W^\top W x$ with no ReLU and no bias. Then the reconstruction of feature $j$ is $`\hat x_j = x_j + \sum_{i\ne j}(\cos\vartheta_{ij})\,x_i`$ — the true value **plus every crosstalk term, permanently, with no way to remove any of it.** The best you can do is minimize the total squared error, and the answer to that is PCA again. ▸ **Without a nonlinearity there is no gate, and without a gate superposition has no upside.** ReLU is not a detail here; it is the mechanism.
 
 **Drop the sparsity.** Set $S = 1$ so every feature fires on every sample. Then the crosstalk sum above has $n-1$ nonzero terms *every single time*. With $n = 100$ features at typical overlap $0.1$, the noise on each readout is roughly $\sqrt{99}\times 0.1 \approx 1.0$ — the same size as the signal you are trying to read. ▸ **Sparsity is what keeps that sum nearly empty.** At $S = 0.01$ the expected number of interfering terms drops to about $1$, and the noise with it.
 
@@ -316,9 +316,9 @@ If the model packed many sparse features into few dimensions, train an overcompl
 ▸ $$\hat x = W_{\text{dec}}f(x)+b_{\text{dec}}$$
 ▸ $$\mathcal{L} = \underbrace{\|x-\hat x\|_2^2}_{\text{reconstruction}} + \lambda\underbrace{\|f(x)\|_1}_{\text{sparsity}}$$
 
-**Overcomplete** ($m\gg d$) because there are more features than dimensions — that is the entire premise. The $\ell_1$ penalty forces most of them off for any given input (typically 10–100 active out of 16k–16M).
+**Overcomplete** ($m\gg d$) because there are more features than dimensions — that is the entire premise. The $`\ell_1`$ penalty forces most of them off for any given input (typically 10–100 active out of 16k–16M).
 
-**Decoder columns are unit-normalized**, otherwise the model can shrink $f$ and grow $W_{\text{dec}}$ to cheat the $\ell_1$ term.
+**Decoder columns are unit-normalized**, otherwise the model can shrink $f$ and grow $`W_{\text{dec}}`$ to cheat the $`\ell_1`$ term.
 
 #### Reading the sparse autoencoder in plain English
 
@@ -329,11 +329,11 @@ Three equations, and they are the same three equations any autoencoder has — e
 | Symbol | Read aloud | What it is | Shape |
 |---|---|---|---|
 | $x$ | "x" | An activation vector pulled out of the real model at some layer | $\mathbb{R}^d$ |
-| $W_{\text{enc}}$ | "W-encode" | Rows are the **detectors**: row $i$ asks "how much of feature $i$ is here?" | $\mathbb{R}^{m\times d}$ |
-| $b_{\text{dec}}$ | "b-decode" | A learned **centre** — subtracted going in, added coming out | $\mathbb{R}^d$ |
-| $b_{\text{enc}}$ | "b-encode" | A learned **threshold** per feature. The noise gate again | $\mathbb{R}^m$ |
+| $`W_{\text{enc}}`$ | "W-encode" | Rows are the **detectors**: row $i$ asks "how much of feature $i$ is here?" | $\mathbb{R}^{m\times d}$ |
+| $`b_{\text{dec}}`$ | "b-decode" | A learned **centre** — subtracted going in, added coming out | $\mathbb{R}^d$ |
+| $`b_{\text{enc}}`$ | "b-encode" | A learned **threshold** per feature. The noise gate again | $\mathbb{R}^m$ |
 | $f(x)$ | "f of x" | The **feature activations**: $m$ numbers, almost all exactly zero | $\mathbb{R}^m$ |
-| $W_{\text{dec}}$ | "W-decode" | Columns are the **dictionary**: column $i$ is feature $i$'s direction | $\mathbb{R}^{d\times m}$ |
+| $`W_{\text{dec}}`$ | "W-decode" | Columns are the **dictionary**: column $i$ is feature $i$'s direction | $\mathbb{R}^{d\times m}$ |
 | $\hat x$ | "x-hat" | The reconstruction, rebuilt from the few active features | $\mathbb{R}^d$ |
 | $\lambda$ | "lambda" | The dial trading reconstruction quality against sparsity | scalar |
 
@@ -341,24 +341,24 @@ Three equations, and they are the same three equations any autoencoder has — e
 
 ▸ **The shape is the point, and it is backwards from every other autoencoder you have seen.** A normal autoencoder squeezes $d$ down to something smaller to compress. This one **expands** $d$ up to $m = 8d$ or $256d$. It is not compressing; it is **undoing a compression the model already performed.** With $d = 512$ and $m = 8d$, the dictionary has $4{,}096$ entries; at $m = 256d$ it has $131{,}072$.
 
-> **Analogy.** A chord played on a piano arrives at your ear as a single pressure waveform — one number per instant, everything summed together. A Fourier analysis expands that one number into hundreds of frequency bins, of which only three or four are actually ringing. **The expansion is not adding information; it is separating information that was already there but added up.** The $\ell_1$ penalty is the assertion that a real chord has a handful of notes, not four hundred quiet ones.
+> **Analogy.** A chord played on a piano arrives at your ear as a single pressure waveform — one number per instant, everything summed together. A Fourier analysis expands that one number into hundreds of frequency bins, of which only three or four are actually ringing. **The expansion is not adding information; it is separating information that was already there but added up.** The $`\ell_1`$ penalty is the assertion that a real chord has a handful of notes, not four hundred quiet ones.
 
-**Line 1, decoded.** $f(x) = \mathrm{ReLU}(W_{\text{enc}}(x - b_{\text{dec}}) + b_{\text{enc}})$:
-1. **Subtract $b_{\text{dec}}$** — recentre. Residual-stream activations have a large, boring mean; the dictionary should describe *deviations from it*, not spend an entry on "the usual."
-2. **Multiply by $W_{\text{enc}}$** — take $m$ dot products at once, one per candidate feature (§1.1.1, Reading 3: each row of a matrix is a question asked of the input).
-3. **Add $b_{\text{enc}}$, then ReLU** — the noise gate from the toy model, feature by feature. Anything below its own threshold is declared crosstalk and set to exactly zero.
+**Line 1, decoded.** $`f(x) = \mathrm{ReLU}(W_{\text{enc}}(x - b_{\text{dec}}) + b_{\text{enc}})`$:
+1. **Subtract $`b_{\text{dec}}`$** — recentre. Residual-stream activations have a large, boring mean; the dictionary should describe *deviations from it*, not spend an entry on "the usual."
+2. **Multiply by $`W_{\text{enc}}`$** — take $m$ dot products at once, one per candidate feature (§1.1.1, Reading 3: each row of a matrix is a question asked of the input).
+3. **Add $`b_{\text{enc}}`$, then ReLU** — the noise gate from the toy model, feature by feature. Anything below its own threshold is declared crosstalk and set to exactly zero.
 
-**Line 2, decoded.** $\hat x = W_{\text{dec}} f(x) + b_{\text{dec}}$ is a **weighted sum of dictionary columns** — Reading 2 of §1.1.1 once more. Make it concrete with $d = 3$, $m = 5$ and
+**Line 2, decoded.** $`\hat x = W_{\text{dec}} f(x) + b_{\text{dec}}`$ is a **weighted sum of dictionary columns** — Reading 2 of §1.1.1 once more. Make it concrete with $d = 3$, $m = 5$ and
 
 $$f(x) = (0,\ 2.3,\ 0,\ 0.7,\ 0)$$
 
-Then $\hat x = 2.3\,W_{\text{dec},2} + 0.7\,W_{\text{dec},4} + b_{\text{dec}}$. **Only two of the five terms exist.** Read it as a claim: *"this activation is 2.3 units of concept 2 plus 0.7 units of concept 4, and nothing else."* That claim is the interpretability output. Everything else is machinery for producing it.
+Then $`\hat x = 2.3\,W_{\text{dec},2} + 0.7\,W_{\text{dec},4} + b_{\text{dec}}`$. **Only two of the five terms exist.** Read it as a claim: *"this activation is 2.3 units of concept 2 plus 0.7 units of concept 4, and nothing else."* That claim is the interpretability output. Everything else is machinery for producing it.
 
-**$L_0$, the number everyone quotes.** $L_0$ is how many entries of $f(x)$ are nonzero — a *count*, not a length. With $m = 16{,}384$ and $L_0 = 50$, the code is $50/16{,}384 = 0.3\%$ dense. ▸ **A paper reporting SAE quality reports two numbers and you need both: reconstruction error (how much of $x$ came back) and $L_0$ (how many features it took).** Either alone is meaningless — you can drive error to zero with $L_0 = m$, and $L_0$ to one with garbage reconstruction.
+**$`L_0`$, the number everyone quotes.** $`L_0`$ is how many entries of $f(x)$ are nonzero — a *count*, not a length. With $m = 16{,}384$ and $`L_0 = 50`$, the code is $50/16{,}384 = 0.3\%$ dense. ▸ **A paper reporting SAE quality reports two numbers and you need both: reconstruction error (how much of $x$ came back) and $`L_0`$ (how many features it took).** Either alone is meaningless — you can drive error to zero with $`L_0 = m`$, and $`L_0`$ to one with garbage reconstruction.
 
-**Why $\ell_1$ produces exact zeros.** $\|f\|_1 = \sum_i \lvert f_i\rvert$ (§1.1.4). Its gradient has constant magnitude $\lambda$ no matter how small $f_i$ gets, so the penalty keeps pushing with full force right up to zero and pins it there. Compare $\ell_2$: the gradient of $f_i^2$ is $2f_i$, which fades to nothing as $f_i$ shrinks, so $\ell_2$ produces many small values and no zeros. ▸ **$\ell_1$ selects; $\ell_2$ shrinks.** That distinction is why the sparsity term is $\ell_1$ and not $\ell_2$.
+**Why $`\ell_1`$ produces exact zeros.** $`\|f\|_1 = \sum_i \lvert f_i\rvert`$ (§1.1.4). Its gradient has constant magnitude $\lambda$ no matter how small $`f_i`$ gets, so the penalty keeps pushing with full force right up to zero and pins it there. Compare $`\ell_2`$: the gradient of $`f_i^2`$ is $`2f_i`$, which fades to nothing as $`f_i`$ shrinks, so $`\ell_2`$ produces many small values and no zeros. ▸ **$`\ell_1`$ selects; $`\ell_2`$ shrinks.** That distinction is why the sparsity term is $`\ell_1`$ and not $`\ell_2`$.
 
-**The unit-norm rule, and the exact cheat it blocks.** Suppose you multiply dictionary column $i$ by $c > 1$ and divide $f_i$ by $c$. The reconstruction $f_i W_{\text{dec},i}$ is **completely unchanged** — but the penalty term $\lambda\lvert f_i\rvert$ becomes $\lambda\lvert f_i\rvert / c$. Take $c = 100$ and the sparsity penalty falls by $100\times$ for free. Let $c\to\infty$ and the penalty vanishes entirely while the model reconstructs exactly as before. ▸ **Constraining every decoder column to length 1 removes the loophole.** This is not fussiness; without it the $\ell_1$ term is not a constraint at all.
+**The unit-norm rule, and the exact cheat it blocks.** Suppose you multiply dictionary column $i$ by $c > 1$ and divide $`f_i`$ by $c$. The reconstruction $`f_i W_{\text{dec},i}`$ is **completely unchanged** — but the penalty term $`\lambda\lvert f_i\rvert`$ becomes $`\lambda\lvert f_i\rvert / c`$. Take $c = 100$ and the sparsity penalty falls by $100\times$ for free. Let $c\to\infty$ and the penalty vanishes entirely while the model reconstructs exactly as before. ▸ **Constraining every decoder column to length 1 removes the loophole.** This is not fussiness; without it the $`\ell_1`$ term is not a constraint at all.
 
 > **Where this came from.** The method is **sparse dictionary learning**, and it was invented to explain the brain. In 1996, **Bruno Olshausen and David Field** published *Emergence of Simple-Cell Receptive Field Properties by Learning a Sparse Code for Natural Images* in *Nature*. Their question was neuroscience, not engineering: why does the primary visual cortex contain cells tuned to oriented edges at particular positions and scales? Their answer was that if you take natural photographs and learn an overcomplete dictionary under a sparsity penalty — exactly the loss above — the dictionary entries that emerge **are** oriented edge detectors, matching what physiologists had measured in cat and monkey V1. Sparsity alone predicted the architecture of a piece of the visual system. Nearly thirty years later the same loss was pointed at transformer activations, by two groups within weeks of each other in late 2023: **Cunningham, Ewart, Riggs, Huben and Sharkey**, and **Anthropic's** *Towards Monosemanticity*. The technique that explained why you have edge detectors is now the technique for finding out what a language model is thinking.
 
@@ -373,7 +373,7 @@ Anthropic's Claude 3 Sonnet SAE work recovered millions of interpretable feature
 
 #### Why "causal, not correlational" is the whole argument
 
-**"Clamping" means:** run the model normally, but at one layer force $f_i$ — one entry of the sparse code — to a fixed large value, rebuild $\hat x$ from the modified code, and put it back into the residual stream. You have not retrained anything and you have not touched the prompt. You reached in and turned one dial.
+**"Clamping" means:** run the model normally, but at one layer force $`f_i`$ — one entry of the sparse code — to a fixed large value, rebuild $\hat x$ from the modified code, and put it back into the residual stream. You have not retrained anything and you have not touched the prompt. You reached in and turned one dial.
 
 The distinction being drawn is the oldest one in empirical science, and it is worth stating precisely:
 
@@ -390,21 +390,21 @@ The distinction being drawn is the oldest one in empirical science, and it is wo
 
 ### The known problems
 
-- ▸ **Shrinkage.** The $\ell_1$ penalty biases *all* activations toward zero, systematically underestimating magnitudes even for correctly identified features. **JumpReLU** and **TopK** SAEs address this — TopK enforces exactly $k$ active features and drops $\ell_1$ entirely, removing the bias.
+- ▸ **Shrinkage.** The $`\ell_1`$ penalty biases *all* activations toward zero, systematically underestimating magnitudes even for correctly identified features. **JumpReLU** and **TopK** SAEs address this — TopK enforces exactly $k$ active features and drops $`\ell_1`$ entirely, removing the bias.
 - **Dead features:** a large fraction never activate. Mitigations: resampling, auxiliary losses on dead features, careful init.
 - **Feature splitting:** widen the SAE and one feature splits into many finer ones. ▸ **There is no canonical granularity** — this is arguably the deepest conceptual problem with SAEs, because it suggests "the" feature set may not be well-defined.
-- **Evaluation is  hard.** Reconstruction loss and $L_0$ are proxies; automated interpretability scores use an LLM to name and predict feature activations, which is circular in an uncomfortable way. Recent work has found SAEs underperform simpler baselines on some downstream tasks, and the field is actively debating how much they have delivered.
+- **Evaluation is  hard.** Reconstruction loss and $`L_0`$ are proxies; automated interpretability scores use an LLM to name and predict feature activations, which is circular in an uncomfortable way. Recent work has found SAEs underperform simpler baselines on some downstream tasks, and the field is actively debating how much they have delivered.
 
 **Related methods:** transcoders (approximate an MLP layer sparsely, giving circuits directly), crosscoders (share features across layers or models), and attribution-based dictionary learning.
 
 #### Shrinkage, derived in four lines
 
-Shrinkage sounds like a vague complaint. It is not — you can compute exactly how much magnitude the $\ell_1$ penalty steals, and the answer is embarrassing.
+Shrinkage sounds like a vague complaint. It is not — you can compute exactly how much magnitude the $`\ell_1`$ penalty steals, and the answer is embarrassing.
 
-Suppose feature $i$ is  present with true strength $1$, and the dictionary column is a perfect unit vector, so the reconstruction would be exact at $f_i = 1$. Now let the model output $f_i = 1 - \delta$ instead and see what the loss does.
+Suppose feature $i$ is  present with true strength $1$, and the dictionary column is a perfect unit vector, so the reconstruction would be exact at $`f_i = 1`$. Now let the model output $`f_i = 1 - \delta`$ instead and see what the loss does.
 
 - **Reconstruction term.** You are short by $\delta$ along a unit direction, so the squared error grows by $\delta^2$.
-- **Sparsity term.** You claimed $\delta$ less, so the $\ell_1$ penalty falls by $\lambda\delta$.
+- **Sparsity term.** You claimed $\delta$ less, so the $`\ell_1`$ penalty falls by $\lambda\delta$.
 - **Net change.** $\Delta\mathcal{L}(\delta) = \delta^2 - \lambda\delta$.
 - **Minimize.** $\dfrac{d}{d\delta}(\delta^2 - \lambda\delta) = 2\delta - \lambda = 0 \;\Rightarrow\; \boxed{\delta = \lambda/2}$
 
@@ -412,7 +412,7 @@ Suppose feature $i$ is  present with true strength $1$, and the dictionary colum
 
 **Why this is more than an accounting error.** You cannot fix it by turning $\lambda$ down, because $\lambda$ is what produces the sparsity you came for. You are stuck choosing between "sparse but systematically wrong magnitudes" and "accurate magnitudes but not sparse." ▸ **The penalty that finds the features is the same penalty that mismeasures them.**
 
-**How the fixes work.** **TopK** SAEs delete $\lambda$ entirely: keep the $k$ largest pre-activations, zero everything else, and impose no penalty on the survivors — so there is no force pulling magnitudes down, and $L_0 = k$ exactly, by construction rather than by tuning. **JumpReLU** keeps a penalty but replaces the smooth ReLU with a step: below a learned threshold the output is $0$, above it the output is the *unshrunk* value, so crossing the gate costs you a fixed price rather than a per-unit tax.
+**How the fixes work.** **TopK** SAEs delete $\lambda$ entirely: keep the $k$ largest pre-activations, zero everything else, and impose no penalty on the survivors — so there is no force pulling magnitudes down, and $`L_0 = k`$ exactly, by construction rather than by tuning. **JumpReLU** keeps a penalty but replaces the smooth ReLU with a step: below a learned threshold the output is $0$, above it the output is the *unshrunk* value, so crossing the gate costs you a fixed price rather than a per-unit tax.
 
 **A note on the deepest problem.** Feature splitting is worse than it sounds. Widen the dictionary from $4{,}096$ to $16{,}384$ and a single "legal language" feature can resolve into contract clauses, court citations, statutory language, and legalese-in-fiction. Neither answer is wrong. ▸ **There is no fact of the matter about which is "the" feature set, which means SAE output is a *choice of resolution*, not a discovery of ground truth** — closer to picking a magnification on a microscope than to reading off a parts list.
 
@@ -456,13 +456,13 @@ $$x_L = x_0 + \sum_{\ell=1}^{2L} \text{sublayer}_\ell(\cdot)$$
 
 #### What the logit lens is doing
 
-**The unembedding** $W_U$ is the final matrix that turns a $d$-vector into one score per vocabulary token. Normally it is applied once, at the end. The logit lens applies it **early** — to $x_5$, say, in a 12-layer model — and asks: *if the model had to answer right now, what would it say?*
+**The unembedding** $`W_U`$ is the final matrix that turns a $d$-vector into one score per vocabulary token. Normally it is applied once, at the end. The logit lens applies it **early** — to $`x_5`$, say, in a 12-layer model — and asks: *if the model had to answer right now, what would it say?*
 
-Because of the additive stream, this is a legitimate question rather than a violation. $x_5$ lives in the same space as $x_{12}$; it is simply an unfinished sum.
+Because of the additive stream, this is a legitimate question rather than a violation. $`x_5`$ lives in the same space as $`x_{12}`$; it is simply an unfinished sum.
 
 ▸ **What you see is a prediction sharpening.** Early layers put mass on generically common tokens; middle layers commit to a syntactic category; the correct answer often locks in several layers before the end, after which the remaining layers change little. That last observation is directly useful — it is the empirical basis for early-exit and layer-skipping inference (Ch. 17).
 
-**Why the tuned lens is better.** The lens assumes intermediate states are directly readable by the *final* unembedding, but each layer works in its own slightly rotated and rescaled version of the space. The tuned lens fits a small per-layer affine map $A_\ell x_\ell + c_\ell$ first — a learned translator — and produces far more faithful readings, especially in the early layers where the raw lens often outputs nonsense.
+**Why the tuned lens is better.** The lens assumes intermediate states are directly readable by the *final* unembedding, but each layer works in its own slightly rotated and rescaled version of the space. The tuned lens fits a small per-layer affine map $`A_\ell x_\ell + c_\ell`$ first — a learned translator — and produces far more faithful readings, especially in the early layers where the raw lens often outputs nonsense.
 
 > **Where this came from.** The residual-stream framing is from *A Mathematical Framework for Transformer Circuits* (**Elhage, Nanda, Olsson and colleagues, 2021**), which took the deliberate step of studying transformers with **zero or one or two attention layers and no MLPs** — small enough to be solved completely — and only then asking what carries over. The **logit lens** did not come from a paper at all: it was described in a 2020 blog post on the forum LessWrong by a writer under the pseudonym **nostalgebraist**, who noticed that GPT-2's intermediate activations were already readable by the output matrix. It was adopted as standard tooling on the strength of the observation alone. The **tuned lens** (Belrose and colleagues, 2023) supplied the per-layer correction and the evidence that the raw version is unreliable early. It is a small illustration of how young this field is: one of its most-used instruments started as an internet post.
 
@@ -477,30 +477,30 @@ $$\text{output} = \big(\text{pattern}\big)\cdot x\,W_V^\top W_O^\top\quad\Righta
 
 #### The QK/OV factorization, unpacked
 
-An attention head is usually taught as four matrices — $W_Q$, $W_K$, $W_V$, $W_O$ — and that framing makes it look like a four-part machine. It is a **two**-part machine, and the two parts never interact.
+An attention head is usually taught as four matrices — $`W_Q`$, $`W_K`$, $`W_V`$, $`W_O`$ — and that framing makes it look like a four-part machine. It is a **two**-part machine, and the two parts never interact.
 
 **Every symbol.**
 
 | Symbol | Read aloud | Job |
 |---|---|---|
-| $W_Q$ | "W-query" | Turns a token's state into a *question* |
-| $W_K$ | "W-key" | Turns a token's state into an *advertisement* |
-| $W_V$ | "W-value" | Extracts the *payload* a token offers |
-| $W_O$ | "W-output" | Decides where in the stream that payload gets written |
-| $d_k$ | "d-k" | Width of the query/key space per head — $64$ in GPT-2 small |
-| $\sqrt{d_k}$ | "root d-k" | The scaling that stops dot products from growing with $d_k$ and saturating the softmax |
+| $`W_Q`$ | "W-query" | Turns a token's state into a *question* |
+| $`W_K`$ | "W-key" | Turns a token's state into an *advertisement* |
+| $`W_V`$ | "W-value" | Extracts the *payload* a token offers |
+| $`W_O`$ | "W-output" | Decides where in the stream that payload gets written |
+| $`d_k`$ | "d-k" | Width of the query/key space per head — $64$ in GPT-2 small |
+| $`\sqrt{d_k}`$ | "root d-k" | The scaling that stops dot products from growing with $`d_k`$ and saturating the softmax |
 | $\mathrm{softmax}$ | "soft-max" | Turns raw scores into weights that are positive and sum to 1 (§1.3.4) |
 
-**Why $W_Q$ and $W_K$ collapse into one matrix.** The attention score between token $i$ and token $j$ is $(W_Q x_i)^\top (W_K x_j)$, which regroups as $x_i^\top (W_Q^\top W_K)\, x_j$ — the queries and keys never appear except *through their product*. Define $W_{QK} = W_Q^\top W_K$ and the head's routing behaviour is one matrix.
+**Why $`W_Q`$ and $`W_K`$ collapse into one matrix.** The attention score between token $i$ and token $j$ is $`(W_Q x_i)^\top (W_K x_j)`$, which regroups as $`x_i^\top (W_Q^\top W_K)\, x_j`$ — the queries and keys never appear except *through their product*. Define $`W_{QK} = W_Q^\top W_K`$ and the head's routing behaviour is one matrix.
 
-▸ **Consequence, and it is stronger than it first sounds: $W_Q$ and $W_K$ are individually meaningless.** Replace $W_Q$ by $MW_Q$ and $W_K$ by $M^{-\top}W_K$ for any invertible $M$ and the product is unchanged, so the model behaves identically. **Any story you tell about "what the query matrix represents" is a story about an arbitrary choice of basis.** Only $W_{QK}$ is real. The same argument applies to $W_{OV} = W_O W_V$.
+▸ **Consequence, and it is stronger than it first sounds: $`W_Q`$ and $`W_K`$ are individually meaningless.** Replace $`W_Q`$ by $`MW_Q`$ and $`W_K`$ by $`M^{-\top}W_K`$ for any invertible $M$ and the product is unchanged, so the model behaves identically. **Any story you tell about "what the query matrix represents" is a story about an arbitrary choice of basis.** Only $`W_{QK}`$ is real. The same argument applies to $`W_{OV} = W_O W_V`$.
 
-**Put shapes and counts on it** (GPT-2 small: $d = 768$, 12 heads, $d_k = 64$):
+**Put shapes and counts on it** (GPT-2 small: $d = 768$, 12 heads, $`d_k = 64`$):
 
 | Object | Shape | Rank | Free parameters |
 |---|---|---|---|
-| $W_Q$, $W_K$ separately | $64\times 768$ each | — | $2\times 49{,}152 = 98{,}304$ |
-| $W_{QK} = W_Q^\top W_K$ | $768\times 768$ | **at most 64** | still $98{,}304$ |
+| $`W_Q`$, $`W_K`$ separately | $64\times 768$ each | — | $2\times 49{,}152 = 98{,}304$ |
+| $`W_{QK} = W_Q^\top W_K`$ | $768\times 768$ | **at most 64** | still $98{,}304$ |
 | A general $768\times768$ matrix | $768\times 768$ | up to $768$ | $589{,}824$ |
 
 ▸ **A head's routing rule is a $768\times768$ table described by only 98,304 numbers, and it can only "see" a 64-dimensional slice of the stream.** That $64/768 \approx 8\%$ is a severe restriction — and it is a gift to the interpreter, because a rank-64 object in a 768-dimensional space is a small, analyzable thing. **Low rank is why attention heads can be understood at all;** a full-rank head would be as opaque as an MLP.
@@ -509,10 +509,10 @@ An attention head is usually taught as four matrices — $W_Q$, $W_K$, $W_V$, $W
 
 **Reading each formula aloud, once.**
 
-- $\mathrm{softmax}\!\big(x^\top W_Q^\top W_K x/\sqrt{d_k}\big)$: *"score every earlier position by how well its advertisement answers my question, divide by root-$d_k$ so the scores don't blow up, and normalize into a set of weights that sum to one."*
-- $(\text{pattern})\cdot x\,W_V^\top W_O^\top$: *"take a weighted average of the payloads at those positions, and add it into my own stream."*
+- $`\mathrm{softmax}\!\big(x^\top W_Q^\top W_K x/\sqrt{d_k}\big)`$: *"score every earlier position by how well its advertisement answers my question, divide by root-$`d_k`$ so the scores don't blow up, and normalize into a set of weights that sum to one."*
+- $`(\text{pattern})\cdot x\,W_V^\top W_O^\top`$: *"take a weighted average of the payloads at those positions, and add it into my own stream."*
 
-**A worked micro-case.** Set $d_k = 4$ and suppose $x_i^\top W_{QK} x_j$ evaluates to $(2.0,\ 8.0,\ 1.0)$ for three candidate positions. Divide by $\sqrt{4} = 2$: $(1.0,\ 4.0,\ 0.5)$. Exponentiate: $(2.72,\ 54.60,\ 1.65)$, sum $58.97$. Softmax: $(0.046,\ 0.926,\ 0.028)$. ▸ **92.6% of the head's attention goes to position 2** — an attention pattern is not a soft blur but usually a near-decision, which is why "this head attends to the previous token" is a statement you can check by eye.
+**A worked micro-case.** Set $`d_k = 4`$ and suppose $`x_i^\top W_{QK} x_j`$ evaluates to $(2.0,\ 8.0,\ 1.0)$ for three candidate positions. Divide by $\sqrt{4} = 2$: $(1.0,\ 4.0,\ 0.5)$. Exponentiate: $(2.72,\ 54.60,\ 1.65)$, sum $58.97$. Softmax: $(0.046,\ 0.926,\ 0.028)$. ▸ **92.6% of the head's attention goes to position 2** — an attention pattern is not a soft blur but usually a near-decision, which is why "this head attends to the previous token" is a statement you can check by eye.
 
 ### Induction heads — the fully worked example
 
@@ -546,7 +546,7 @@ That second clause is new information. Position 2's embedding never contained it
 
 #### Why one layer provably cannot do it
 
-Attention keys at position $j$ are computed as $W_K x_j$, and before any attention has run, $x_j$ contains **only** token $j$'s embedding plus its positional encoding. So a first-layer key can advertise *"I am `Dursley`"* or *"I am at position 2"* — but there is no way for it to advertise *"the token before me was `Mr`"*, because that information is not in $x_j$ yet.
+Attention keys at position $j$ are computed as $`W_K x_j`$, and before any attention has run, $`x_j`$ contains **only** token $j$'s embedding plus its positional encoding. So a first-layer key can advertise *"I am `Dursley`"* or *"I am at position 2"* — but there is no way for it to advertise *"the token before me was `Mr`"*, because that information is not in $`x_j`$ yet.
 
 ▸ **The fix is that a previous head has to write it there first.** Naming the three ways one head can feed another is worth memorizing, because circuit papers use these terms constantly:
 
@@ -711,7 +711,7 @@ Train a classifier on internal activations to detect a property.
 - **Amnesic probing:** remove the property (project out its direction) and check whether behaviour changes. This is the causal version.
 - ▸ **Always follow a probe with an intervention.** A probe is a hypothesis; steering or patching is the test.
 
-**Steering vectors.** Compute $v = \bar h_{\text{positive}} - \bar h_{\text{negative}}$ over contrastive pairs, add $\alpha v$ to the residual stream at inference. Works for sentiment, refusal, truthfulness, sycophancy, and style. ▸ **That such a crude method works at all is strong evidence for the linear representation hypothesis** — and SAE features give cleaner, more targeted steering directions.
+**Steering vectors.** Compute $`v = \bar h_{\text{positive}} - \bar h_{\text{negative}}`$ over contrastive pairs, add $\alpha v$ to the residual stream at inference. Works for sentiment, refusal, truthfulness, sycophancy, and style. ▸ **That such a crude method works at all is strong evidence for the linear representation hypothesis** — and SAE features give cleaner, more targeted steering directions.
 
 #### The probing confound, made concrete
 
@@ -746,7 +746,7 @@ Check: $v^\top h' = 0.864 - 0.864 = 0$. **The information along $v$ is gone and 
 
 #### Steering vectors, worked
 
-$\bar h_{\text{positive}}$ reads *"the average residual stream over the positive examples"* — the bar is an ordinary average here, not the gradient bar of §0.6.
+$`\bar h_{\text{positive}}`$ reads *"the average residual stream over the positive examples"* — the bar is an ordinary average here, not the gradient bar of §0.6.
 
 Build one for sentiment. Collect thirty sentences with positive tone and thirty with negative tone, matched as closely as possible. Average each set's activations at one layer, subtract:
 
@@ -856,7 +856,7 @@ Interpretability's central difficulty is that suggestive-looking evidence is usu
 
 - **In GPT-3's residual stream, two directions picked at random overlap by about 0.9%.** Random unit vectors in $\mathbb{R}^d$ have expected cosine similarity $0$ with standard deviation $1/\sqrt{d}$, and $1/\sqrt{12{,}288}\approx 0.009$. You do not have to design near-perpendicular directions in high dimensions; you get them by accident.
 
-- **The query matrix has no meaning on its own.** Replace $W_Q$ with $MW_Q$ and $W_K$ with $M^{-\top}W_K$ for any invertible $M$ and the model's behaviour is bit-for-bit identical, because only the product $W_Q^\top W_K$ ever appears. Any interpretation of "what the queries represent" is an interpretation of an arbitrary basis choice.
+- **The query matrix has no meaning on its own.** Replace $`W_Q`$ with $`MW_Q`$ and $`W_K`$ with $`M^{-\top}W_K`$ for any invertible $M$ and the model's behaviour is bit-for-bit identical, because only the product $`W_Q^\top W_K`$ ever appears. Any interpretation of "what the queries represent" is an interpretation of an arbitrary basis choice.
 
 - **A kink in a loss curve turned out to be an algorithm assembling itself.** Small transformers show a brief bump early in training where the loss departs from its smooth descent. It had been treated as noise. It is the window in which induction heads form — and in-context learning ability jumps in the same window.
 
@@ -881,7 +881,7 @@ The test of understanding is conversational: could you explain each of these to 
 3. **Why are both sparsity and a nonlinearity required for superposition, and what exactly does each one do?** Answer in terms of a noise gate.
 4. **Why is a polysemantic neuron not a bug?** Explain it as a microphone in a restaurant, without algebra.
 5. **Why does a sparse autoencoder make the representation *wider* rather than narrower?** Every other autoencoder you have met does the opposite.
-6. **Why does the $\ell_1$ penalty systematically understate every feature's magnitude, and why can't you fix it by lowering $\lambda$?**
+6. **Why does the $`\ell_1`$ penalty systematically understate every feature's magnitude, and why can't you fix it by lowering $\lambda$?**
 7. **Why is "feature splitting" the deepest problem with sparse autoencoders?** What would it mean for there to be no canonical feature set?
 8. **Why does the residual stream being *additive* make attribution possible at all?**
 9. **Why does an induction head need two layers?** State the reason in terms of what a first-layer key can possibly know.

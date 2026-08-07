@@ -12,22 +12,22 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $I(\text{node})$ | "impurity of the node" | How **mixed** the labels are in a group. Zero means all one class. |
-| $p_k$ | "p-k" | The fraction of points in this node whose label is class $k$ |
-| $n_L,\ n_R$ | "n-left, n-right" | How many training points land on the left / right side of a split |
-| $\min_{j,s}$ | "minimize over j and s" | "Try every feature $j$ and every threshold $s$; keep the best pair" |
-| $\lvert T_{\text{leaves}}\rvert$ | "the number of leaves of T" | The tree's size — its complexity |
+| $`p_k`$ | "p-k" | The fraction of points in this node whose label is class $k$ |
+| $`n_L,\ n_R`$ | "n-left, n-right" | How many training points land on the left / right side of a split |
+| $`\min_{j,s}`$ | "minimize over j and s" | "Try every feature $j$ and every threshold $s$; keep the best pair" |
+| $`\lvert T_{\text{leaves}}\rvert`$ | "the number of leaves of T" | The tree's size — its complexity |
 | $\rho$ | "rho" | **Correlation** between two ensemble members' predictions |
 | $\sigma^2$ | "sigma squared" | **Variance** of a single ensemble member |
 | $B$ | "B" | How many trees are in the ensemble |
 | $\mathbb{1}[\,\cdot\,]$ | "the indicator of" | **1 if the statement inside is true, 0 if false.** A yes/no written as a number. |
 | $\eta$ | "eta" | **Learning rate / shrinkage** — what fraction of each new tree you actually add |
-| $F_m(x)$ | "F-m of x" | The whole ensemble's prediction after $m$ rounds |
-| $r_i^{(m)}$ | "r-i at round m" | **Pseudo-residual** — the direction example $i$ wants the prediction moved |
-| $g_i,\ h_i$ | "g-i, h-i" | First and second derivative of the loss at example $i$ |
-| $G_j,\ H_j$ | "big G-j, big H-j" | Those same derivatives **summed over every example sitting in leaf $j$** |
-| $w_j$ | "w-j" | The single number the tree outputs for anything that lands in leaf $j$ |
+| $`F_m(x)`$ | "F-m of x" | The whole ensemble's prediction after $m$ rounds |
+| $`r_i^{(m)}`$ | "r-i at round m" | **Pseudo-residual** — the direction example $i$ wants the prediction moved |
+| $`g_i,\ h_i`$ | "g-i, h-i" | First and second derivative of the loss at example $i$ |
+| $`G_j,\ H_j`$ | "big G-j, big H-j" | Those same derivatives **summed over every example sitting in leaf $j$** |
+| $`w_j`$ | "w-j" | The single number the tree outputs for anything that lands in leaf $j$ |
 | $\lambda,\ \gamma$ | "lambda, gamma" | Ridge penalty on leaf values; fixed toll charged per extra leaf |
-| $\phi_j$ | "phi-j" | The **SHAP** credit assigned to feature $j$ for one prediction |
+| $`\phi_j`$ | "phi-j" | The **SHAP** credit assigned to feature $j$ for one prediction |
 
 ### Full forms for the abbreviations in this chapter
 
@@ -67,20 +67,20 @@ At each node, search over all features $j$ and all thresholds $s$ for the split 
 
 ▸ $$\min_{j,s}\ \frac{n_L}{n}I(\text{left}) + \frac{n_R}{n}I(\text{right})$$
 
-**Impurity measures.** For a node with class proportions $p_k$:
+**Impurity measures.** For a node with class proportions $`p_k`$:
 
 | Measure | Formula | Note |
 |---|---|---|
-| **Gini** | $1-\sum_k p_k^2$ | probability two random draws differ; CART default |
-| **Entropy** | $-\sum_k p_k\log p_k$ | information-theoretic; ID3/C4.5 |
-| Misclassification | $1-\max_k p_k$ | **not used for splitting** |
-| **MSE** (regression) | $\frac1n\sum_i(y_i-\bar y)^2$ | |
+| **Gini** | $`1-\sum_k p_k^2`$ | probability two random draws differ; CART default |
+| **Entropy** | $`-\sum_k p_k\log p_k`$ | information-theoretic; ID3/C4.5 |
+| Misclassification | $`1-\max_k p_k`$ | **not used for splitting** |
+| **MSE** (regression) | $`\frac1n\sum_i(y_i-\bar y)^2`$ | |
 
 ▸ **Why misclassification error is a bad splitting criterion, even though it's the thing you care about:** it is piecewise-linear in $p$, so a split that moves probability mass without changing the argmax gives *zero* improvement. Gini and entropy are strictly concave, so **any** split that increases purity registers a gain. Concavity is what makes greedy search work at all. This is a  good interview question.
 
 Gini and entropy agree on the chosen split ~98% of the time. Gini is marginally cheaper (no log).
 
-**Information gain** $= H(\text{parent}) - \sum\frac{n_c}{n}H(\text{child})$, which is exactly the mutual information between the split variable and the label.
+**Information gain** $`= H(\text{parent}) - \sum\frac{n_c}{n}H(\text{child})`$, which is exactly the mutual information between the split variable and the label.
 
 **Regression trees** predict the mean of each leaf and split to minimize the sum of squared errors.
 
@@ -97,16 +97,16 @@ Every symbol:
 | $j$ | "j" | Which **column** of your table you're splitting on — age, income, pixel 47 |
 | $s$ | "s" | The **cut point** on that column — "age $\le 38.5$" |
 | $n$ | "n" | How many training points arrived at this node |
-| $n_L,\ n_R$ | "n-left, n-right" | How many go left, how many go right. Always $n_L + n_R = n$. |
+| $`n_L,\ n_R`$ | "n-left, n-right" | How many go left, how many go right. Always $`n_L + n_R = n`$. |
 | $I(\cdot)$ | "impurity of" | A number saying **how mixed** the labels are in that group |
-| $n_L/n$ | "n-left over n" | The **fraction** of points going left — a weight, so a big group counts more |
+| $`n_L/n`$ | "n-left over n" | The **fraction** of points going left — a weight, so a big group counts more |
 
-> **Analogy.** You run a mailroom with one big unsorted bin. You are allowed to install a single sorting rule — "postcode below 50000 goes in bin A, everything else in bin B" — and you want the two bins that come out to each be as *uniform* as possible. Impurity is "how jumbled is this bin." The weighting $n_L/n$ exists because making a bin of 3 letters perfectly pure while leaving 997 letters in chaos is not progress.
+> **Analogy.** You run a mailroom with one big unsorted bin. You are allowed to install a single sorting rule — "postcode below 50000 goes in bin A, everything else in bin B" — and you want the two bins that come out to each be as *uniform* as possible. Impurity is "how jumbled is this bin." The weighting $`n_L/n`$ exists because making a bin of 3 letters perfectly pure while leaving 997 letters in chaos is not progress.
 
 **Real numbers.** Take a node with 100 points: 50 spam, 50 not-spam. Try the split "contains the word *free*":
 
-- **Left** ($n_L = 40$): 35 spam, 5 not. So $p_{\text{spam}} = 0.875$.
-- **Right** ($n_R = 60$): 15 spam, 45 not. So $p_{\text{spam}} = 0.25$.
+- **Left** ($`n_L = 40`$): 35 spam, 5 not. So $`p_{\text{spam}} = 0.875`$.
+- **Right** ($`n_R = 60`$): 15 spam, 45 not. So $`p_{\text{spam}} = 0.25`$.
 
 Gini of the parent: $1 - (0.5^2 + 0.5^2) = 0.5$ — the worst possible value for two classes.
 Gini left: $1 - (0.875^2 + 0.125^2) = 1 - (0.766 + 0.016) = 0.219$.
@@ -122,17 +122,17 @@ All four rows of the table above answer the same question — *"how mixed is thi
 
 Take a two-class node and let $p$ be the fraction of class 1:
 
-| $p$ (fraction class 1) | Gini $1-\sum_k p_k^2$ | Entropy $-\sum_k p_k\log_2 p_k$ | Misclassification $1-\max_k p_k$ |
+| $p$ (fraction class 1) | Gini $`1-\sum_k p_k^2`$ | Entropy $`-\sum_k p_k\log_2 p_k`$ | Misclassification $`1-\max_k p_k`$ |
 |---|---|---|---|
 | $1.0$ (pure) | $0$ | $0$ | $0$ |
 | $0.9$ | $0.18$ | $0.469$ | $0.1$ |
 | $0.75$ | $0.375$ | $0.811$ | $0.25$ |
 | $0.5$ (worst) | $0.5$ | $1.0$ | $0.5$ |
 
-- **Gini, $1-\sum_k p_k^2$.** Read: "one minus the sum over classes of the squared class fractions." The interpretation in the table — *"probability two random draws differ"* — is exact and worth checking: draw two points at random with replacement; the chance they match is $\sum_k p_k^2$; so the chance they differ is $1$ minus that. Gini is the **probability of disagreement**.
-- **Entropy, $-\sum_k p_k\log p_k$.** Read: "minus the sum of p-log-p." This is Shannon's surprise measure (Ch. 1 §1.4): the average number of yes/no questions needed to identify a point's class. A 50/50 node needs exactly 1 bit; a pure node needs 0.
-- **Misclassification, $1-\max_k p_k$.** Read: "one minus the biggest class fraction." If you had to guess one label for the whole node, this is your error rate. It is *the thing you actually care about at prediction time* — which makes it all the more surprising that it is a bad splitting criterion.
-- **MSE (mean squared error), $\frac1n\sum_i(y_i-\bar y)^2$.** The regression version. $\bar y$ (read "y-bar") is the average target in the node. Impurity here means "spread": a leaf whose targets are all $7.2$ has impurity 0.
+- **Gini, $`1-\sum_k p_k^2`$.** Read: "one minus the sum over classes of the squared class fractions." The interpretation in the table — *"probability two random draws differ"* — is exact and worth checking: draw two points at random with replacement; the chance they match is $`\sum_k p_k^2`$; so the chance they differ is $1$ minus that. Gini is the **probability of disagreement**.
+- **Entropy, $`-\sum_k p_k\log p_k`$.** Read: "minus the sum of p-log-p." This is Shannon's surprise measure (Ch. 1 §1.4): the average number of yes/no questions needed to identify a point's class. A 50/50 node needs exactly 1 bit; a pure node needs 0.
+- **Misclassification, $`1-\max_k p_k`$.** Read: "one minus the biggest class fraction." If you had to guess one label for the whole node, this is your error rate. It is *the thing you actually care about at prediction time* — which makes it all the more surprising that it is a bad splitting criterion.
+- **MSE (mean squared error), $`\frac1n\sum_i(y_i-\bar y)^2`$.** The regression version. $\bar y$ (read "y-bar") is the average target in the node. Impurity here means "spread": a leaf whose targets are all $7.2$ has impurity 0.
 
 #### Why concavity is the whole trick
 
@@ -160,7 +160,7 @@ Gini on the same second split: parent $=0.48$; left $=2(0.7)(0.3) = 0.42$; right
 
 > **Where this came from.** Decision trees were invented independently in at least three fields. The earliest recognizable ancestor is **AID (Automatic Interaction Detection)**, built by **James Morgan and John Sonquist** at the University of Michigan's Survey Research Center and published in 1963 — they were social scientists trying to find *interactions* in survey data (does education affect income differently for men and women?) and were explicitly frustrated that regression assumed additivity. In the 1980s two lines matured in parallel: **CART**, from the 1984 book by **Leo Breiman, Jerome Friedman, Richard Olshen, and Charles Stone**, which brought Gini, surrogate splits for missing values, and cost-complexity pruning; and **ID3 / C4.5**, from the Australian computer scientist **Ross Quinlan**, which came out of the artificial-intelligence tradition and used entropy and information gain. Statistics and AI arrived at nearly the same algorithm from opposite directions and with almost no shared vocabulary — which is why the same object has two names for everything.
 
-> **The story behind "Gini."** The measure is named for **Corrado Gini**, the Italian statistician who introduced an index of statistical dispersion in 1912 — as a way of quantifying **income inequality**, which is still its most famous use. The identical quantity has been rediscovered repeatedly under other names: in ecology it is the **Simpson diversity index** (Edward H. Simpson, 1949), used to measure how many species a habitat contains; in economics, its complement $\sum_k p_k^2$ is the **Herfindahl–Hirschman index**, which United States antitrust regulators use to decide whether a proposed merger makes a market too concentrated. The number your gradient-boosting library computes several billion times per training run is the same one a competition authority computes to block a merger. (Gini was also an active supporter of Italian Fascism and wrote in defence of it; the mathematics is untouched by this, but the name carries the history.)
+> **The story behind "Gini."** The measure is named for **Corrado Gini**, the Italian statistician who introduced an index of statistical dispersion in 1912 — as a way of quantifying **income inequality**, which is still its most famous use. The identical quantity has been rediscovered repeatedly under other names: in ecology it is the **Simpson diversity index** (Edward H. Simpson, 1949), used to measure how many species a habitat contains; in economics, its complement $`\sum_k p_k^2`$ is the **Herfindahl–Hirschman index**, which United States antitrust regulators use to decide whether a proposed merger makes a market too concentrated. The number your gradient-boosting library computes several billion times per training run is the same one a competition authority computes to block a merger. (Gini was also an active supporter of Italian Fascism and wrote in defence of it; the mathematics is untouched by this, but the name carries the history.)
 
 ### Complexity control
 
@@ -177,10 +177,10 @@ Read aloud: *"the alpha-penalized cost of tree $T$ equals its error plus alpha t
 
 - $T$ — a particular tree (a specific set of splits).
 - $R(T)$ — the tree's **error** on the training data: misclassification rate, or sum of squared errors for regression.
-- $\lvert T_{\text{leaves}}\rvert$ — the **number of leaves**, i.e. how many distinct predictions the tree can make. This is the tree's complexity. The vertical bars mean "size of the set," exactly as $\lvert S\rvert$ means "how many elements are in $S$."
+- $`\lvert T_{\text{leaves}}\rvert`$ — the **number of leaves**, i.e. how many distinct predictions the tree can make. This is the tree's complexity. The vertical bars mean "size of the set," exactly as $\lvert S\rvert$ means "how many elements are in $S$."
 - $\alpha$ — the **price per leaf**, a number you choose. It has units of "error per leaf."
 
-> **Analogy.** You are furnishing a room and each extra piece of furniture costs rent. $R(T)$ is how uncomfortable the room is; $\alpha\lvert T_{\text{leaves}}\rvert$ is the monthly bill. At $\alpha = 0$ rent is free, so you cram in every chair you own — that is the fully grown tree, which fits the training data perfectly and generalizes terribly. Raise the rent and you start throwing out the chairs nobody sits in. Raise it far enough and you keep one chair — a stump — and eventually none at all.
+> **Analogy.** You are furnishing a room and each extra piece of furniture costs rent. $R(T)$ is how uncomfortable the room is; $`\alpha\lvert T_{\text{leaves}}\rvert`$ is the monthly bill. At $\alpha = 0$ rent is free, so you cram in every chair you own — that is the fully grown tree, which fits the training data perfectly and generalizes terribly. Raise the rent and you start throwing out the chairs nobody sits in. Raise it far enough and you keep one chair — a stump — and eventually none at all.
 
 **Real numbers.** Suppose a fully grown tree has 400 leaves and 0 training errors out of 1000 points, so $R(T) = 0$. A pruned version has 12 leaves and 60 errors, so $R = 0.06$.
 
@@ -189,7 +189,7 @@ Read aloud: *"the alpha-penalized cost of tree $T$ equals its error plus alpha t
 
 Somewhere between those two values the winner flips. ▸ **The important structural fact is that as you sweep $\alpha$ from 0 upward, the winning tree changes only finitely many times, and each new winner is a subtree of the previous one.** That is why the text says it "traces a nested sequence." You do not have to search over the astronomically many possible subtrees — you get a short list, maybe twenty candidates, and cross-validation picks among them. A search problem was converted into a sorting problem, the same move Eckart–Young makes for matrices (Ch. 1 §1.1.3).
 
-**Why post-pruning beats pre-pruning — the XOR problem, concretely.** Take two binary features $x_1, x_2$ and the label $y = x_1 \oplus x_2$ (exclusive-or: 1 when exactly one of them is 1). Split on $x_1$ alone: the left child is 50/50, the right child is 50/50. **Zero impurity reduction.** Same for $x_2$. A pre-pruning rule like `min_impurity_decrease` looks at this and stops immediately — declaring the data unlearnable. But split on $x_1$ *anyway*, and then split each child on $x_2$, and you get four perfectly pure leaves.
+**Why post-pruning beats pre-pruning — the XOR problem, concretely.** Take two binary features $`x_1, x_2`$ and the label $`y = x_1 \oplus x_2`$ (exclusive-or: 1 when exactly one of them is 1). Split on $`x_1`$ alone: the left child is 50/50, the right child is 50/50. **Zero impurity reduction.** Same for $`x_2`$. A pre-pruning rule like `min_impurity_decrease` looks at this and stops immediately — declaring the data unlearnable. But split on $`x_1`$ *anyway*, and then split each child on $`x_2`$, and you get four perfectly pure leaves.
 
 ▸ **Greedy search is myopic by construction, and the fix is to be greedy on the way down and thoughtful on the way up.** Grow the tree past the point of apparent usefulness, then prune back with the benefit of hindsight. This is a general pattern well beyond trees: exploring past a local plateau and retracting later beats refusing to explore.
 
@@ -213,7 +213,7 @@ Contrast this with linear regression, where one deleted row moves each coefficie
 
 **The other weaknesses, made concrete:**
 
-- **Axis-aligned splits and diagonal boundaries.** A tree can only ask "is $x_1 > 3$?", never "is $x_1 + x_2 > 3$?". To approximate the diagonal line $x_2 = x_1$ it must build a staircase. With depth $d$ it gets $2^d$ steps — so depth 10 gives about a thousand steps, which is visually fine but cost a thousand leaves to express what linear regression writes with two coefficients.
+- **Axis-aligned splits and diagonal boundaries.** A tree can only ask "is $`x_1 > 3`$?", never "is $`x_1 + x_2 > 3`$?". To approximate the diagonal line $`x_2 = x_1`$ it must build a staircase. With depth $d$ it gets $2^d$ steps — so depth 10 gives about a thousand steps, which is visually fine but cost a thousand leaves to express what linear regression writes with two coefficients.
 - **Cannot extrapolate.** A leaf predicts a constant. If every training house cost under \$2M, a tree can never predict \$5M for a mansion — the prediction is capped by the largest leaf mean it ever saw. Linear regression happily extrapolates (sometimes to nonsense, but it *can*). ▸ **This is the single most common surprise when a tree model is deployed on data that drifted upward**: forecasts flatten out at the ceiling of the training range and stay there.
 - **Biased toward high-cardinality features.** A feature with 1000 distinct values offers 999 candidate thresholds; a binary feature offers one. More lottery tickets means a better chance of a spuriously good score, so the high-cardinality feature wins the argmax more often than it deserves. This is the same multiple-comparisons problem that makes p-hacking work, wearing a different hat.
 
@@ -225,7 +225,7 @@ Contrast this with linear regression, where one deleted row moves each coefficie
 |---|---|
 | "If `income > 50000` **and** `age < 30`, approve" | A root-to-leaf path is a conjunction of axis-aligned tests — that is literally what a tree is |
 | Rescaling `income` from dollars to thousands of dollars | Splits are chosen from rank order, so any monotone transform yields an identical tree |
-| An XOR target on two binary features | Depth 2 solves it exactly: split on $x_1$, then on $x_2$ in both children |
+| An XOR target on two binary features | Depth 2 solves it exactly: split on $`x_1`$, then on $`x_2`$ in both children |
 | A  step change in the target at `age = 65` | A leaf predicts a constant, so steps are the tree's native output shape |
 | A column with 40% missing values | Surrogate splits (or a learned default direction) route the missing rows without imputation |
 
@@ -233,7 +233,7 @@ Contrast this with linear regression, where one deleted row moves each coefficie
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| The boundary $x_1 + x_2 > 3$ | The tree can only ask about one feature per node, so it must build a staircase | An **oblique** boundary — needs an oblique tree or a linear model |
+| The boundary $`x_1 + x_2 > 3`$ | The tree can only ask about one feature per node, so it must build a staircase | An **oblique** boundary — needs an oblique tree or a linear model |
 | Predicting \$5M for a mansion when every training house was under \$2M | Every leaf is a constant learned from training rows; there is no slope to ride outward | **Extrapolation**, which trees structurally cannot do |
 | A smooth relationship such as $y = \log x$ | Approximated by a staircase; a good fit costs many leaves | Piecewise-constant approximation, not a smooth fit |
 | "Trees are invariant to feature transformations" | Only **monotone** ones. Rotate the feature space by 45° and you get a completely different tree | Monotone invariance, which is narrower than the slogan suggests |
@@ -267,9 +267,9 @@ Every symbol:
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $f_b$ | "f-b" | The prediction of tree number $b$ |
+| $`f_b`$ | "f-b" | The prediction of tree number $b$ |
 | $B$ | "B" | How many trees you are averaging |
-| $\frac1B\sum_b f_b$ | "one over B, sum over b, of f-b" | The ensemble's prediction — just the plain average |
+| $`\frac1B\sum_b f_b`$ | "one over B, sum over b, of f-b" | The ensemble's prediction — just the plain average |
 | $\mathrm{Var}(\cdot)$ | "variance of" | How much this quantity would jump around if you re-drew the training data |
 | $\sigma^2$ | "sigma squared" | The variance of **one** tree on its own |
 | $\rho$ | "rho" | How **correlated** two different trees' predictions are, from $0$ (independent) to $1$ (identical) |
@@ -504,7 +504,7 @@ Now the two strategies, side by side:
 | Weighted bagging — fixed class weights on every bootstrap draw | The weights are set once, before training, and depend on no model | **Cost-sensitive** bagging |
 | Growing 500 forest trees and keeping the best 50 | Selection after the fact, not sequential correction | Ensemble **pruning** |
 | Stacking: several models, then a meta-model on their predictions | The base models are mutually independent; the meta-model is one extra layer, not a residual chain | **Stacking / blending** |
-| "Gradient boosting does gradient descent on the trees' parameters" | The derivative is taken with respect to the **function value** $F(x_i)$ at each training point, not with respect to any split or weight | Gradient descent **in function space** |
+| "Gradient boosting does gradient descent on the trees' parameters" | The derivative is taken with respect to the **function value** $`F(x_i)`$ at each training point, not with respect to any split or weight | Gradient descent **in function space** |
 | Boosting depth-20 trees | Each round then has the capacity to fit its own residuals outright, which voids the weak-learner premise | A model that overfits in a handful of rounds |
 | A forest of trees trained on progressively larger subsets | The members still never see each other's errors | Bagging with a curriculum |
 
@@ -516,13 +516,13 @@ Now the two strategies, side by side:
 
 ### AdaBoost
 
-**The algorithm.** Initialize weights $w_i=1/n$. For $m=1..M$:
-1. Fit a weak classifier $G_m$ on weighted data.
-2. Compute weighted error $\mathrm{err}_m = \frac{\sum_i w_i\mathbb{1}[y_i\ne G_m(x_i)]}{\sum_i w_i}$.
-3. ▸ $\alpha_m = \log\frac{1-\mathrm{err}_m}{\mathrm{err}_m}$
-4. ▸ $w_i \leftarrow w_i\exp\big(\alpha_m\mathbb{1}[y_i\ne G_m(x_i)]\big)$ — **misclassified points get up-weighted.**
+**The algorithm.** Initialize weights $`w_i=1/n`$. For $m=1..M$:
+1. Fit a weak classifier $`G_m`$ on weighted data.
+2. Compute weighted error $`\mathrm{err}_m = \frac{\sum_i w_i\mathbb{1}[y_i\ne G_m(x_i)]}{\sum_i w_i}`$.
+3. ▸ $`\alpha_m = \log\frac{1-\mathrm{err}_m}{\mathrm{err}_m}`$
+4. ▸ $`w_i \leftarrow w_i\exp\big(\alpha_m\mathbb{1}[y_i\ne G_m(x_i)]\big)`$ — **misclassified points get up-weighted.**
 
-Final: $G(x)=\mathrm{sign}\left(\sum_m\alpha_mG_m(x)\right)$.
+Final: $`G(x)=\mathrm{sign}\left(\sum_m\alpha_mG_m(x)\right)`$.
 
 #### AdaBoost, one round at a time, with real numbers
 
@@ -530,21 +530,21 @@ First the notation, since this algorithm is written almost entirely in it:
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $w_i$ | "w-i" | How much attention example $i$ currently gets. Starts equal for everyone. |
-| $G_m$ | "G-m" | The $m$-th weak classifier. Outputs $+1$ or $-1$. |
-| $y_i$ | "y-i" | The true label of example $i$, coded as $+1$ or $-1$ |
-| $\mathbb{1}[y_i\ne G_m(x_i)]$ | "indicator that y-i is not G-m of x-i" | **1 if this example was misclassified, 0 if correct** |
-| $\mathrm{err}_m$ | "err-m" | The weighted fraction of examples that $G_m$ got wrong |
-| $\alpha_m$ | "alpha-m" | How much of a **vote** classifier $m$ gets in the final decision |
+| $`w_i`$ | "w-i" | How much attention example $i$ currently gets. Starts equal for everyone. |
+| $`G_m`$ | "G-m" | The $m$-th weak classifier. Outputs $+1$ or $-1$. |
+| $`y_i`$ | "y-i" | The true label of example $i$, coded as $+1$ or $-1$ |
+| $`\mathbb{1}[y_i\ne G_m(x_i)]`$ | "indicator that y-i is not G-m of x-i" | **1 if this example was misclassified, 0 if correct** |
+| $`\mathrm{err}_m`$ | "err-m" | The weighted fraction of examples that $`G_m`$ got wrong |
+| $`\alpha_m`$ | "alpha-m" | How much of a **vote** classifier $m$ gets in the final decision |
 | $\mathrm{sign}(\cdot)$ | "sign of" | Return $+1$ if the argument is positive, $-1$ if negative |
 
-The labels being $\pm1$ rather than $0/1$ is not cosmetic — it makes $y_iG(x_i)$ equal $+1$ when correct and $-1$ when wrong, which is what lets a single expression handle both cases later.
+The labels being $\pm1$ rather than $0/1$ is not cosmetic — it makes $`y_iG(x_i)`$ equal $+1$ when correct and $-1$ when wrong, which is what lets a single expression handle both cases later.
 
-**Step 2, the weighted error.** $\mathrm{err}_m = \frac{\sum_i w_i\mathbb{1}[y_i\ne G_m(x_i)]}{\sum_i w_i}$ reads: *"add up the weights of the examples we got wrong; divide by the total weight."* The indicator function is doing the filtering — it multiplies by 1 on mistakes and 0 on successes, so the numerator is "total weight of mistakes." It is a weighted error rate, nothing more.
+**Step 2, the weighted error.** $`\mathrm{err}_m = \frac{\sum_i w_i\mathbb{1}[y_i\ne G_m(x_i)]}{\sum_i w_i}`$ reads: *"add up the weights of the examples we got wrong; divide by the total weight."* The indicator function is doing the filtering — it multiplies by 1 on mistakes and 0 on successes, so the numerator is "total weight of mistakes." It is a weighted error rate, nothing more.
 
-**Step 3, the vote.** $\alpha_m = \log\frac{1-\mathrm{err}_m}{\mathrm{err}_m}$. The fraction inside is the **odds of being right**. Numbers:
+**Step 3, the vote.** $`\alpha_m = \log\frac{1-\mathrm{err}_m}{\mathrm{err}_m}`$. The fraction inside is the **odds of being right**. Numbers:
 
-| $\mathrm{err}_m$ | odds correct | $\alpha_m$ | Interpretation |
+| $`\mathrm{err}_m`$ | odds correct | $`\alpha_m`$ | Interpretation |
 |---|---|---|---|
 | $0.01$ | $99$ | $+4.60$ | Nearly perfect — enormous vote |
 | $0.20$ | $4$ | $+1.39$ | Solidly useful |
@@ -554,14 +554,14 @@ The labels being $\pm1$ rather than $0/1$ is not cosmetic — it makes $y_iG(x_i
 
 ▸ **The zero at $\mathrm{err}=0.5$ is the elegant part.** A classifier that is right half the time carries no information, and the formula gives it exactly no influence — automatically, with no special-casing. And a classifier reliably *worse* than chance gets a negative weight, which means AdaBoost happily uses it by inverting it. Being consistently wrong is just as informative as being consistently right.
 
-**Step 4, the reweighting.** $w_i \leftarrow w_i\exp(\alpha_m\mathbb{1}[y_i\ne G_m(x_i)])$. The indicator makes this a two-case rule:
+**Step 4, the reweighting.** $`w_i \leftarrow w_i\exp(\alpha_m\mathbb{1}[y_i\ne G_m(x_i)])`$. The indicator makes this a two-case rule:
 
-- **Got it right:** the indicator is 0, so $w_i \leftarrow w_i e^0 = w_i$. **Unchanged.**
-- **Got it wrong:** the indicator is 1, so $w_i \leftarrow w_i e^{\alpha_m}$. **Multiplied up.**
+- **Got it right:** the indicator is 0, so $`w_i \leftarrow w_i e^0 = w_i`$. **Unchanged.**
+- **Got it wrong:** the indicator is 1, so $`w_i \leftarrow w_i e^{\alpha_m}`$. **Multiplied up.**
 
-With $\mathrm{err}_m = 0.2$, $e^{\alpha_m} = e^{1.386} = 4$. Every misclassified point becomes **four times** as important for the next round.
+With $`\mathrm{err}_m = 0.2`$, $`e^{\alpha_m} = e^{1.386} = 4`$. Every misclassified point becomes **four times** as important for the next round.
 
-**Walk one round on ten examples.** Start with $w_i = 0.1$ each. Round 1's stump misclassifies examples 3, 7 — so $\mathrm{err}_1 = 0.2$, $\alpha_1 = 1.386$, and those two weights become $0.4$. Total weight is now $8(0.1) + 2(0.4) = 1.6$. Renormalized, examples 3 and 7 each carry $0.4/1.6 = 25\%$ of the total attention, up from 10%.
+**Walk one round on ten examples.** Start with $`w_i = 0.1`$ each. Round 1's stump misclassifies examples 3, 7 — so $`\mathrm{err}_1 = 0.2`$, $`\alpha_1 = 1.386`$, and those two weights become $0.4$. Total weight is now $8(0.1) + 2(0.4) = 1.6$. Renormalized, examples 3 and 7 each carry $0.4/1.6 = 25\%$ of the total attention, up from 10%.
 
 ▸ **Round 2 is now fitting a substantially different problem.** Half the training signal comes from two examples. A stump that gets those two right will look excellent even if it misses several easy ones — which is exactly the point. **The hard examples are auctioned to whichever weak learner can handle them.**
 
@@ -571,17 +571,17 @@ With $\mathrm{err}_m = 0.2$, $e^{\alpha_m} = e^{1.386} = 4$. Every misclassified
 
 > **Where this came from.** Boosting began as a **theoretical question with a yes/no answer**, not as an algorithm. In 1988 **Michael Kearns**, then a graduate student, posed what he called the *hypothesis boosting problem*: in Valiant's PAC learning framework, is a "weak" learner — one that is only guaranteed to do slightly better than random guessing — secretly as powerful as a "strong" learner that can achieve arbitrarily small error? Most people expected the answer to be no. In 1990 **Robert Schapire** proved the answer is **yes**, and did it constructively: his proof was a recursive procedure for combining weak learners. **Yoav Freund** improved the construction shortly after. The two then collaborated on **AdaBoost** (short for *adaptive* boosting) in 1995, which replaced the awkward recursive scheme with the simple reweighting loop above and worked spectacularly in practice. Freund and Schapire received the **Gödel Prize in 2003** for it — an award for theoretical computer science, which is a fair reflection of where the idea was born. ▸ **The lesson worth keeping: AdaBoost is one of the very few widely deployed algorithms that was derived from a complexity-theoretic proof rather than discovered by experiment.**
 
-> **The story behind the exponential loss.** Nobody designed AdaBoost to minimize $\sum_i e^{-y_if(x_i)}$. The weights, the $\log$-odds vote, the reweighting rule — all of it came out of the PAC-learning proof, and for five years the algorithm's excellent performance was explained by a *margin* theory. Then **Jerome Friedman, Trevor Hastie, and Robert Tibshirani** published *Additive Logistic Regression: A Statistical View of Boosting* in 2000, showing that this apparently ad-hoc procedure is exactly greedy coordinate descent on the exponential loss. The reaction in the boosting community was not universally warm — there was a  and long-running disagreement about whether the loss-function view or the margin view explains AdaBoost's resistance to overfitting, and the published discussion accompanying the paper is unusually pointed for a statistics journal. Both views turned out to be productive: the margin theory explains *why it generalizes*, and the loss-function theory explains *how to generalize it*, which is gradient boosting.
+> **The story behind the exponential loss.** Nobody designed AdaBoost to minimize $`\sum_i e^{-y_if(x_i)}`$. The weights, the $\log$-odds vote, the reweighting rule — all of it came out of the PAC-learning proof, and for five years the algorithm's excellent performance was explained by a *margin* theory. Then **Jerome Friedman, Trevor Hastie, and Robert Tibshirani** published *Additive Logistic Regression: A Statistical View of Boosting* in 2000, showing that this apparently ad-hoc procedure is exactly greedy coordinate descent on the exponential loss. The reaction in the boosting community was not universally warm — there was a  and long-running disagreement about whether the loss-function view or the margin view explains AdaBoost's resistance to overfitting, and the published discussion accompanying the paper is unusually pointed for a statistics journal. Both views turned out to be productive: the margin theory explains *why it generalizes*, and the loss-function theory explains *how to generalize it*, which is gradient boosting.
 
 ### AdaBoost is forward stagewise fitting of the exponential loss — derive it
 
-**Claim:** AdaBoost greedily minimizes $\mathcal{L}=\sum_i \exp(-y_if(x_i))$ with $f=\sum_m\alpha_mG_m$.
+**Claim:** AdaBoost greedily minimizes $`\mathcal{L}=\sum_i \exp(-y_if(x_i))`$ with $`f=\sum_m\alpha_mG_m`$.
 
-At step $m$ with current $f_{m-1}$, we solve
+At step $m$ with current $`f_{m-1}`$, we solve
 $$\min_{\alpha,G}\sum_i \exp\big(-y_i(f_{m-1}(x_i)+\alpha G(x_i))\big) = \min_{\alpha,G}\sum_i w_i^{(m)}\exp(-\alpha y_iG(x_i))$$
-where $w_i^{(m)}=\exp(-y_if_{m-1}(x_i))$ — **this is exactly AdaBoost's weight**, and it appears automatically rather than by design.
+where $`w_i^{(m)}=\exp(-y_if_{m-1}(x_i))`$ — **this is exactly AdaBoost's weight**, and it appears automatically rather than by design.
 
-Split the sum by correct/incorrect (using $y_iG(x_i)=\pm1$):
+Split the sum by correct/incorrect (using $`y_iG(x_i)=\pm1`$):
 $$= e^{-\alpha}\!\!\sum_{y_i=G(x_i)}\!\! w_i + e^{\alpha}\!\!\sum_{y_i\ne G(x_i)}\!\! w_i = (e^\alpha - e^{-\alpha})\sum_i w_i\mathbb{1}[y_i\ne G(x_i)] + e^{-\alpha}\sum_i w_i$$
 
 For fixed $\alpha>0$, minimizing over $G$ means minimizing the weighted error — **step 1**. Then differentiate with respect to $\alpha$:
@@ -596,22 +596,22 @@ $$(e^\alpha+e^{-\alpha})\,\mathrm{err} - e^{-\alpha}=0 \quad\Longrightarrow\quad
 
 This derivation is four lines of algebra carrying a large idea, so here it is slowly.
 
-**"Forward stagewise" means: add one piece at a time and never revise.** At step $m$ you have $f_{m-1}$, a fixed sum of the pieces you already added. You choose one new piece $\alpha G$ to append, choosing it to make the total loss as small as possible *given that everything before it is frozen*. You never go back and re-tune $\alpha_3$. This is why it is "greedy": it is coordinate descent where each coordinate is an entire weak learner, and each coordinate is visited once.
+**"Forward stagewise" means: add one piece at a time and never revise.** At step $m$ you have $`f_{m-1}`$, a fixed sum of the pieces you already added. You choose one new piece $\alpha G$ to append, choosing it to make the total loss as small as possible *given that everything before it is frozen*. You never go back and re-tune $`\alpha_3`$. This is why it is "greedy": it is coordinate descent where each coordinate is an entire weak learner, and each coordinate is visited once.
 
-**The quantity $y_if(x_i)$ is called the margin, and it is the object the whole derivation is about.** Since $y_i \in \{-1,+1\}$ and $f$ is the ensemble's raw score:
+**The quantity $`y_if(x_i)`$ is called the margin, and it is the object the whole derivation is about.** Since $`y_i \in \{-1,+1\}`$ and $f$ is the ensemble's raw score:
 
-- $y_if(x_i) > 0$ — **correct**, and the magnitude says how confidently.
-- $y_if(x_i) < 0$ — **wrong**, and the magnitude says how confidently wrong.
+- $`y_if(x_i) > 0`$ — **correct**, and the magnitude says how confidently.
+- $`y_if(x_i) < 0`$ — **wrong**, and the magnitude says how confidently wrong.
 
-So $\exp(-y_if(x_i))$ is small when you are confidently right and large when you are confidently wrong. Numbers: margin $+3$ costs $e^{-3} = 0.050$; margin $0$ costs $1$; margin $-3$ costs $e^{3} = 20.1$; margin $-10$ costs $22026$.
+So $`\exp(-y_if(x_i))`$ is small when you are confidently right and large when you are confidently wrong. Numbers: margin $+3$ costs $e^{-3} = 0.050$; margin $0$ costs $1$; margin $-3$ costs $e^{3} = 20.1$; margin $-10$ costs $22026$.
 
 **Line 1 — where the weights come from.** Split the exponential using $e^{a+b} = e^ae^b$:
 
 $$\exp\big(-y_i(f_{m-1}(x_i)+\alpha G(x_i))\big) = \underbrace{\exp(-y_if_{m-1}(x_i))}_{\text{call this }w_i^{(m)}}\cdot \exp(-\alpha y_iG(x_i))$$
 
-▸ **This is the derivation's punchline and it arrives in the first line.** The factor $w_i^{(m)}$ depends only on the *old* ensemble, so as far as the current step is concerned it is a constant — a per-example weight. And it is literally AdaBoost's weight: an example the current ensemble already handles confidently ($y_if_{m-1}$ large and positive) gets a tiny $w_i$; one the ensemble is getting badly wrong gets a huge one. **Nobody put the reweighting rule into AdaBoost by design. It falls out of the algebra of the exponential function.** Freund and Schapire wrote it down for entirely different reasons and it turned out to be this.
+▸ **This is the derivation's punchline and it arrives in the first line.** The factor $`w_i^{(m)}`$ depends only on the *old* ensemble, so as far as the current step is concerned it is a constant — a per-example weight. And it is literally AdaBoost's weight: an example the current ensemble already handles confidently ($`y_if_{m-1}`$ large and positive) gets a tiny $`w_i`$; one the ensemble is getting badly wrong gets a huge one. **Nobody put the reweighting rule into AdaBoost by design. It falls out of the algebra of the exponential function.** Freund and Schapire wrote it down for entirely different reasons and it turned out to be this.
 
-**Line 2 — the two-case split.** Because $y_iG(x_i)$ is exactly $+1$ (correct) or $-1$ (wrong), $\exp(-\alpha y_iG(x_i))$ is exactly $e^{-\alpha}$ or $e^{+\alpha}$. So the sum breaks into "correct examples, each paying $e^{-\alpha}$" plus "wrong examples, each paying $e^{+\alpha}$." Rearranged, the whole thing is
+**Line 2 — the two-case split.** Because $`y_iG(x_i)`$ is exactly $+1$ (correct) or $-1$ (wrong), $`\exp(-\alpha y_iG(x_i))`$ is exactly $e^{-\alpha}$ or $e^{+\alpha}$. So the sum breaks into "correct examples, each paying $e^{-\alpha}$" plus "wrong examples, each paying $e^{+\alpha}$." Rearranged, the whole thing is
 
 $$(e^\alpha - e^{-\alpha})\cdot(\text{weighted error}) + e^{-\alpha}\cdot(\text{total weight}).$$
 
@@ -645,23 +645,23 @@ Do gradient descent in **function space**: at each step, fit a tree to the negat
 
 ### The derivation
 
-We want to minimize $\mathcal{L}=\sum_i L(y_i, F(x_i))$ over functions $F$. Treat the vector of predictions $(F(x_1),\dots,F(x_n))$ as the parameter. The negative gradient is
+We want to minimize $`\mathcal{L}=\sum_i L(y_i, F(x_i))`$ over functions $F$. Treat the vector of predictions $`(F(x_1),\dots,F(x_n))`$ as the parameter. The negative gradient is
 
 ▸ $$r_i^{(m)} = -\left[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\right]_{F=F_{m-1}}$$
 
-These are **pseudo-residuals**. Gradient descent would set $F_m = F_{m-1}+\eta r$ — but that only defines an update at the training points. To generalize, **fit a tree $h_m$ to the pseudo-residuals** and step in that direction:
+These are **pseudo-residuals**. Gradient descent would set $`F_m = F_{m-1}+\eta r`$ — but that only defines an update at the training points. To generalize, **fit a tree $`h_m`$ to the pseudo-residuals** and step in that direction:
 
 ▸ $$F_m(x) = F_{m-1}(x) + \eta\,h_m(x)$$
 
-**For squared loss**, $L=\frac12(y-F)^2$ gives $r_i = y_i-F(x_i)$ — the ordinary residual. That is the special case people remember, and the general case is what makes the method powerful.
+**For squared loss**, $L=\frac12(y-F)^2$ gives $`r_i = y_i-F(x_i)`$ — the ordinary residual. That is the special case people remember, and the general case is what makes the method powerful.
 
 | Loss | Pseudo-residual |
 |---|---|
-| Squared error | $y_i - F_i$ |
-| Absolute error | $\mathrm{sign}(y_i-F_i)$ |
+| Squared error | $`y_i - F_i`$ |
+| Absolute error | $`\mathrm{sign}(y_i-F_i)`$ |
 | Huber | residual, clipped |
-| Logistic (binary) | $y_i - \sigma(F_i)$ |
-| Poisson | $y_i - e^{F_i}$ |
+| Logistic (binary) | $`y_i - \sigma(F_i)`$ |
+| Poisson | $`y_i - e^{F_i}`$ |
 
 ▸ **Any differentiable loss works.** This is why gradient boosting handles ranking (LambdaRank), survival analysis, quantile regression, and custom business objectives — you supply the gradient.
 
@@ -669,19 +669,19 @@ These are **pseudo-residuals**. Gradient descent would set $F_m = F_{m-1}+\eta r
 
 This phrase is the conceptual heart of the chapter, and it sounds far more exotic than it is.
 
-**Ordinary gradient descent**, the kind in Ch. 4, adjusts *numbers*. You have parameters $\theta \in \mathbb{R}^p$, you compute $\nabla_\theta\mathcal{L}$ — a list of $p$ numbers saying which way to nudge each parameter — and you step: $\theta \leftarrow \theta - \eta\nabla_\theta\mathcal{L}$.
+**Ordinary gradient descent**, the kind in Ch. 4, adjusts *numbers*. You have parameters $\theta \in \mathbb{R}^p$, you compute $`\nabla_\theta\mathcal{L}`$ — a list of $p$ numbers saying which way to nudge each parameter — and you step: $`\theta \leftarrow \theta - \eta\nabla_\theta\mathcal{L}`$.
 
-**Gradient boosting does the same thing, but the "parameter" is the model's list of predictions.** Here is the trick, stated flatly: forget that $F$ is a function. On your $n$ training points, $F$ is fully described by the $n$ numbers $\big(F(x_1), F(x_2), \dots, F(x_n)\big)$. Treat *that vector* as the parameter. It lives in $\mathbb{R}^n$, and you can take a gradient with respect to it exactly as usual.
+**Gradient boosting does the same thing, but the "parameter" is the model's list of predictions.** Here is the trick, stated flatly: forget that $F$ is a function. On your $n$ training points, $F$ is fully described by the $n$ numbers $`\big(F(x_1), F(x_2), \dots, F(x_n)\big)`$. Treat *that vector* as the parameter. It lives in $\mathbb{R}^n$, and you can take a gradient with respect to it exactly as usual.
 
 $$r_i^{(m)} = -\left[\frac{\partial L(y_i,F(x_i))}{\partial F(x_i)}\right]_{F=F_{m-1}}$$
 
 Read aloud: *"r-i at round m is minus the derivative of the loss for example i, with respect to that example's own prediction, evaluated at the current ensemble."*
 
-- The square brackets with the subscript $F = F_{m-1}$ mean **"evaluate this derivative at the current model"** — the derivative is a formula; the subscript says where to plug in.
+- The square brackets with the subscript $`F = F_{m-1}`$ mean **"evaluate this derivative at the current model"** — the derivative is a formula; the subscript says where to plug in.
 - The minus sign is the usual one: the gradient points uphill on the loss, and we want to go downhill.
-- $r_i$ answers a very concrete question: ***"if I could change this one prediction by hand, which way should I move it, and how urgently?"***
+- $`r_i`$ answers a very concrete question: ***"if I could change this one prediction by hand, which way should I move it, and how urgently?"***
 
-**Now the problem, and the fix.** Gradient descent would say $F_m(x_i) = F_{m-1}(x_i) + \eta r_i$ for each $i$. That is a perfectly good instruction — for the $n$ points you trained on. But it says nothing whatsoever about a new customer who walks in tomorrow. You have improved a lookup table, not a model.
+**Now the problem, and the fix.** Gradient descent would say $`F_m(x_i) = F_{m-1}(x_i) + \eta r_i`$ for each $i$. That is a perfectly good instruction — for the $n$ points you trained on. But it says nothing whatsoever about a new customer who walks in tomorrow. You have improved a lookup table, not a model.
 
 ▸ **The fix is the entire idea of gradient boosting: fit a tree to the vector $r$, and use the tree's output as the step direction.** The tree is a *smoother* — it looks at the $n$ desired nudges, notices that "everyone with income under 40k and age over 60 wants to move down by about 0.3," and turns a table of $n$ instructions into a rule that applies to anyone. **The gradient tells you where to go; the tree tells you how to get there for points you have never seen.**
 
@@ -691,11 +691,11 @@ Read aloud: *"r-i at round m is minus the derivative of the loss for example i, 
 
 Each row is one loss function and the "nudge direction" it produces. Work through them:
 
-- **Squared error, $L=\frac12(y-F)^2$.** Differentiate with respect to $F$: $\partial L/\partial F = -(y-F)$, so $r_i = y_i - F_i$. **The ordinary residual** — how far off you are, signed. If you predicted 7 and the truth is 10, the tree is asked to predict $+3$ there. This is why the naive description "boosting fits the errors" is *almost* right: it is right for exactly one loss function.
-- **Absolute error, $L = \lvert y-F\rvert$.** The derivative of $\lvert u\rvert$ is $\mathrm{sign}(u)$, so $r_i = \mathrm{sign}(y_i - F_i)$ — **just $+1$ or $-1$.** Being off by 3 and being off by 300 produce *the same* pseudo-residual. ▸ **That is exactly what makes absolute error robust:** an outlier can shout no louder than anyone else, because the loss only ever asks for direction, never magnitude.
+- **Squared error, $L=\frac12(y-F)^2$.** Differentiate with respect to $F$: $\partial L/\partial F = -(y-F)$, so $`r_i = y_i - F_i`$. **The ordinary residual** — how far off you are, signed. If you predicted 7 and the truth is 10, the tree is asked to predict $+3$ there. This is why the naive description "boosting fits the errors" is *almost* right: it is right for exactly one loss function.
+- **Absolute error, $L = \lvert y-F\rvert$.** The derivative of $\lvert u\rvert$ is $\mathrm{sign}(u)$, so $`r_i = \mathrm{sign}(y_i - F_i)`$ — **just $+1$ or $-1$.** Being off by 3 and being off by 300 produce *the same* pseudo-residual. ▸ **That is exactly what makes absolute error robust:** an outlier can shout no louder than anyone else, because the loss only ever asks for direction, never magnitude.
 - **Huber.** The residual, but clipped at some threshold $\delta$. Squared-error behaviour for small errors (efficient, uses magnitude), absolute-error behaviour for large ones (robust, ignores magnitude). The deliberate compromise.
-- **Logistic (binary), $r_i = y_i - \sigma(F_i)$.** Here $\sigma$ is the sigmoid (Ch. 1 §1.3.4), $F_i$ is a **log-odds score**, and $\sigma(F_i)$ converts it to a probability. So the pseudo-residual is **"true label minus predicted probability."** If $y_i=1$ and your model says $0.7$, the pseudo-residual is $+0.3$. Note this is bounded in $[-1,1]$ no matter how wrong you are — the safety property from §23.3 again.
-- **Poisson, $r_i = y_i - e^{F_i}$.** For count data. $F_i$ is a log-rate, so $e^{F_i}$ is the predicted count, and the residual is observed-minus-predicted counts. The exponential link is what guarantees the prediction is never negative — you cannot predict $-3$ customer visits.
+- **Logistic (binary), $`r_i = y_i - \sigma(F_i)`$.** Here $\sigma$ is the sigmoid (Ch. 1 §1.3.4), $`F_i`$ is a **log-odds score**, and $`\sigma(F_i)`$ converts it to a probability. So the pseudo-residual is **"true label minus predicted probability."** If $`y_i=1`$ and your model says $0.7$, the pseudo-residual is $+0.3$. Note this is bounded in $[-1,1]$ no matter how wrong you are — the safety property from §23.3 again.
+- **Poisson, $`r_i = y_i - e^{F_i}`$.** For count data. $`F_i`$ is a log-rate, so $`e^{F_i}`$ is the predicted count, and the residual is observed-minus-predicted counts. The exponential link is what guarantees the prediction is never negative — you cannot predict $-3$ customer visits.
 
 ▸ **The pattern across the whole table: the pseudo-residual is always "what we wanted minus what we got," measured in whatever currency the loss uses.** Change the currency, and the identical algorithm now does quantile regression, ranking, or survival analysis. **You never modify the boosting loop; you modify one line that computes a derivative.** That modularity is why gradient boosting outlived AdaBoost.
 
@@ -705,13 +705,13 @@ Each row is one loss function and the "nudge direction" it produces. Work throug
 
 1. **Learning rate (shrinkage)** $\eta\approx0.01$–$0.1$. ▸ **Lower $\eta$ with more trees is nearly always better** (the classic $\eta$–$M$ trade-off). This is the single most important hyperparameter.
 2. **Subsampling** (stochastic gradient boosting): use a random 50–80% of rows per tree. Adds variance reduction on top of bias reduction, and speeds training.
-3. **Tree constraints:** depth 3–8, min samples per leaf, and the $\ell_2$ penalty on leaf weights (below).
+3. **Tree constraints:** depth 3–8, min samples per leaf, and the $`\ell_2`$ penalty on leaf weights (below).
 
 #### Why shrinkage works, with numbers
 
 $$F_m(x) = F_{m-1}(x) + \eta\,h_m(x)$$
 
-Read aloud: *"the new ensemble equals the old ensemble plus eta times the new tree."* The tree $h_m$ was fitted to close the whole gap — and then you deliberately apply only a small fraction $\eta$ of it.
+Read aloud: *"the new ensemble equals the old ensemble plus eta times the new tree."* The tree $`h_m`$ was fitted to close the whole gap — and then you deliberately apply only a small fraction $\eta$ of it.
 
 **This looks wasteful and is not.** Suppose the tree says "increase this prediction by 3.0" and $\eta = 0.05$. You move it by $0.15$. Next round you recompute the residuals — the gap is now $2.85$ — and another tree, fitted fresh on the *new* residual pattern, moves it a bit further. You needed about 20 trees to travel a distance one tree offered to cover in a single step.
 
@@ -757,7 +757,7 @@ Read aloud: *"the new ensemble equals the old ensemble plus eta times the new tr
 
 ▸ **The boundary:** in boosting, every regularizer works by limiting **how much a single round is allowed to commit** — a fraction of the step, a subset of the rows, a bound on the interactions. None of it resembles the "just add more members" safety of a forest.
 
-> **Common misconception.** *"More trees can't hurt — that's true for forests, and boosting is an ensemble too."* In a forest, each new tree is one more sample in an average. In a boosted model, each new tree is a fresh block of capacity **added onto the running total**. Train long enough and the ensemble starts fitting the noise in its own residuals: test loss traces a U, falling to a minimum at some $M^*$ and then climbing, while training loss keeps dropping the whole time. **`n_estimators` in a boosted model is not a resource setting, it is the primary capacity hyperparameter** — which is why early stopping on a validation set sits at the top of §23.7's tuning order, and why the honest way to report a boosted model is "$M$ selected by early stopping" rather than a round number. The belief is tempting because both objects are called ensembles, both libraries name the parameter `n_estimators`, and the forest advice — "more is always better, just slower" — gets repeated so often that it is transplanted without anyone checking whether the members are averaged or summed.
+> **Common misconception.** *"More trees can't hurt — that's true for forests, and boosting is an ensemble too."* In a forest, each new tree is one more sample in an average. In a boosted model, each new tree is a fresh block of capacity **added onto the running total**. Train long enough and the ensemble starts fitting the noise in its own residuals: test loss traces a U, falling to a minimum at some $`M^*`$ and then climbing, while training loss keeps dropping the whole time. **`n_estimators` in a boosted model is not a resource setting, it is the primary capacity hyperparameter** — which is why early stopping on a validation set sits at the top of §23.7's tuning order, and why the honest way to report a boosted model is "$M$ selected by early stopping" rather than a round number. The belief is tempting because both objects are called ensembles, both libraries name the parameter `n_estimators`, and the forest advice — "more is always better, just slower" — gets repeated so often that it is transplanted without anyone checking whether the members are averaged or summed.
 
 ---
 
@@ -769,7 +769,7 @@ XGBoost's contribution was to write down the *exact* objective a tree should opt
 
 ▸ $$\mathcal{L}^{(m)} = \sum_{i=1}^n L\big(y_i,\ F_{m-1}(x_i)+f_m(x_i)\big) + \Omega(f_m),\qquad \Omega(f)=\gamma T + \tfrac12\lambda\sum_{j=1}^{T}w_j^2$$
 
-where $T$ = number of leaves and $w_j$ = the value at leaf $j$.
+where $T$ = number of leaves and $`w_j`$ = the value at leaf $j$.
 
 #### Unpacking the regularized objective
 
@@ -780,11 +780,11 @@ Read aloud: *"the objective at round m is the sum over all n examples of the los
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $\mathcal{L}^{(m)}$ | "script-L, superscript m" | The thing round $m$ is trying to minimize |
-| $F_{m-1}(x_i)$ | "F-m-minus-1 of x-i" | What the ensemble already predicts for example $i$. **Fixed — a known number.** |
-| $f_m(x_i)$ | "f-m of x-i" | What the *new* tree will add for example $i$. **The unknown we are solving for.** |
+| $`F_{m-1}(x_i)`$ | "F-m-minus-1 of x-i" | What the ensemble already predicts for example $i$. **Fixed — a known number.** |
+| $`f_m(x_i)`$ | "f-m of x-i" | What the *new* tree will add for example $i$. **The unknown we are solving for.** |
 | $\Omega(f)$ | "Omega of f" | Greek capital O — the **complexity penalty** on the new tree |
 | $T$ | "T" | Number of leaves in the new tree |
-| $w_j$ | "w-j" | The value the new tree outputs at leaf $j$ |
+| $`w_j`$ | "w-j" | The value the new tree outputs at leaf $j$ |
 | $\gamma$ | "gamma" | Price charged **per leaf** — the same idea as $\alpha$ in cost-complexity pruning |
 | $\lambda$ | "lambda" | Ridge penalty pushing every leaf value toward **zero** |
 
@@ -793,17 +793,17 @@ Read aloud: *"the objective at round m is the sum over all n examples of the los
 **The two penalty terms do different jobs:**
 
 - $\gamma T$ — a **flat toll per leaf.** Adding a leaf must buy at least $\gamma$ worth of loss reduction or it is not worth it. This is a *structural* penalty: it controls how many splits exist.
-- $\tfrac12\lambda\sum_j w_j^2$ — a **quadratic penalty on leaf values.** This is a *magnitude* penalty: the tree may have many leaves, but each is discouraged from making a bold prediction. This is exactly ridge regression (Ch. 22 §22.2) with the leaf values as coefficients.
+- $`\tfrac12\lambda\sum_j w_j^2`$ — a **quadratic penalty on leaf values.** This is a *magnitude* penalty: the tree may have many leaves, but each is discouraged from making a bold prediction. This is exactly ridge regression (Ch. 22 §22.2) with the leaf values as coefficients.
 
-> **Analogy.** You are approving a company's proposed org chart. $\gamma T$ is a fixed cost for every headcount you approve — it limits how many boxes appear on the chart. $\lambda\sum w_j^2$ limits how much authority any one box may wield. You can have a large flat organization of cautious people, or a small organization of decisive ones, and the two knobs price those choices separately.
+> **Analogy.** You are approving a company's proposed org chart. $\gamma T$ is a fixed cost for every headcount you approve — it limits how many boxes appear on the chart. $`\lambda\sum w_j^2`$ limits how much authority any one box may wield. You can have a large flat organization of cautious people, or a small organization of decisive ones, and the two knobs price those choices separately.
 
 ### Second-order expansion
 
-Let $g_i = \partial_F L(y_i,F_{m-1})$ and $h_i = \partial_F^2 L(y_i,F_{m-1})$. Taylor-expand:
+Let $`g_i = \partial_F L(y_i,F_{m-1})`$ and $`h_i = \partial_F^2 L(y_i,F_{m-1})`$. Taylor-expand:
 
 $$\mathcal{L}^{(m)}\approx\sum_i\left[L(y_i,F_{m-1}) + g_if_m(x_i)+\tfrac12h_if_m(x_i)^2\right]+\Omega(f_m)$$
 
-Drop the constant. A tree assigns every $x$ in leaf $j$ the same value $w_j$, so group the sum by leaves. Let $I_j$ be the set of instances in leaf $j$, $G_j=\sum_{i\in I_j}g_i$, $H_j=\sum_{i\in I_j}h_i$:
+Drop the constant. A tree assigns every $x$ in leaf $j$ the same value $`w_j`$, so group the sum by leaves. Let $`I_j`$ be the set of instances in leaf $j$, $`G_j=\sum_{i\in I_j}g_i`$, $`H_j=\sum_{i\in I_j}h_i`$:
 
 ▸ $$\tilde{\mathcal{L}} = \sum_{j=1}^{T}\left[G_jw_j + \tfrac12(H_j+\lambda)w_j^2\right] + \gamma T$$
 
@@ -825,16 +825,16 @@ Splitting a leaf into $L$ and $R$ changes the score by:
 
 ▸ **This is the formula to know.** Read it: the first two terms are the children's scores, the third is the parent's, and $\gamma$ is a fixed cost per additional leaf. **If the gain is negative, don't split** — $\gamma$ acts as automatic pre-pruning with a principled threshold, rather than a heuristic like `min_impurity_decrease`.
 
-Note also that $H_j+\lambda$ in the denominator means **leaves with little curvature (few or low-confidence samples) get shrunk toward zero.** That is ridge regularization appearing again (Ch. 22 §22.2), now on leaf values.
+Note also that $`H_j+\lambda`$ in the denominator means **leaves with little curvature (few or low-confidence samples) get shrunk toward zero.** That is ridge regularization appearing again (Ch. 22 §22.2), now on leaf values.
 
 #### The second-order expansion, decoded
 
-**What a Taylor expansion is doing here.** You have a complicated loss $L$ and you are about to change its input by a small amount $f_m(x_i)$. Rather than working with $L$ exactly — which could be logistic, Poisson, or something you wrote yourself — you replace it locally by a **parabola** that matches its value, slope, and curvature at the current point:
+**What a Taylor expansion is doing here.** You have a complicated loss $L$ and you are about to change its input by a small amount $`f_m(x_i)`$. Rather than working with $L$ exactly — which could be logistic, Poisson, or something you wrote yourself — you replace it locally by a **parabola** that matches its value, slope, and curvature at the current point:
 
 $$L(y, F + f) \approx \underbrace{L(y,F)}_{\text{value}} + \underbrace{g\,f}_{\text{slope}} + \underbrace{\tfrac12 h\,f^2}_{\text{curvature}}$$
 
-- $g_i = \partial_F L(y_i, F_{m-1})$ — read "**the first derivative of the loss at example $i$**." Which way and how urgently this example wants its prediction moved. (Note: $g_i = -r_i$, the negative of §23.4's pseudo-residual. Same information, opposite sign convention.)
-- $h_i = \partial_F^2 L(y_i, F_{m-1})$ — read "**the second derivative**," the curvature. How quickly the urgency changes as you move. High $h$ means "this example is confident about what it wants"; low $h$ means "this example is nearly indifferent."
+- $`g_i = \partial_F L(y_i, F_{m-1})`$ — read "**the first derivative of the loss at example $i$**." Which way and how urgently this example wants its prediction moved. (Note: $`g_i = -r_i`$, the negative of §23.4's pseudo-residual. Same information, opposite sign convention.)
+- $`h_i = \partial_F^2 L(y_i, F_{m-1})`$ — read "**the second derivative**," the curvature. How quickly the urgency changes as you move. High $h$ means "this example is confident about what it wants"; low $h$ means "this example is nearly indifferent."
 
 ▸ **This is the same move Newton's method makes (Ch. 4), and it buys the same thing: a step size that is derived rather than guessed.** Plain gradient boosting knows only the slope, so it must be told how far to step. Second-order boosting knows the curvature too, so it can compute the exact bottom of the local parabola.
 
@@ -851,39 +851,39 @@ Now read what $h$ is telling you:
 | $0.99$ | $0.0099$ | Very confident — **barely moves the fit** |
 | $0.999$ | $0.000999$ | Effectively settled |
 
-▸ **$h_i$ is a natural, automatic per-example weight, and it weights by uncertainty.** Examples the model is already confident about contribute almost nothing to the next tree — not because anyone wrote a rule saying so, but because the loss surface is flat there. AdaBoost achieved something similar by explicitly rewriting weights each round; XGBoost gets it from the second derivative for free.
+▸ **$`h_i`$ is a natural, automatic per-example weight, and it weights by uncertainty.** Examples the model is already confident about contribute almost nothing to the next tree — not because anyone wrote a rule saying so, but because the loss surface is flat there. AdaBoost achieved something similar by explicitly rewriting weights each round; XGBoost gets it from the second derivative for free.
 
-**Why grouping by leaves works.** A tree assigns *the same number* $w_j$ to every example landing in leaf $j$. So in the sum $\sum_i [g_if_m(x_i) + \frac12 h_if_m(x_i)^2]$, every $i$ in leaf $j$ contributes $g_iw_j + \frac12h_iw_j^2$. Factor out $w_j$ and $w_j^2$:
+**Why grouping by leaves works.** A tree assigns *the same number* $`w_j`$ to every example landing in leaf $j$. So in the sum $`\sum_i [g_if_m(x_i) + \frac12 h_if_m(x_i)^2]`$, every $i$ in leaf $j$ contributes $`g_iw_j + \frac12h_iw_j^2`$. Factor out $`w_j`$ and $`w_j^2`$:
 
 $$\sum_{i \in I_j}\Big(g_iw_j + \tfrac12h_iw_j^2\Big) = \Big(\underbrace{\textstyle\sum_{i\in I_j}g_i}_{G_j}\Big)w_j + \tfrac12\Big(\underbrace{\textstyle\sum_{i\in I_j}h_i}_{H_j}\Big)w_j^2$$
 
-- $I_j$ — read "**the index set of leaf $j$**": the list of which training rows land there.
-- $G_j$ — the **total** first-derivative pressure in that leaf.
-- $H_j$ — the **total** curvature in that leaf.
+- $`I_j`$ — read "**the index set of leaf $j$**": the list of which training rows land there.
+- $`G_j`$ — the **total** first-derivative pressure in that leaf.
+- $`H_j`$ — the **total** curvature in that leaf.
 
-▸ **A sum over $n$ examples became a sum over $T$ leaves, and the $T$ terms don't interact.** Every leaf is now an independent one-dimensional parabola in its own $w_j$, and one-dimensional parabolas are the easiest optimization problem that exists. That collapse — from a coupled $n$-dimensional problem to $T$ separate scalar ones — is what makes the whole derivation go through in closed form.
+▸ **A sum over $n$ examples became a sum over $T$ leaves, and the $T$ terms don't interact.** Every leaf is now an independent one-dimensional parabola in its own $`w_j`$, and one-dimensional parabolas are the easiest optimization problem that exists. That collapse — from a coupled $n$-dimensional problem to $T$ separate scalar ones — is what makes the whole derivation go through in closed form.
 
 #### The optimal leaf weight, with numbers
 
 $$w_j^* = -\frac{G_j}{H_j+\lambda}$$
 
-This is just "vertex of a parabola." For $ax + \frac12 bx^2$, the minimum sits at $x = -a/b$. Here $a = G_j$ and $b = H_j + \lambda$, and the $\lambda$ arrives from the ridge term $\frac12\lambda w_j^2$ folding into the quadratic coefficient.
+This is just "vertex of a parabola." For $ax + \frac12 bx^2$, the minimum sits at $x = -a/b$. Here $`a = G_j`$ and $`b = H_j + \lambda`$, and the $\lambda$ arrives from the ridge term $`\frac12\lambda w_j^2`$ folding into the quadratic coefficient.
 
 **Work an example.** A leaf holds 20 examples, all currently predicted at $p = 0.5$, of which 15 are truly class 1.
 
-- $g_i = p - y_i$, so the 15 positives each give $0.5 - 1 = -0.5$, and the 5 negatives each give $0.5 - 0 = +0.5$. Total: $G_j = 15(-0.5) + 5(0.5) = -5.0$.
-- $h_i = p(1-p) = 0.25$ for all twenty. Total: $H_j = 5.0$.
-- With $\lambda = 1$: $w_j^* = -(-5.0)/(5.0 + 1) = \mathbf{+0.833}$.
-- With $\lambda = 0$: $w_j^* = 5.0/5.0 = \mathbf{+1.0}$.
+- $`g_i = p - y_i`$, so the 15 positives each give $0.5 - 1 = -0.5$, and the 5 negatives each give $0.5 - 0 = +0.5$. Total: $`G_j = 15(-0.5) + 5(0.5) = -5.0`$.
+- $`h_i = p(1-p) = 0.25`$ for all twenty. Total: $`H_j = 5.0`$.
+- With $\lambda = 1$: $`w_j^* = -(-5.0)/(5.0 + 1) = \mathbf{+0.833}`$.
+- With $\lambda = 0$: $`w_j^* = 5.0/5.0 = \mathbf{+1.0}`$.
 
 The leaf pushes the log-odds up, which is right — this leaf is 75% positive and the current prediction is 50%. And **$\lambda = 1$ shrank the step by 17%**.
 
-Now shrink the leaf to **2 examples** (both positive, both at $p=0.5$): $G_j = -1.0$, $H_j = 0.5$.
+Now shrink the leaf to **2 examples** (both positive, both at $p=0.5$): $`G_j = -1.0`$, $`H_j = 0.5`$.
 
-- With $\lambda = 1$: $w_j^* = 1.0/(0.5+1) = \mathbf{0.667}$ — shrunk by **33%**.
-- With $\lambda = 0$: $w_j^* = 1.0/0.5 = \mathbf{2.0}$.
+- With $\lambda = 1$: $`w_j^* = 1.0/(0.5+1) = \mathbf{0.667}`$ — shrunk by **33%**.
+- With $\lambda = 0$: $`w_j^* = 1.0/0.5 = \mathbf{2.0}`$.
 
-▸ **Same $\lambda$, and the tiny leaf was shrunk twice as hard as the large one.** That is the whole point of putting $\lambda$ in the denominator next to $H_j$: $H_j$ grows with the number of examples in the leaf, so $\lambda$ is large *relative to* $H_j$ exactly when the leaf has little evidence. **A fixed penalty automatically becomes a strong prior on small leaves and a weak one on large leaves.** You get sample-size-aware shrinkage from one constant.
+▸ **Same $\lambda$, and the tiny leaf was shrunk twice as hard as the large one.** That is the whole point of putting $\lambda$ in the denominator next to $`H_j`$: $`H_j`$ grows with the number of examples in the leaf, so $\lambda$ is large *relative to* $`H_j`$ exactly when the leaf has little evidence. **A fixed penalty automatically becomes a strong prior on small leaves and a weak one on large leaves.** You get sample-size-aware shrinkage from one constant.
 
 > **Analogy.** $\lambda$ is a sceptical editor. A claim backed by twenty sources gets published nearly as written; the same claim backed by two sources gets toned down substantially. The editor applies one policy; the effect scales with the evidence.
 
@@ -891,34 +891,34 @@ Now shrink the leaf to **2 examples** (both positive, both at $p=0.5$): $G_j = -
 
 $$\mathrm{Gain} = \frac12\left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right]-\gamma$$
 
-Substituting $w^*$ back into the leaf objective gives that leaf's contribution as $-\frac12\frac{G_j^2}{H_j+\lambda}$ — so the quantity $\frac{G_j^2}{H_j+\lambda}$ is exactly **"how much loss this leaf removes,"** and the whole formula is bookkeeping:
+Substituting $`w^*`$ back into the leaf objective gives that leaf's contribution as $`-\frac12\frac{G_j^2}{H_j+\lambda}`$ — so the quantity $`\frac{G_j^2}{H_j+\lambda}`$ is exactly **"how much loss this leaf removes,"** and the whole formula is bookkeeping:
 
 $$\mathrm{Gain} = \tfrac12\big[\underbrace{\text{score}_L + \text{score}_R}_{\text{after the split}} - \underbrace{\text{score}_{\text{parent}}}_{\text{before}}\big] - \underbrace{\gamma}_{\text{cost of the extra leaf}}$$
 
-Note $G_L + G_R$ and $H_L + H_R$ are the parent's totals — because splitting a leaf does not create or destroy examples, it just partitions them. That is why the parent term is written in terms of the children's sums.
+Note $`G_L + G_R`$ and $`H_L + H_R`$ are the parent's totals — because splitting a leaf does not create or destroy examples, it just partitions them. That is why the parent term is written in terms of the children's sums.
 
 **Real numbers.** A node with $G = -5.0$, $H = 5.0$, $\lambda = 1$, $\gamma = 0.5$. Two candidate splits:
 
-**Split A — a  informative split.** Left gets the 15 positives ($G_L = -7.5$, $H_L = 3.75$); right gets the 5 negatives ($G_R = +2.5$, $H_R = 1.25$).
-- $\text{score}_L = 7.5^2/(3.75+1) = 56.25/4.75 = 11.84$
-- $\text{score}_R = 2.5^2/(1.25+1) = 6.25/2.25 = 2.78$
-- $\text{score}_{\text{parent}} = 5.0^2/(5.0+1) = 25/6 = 4.17$
+**Split A — a  informative split.** Left gets the 15 positives ($`G_L = -7.5`$, $`H_L = 3.75`$); right gets the 5 negatives ($`G_R = +2.5`$, $`H_R = 1.25`$).
+- $`\text{score}_L = 7.5^2/(3.75+1) = 56.25/4.75 = 11.84`$
+- $`\text{score}_R = 2.5^2/(1.25+1) = 6.25/2.25 = 2.78`$
+- $`\text{score}_{\text{parent}} = 5.0^2/(5.0+1) = 25/6 = 4.17`$
 - $\mathrm{Gain} = \frac12[11.84 + 2.78 - 4.17] - 0.5 = \frac12(10.45) - 0.5 = \mathbf{+4.72}$. **Split it.**
 
-**Split B — a useless split** that divides the node into two halves with the same class balance. Then $G_L = G_R = -2.5$, $H_L = H_R = 2.5$.
-- $\text{score}_L = \text{score}_R = 6.25/3.5 = 1.79$
+**Split B — a useless split** that divides the node into two halves with the same class balance. Then $`G_L = G_R = -2.5`$, $`H_L = H_R = 2.5`$.
+- $`\text{score}_L = \text{score}_R = 6.25/3.5 = 1.79`$
 - $\mathrm{Gain} = \frac12[1.79 + 1.79 - 4.17] - 0.5 = \frac12(-0.59) - 0.5 = \mathbf{-0.79}$. **Do not split.**
 
 ▸ **Note that split B produced a *negative* gain even before $\gamma$ was subtracted.** That is the $\lambda$ working: two small leaves each pay the $\lambda$ tax separately, whereas one large leaf pays it once. **The regularizer makes uninformative splits actively costly rather than merely neutral**, which is a much stronger form of pruning than a heuristic threshold on impurity decrease.
 
 **What $\gamma$ gives you that `min_impurity_decrease` does not:** it is measured in the units of the loss you actually chose. A gain of $+4.72$ means "this split reduces my logistic loss by 4.72 nats-worth of objective." $\gamma = 0.5$ means "I refuse any split worth less than half that unit." The threshold has a meaning; a threshold on Gini impurity does not translate into anything you care about.
 
-> **Where this came from.** **XGBoost** began around 2014 as a research project by **Tianqi Chen**, then a PhD student at the University of Washington working with Carlos Guestrin, and was open-sourced before the paper describing it appeared at KDD in 2016. Its reputation was made on Kaggle rather than in the literature: the paper's own accounting notes that **among the 29 winning solutions published on Kaggle's blog during 2015, 17 used XGBoost** — a rate of adoption that essentially ended the debate about tabular defaults. What is interesting is that a large share of the contribution is *systems engineering* rather than statistics: a cache-aware block structure for out-of-core data, a sparsity-aware split finder that learns a default direction for missing values instead of imputing them, parallelized split search, and an approximate quantile sketch weighted by $h_i$ so that split candidates could be proposed without sorting the entire dataset. ▸ **The second-order objective above is the part everyone quotes, but the reason XGBoost won was that it was roughly an order of magnitude faster than the alternatives on the hardware people actually had.**
+> **Where this came from.** **XGBoost** began around 2014 as a research project by **Tianqi Chen**, then a PhD student at the University of Washington working with Carlos Guestrin, and was open-sourced before the paper describing it appeared at KDD in 2016. Its reputation was made on Kaggle rather than in the literature: the paper's own accounting notes that **among the 29 winning solutions published on Kaggle's blog during 2015, 17 used XGBoost** — a rate of adoption that essentially ended the debate about tabular defaults. What is interesting is that a large share of the contribution is *systems engineering* rather than statistics: a cache-aware block structure for out-of-core data, a sparsity-aware split finder that learns a default direction for missing values instead of imputing them, parallelized split search, and an approximate quantile sketch weighted by $`h_i`$ so that split candidates could be proposed without sorting the entire dataset. ▸ **The second-order objective above is the part everyone quotes, but the reason XGBoost won was that it was roughly an order of magnitude faster than the alternatives on the hardware people actually had.**
 
 ### XGBoost's other contributions
 
 - **Sparsity-aware split finding:** learn a default direction for missing values at each node, rather than imputing.
-- **Weighted quantile sketch:** approximate split candidates using $h_i$ as weights, so it scales to data that doesn't fit in memory.
+- **Weighted quantile sketch:** approximate split candidates using $`h_i`$ as weights, so it scales to data that doesn't fit in memory.
 - **Column and row subsampling**, cache-aware access patterns, out-of-core computation, and parallel split finding.
 
 ---
@@ -941,7 +941,7 @@ Note $G_L + G_R$ and $H_L + H_R$ are the parent's totals — because splitting a
 
 Histogram binning does the sorting **once, at the start**. Each continuous column is replaced by a bin index from 0 to 254 — so a value of $37{,}412.55$ becomes bin `143`. Now finding a split means sweeping 255 bin boundaries and accumulating $(G, H)$ sums, which costs $O(255)$ regardless of $n$.
 
-**Real numbers.** With $n = 10^6$: sorting costs about $10^6\times 20 = 2\times10^7$ operations per feature per node; binning costs $255$. The build of the histogram itself costs $O(n)$, but there is a further trick — **the histogram subtraction identity**: a node's two children partition its examples, so $\text{hist}_{\text{right}} = \text{hist}_{\text{parent}} - \text{hist}_{\text{left}}$. Build the histogram for the *smaller* child only and subtract to get the other, halving the work at every level.
+**Real numbers.** With $n = 10^6$: sorting costs about $10^6\times 20 = 2\times10^7$ operations per feature per node; binning costs $255$. The build of the histogram itself costs $O(n)$, but there is a further trick — **the histogram subtraction identity**: a node's two children partition its examples, so $`\text{hist}_{\text{right}} = \text{hist}_{\text{parent}} - \text{hist}_{\text{left}}`$. Build the histogram for the *smaller* child only and subtract to get the other, halving the work at every level.
 
 ▸ **The cost of binning is a loss of threshold precision, and it turns out not to matter.** With 255 bins you can only split at 255 places instead of $n$; but the extra precision was mostly fitting noise anyway, so binning often acts as a mild regularizer. This is why it stopped being LightGBM's differentiator — XGBoost adopted it as `tree_method='hist'` and it is now everyone's default.
 
@@ -951,9 +951,9 @@ Histogram binning does the sorting **once, at the start**. Each continuous colum
 
 Given a budget of 31 leaves, leaf-wise reaches a lower training loss than level-wise, because it spent all 31 where they helped most. But the resulting tree can be depth 15 down one branch and depth 2 down another, and a depth-15 path is asking 15 questions to isolate perhaps four training points. ▸ **This is why `num_leaves` — not `max_depth` — is LightGBM's real capacity knob, and why the standard first mistake is porting an XGBoost `max_depth=6` into LightGBM and setting `num_leaves=64` ($2^6$).** A level-wise tree of depth 6 rarely fills all 64 slots; a leaf-wise tree always will, and it will put them somewhere deep and specific. Start well below $2^{\text{depth}}$.
 
-**3. GOSS, decoded.** The name expands to **Gradient-based One-Side Sampling**. The insight: after a few rounds, most examples are already well-fit, and a well-fit example has $g_i \approx 0$ — it contributes nothing to any $G_j$ and therefore nothing to any split decision. So why pay to scan it?
+**3. GOSS, decoded.** The name expands to **Gradient-based One-Side Sampling**. The insight: after a few rounds, most examples are already well-fit, and a well-fit example has $`g_i \approx 0`$ — it contributes nothing to any $`G_j`$ and therefore nothing to any split decision. So why pay to scan it?
 
-GOSS keeps the top $a$ fraction by $\lvert g_i\rvert$ (say 20%), randomly samples a fraction $b$ (say 10%) from the remaining 80%, and **multiplies the sampled small-gradient examples' contributions by $\frac{1-a}{b}$** — here $\frac{0.8}{0.1} = 8$. That factor is an importance-sampling correction: you kept one in eight of them, so each stands in for eight, and the estimated $G_j$ stays unbiased. **The result is a scan over 30% of the data that estimates the same split gains.**
+GOSS keeps the top $a$ fraction by $`\lvert g_i\rvert`$ (say 20%), randomly samples a fraction $b$ (say 10%) from the remaining 80%, and **multiplies the sampled small-gradient examples' contributions by $\frac{1-a}{b}$** — here $\frac{0.8}{0.1} = 8$. That factor is an importance-sampling correction: you kept one in eight of them, so each stands in for eight, and the estimated $`G_j`$ stays unbiased. **The result is a scan over 30% of the data that estimates the same split gains.**
 
 ▸ **This is the same "one-sided" logic as hard-negative mining in contrastive learning (Ch. 25) and as focal loss: the examples you already handle carry no information about how to improve.** The subtlety GOSS gets right is the reweighting — sampling without the $\frac{1-a}{b}$ correction would systematically bias every split toward the hard examples' preferences.
 
@@ -975,11 +975,11 @@ Read aloud: *"the encoded value for row $i$ is the sum of the labels of all earl
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $x_i$ | "x-i" | Row $i$'s **category** — "London", "customer segment C" |
-| $\hat x_i$ | "x-i hat" | The **number** we will replace that category with |
+| $`x_i`$ | "x-i" | Row $i$'s **category** — "London", "customer segment C" |
+| $`\hat x_i`$ | "x-i hat" | The **number** we will replace that category with |
 | $j < i$ | "j less than i" | "Only rows that came **before** row $i$ in a random permutation" |
-| $\mathbb{1}[x_j=x_i]$ | "indicator x-j equals x-i" | 1 if row $j$ is in the same category as row $i$, else 0 |
-| $y_j$ | "y-j" | The **label** of that earlier row |
+| $`\mathbb{1}[x_j=x_i]`$ | "indicator x-j equals x-i" | 1 if row $j$ is in the same category as row $i$, else 0 |
+| $`y_j`$ | "y-j" | The **label** of that earlier row |
 | $p$ | "p" | A **prior** — usually the overall mean of $y$ across the dataset |
 | $a$ | "a" | How many imaginary prior observations to add — the smoothing strength |
 
@@ -1041,7 +1041,7 @@ The seven parameters above are not seven unrelated dials — they are three grou
 | **How complex each tree is** | `max_depth`, `num_leaves`, `min_child_weight`, `gamma` | Capacity of one correction | Shallower, fewer leaves, larger minimums, higher toll |
 | **How much randomness you inject** | `subsample`, `colsample_bytree` | Decorrelation between successive trees | Lower fractions (more randomness) |
 
-**`min_child_weight` is the one whose name misleads everyone.** It is not a count of rows — it is a **minimum required $H_j$**, the summed second derivative in a leaf. For squared error, $h_i = 1$ for every example, so $H_j$ *is* the row count and the name is accurate. For logistic loss, $h_i = p(1-p)$, so a leaf holding 100 examples the model is already confident about ($p = 0.99$) has $H_j \approx 1$, and `min_child_weight=5` will refuse to create it.
+**`min_child_weight` is the one whose name misleads everyone.** It is not a count of rows — it is a **minimum required $`H_j`$**, the summed second derivative in a leaf. For squared error, $`h_i = 1`$ for every example, so $`H_j`$ *is* the row count and the name is accurate. For logistic loss, $`h_i = p(1-p)`$, so a leaf holding 100 examples the model is already confident about ($p = 0.99$) has $`H_j \approx 1`$, and `min_child_weight=5` will refuse to create it.
 
 ▸ **That is better behaviour than a raw row count, not worse: it asks for a minimum amount of *evidence*, not a minimum number of *rows*.** A hundred examples the model has already settled carry roughly one example's worth of information about where to split next, and the parameter is measuring exactly that.
 
@@ -1082,9 +1082,9 @@ This is the most notation-dense formula in the chapter, and every piece of it is
 | $!$ | "factorial" | $4! = 4\times3\times2\times1 = 24$ |
 | $f(S)$ | "f of S" | The model's prediction **when only the features in $S$ are known** |
 | $f(S\cup\{j\}) - f(S)$ | "f of S-union-j, minus f of S" | **How much the prediction changes when you add feature $j$ to that coalition** |
-| $\phi_j$ | "phi-j" | Feature $j$'s total credit for this one prediction |
+| $`\phi_j`$ | "phi-j" | Feature $j$'s total credit for this one prediction |
 
-**The idea, without notation.** Line the features up in a random order and reveal them one at a time, watching the prediction move. Feature $j$'s contribution *in that ordering* is however much the prediction moved at the moment $j$ was revealed. **Do this for every possible ordering and average.** That average is $\phi_j$.
+**The idea, without notation.** Line the features up in a random order and reveal them one at a time, watching the prediction move. Feature $j$'s contribution *in that ordering* is however much the prediction moved at the moment $j$ was revealed. **Do this for every possible ordering and average.** That average is $`\phi_j`$.
 
 **The scary fraction is just a counting weight.** $\frac{\lvert S\rvert!\,(\lvert F\rvert-\lvert S\rvert-1)!}{\lvert F\rvert!}$ is the fraction of the $\lvert F\rvert!$ possible orderings in which exactly the features of $S$ come before $j$: $\lvert S\rvert!$ ways to arrange the ones before, $(\lvert F\rvert - \lvert S\rvert - 1)!$ ways to arrange the ones after. **It is there so that summing over subsets gives the same answer as averaging over orderings.**
 
@@ -1104,7 +1104,7 @@ Two orderings, each with probability $\frac12$:
 - **age then income:** age contributes $0.50 - 0.30 = 0.20$; income contributes $0.80-0.50 = 0.30$.
 - **income then age:** income contributes $0.40-0.30 = 0.10$; age contributes $0.80-0.40 = 0.40$.
 
-Average: $\phi_{\text{age}} = \frac{0.20+0.40}{2} = 0.30$, and $\phi_{\text{income}} = \frac{0.30+0.10}{2} = 0.20$.
+Average: $`\phi_{\text{age}} = \frac{0.20+0.40}{2} = 0.30`$, and $`\phi_{\text{income}} = \frac{0.30+0.10}{2} = 0.20`$.
 
 **Check the sum:** $0.30 + 0.30 + 0.20 = 0.80$. ✓ The base value plus all attributions equals the prediction exactly. ▸ **That is the "local accuracy" property, and it is the reason SHAP displaces every earlier attribution method: the numbers *add up*.** You can hand a customer a sentence of the form "your score was 0.80: everyone starts at 0.30, your age added 0.30, your income added 0.20" and it is arithmetically true, not a metaphor.
 
@@ -1156,7 +1156,7 @@ The list above is really one idea seen from five angles: **a table is not an ima
 
 - **"Random Forests" is a registered trademark.** Leo Breiman and Adele Cutler trademarked the name and licensed it exclusively to a commercial vendor. This is why the technique is universally described in lowercase in papers and libraries, and why nobody sells a product called Random Forest.
 
-- **The Gini impurity is an income-inequality statistic.** Corrado Gini introduced it in 1912 to measure dispersion in wealth. The identical formula is the Simpson diversity index in ecology, and its complement $\sum_k p_k^2$ is the Herfindahl–Hirschman index that antitrust regulators use to decide whether a merger concentrates a market too far.
+- **The Gini impurity is an income-inequality statistic.** Corrado Gini introduced it in 1912 to measure dispersion in wealth. The identical formula is the Simpson diversity index in ecology, and its complement $`\sum_k p_k^2`$ is the Herfindahl–Hirschman index that antitrust regulators use to decide whether a merger concentrates a market too far.
 
 - **The word "matrix" of trees — CART — was written by four authors and one of them had already left academia.** Leo Breiman spent thirteen years as a full-time statistical consultant before returning to Berkeley in 1980, four years before the CART book. His later polemic *Statistical Modeling: The Two Cultures* (2001) argued that academic statistics had wasted decades on models it could prove things about rather than algorithms that predicted well — a position that reads as obvious now and was contentious then.
 
@@ -1196,7 +1196,7 @@ The test of understanding is conversational: could you explain each of these to 
 6. **What does "gradient descent in function space" mean?** (Correct answer names what the parameter vector is, and says why you need a tree rather than just applying the gradient directly.)
 7. **Why is AdaBoost so fragile to a single mislabelled row?** Trace it through the reweighting step.
 8. **Why do gradient boosting libraries use shallow trees and random forests use deep ones?**
-9. **What is $\lambda$ doing in $w^* = -G/(H+\lambda)$, and why does a fixed $\lambda$ shrink small leaves harder than large ones?**
+9. **What is $\lambda$ doing in $`w^* = -G/(H+\lambda)`$, and why does a fixed $\lambda$ shrink small leaves harder than large ones?**
 10. **Why does target encoding leak, and how does "only use rows before me" fix it?**
 11. **What does a SHAP value mean, in terms of splitting a taxi fare?** Why does it matter that the attributions sum to the prediction?
 12. **Why do trees still beat neural networks on tabular data?** Give at least three reasons, and say what changes if you suddenly have a billion rows.

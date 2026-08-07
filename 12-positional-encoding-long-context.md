@@ -13,16 +13,16 @@ Skim once; each is unpacked properly where it first appears. Almost everything i
 | $P$ | "P" | A **permutation matrix** — a shuffler that reorders a list without changing its contents |
 | $pos$, $m$, $n$ | "pos", "m", "n" | **Absolute position**: which slot in the sequence a token sits in (1st, 2nd, 57th…) |
 | $i - j$ | "i minus j" | **Relative distance**: how many slots apart two tokens are |
-| $PE_{(pos,\,2i)}$ | "P-E at pos, dimension 2i" | Entry number $2i$ of the positional code for slot $pos$ |
-| $\omega_i$, $\theta_i$ | "omega-i", "theta-i" | The **angular frequency** of dimension-pair $i$ — how fast that pair spins as position advances |
-| $b_{i-j}$ | "b sub i-minus-j" | A **learned number added to an attention score**, chosen purely by distance |
-| $m_h$ | "m sub h" | ALiBi's per-head **slope** — how fast head $h$ loses interest with distance |
-| $R_m$ | "R sub m" | A **rotation matrix**: turn a vector by an angle proportional to position $m$ |
+| $`PE_{(pos,\,2i)}`$ | "P-E at pos, dimension 2i" | Entry number $2i$ of the positional code for slot $pos$ |
+| $`\omega_i`$, $`\theta_i`$ | "omega-i", "theta-i" | The **angular frequency** of dimension-pair $i$ — how fast that pair spins as position advances |
+| $`b_{i-j}`$ | "b sub i-minus-j" | A **learned number added to an attention score**, chosen purely by distance |
+| $`m_h`$ | "m sub h" | ALiBi's per-head **slope** — how fast head $h$ loses interest with distance |
+| $`R_m`$ | "R sub m" | A **rotation matrix**: turn a vector by an angle proportional to position $m$ |
 | $\langle a, b\rangle$ | "inner product of a and b" | The dot product $a^\top b$ — one number measuring **alignment** |
 | $\mathcal{O}(T^2)$ | "big-O of T squared" | Cost grows with the **square** of sequence length: double $T$, quadruple the bill |
-| $h_{kv}$, $d_{\text{head}}$ | "h sub k-v", "d head" | Number of **key/value heads**, and the width of one head |
+| $`h_{kv}`$, $`d_{\text{head}}`$ | "h sub k-v", "d head" | Number of **key/value heads**, and the width of one head |
 | $\bar A,\ \bar B$ | "A-bar, B-bar" | **Discretized** state-space matrices. ⚠ Here a bar means "discretized," *not* a gradient (contrast §0.6) |
-| $*$ | "convolved with" | **Convolution** — slide a kernel along a sequence and take dot products |
+| $`*`$ | "convolved with" | **Convolution** — slide a kernel along a sequence and take dot products |
 | $\phi(\cdot)$ | "phi of" | A **feature map** applied to queries and keys, replacing softmax in linear attention |
 | $m,\ \ell$ (FlashAttention) | "m", "ell" | Running softmax **max** and running **sum**. ⚠ $m$ is overloaded — position in §12.4, a maximum in §12.5 |
 
@@ -74,11 +74,11 @@ Every symbol first.
 - **Equivariant** means *"the operation and the shuffle commute."* Shuffle-then-attend gives literally the same answer as attend-then-shuffle. Read $\mathrm{Attention}(PX) = P\,\mathrm{Attention}(X)$ aloud as: **"attention doesn't care what order you hand it the tokens in — it just carries the order along."**
 - A **multiset** is a bag of items where duplicates count but order does not. $\{\text{dog}, \text{bites}, \text{man}\}$ and $\{\text{man}, \text{bites}, \text{dog}\}$ are the same multiset.
 
-**Work it with $T = 2$.** Take two tokens $x_1$ and $x_2$, and let $P$ be the swap:
+**Work it with $T = 2$.** Take two tokens $`x_1`$ and $`x_2`$, and let $P$ be the swap:
 
 $$P = \begin{pmatrix}0 & 1\\ 1 & 0\end{pmatrix}$$
 
-Token 1's output is $\alpha_{11}v_1 + \alpha_{12}v_2$, where $\alpha_{11}$ is "how much token 1 attends to token 1." Those weights come from dot products $q_1^\top k_1$ and $q_1^\top k_2$ — and a dot product between two specific vectors is the same number no matter which row of the array either vector was sitting in. So swapping the rows just swaps which output row the same numbers land in. **Order never entered the arithmetic anywhere.**
+Token 1's output is $`\alpha_{11}v_1 + \alpha_{12}v_2`$, where $`\alpha_{11}`$ is "how much token 1 attends to token 1." Those weights come from dot products $`q_1^\top k_1`$ and $`q_1^\top k_2`$ — and a dot product between two specific vectors is the same number no matter which row of the array either vector was sitting in. So swapping the rows just swaps which output row the same numbers land in. **Order never entered the arithmetic anywhere.**
 
 > **Analogy.** A blender. Put in a banana, then strawberries, then milk; or milk, strawberries, then banana. The smoothie is identical, because blending is a set operation. Attention is a blender. If the recipe  depends on order — "add the eggs *after* the pan is hot" — a blender cannot express it, and you must attach a timestamp to each ingredient before it goes in. Positional encoding is that timestamp.
 
@@ -119,7 +119,7 @@ Decode each piece:
 - Clock 0: $10000^{0/4} = 1$, so the angle is $pos/1 = pos$ radians. It completes a full turn every $2\pi \approx 6.3$ positions. **Fast.**
 - Clock 1: $10000^{2/4} = 100$, so the angle is $pos/100$. It completes a full turn every $628$ positions. **Slow.**
 
-So $PE_{pos} = \big(\sin(pos),\ \cos(pos),\ \sin(pos/100),\ \cos(pos/100)\big)$. At $pos = 0$ that's $(0, 1, 0, 1)$; at $pos = 1$ it's $(0.841, 0.540, 0.010, 1.000)$. The fast clock has moved a lot; the slow clock has barely twitched.
+So $`PE_{pos} = \big(\sin(pos),\ \cos(pos),\ \sin(pos/100),\ \cos(pos/100)\big)`$. At $pos = 0$ that's $(0, 1, 0, 1)$; at $pos = 1$ it's $(0.841, 0.540, 0.010, 1.000)$. The fast clock has moved a lot; the slow clock has barely twitched.
 
 > **Analogy.** A mechanical odometer, or the hands of an analogue watch. The seconds hand tells you precisely *where in the minute* you are but is useless for telling you the hour; the hour hand is the reverse. Read all the hands together and you get a reading that is both precise and unambiguous over a huge range. The sinusoidal encoding is a watch with $d/2$ hands, geared in a geometric ratio, and every token is stamped with the time it arrived.
 
@@ -129,19 +129,19 @@ So $PE_{pos} = \big(\sin(pos),\ \cos(pos),\ \sin(pos/100),\ \cos(pos/100)\big)$.
 
 $$\begin{pmatrix}\sin(\omega_i(pos+k))\\\cos(\omega_i(pos+k))\end{pmatrix} = \begin{pmatrix}\cos\omega_ik & \sin\omega_ik\\-\sin\omega_ik&\cos\omega_ik\end{pmatrix}\begin{pmatrix}\sin(\omega_i\,pos)\\\cos(\omega_i\,pos)\end{pmatrix}$$
 
-▸ $PE_{pos+k} = M_k\,PE_{pos}$ with $M_k$ **independent of $pos$** — a rotation by a fixed angle in each 2-D subspace. So relative position is linearly recoverable, and the encoding extrapolates to positions never seen.
+▸ $`PE_{pos+k} = M_k\,PE_{pos}`$ with $`M_k`$ **independent of $pos$** — a rotation by a fixed angle in each 2-D subspace. So relative position is linearly recoverable, and the encoding extrapolates to positions never seen.
 
 #### Unpacking "a shift is a rotation"
 
-The matrix in the display above is the standard **2-D rotation matrix**. Read $M_k$ as *"turn the clock hand forward by angle $\omega_i k$."*
+The matrix in the display above is the standard **2-D rotation matrix**. Read $`M_k`$ as *"turn the clock hand forward by angle $`\omega_i k`$."*
 
 The claim being made has a precise and useful shape. Read it as three separate statements:
 
-1. **Moving forward $k$ positions = turning every clock hand forward by a fixed angle.** Clock $i$ turns by $\omega_i k$. That's what a clock *does*.
-2. **How much you turn depends on $k$ only — never on where you started.** $M_k$ contains no $pos$. Advancing from position 3 to position 8 is the same rotation as advancing from position 3003 to position 3008.
+1. **Moving forward $k$ positions = turning every clock hand forward by a fixed angle.** Clock $i$ turns by $`\omega_i k`$. That's what a clock *does*.
+2. **How much you turn depends on $k$ only — never on where you started.** $`M_k`$ contains no $pos$. Advancing from position 3 to position 8 is the same rotation as advancing from position 3003 to position 3008.
 3. **Therefore the network can extract relative position with a linear layer.** Attention is built out of linear maps and dot products; if "5 positions apart" is a *fixed matrix*, a linear layer can learn to detect it. If it had been some tangled nonlinear function of $pos$, the network would have to learn a separate detector for every starting point.
 
-**Do it with numbers.** Take clock $i$ with $\omega_i = 1$, currently at position $pos$ with reading $(\sin pos, \cos pos)$. Advance $k = \pi/2$ (a quarter turn). The identity says the new reading is
+**Do it with numbers.** Take clock $i$ with $`\omega_i = 1`$, currently at position $pos$ with reading $(\sin pos, \cos pos)$. Advance $k = \pi/2$ (a quarter turn). The identity says the new reading is
 
 $$\begin{pmatrix}\cos(\pi/2) & \sin(\pi/2)\\ -\sin(\pi/2) & \cos(\pi/2)\end{pmatrix}\begin{pmatrix}\sin pos\\ \cos pos\end{pmatrix} = \begin{pmatrix}0 & 1\\ -1 & 0\end{pmatrix}\begin{pmatrix}\sin pos\\ \cos pos\end{pmatrix} = \begin{pmatrix}\cos pos\\ -\sin pos\end{pmatrix}$$
 
@@ -186,25 +186,25 @@ Two completely different kinds of information are **summed into the same $d$ num
 
 > **Analogy.** Two people speaking into the same microphone at once. The recording contains both voices, and in principle you can separate them — they have different characteristic frequencies — but you have spent your recording budget twice and every downstream listener now has an extra job. A separate microphone per speaker would have been strictly better. Relative schemes (§12.3) and RoPE (§12.4) are, in effect, the second microphone: they inject position at the point where positions are *compared*, rather than smuggling it into the content.
 
-▸ **And "extrapolation works in theory but is poor in practice" deserves a sharper statement.** The formula happily produces $PE_{9999}$ for a model trained only to position 512 — the sines and cosines are perfectly well-defined. But the *slow* clocks have only ever been observed over a tiny arc of their cycle during training. Clock $i$ with period 62,800 moves through less than 1% of a full turn across a 512-token training window, so every weight that reads it was fitted on a nearly-straight line segment. Ask it to interpret a reading from the other side of the circle and it has no basis for an answer. **The formula extrapolates; the learned weights that consume it do not.** This exact distinction returns in §12.4 as the "NTK" argument, and it is the single most reusable idea in the chapter.
+▸ **And "extrapolation works in theory but is poor in practice" deserves a sharper statement.** The formula happily produces $`PE_{9999}`$ for a model trained only to position 512 — the sines and cosines are perfectly well-defined. But the *slow* clocks have only ever been observed over a tiny arc of their cycle during training. Clock $i$ with period 62,800 moves through less than 1% of a full turn across a 512-token training window, so every weight that reads it was fitted on a nearly-straight line segment. Ask it to interpret a reading from the other side of the circle and it has no basis for an answer. **The formula extrapolates; the learned weights that consume it do not.** This exact distinction returns in §12.4 as the "NTK" argument, and it is the single most reusable idea in the chapter.
 
 ### Learned absolute
 
-$PE\in\mathbb{R}^{T_{\max}\times d}$, trained. Used by BERT, GPT-2, ViT. Slightly better in-distribution.
+$`PE\in\mathbb{R}^{T_{\max}\times d}`$, trained. Used by BERT, GPT-2, ViT. Slightly better in-distribution.
 
-▸ **Fatal flaw: hard length limit.** Position $T_{\max}+1$ has no embedding, and untrained positions are garbage. This is the direct cause of GPT-2's 1024-token wall.
+▸ **Fatal flaw: hard length limit.** Position $`T_{\max}+1`$ has no embedding, and untrained positions are garbage. This is the direct cause of GPT-2's 1024-token wall.
 
 #### Learned absolute positions, decoded
 
-Read $PE \in \mathbb{R}^{T_{\max}\times d}$ as *"a lookup table with $T_{\max}$ rows and $d$ columns"* — literally a second embedding table, but indexed by **slot number** instead of by word. Row 0 is "the vector meaning *first*," row 1 is "the vector meaning *second*," and so on. All of it is learned by gradient descent along with everything else.
+Read $`PE \in \mathbb{R}^{T_{\max}\times d}`$ as *"a lookup table with $`T_{\max}`$ rows and $d$ columns"* — literally a second embedding table, but indexed by **slot number** instead of by word. Row 0 is "the vector meaning *first*," row 1 is "the vector meaning *second*," and so on. All of it is learned by gradient descent along with everything else.
 
 This is appealingly simple: you stop guessing what a good positional code looks like and let the data decide. And in-distribution it wins slightly, because the model can encode whatever quirks of position actually matter in its corpus.
 
-**But count the rows.** GPT-2 has $T_{\max} = 1024$. There is no row 1024. There is no row 1025. Not "a bad row" — **no row at all**, the way an array of length 1024 has no index 1024.
+**But count the rows.** GPT-2 has $`T_{\max} = 1024`$. There is no row 1024. There is no row 1025. Not "a bad row" — **no row at all**, the way an array of length 1024 has no index 1024.
 
 > **Analogy.** A theatre with 1024 numbered seats. Sinusoidal encoding is a tape measure laid down the aisle: ask where 3 metres past the back wall is and it will tell you, even though there is no floor there. A learned table is a printed seating chart. Ask for seat 1025 and you do not get a wrong answer, you get *nothing* — and if the software papers over the gap with a fresh random row, the model receives a vector it has never seen in its life, in the middle of a sentence.
 
-▸ **Every scheme in the rest of this chapter can be read as an answer to one question: what happens at position $T_{\max}+1$?** Learned tables crash. Sinusoids produce numbers the weights can't interpret. Relative biases and ALiBi degrade gently because they only ever look at *differences*, which stay in a familiar range near the diagonal. RoPE keeps working until the slow clocks leave their trained arc — which is exactly what PI, NTK-scaling and YaRN are built to postpone.
+▸ **Every scheme in the rest of this chapter can be read as an answer to one question: what happens at position $`T_{\max}+1`$?** Learned tables crash. Sinusoids produce numbers the weights can't interpret. Relative biases and ALiBi degrade gently because they only ever look at *differences*, which stay in a familiar range near the diagonal. RoPE keeps working until the slow clocks leave their trained arc — which is exactly what PI, NTK-scaling and YaRN are built to postpone.
 
 > **Where this came from.** The sinusoidal scheme appeared in **"Attention Is All You Need"** (Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser and Polosukhin, Google, 2017) — the paper that introduced the transformer. The paper is unusually candid about it: the authors report that they *also* tried learned positional embeddings and found the two produced **nearly identical results**, and say they chose the sinusoidal version because they hypothesized it might let the model extrapolate to lengths longer than those seen in training. That hypothesis turned out to be largely wrong in practice, which is a nice reminder that the reasoning offered for a design choice and the reason it survives are often different things. The base constant 10000 is stated without derivation and has been inherited, essentially unquestioned, by an enormous amount of subsequent work — including RoPE, where it became the single most important tuning knob for long context.
 
@@ -214,11 +214,11 @@ This is appealingly simple: you stop guessing what a good positional code looks 
 
 | Example | Why it qualifies |
 |---|---|
-| Sinusoidal $PE_{pos}$ added to the token embedding | The vector entering layer 1 — and therefore every score computed from it — becomes a function of $pos$ |
+| Sinusoidal $`PE_{pos}`$ added to the token embedding | The vector entering layer 1 — and therefore every score computed from it — becomes a function of $pos$ |
 | BERT's learned table $PE\in\mathbb{R}^{512\times768}$ | Row $pos$ is a distinct trained vector per slot; which row was added changes the score |
-| T5's bias $b_{i-j}$ added to the logit | Injects a number that depends on nothing but the gap between the two tokens |
-| ALiBi's $-m_h(i-j)$ | Same place, same job, with the number fixed in advance instead of learned |
-| RoPE's rotation of $q_i$ and $k_j$ | After rotation the dot product is a function of $i-j$; position has entered the score itself |
+| T5's bias $`b_{i-j}`$ added to the logit | Injects a number that depends on nothing but the gap between the two tokens |
+| ALiBi's $`-m_h(i-j)`$ | Same place, same job, with the number fixed in advance instead of learned |
+| RoPE's rotation of $`q_i`$ and $`k_j`$ | After rotation the dot product is a function of $i-j$; position has entered the score itself |
 
 **❌ Near-misses — look like they encode position, but don't**
 
@@ -226,13 +226,13 @@ This is appealingly simple: you stop guessing what a good positional code looks 
 |---|---|---|
 | The order of rows in the input tensor, `x[0], x[1], x[2], …` | This is the *problem*, not the fix. §12.1 showed that permuting those rows permutes the outputs and changes nothing else | Array layout — the thing positional encoding exists to compensate for |
 | The causal mask | It controls *which* keys are visible, not how far away they are. Two visible tokens 3 apart and 3,000 apart are treated identically by the mask | A visibility constraint. It does leak a *count* — a token at slot $i$ sees exactly $i+1$ keys, which is why "NoPE" decoder-only models work at all — but it supplies no notion of distance |
-| BERT's segment embedding $E_A$ / $E_B$ | Every token in sentence A gets the **same** vector, whether it is the 1st or the 40th | A sequence-membership tag |
+| BERT's segment embedding $`E_A`$ / $`E_B`$ | Every token in sentence A gets the **same** vector, whether it is the 1st or the 40th | A sequence-membership tag |
 | A `[CLS]` token parked at slot 0 | Marks a place to read an answer out of; says nothing about the gap between any two other tokens | A pooling convention |
 | Rotating $V$ by position as well as $Q$ and $K$ | It *does* depend on position — that is exactly the trouble. A token's **content** would change with where it sits | A bug. Position belongs in the score, not the payload (§12.4) |
 
 ▸ **The boundary:** a positional encoding is anything that makes the attention score between token $i$ and token $j$ a function of $i$, $j$, or $i-j$. Machinery that changes *which* tokens are visible, or *what* they carry, is doing a different job — however much order-related information it happens to leak on the side.
 
-> **Why summing doesn't wreck the vector.** A natural worry: adding $PE_{pos}$ to the embedding must destroy the word's meaning. It **degrades** the vector; it does not destroy it, and the reason is dimension. In $d = 768$ there is an enormous amount of room: two vectors drawn at random in 768 dimensions have an expected cosine of 0 with a spread of only about $1/\sqrt{768}\approx0.036$, so nearly everything is nearly perpendicular to nearly everything else. The positional codes occupy their own structured set of directions, and the trained $W_Q$ and $W_K$ can read around them. The real price is **capacity, not corruption** — some of the residual stream's budget now goes on bookkeeping. The belief is tempting because in the two or three dimensions where our geometric intuition lives, adding one vector to another  does wreck it. High-dimensional space is far roomier than it feels.
+> **Why summing doesn't wreck the vector.** A natural worry: adding $`PE_{pos}`$ to the embedding must destroy the word's meaning. It **degrades** the vector; it does not destroy it, and the reason is dimension. In $d = 768$ there is an enormous amount of room: two vectors drawn at random in 768 dimensions have an expected cosine of 0 with a spread of only about $1/\sqrt{768}\approx0.036$, so nearly everything is nearly perpendicular to nearly everything else. The positional codes occupy their own structured set of directions, and the trained $`W_Q`$ and $`W_K`$ can read around them. The real price is **capacity, not corruption** — some of the residual stream's budget now goes on bookkeeping. The belief is tempting because in the two or three dimensions where our geometric intuition lives, adding one vector to another  does wreck it. High-dimensional space is far roomier than it feels.
 
 > **Common misconception.** *"Position is injected once at the bottom of the network, so by layer 40 the model has lost it."* Two things keep it alive, and they are different things. First, the residual stream is **additive** — whatever the embedding layer wrote is still present at layer 40 unless some layer deliberately subtracted it. Second, and more decisively, **RoPE is not injected once at all**: it is applied fresh at every layer, to that layer's own $Q$ and $K$, every single time attention is computed. This is a real advantage of relative schemes over absolute ones — an absolute code has to survive forty layers of residual traffic, while a relative one re-supplies the information at the exact moment it gets used. The misconception is tempting because the diagram in every tutorial draws the "+ positional encoding" box exactly once, at the very bottom.
 
@@ -253,12 +253,12 @@ Take the formula apart left to right.
 
 | Piece | Read aloud | Job |
 |---|---|---|
-| $e_{ij}$ | "e sub i j" | The raw **attention score** from query token $i$ to key token $j$, before softmax |
-| $x_iW_Q$ | "x-i W-Q" | Token $i$'s **query** vector: "what am I looking for?" |
-| $x_jW_K$ | "x-j W-K" | Token $j$'s **key** vector: "what do I advertise?" |
+| $`e_{ij}`$ | "e sub i j" | The raw **attention score** from query token $i$ to key token $j$, before softmax |
+| $`x_iW_Q`$ | "x-i W-Q" | Token $i$'s **query** vector: "what am I looking for?" |
+| $`x_jW_K`$ | "x-j W-K" | Token $j$'s **key** vector: "what do I advertise?" |
 | $(\cdot)(\cdot)^\top$ | "dot product" | How well the question matches the advertisement — one number |
-| $\sqrt{d_k}$ | "root d-k" | The scaling from Ch. 11 that stops the dot products growing with width |
-| $b_{i-j}$ | "b sub i minus j" | **A learned number that depends on nothing but the gap.** Added on top |
+| $`\sqrt{d_k}`$ | "root d-k" | The scaling from Ch. 11 that stops the dot products growing with width |
+| $`b_{i-j}`$ | "b sub i minus j" | **A learned number that depends on nothing but the gap.** Added on top |
 
 ▸ **The entire idea is the last term.** The first term is ordinary attention — content matching content. The second term is a learned opinion about distance alone: *"all else equal, how interested should a token be in something 7 slots back?"* Content and position are now in **separate summands** instead of tangled into one vector, which is precisely the "second microphone" from §12.2.
 
@@ -278,7 +278,7 @@ $$b = \begin{pmatrix}b_0 & \cdot & \cdot\\ b_1 & b_0 & \cdot\\ b_2 & b_1 & b_0\e
 
 ▸ $$e_{ij} = \frac{q_i^\top k_j}{\sqrt{d_k}} - m_h\,(i-j)$$
 
-A **linear penalty** with a head-specific slope $m_h$, fixed as a geometric sequence: for $h$ heads, $m_h = 2^{-8h'/h}$ for $h'=1..h$.
+A **linear penalty** with a head-specific slope $`m_h`$, fixed as a geometric sequence: for $h$ heads, $`m_h = 2^{-8h'/h}`$ for $h'=1..h$.
 
 **Intuition:** each head gets a different "attention span." Small slope = long-range head; large slope = local head. No learned parameters, and it extrapolates remarkably well (train at 1k, evaluate at 16k). Used by BLOOM, MPT.
 
@@ -288,18 +288,18 @@ A **linear penalty** with a head-specific slope $m_h$, fixed as a geometric sequ
 
 **ALiBi** stands for **Attention with Linear Biases**, and the formula is one of the simplest ideas in this book: *subtract a penalty proportional to how far away the token is.*
 
-- $q_i^\top k_j / \sqrt{d_k}$ — ordinary attention, unchanged.
+- $`q_i^\top k_j / \sqrt{d_k}`$ — ordinary attention, unchanged.
 - $i - j$ — the gap. In a causal model $j \le i$, so this is $\ge 0$.
-- $m_h$ — a **fixed** (not learned) positive slope belonging to head $h$.
+- $`m_h`$ — a **fixed** (not learned) positive slope belonging to head $h$.
 - The minus sign — this is always a **penalty**, never a bonus. The further away, the worse the score, always.
 
 ▸ **In one sentence: every head is given a built-in impatience, and each head is given a different amount of it.**
 
-**Put numbers on the slopes.** With $h = 8$ heads, $m_{h'} = 2^{-8h'/8} = 2^{-h'}$ for $h' = 1..8$: the slopes are $\tfrac12, \tfrac14, \tfrac18, \dots, \tfrac1{256}$.
+**Put numbers on the slopes.** With $h = 8$ heads, $`m_{h'} = 2^{-8h'/8} = 2^{-h'}`$ for $h' = 1..8$: the slopes are $\tfrac12, \tfrac14, \tfrac18, \dots, \tfrac1{256}$.
 
 Now watch what those slopes *do* to a token 50 positions back:
 
-| Head | Slope $m_h$ | Penalty at gap 50 | Effect on the softmax weight |
+| Head | Slope $`m_h`$ | Penalty at gap 50 | Effect on the softmax weight |
 |---|---|---|---|
 | 1 | $0.5$ | $-25$ | $e^{-25}\approx 10^{-11}$ — annihilated |
 | 4 | $0.0625$ | $-3.1$ | $e^{-3.1}\approx 0.045$ — heavily discounted |
@@ -309,7 +309,7 @@ Head 1 cannot see 50 tokens back at any price. Head 8 hardly notices the distanc
 
 > **Analogy.** A newsroom. One reporter covers the street outside and knows it in minute detail; one covers the city; one covers the country. Nobody assigned anyone a topic — they were assigned a *radius*, and the topics followed. ALiBi assigns radii.
 
-**Why it extrapolates so well.** There is no table to run off the end of and no angle to leave its trained range. At length 16k the penalty $-m_h(i-j)$ is computed by the same multiplication as at length 1k; it just returns a bigger number, and a bigger number inside a softmax means a smaller weight, which is a perfectly sensible thing for the model to receive. **A formula with no learned parameters and no lookup cannot be out-of-distribution.** That is the whole trick, and it is why "train at 1k, evaluate at 16k" works.
+**Why it extrapolates so well.** There is no table to run off the end of and no angle to leave its trained range. At length 16k the penalty $`-m_h(i-j)`$ is computed by the same multiplication as at length 1k; it just returns a bigger number, and a bigger number inside a softmax means a smaller weight, which is a perfectly sensible thing for the model to receive. **A formula with no learned parameters and no lookup cannot be out-of-distribution.** That is the whole trick, and it is why "train at 1k, evaluate at 16k" works.
 
 ▸ **And now the limitation, sharply.** The penalty is *monotone*: score always falls with distance, with no exceptions available. If the answer to a question sits 30,000 tokens back — a needle in a haystack, a variable defined at the top of a long file — ALiBi has hard-wired the belief that it cannot matter much. **You have traded the ability to extrapolate for the ability to look far away on purpose, and those are not the same thing.** RoPE's decay, by contrast, is a soft statistical tendency rather than an enforced rule, which is a large part of why RoPE won.
 
@@ -321,24 +321,24 @@ Head 1 cannot see 50 tokens back at any price. Head 8 hardly notices the distanc
 
 | Example | Why it qualifies |
 |---|---|
-| T5's $b_{i-j}$ | The added term is indexed by the gap and nothing else |
-| ALiBi's $-m_h(i-j)$ | Same — a function of the gap, with a head-specific slope |
+| T5's $`b_{i-j}`$ | The added term is indexed by the gap and nothing else |
+| ALiBi's $`-m_h(i-j)`$ | Same — a function of the gap, with a head-specific slope |
 | Shaw et al.'s learned relative key vectors, clipped at $\pm k$ | Indexed by a clipped $i-j$; positions beyond the clip share a bucket |
-| RoPE | $\langle R_iq,\ R_jk\rangle = \langle R_{i-j}q,\ k\rangle$ — the score is provably a function of the gap alone |
+| RoPE | $`\langle R_iq,\ R_jk\rangle = \langle R_{i-j}q,\ k\rangle`$ — the score is provably a function of the gap alone |
 
 **❌ Near-misses — described as relative, but aren't**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| Sinusoidal absolute $PE$, "because a shift is a rotation" | $PE_{pos+k}$ really is a fixed linear map of $PE_{pos}$, so the gap is *recoverable in principle*. But nothing **forces** the score to be a function of $i-j$; it may depend on $i$ and $j$ separately, and empirically it does | An absolute scheme with relative structure lying around unused |
+| Sinusoidal absolute $PE$, "because a shift is a rotation" | $`PE_{pos+k}`$ really is a fixed linear map of $`PE_{pos}`$, so the gap is *recoverable in principle*. But nothing **forces** the score to be a function of $i-j$; it may depend on $i$ and $j$ separately, and empirically it does | An absolute scheme with relative structure lying around unused |
 | A learned absolute table | The model could learn to compare row $i$ against row $j$ — but there is no constraint making it, and no reason position 900 behaves like position 100 | Absolute |
 | Sliding-window attention with window $w$ | Everything inside the window is treated identically and everything outside is invisible. There is no gradation *within* the window | A relative **mask**, not a relative encoding |
 | Normalizing position as $i/T$ | Shifting the whole sequence by one slot changes every value, and the same token gets a different code in a longer document | Rescaled absolute position |
-| "RoPE is relative, so it never uses absolute position" | RoPE rotates $q_i$ by exactly $i\theta$ — an absolute angle, computed from an absolute index | Absolute rotations whose absoluteness *cancels* in the dot product |
+| "RoPE is relative, so it never uses absolute position" | RoPE rotates $`q_i`$ by exactly $i\theta$ — an absolute angle, computed from an absolute index | Absolute rotations whose absoluteness *cancels* in the dot product |
 
 ▸ **The boundary:** a scheme is relative if and only if **adding the same constant to every token's index leaves every attention score unchanged.** That is a test you can run: slide the whole sequence one slot to the right and see whether any score moves. Under T5 bias, ALiBi and RoPE, nothing moves. Under sinusoidal or learned absolute encodings, everything does.
 
-> **Common misconception.** *"ALiBi and RoPE both make attention fall off with distance, so they encode the same prior."* Plot the two decay curves and they look like cousins. The difference is whether the model is allowed to disagree. ALiBi **subtracts** $m_h(i-j)$ from the logit: with slope $0.5$ and a gap of 50 that is $-25$, and $e^{-25}\approx10^{-11}$, so no content match of any strength can recover that weight — the decay is a rule. RoPE subtracts nothing; its decay is a *statistical* tendency that emerges because many clocks drift out of phase and their contributions cancel by chance, so a strong enough query–key match still produces a large score across 50,000 tokens. **One is a constraint the model cannot argue with; the other is a prior it can.** That single difference is why ALiBi extrapolates beautifully and retrieves badly, and it is easy to miss because the two schemes are almost always introduced side by side under the same heading, "long-range decay."
+> **Common misconception.** *"ALiBi and RoPE both make attention fall off with distance, so they encode the same prior."* Plot the two decay curves and they look like cousins. The difference is whether the model is allowed to disagree. ALiBi **subtracts** $`m_h(i-j)`$ from the logit: with slope $0.5$ and a gap of 50 that is $-25$, and $e^{-25}\approx10^{-11}$, so no content match of any strength can recover that weight — the decay is a rule. RoPE subtracts nothing; its decay is a *statistical* tendency that emerges because many clocks drift out of phase and their contributions cancel by chance, so a strong enough query–key match still produces a large score across 50,000 tokens. **One is a constraint the model cannot argue with; the other is a prior it can.** That single difference is why ALiBi extrapolates beautifully and retrieves badly, and it is easy to miss because the two schemes are almost always introduced side by side under the same heading, "long-range decay."
 
 ---
 
@@ -356,11 +356,11 @@ Two clock hands. If you rotate the hour hand of clock A by $m$ degrees and clock
 
 ### The construction
 
-Split the $d$-dimensional vector into $d/2$ consecutive pairs. For pair $i$ at position $m$, rotate by angle $m\theta_i$ where $\theta_i = 10000^{-2i/d}$:
+Split the $d$-dimensional vector into $d/2$ consecutive pairs. For pair $i$ at position $m$, rotate by angle $`m\theta_i`$ where $`\theta_i = 10000^{-2i/d}`$:
 
 ▸ $$R_m^{(i)} = \begin{pmatrix}\cos m\theta_i & -\sin m\theta_i\\ \sin m\theta_i & \cos m\theta_i\end{pmatrix}$$
 
-Apply to queries and keys: $\tilde q_m = R_mq_m$, $\tilde k_n = R_nk_n$.
+Apply to queries and keys: $`\tilde q_m = R_mq_m`$, $`\tilde k_n = R_nk_n`$.
 
 #### Reading the rotation matrix
 
@@ -370,12 +370,12 @@ Every symbol:
 |---|---|---|
 | $m$ | "m" | The token's **absolute position** — 0, 1, 2, … |
 | $i$ | "i" | Which **pair of dimensions** we're rotating: $i = 0,\dots,d/2-1$ |
-| $\theta_i = 10000^{-2i/d}$ | "theta-i" | Pair $i$'s **rotation speed**, in radians per position. Note the *minus* in the exponent: large $i$ → tiny $\theta_i$ → slow |
-| $m\theta_i$ | "m theta-i" | The **total angle** this pair has turned by position $m$ |
-| $R_m^{(i)}$ | "R-m superscript i" | The 2×2 matrix that performs that turn |
-| $\tilde q_m$ | "q-tilde sub m" | The query **after** rotating |
+| $`\theta_i = 10000^{-2i/d}`$ | "theta-i" | Pair $i$'s **rotation speed**, in radians per position. Note the *minus* in the exponent: large $i$ → tiny $`\theta_i`$ → slow |
+| $`m\theta_i`$ | "m theta-i" | The **total angle** this pair has turned by position $m$ |
+| $`R_m^{(i)}`$ | "R-m superscript i" | The 2×2 matrix that performs that turn |
+| $`\tilde q_m`$ | "q-tilde sub m" | The query **after** rotating |
 
-▸ **The one-sentence version: chop the vector into 2-D pairs, treat each pair as an arrow on a little clock face, and spin arrow $i$ by $m\theta_i$ — a bigger spin for tokens later in the sequence, and a faster spin for earlier dimension-pairs.**
+▸ **The one-sentence version: chop the vector into 2-D pairs, treat each pair as an arrow on a little clock face, and spin arrow $i$ by $`m\theta_i`$ — a bigger spin for tokens later in the sequence, and a faster spin for earlier dimension-pairs.**
 
 **What a 2×2 rotation matrix does, concretely.** Applied to a point $(x,y)$ it produces
 
@@ -385,7 +385,7 @@ Take $\alpha = 90° = \pi/2$, so $\cos\alpha = 0$, $\sin\alpha = 1$, and the mat
 
 **Real numbers for the speeds.** With $d = 128$ there are 64 pairs:
 
-| Pair $i$ | $\theta_i = 10000^{-2i/128}$ | Full turn every… |
+| Pair $i$ | $`\theta_i = 10000^{-2i/128}`$ | Full turn every… |
 |---|---|---|
 | $0$ | $1.0$ | $6.3$ positions |
 | $16$ | $0.1$ | $63$ positions |
@@ -400,7 +400,7 @@ Take $\alpha = 90° = \pi/2$, so $\cos\alpha = 0$, $\sin\alpha = 1$, and the mat
 
 $$\tilde q_m^\top\tilde k_n = (R_mq)^\top(R_nk) = q^\top R_m^\top R_nk = q^\top R_{n-m}k$$
 
-using $R_m^\top R_n = R_{n-m}$ (rotations form a group; $R_m^{-1}=R_m^\top=R_{-m}$).
+using $`R_m^\top R_n = R_{n-m}`$ (rotations form a group; $`R_m^{-1}=R_m^\top=R_{-m}`$).
 
 ▸ $$\boxed{\ \langle\mathrm{RoPE}(q,m),\ \mathrm{RoPE}(k,n)\rangle = g(q,k,\,n-m)\ }$$
 
@@ -414,10 +414,10 @@ $$\underbrace{\tilde q_m^\top\tilde k_n}_{\text{1}} = \underbrace{(R_mq)^\top(R_
 
 1. **The thing we want**: the attention score between the rotated query at position $m$ and the rotated key at position $n$.
 2. **Substitute the definitions.** Nothing has happened yet.
-3. **Use $(AB)^\top = B^\top A^\top$.** Pure bookkeeping — the standard transpose rule from §0.6, moving the transpose inside and reversing the order. The $R_m^\top R_n$ has now been brought together in the middle.
-4. **Use the group property $R_m^\top R_n = R_{n-m}$.** This is the payoff step, and it is a fact about rotations, not about transformers.
+3. **Use $(AB)^\top = B^\top A^\top$.** Pure bookkeeping — the standard transpose rule from §0.6, moving the transpose inside and reversing the order. The $`R_m^\top R_n`$ has now been brought together in the middle.
+4. **Use the group property $`R_m^\top R_n = R_{n-m}`$.** This is the payoff step, and it is a fact about rotations, not about transformers.
 
-**Why $R_m^\top R_n = R_{n-m}$.** A rotation matrix is orthonormal, so its transpose *is* its inverse: $R_m^\top = R_m^{-1} = R_{-m}$. Turning back by $m$ and then forward by $n$ is turning forward by $n - m$. **Angles add.** That's it — that's the whole mechanism.
+**Why $`R_m^\top R_n = R_{n-m}`$.** A rotation matrix is orthonormal, so its transpose *is* its inverse: $`R_m^\top = R_m^{-1} = R_{-m}`$. Turning back by $m$ and then forward by $n$ is turning forward by $n - m$. **Angles add.** That's it — that's the whole mechanism.
 
 ▸ **Now say it without symbols: token $m$'s query has been spun forward by $m$, token $n$'s key by $n$. When you compare them, the comparison only cares about the angle *between* them, and that angle is $n - m$. The two absolute spins subtract each other out automatically.**
 
@@ -477,32 +477,32 @@ The `rotate_half` trick performs the same arithmetic in $O(d)$. Read the code li
 
 > **Analogy.** At a conference, position tells you *who to talk to* — you find the people near you, or the people in your session. It does not change *what they know*. RoPE encodes seating; values encode expertise.
 
-**"The base 10000 is the key knob."** Since $\theta_i = \text{base}^{-2i/d}$, raising the base makes the clocks slower — and it does so **unevenly**. Pair $i$'s wavelength is $2\pi\cdot\text{base}^{2i/d}$, so multiplying the base by 50 (from 10,000 to LLaMA-3's 500,000) leaves pair $0$ untouched, slows the middle pairs by $\sqrt{50}\approx 7\times$, and slows the slowest pair by the full $50\times$. Local resolution survives; global range multiplies. **That one constant is a large part of how LLaMA-3 reaches 128k context**, and it costs nothing at run time — it is a different number in a table of precomputed sines.
+**"The base 10000 is the key knob."** Since $`\theta_i = \text{base}^{-2i/d}`$, raising the base makes the clocks slower — and it does so **unevenly**. Pair $i$'s wavelength is $2\pi\cdot\text{base}^{2i/d}$, so multiplying the base by 50 (from 10,000 to LLaMA-3's 500,000) leaves pair $0$ untouched, slows the middle pairs by $\sqrt{50}\approx 7\times$, and slows the slowest pair by the full $50\times$. Local resolution survives; global range multiplies. **That one constant is a large part of how LLaMA-3 reaches 128k context**, and it costs nothing at run time — it is a different number in a table of precomputed sines.
 
 ▸ **So the design has exactly one dial, and turning it trades local resolution for global range.** Everything in the next section is a more careful way of turning that dial — including turning it by different amounts for different dimensions.
 
 ### Context extension
 
-The problem: a model trained at $T=4096$ has never seen rotation angles beyond $4096\theta_i$, and behaves badly past it.
+The problem: a model trained at $T=4096$ has never seen rotation angles beyond $`4096\theta_i`$, and behaves badly past it.
 
 | Method | Mechanism | Notes |
 |---|---|---|
-| **Position Interpolation (PI)** | scale positions: $m\to m\cdot\frac{T_{\text{train}}}{T_{\text{new}}}$ | all angles stay in-distribution, but *crowds* nearby positions and blurs local resolution. Needs a little fine-tuning. |
-| **NTK-aware scaling** | increase the base: $\theta_{\text{base}}: 10000\to10000\cdot s^{d/(d-2)}$ | stretches low-frequency dims more, leaves high-frequency (local) dims alone. Often works with **no** fine-tuning. |
+| **Position Interpolation (PI)** | scale positions: $`m\to m\cdot\frac{T_{\text{train}}}{T_{\text{new}}}`$ | all angles stay in-distribution, but *crowds* nearby positions and blurs local resolution. Needs a little fine-tuning. |
+| **NTK-aware scaling** | increase the base: $`\theta_{\text{base}}: 10000\to10000\cdot s^{d/(d-2)}`$ | stretches low-frequency dims more, leaves high-frequency (local) dims alone. Often works with **no** fine-tuning. |
 | **YaRN** | per-dimension: interpolate low-frequency dims, extrapolate high-frequency ones, plus a temperature correction on attention | current best; 10× extension with ~0.1% of original training tokens |
-| **Train with a large base** | e.g. $\theta_{\text{base}}=500{,}000$ from scratch | LLaMA-3's approach; simplest if you control pretraining |
+| **Train with a large base** | e.g. $`\theta_{\text{base}}=500{,}000`$ from scratch | LLaMA-3's approach; simplest if you control pretraining |
 
 ▸ **The unifying insight (the "NTK" argument):** RoPE dimensions form a spectrum of frequencies. High-frequency dimensions complete many full rotations within the training length, so they are well-trained and *can* extrapolate; low-frequency dimensions complete less than one rotation and have never seen large angles, so they *cannot*. The right fix therefore treats dimensions differently by frequency — which is exactly what YaRN does and what naive PI does not.
 
 #### The context-extension table, decoded
 
-First, restate the problem precisely, because it is easy to get backwards. A model trained at $T = 4096$ **does not crash** at position 8000 — RoPE will happily compute $\cos(8000\theta_i)$. It degrades because the *weights that consume those angles* were fitted on a range of angles that never included this one. **The formula generalizes; the learned function of it does not.** (Same distinction as in §12.2. It is the reusable one.)
+First, restate the problem precisely, because it is easy to get backwards. A model trained at $T = 4096$ **does not crash** at position 8000 — RoPE will happily compute $`\cos(8000\theta_i)`$. It degrades because the *weights that consume those angles* were fitted on a range of angles that never included this one. **The formula generalizes; the learned function of it does not.** (Same distinction as in §12.2. It is the reusable one.)
 
-Now each row, in plain terms. Let $s = T_{\text{new}}/T_{\text{train}}$ be the **stretch factor** — $s = 4$ means you want 4× the context.
+Now each row, in plain terms. Let $`s = T_{\text{new}}/T_{\text{train}}`$ be the **stretch factor** — $s = 4$ means you want 4× the context.
 
 **Position Interpolation (PI).** *Lie about the position.* Tell the model that token 8000 is at position 2000. Every angle is divided by $s$, so every angle lands back inside the trained range. It works, immediately, and it is one line of code.
 
-> **Analogy.** Fitting a 30 cm ruler to a 120 cm plank by relabelling every centimetre as four. Every measurement you make is now in range. But your finest gradation is 4 cm wide — you have lost the ability to distinguish things less than 4 cm apart. That is exactly "crowds nearby positions and blurs local resolution": adjacent tokens, which used to sit $\theta_0$ apart on the fastest clock, now sit $\theta_0/4$ apart, and the model must resolve four times finer than it was ever trained to.
+> **Analogy.** Fitting a 30 cm ruler to a 120 cm plank by relabelling every centimetre as four. Every measurement you make is now in range. But your finest gradation is 4 cm wide — you have lost the ability to distinguish things less than 4 cm apart. That is exactly "crowds nearby positions and blurs local resolution": adjacent tokens, which used to sit $`\theta_0`$ apart on the fastest clock, now sit $`\theta_0/4`$ apart, and the model must resolve four times finer than it was ever trained to.
 
 **NTK-aware scaling.** *Change the gearing instead of the ruler.* Rather than dividing all angles by $s$, raise the base so that **slow dimensions stretch a lot and fast dimensions barely change.** Fast dimensions did not need help — they had already completed hundreds of turns during training and are thoroughly exercised across their whole circle. Only the slow ones were starved. So fix only what is broken.
 
@@ -537,7 +537,7 @@ Now each row, in plain terms. Let $s = T_{\text{new}}/T_{\text{train}}$ be the *
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| Editing `max_position_embeddings` to 128000 in the config | Changes a bound check. The rotation angles past $T_{\text{train}}$ are still ones the weights have never been fitted for | A configuration change. The model will accept the tokens and produce degraded output |
+| Editing `max_position_embeddings` to 128000 in the config | Changes a bound check. The rotation angles past $`T_{\text{train}}`$ are still ones the weights have never been fitted for | A configuration change. The model will accept the tokens and produce degraded output |
 | Raising `--max-model-len` / allocating a bigger KV cache | Buys the *room* to hold 128k tokens; says nothing about whether the attention scores over them are meaningful | A memory allocation |
 | Chunking a document into 4k pieces and processing each separately | No token in chunk 7 ever attends to a token in chunk 2. The cross-chunk dependencies are gone by construction | Sliding-window inference |
 | Retrieval-augmented generation over a 500-page PDF | Reduces the input to a few thousand relevant tokens *before* the model sees it | Retrieval (Ch. 18) — a complement to long context, not a form of it |
@@ -545,7 +545,7 @@ Now each row, in plain terms. Let $s = T_{\text{new}}/T_{\text{train}}$ be the *
 
 ▸ **The boundary:** context extension means the attention machinery at position 100,000 is operating in a regime the weights were actually fitted for. Anything that only changes what the runtime will *accept* — a config field, a buffer size, a chunking loop — moves the limit without moving the capability.
 
-> **Common misconception.** *"RoPE is a learned positional embedding — it's in the name."* RoPE has **zero learned parameters.** The angles come from a closed-form table, $\theta_i = \text{base}^{-2i/d}$, computed once and cached; there is no gradient flowing into them and nothing to initialize. What *is* learned is $W_Q$ and $W_K$ and everything downstream, which is why changing the base is disruptive even though the base itself was never trained — you have changed the inputs those trained weights consume. The misconception is very tempting, because the word "embedding" almost everywhere else in deep learning means *a learned lookup table indexed by an integer*, and because RoPE's behaviour clearly does change when you retrain. Compare BERT's $PE\in\mathbb{R}^{512\times768}$, which  is a learned table, and the contrast is sharp: BERT has no row 512, while RoPE will happily compute an angle for position 10 million.
+> **Common misconception.** *"RoPE is a learned positional embedding — it's in the name."* RoPE has **zero learned parameters.** The angles come from a closed-form table, $`\theta_i = \text{base}^{-2i/d}`$, computed once and cached; there is no gradient flowing into them and nothing to initialize. What *is* learned is $`W_Q`$ and $`W_K`$ and everything downstream, which is why changing the base is disruptive even though the base itself was never trained — you have changed the inputs those trained weights consume. The misconception is very tempting, because the word "embedding" almost everywhere else in deep learning means *a learned lookup table indexed by an integer*, and because RoPE's behaviour clearly does change when you retrain. Compare BERT's $PE\in\mathbb{R}^{512\times768}$, which  is a learned table, and the contrast is sharp: BERT has no row 512, while RoPE will happily compute an angle for position 10 million.
 
 > **Common misconception.** *"We extended the model to 128k context, so now it can reason over 128k tokens."* Extension fixes exactly one thing: the mismatch between the angles the model sees and the angles its weights were fitted for. It does nothing whatsoever about the model's ability to *integrate* information spread across 128,000 tokens — that is a capability question, and §12.8 shows it lags the window size badly. A model can have perfectly in-distribution attention scores at position 120,000 and still be unable to answer a question that requires combining something at position 5,000 with something at position 95,000. The belief is tempting because the metrics used to validate an extension — perplexity on long documents, needle-in-a-haystack recall — are both dominated by *local* prediction and *lookup*, the two things that were never the hard part. **You measured the thing that was easy to measure and concluded something about the thing that wasn't.**
 
@@ -589,7 +589,7 @@ The rescaling factors correct the previously-accumulated result for the new glob
 
 This is the mathematical core of FlashAttention and it looks worse than it is. Start with **why softmax needs a maximum at all.**
 
-Softmax is $p_i = e^{z_i}/\sum_j e^{z_j}$. If some $z_i = 800$, then $e^{800}$ overflows to infinity in any float format and the whole computation becomes `NaN`. The standard fix — used in every library, everywhere — is to subtract the largest logit first:
+Softmax is $`p_i = e^{z_i}/\sum_j e^{z_j}`$. If some $`z_i = 800`$, then $e^{800}$ overflows to infinity in any float format and the whole computation becomes `NaN`. The standard fix — used in every library, everywhere — is to subtract the largest logit first:
 
 $$p_i = \frac{e^{z_i - m}}{\sum_j e^{z_j - m}}, \qquad m = \max_j z_j$$
 
@@ -723,7 +723,7 @@ Decoding the complexity column:
 
 Replace $\mathrm{softmax}(QK^\top)V$ with $\phi(Q)(\phi(K)^\top V)$ for a feature map $\phi$. By associativity, compute $\phi(K)^\top V$ first ($d\times d$), giving **$O(Td^2)$ instead of $O(T^2d)$.**
 
-▸ In the causal case this is exactly a **linear RNN** with state $S_t = S_{t-1} + \phi(k_t)v_t^\top$, so inference is $O(1)$ memory per token — no KV cache at all. The cost is quality: linear attention cannot do sharp, selective retrieval, because a fixed $d\times d$ state must summarize everything.
+▸ In the causal case this is exactly a **linear RNN** with state $`S_t = S_{t-1} + \phi(k_t)v_t^\top`$, so inference is $O(1)$ memory per token — no KV cache at all. The cost is quality: linear attention cannot do sharp, selective retrieval, because a fixed $d\times d$ state must summarize everything.
 
 #### Unpacking linear attention
 
@@ -747,7 +747,7 @@ Softmax is what blocks it. In $\mathrm{softmax}(QK^\top)V$ the softmax sits *bet
 
 ▸ **The crossover point is where $T > d$**, which for any real sequence is essentially always — so linear attention is asymptotically better from a few hundred tokens onward. Which raises the obvious question: why doesn't everyone use it?
 
-**Reading the recurrence $S_t = S_{t-1} + \phi(k_t)v_t^\top$.** Here $\phi(k_t)v_t^\top$ is an **outer product** (§0.8) — a $d\times d$ matrix built from two vectors. Each new token adds its own outer product onto a running $d\times d$ accumulator. Then $\phi(q_t)^\top S_t$ reads out of it.
+**Reading the recurrence $`S_t = S_{t-1} + \phi(k_t)v_t^\top`$.** Here $`\phi(k_t)v_t^\top`$ is an **outer product** (§0.8) — a $d\times d$ matrix built from two vectors. Each new token adds its own outer product onto a running $d\times d$ accumulator. Then $`\phi(q_t)^\top S_t`$ reads out of it.
 
 > **Analogy.** A single whiteboard that everyone writes on, in the same handwriting, without erasing. Any individual message is still technically present in the ink, but after ten thousand people have written over each other, extracting one specific sentence is hopeless. A transformer's KV cache is a filing cabinet: every message on its own sheet, indexed, retrievable exactly.
 
@@ -759,10 +759,10 @@ Softmax is what blocks it. In $\mathrm{softmax}(QK^\top)V$ the softmax sits *bet
 
 ### The idea
 
-A continuous linear system $h'(t)=Ah(t)+Bx(t)$, $y=Ch(t)$, discretized to $h_t = \bar Ah_{t-1}+\bar Bx_t$, $y_t = Ch_t$.
+A continuous linear system $h'(t)=Ah(t)+Bx(t)$, $y=Ch(t)$, discretized to $`h_t = \bar Ah_{t-1}+\bar Bx_t`$, $`y_t = Ch_t`$.
 
 **The two-mode trick:** because the recurrence is linear,
-- **Training:** unroll into a convolution $y = \bar K * x$ with kernel $\bar K = (C\bar B, C\bar A\bar B, C\bar A^2\bar B,\dots)$, computable in $O(T\log T)$ by FFT — fully parallel.
+- **Training:** unroll into a convolution $`y = \bar K * x`$ with kernel $\bar K = (C\bar B, C\bar A\bar B, C\bar A^2\bar B,\dots)$, computable in $O(T\log T)$ by FFT — fully parallel.
 - **Inference:** run the recurrence, $O(1)$ state per token.
 
 ▸ **This solves the exact problem that killed RNNs in Ch. 9** (no training parallelism) while keeping their exact advantage (constant-size state).
@@ -786,15 +786,15 @@ Start with the continuous version, $h'(t) = Ah(t) + Bx(t)$, $y = Ch(t)$, and rea
 
 > **Analogy — and this is literally where the equations come from.** A set of connected water tanks. $h$ is the water level in each tank. $A$ says how water flows between tanks and drains away. $B$ says which tanks the hose fills. $C$ says which gauge you read. This is not a metaphor invented for the textbook; these are the standard equations of **linear control theory**, used for aircraft autopilots and chemical plants since the 1960s, imported wholesale into deep learning.
 
-**Discretization, plainly.** A neural network sees tokens at $t = 1, 2, 3, \dots$, not a continuous flow. Discretizing means asking: *given the water was at level $h_{t-1}$ and I let one time-step of duration $\Delta$ elapse, where is it now?* The answer for a linear system involves a matrix exponential, and the result is folded into the new matrices $\bar A$ and $\bar B$. **The bar means "converted to time-steps."** ⚠ This is a different use of the bar from Chapter 0's gradient notation — one of the  collisions in this book's symbol set.
+**Discretization, plainly.** A neural network sees tokens at $t = 1, 2, 3, \dots$, not a continuous flow. Discretizing means asking: *given the water was at level $`h_{t-1}`$ and I let one time-step of duration $\Delta$ elapse, where is it now?* The answer for a linear system involves a matrix exponential, and the result is folded into the new matrices $\bar A$ and $\bar B$. **The bar means "converted to time-steps."** ⚠ This is a different use of the bar from Chapter 0's gradient notation — one of the  collisions in this book's symbol set.
 
 #### Why the two-mode trick works, and why it is such a big deal
 
-The recurrence $h_t = \bar Ah_{t-1} + \bar Bx_t$ looks fatally sequential — you cannot compute $h_5$ without $h_4$. But because there is **no nonlinearity anywhere**, you can unroll it and the mess telescopes:
+The recurrence $`h_t = \bar Ah_{t-1} + \bar Bx_t`$ looks fatally sequential — you cannot compute $`h_5`$ without $`h_4`$. But because there is **no nonlinearity anywhere**, you can unroll it and the mess telescopes:
 
 $$h_1 = \bar Bx_1,\qquad h_2 = \bar A\bar Bx_1 + \bar Bx_2,\qquad h_3 = \bar A^2\bar Bx_1 + \bar A\bar Bx_2 + \bar Bx_3$$
 
-Read out through $C$ and the pattern is clear: $y_t$ is a weighted sum of *all* past inputs, with weight $C\bar A^{k}\bar B$ on the input from $k$ steps ago. **That is a convolution** — the kernel $\bar K = (C\bar B,\ C\bar A\bar B,\ C\bar A^2\bar B,\dots)$ is the same for every $t$, so you can build it once and slide it along.
+Read out through $C$ and the pattern is clear: $`y_t`$ is a weighted sum of *all* past inputs, with weight $C\bar A^{k}\bar B$ on the input from $k$ steps ago. **That is a convolution** — the kernel $\bar K = (C\bar B,\ C\bar A\bar B,\ C\bar A^2\bar B,\dots)$ is the same for every $t$, so you can build it once and slide it along.
 
 And a convolution of length $T$ can be done by **FFT** (Fast Fourier Transform) in $\mathcal{O}(T\log T)$ instead of $\mathcal{O}(T^2)$: at $T=100{,}000$ that is $1.7\times10^6$ against $10^{10}$, a factor of about 6,000.
 
@@ -876,11 +876,11 @@ At inference, past keys and values are cached to avoid recomputation. Size:
 
 ▸ $$\text{KV cache bytes} = 2\times L\times T\times h_{kv}\times d_{\text{head}}\times \text{bytes/elem}$$
 
-**Numbers.** A 70B-class model *with full MHA* — $L=80$, $h_{kv}=64$, $d_{\text{head}}=128$, $T=4096$, bf16:
+**Numbers.** A 70B-class model *with full MHA* — $L=80$, $`h_{kv}=64`$, $`d_{\text{head}}=128`$, $T=4096$, bf16:
 $$2\times80\times4096\times64\times128\times2 = 10.7\ \text{GB per sequence.}$$
 For a batch of 32, that is 343 GB — far more than the 140 GB of weights. **The KV cache, not the model, is usually the binding memory constraint in serving.**
 
-▸ *This is exactly why no shipped 70B model uses MHA.* LLaMA-2-70B has the geometry above but uses **GQA with $h_{kv}=8$**, cutting the cache 8× to 1.34 GB per sequence. The MHA figure is what GQA was invented to avoid — keep both numbers in mind, since the contrast is the argument.
+▸ *This is exactly why no shipped 70B model uses MHA.* LLaMA-2-70B has the geometry above but uses **GQA with $`h_{kv}=8`$**, cutting the cache 8× to 1.34 GB per sequence. The MHA figure is what GQA was invented to avoid — keep both numbers in mind, since the contrast is the argument.
 
 #### Unpacking the KV-cache formula
 
@@ -893,8 +893,8 @@ Now every factor in the formula, and where it comes from:
 | $2$ | "two" | You cache **both** a key and a value per token |
 | $L$ | "L" | **Every layer** has its own attention and its own cache |
 | $T$ | "T" | One entry per **token so far** — this is the one that grows |
-| $h_{kv}$ | "h sub k-v" | One entry per **key/value head** |
-| $d_{\text{head}}$ | "d head" | Each entry is a vector this wide |
+| $`h_{kv}`$ | "h sub k-v" | One entry per **key/value head** |
+| $`d_{\text{head}}`$ | "d head" | Each entry is a vector this wide |
 | bytes/elem | — | 2 for bf16, 1 for int8 |
 
 ▸ **Say it aloud: "two, for keys and values, times layers, times tokens, times key-value heads, times head width, times bytes."** Six factors multiplied. There is no subtlety anywhere in it — which is precisely what makes it dangerous, because six moderate numbers multiply into an enormous one.
@@ -915,11 +915,11 @@ For **one** sequence, at a context of 4096 — which by 2026 standards is short.
 
 ### The fixes
 
-**MQA (Multi-Query Attention):** all query heads share **one** K/V head. $h_{kv}=1$ ⇒ 64× reduction. Noticeable quality loss.
+**MQA (Multi-Query Attention):** all query heads share **one** K/V head. $`h_{kv}=1`$ ⇒ 64× reduction. Noticeable quality loss.
 
-**GQA (Grouped-Query Attention):** $g$ K/V heads shared among $h$ query heads. $h_{kv}=8$ with $h=64$ ⇒ 8× reduction at near-MHA quality. ▸ **The current default** (LLaMA-2/3 70B, Mistral, most production models). It is a clean interpolation: $g=h$ is MHA, $g=1$ is MQA.
+**GQA (Grouped-Query Attention):** $g$ K/V heads shared among $h$ query heads. $`h_{kv}=8`$ with $h=64$ ⇒ 8× reduction at near-MHA quality. ▸ **The current default** (LLaMA-2/3 70B, Mistral, most production models). It is a clean interpolation: $g=h$ is MHA, $g=1$ is MQA.
 
-**MLA (Multi-head Latent Attention, DeepSeek):** compress K and V jointly into a low-rank latent $c_t = W_{DKV}x_t$ and cache only $c_t$, reconstructing K/V on the fly. ~90%+ cache reduction with quality *better* than GQA at matched cache size.
+**MLA (Multi-head Latent Attention, DeepSeek):** compress K and V jointly into a low-rank latent $`c_t = W_{DKV}x_t`$ and cache only $`c_t`$, reconstructing K/V on the fly. ~90%+ cache reduction with quality *better* than GQA at matched cache size.
 
 **Quantized KV cache:** store in int8 or int4. 2–4× reduction, small quality cost, composes with the above.
 
@@ -931,9 +931,9 @@ Every one of them attacks a different factor in that six-term product. That is t
 
 | Fix | Which factor it shrinks | Typical saving |
 |---|---|---|
-| MQA | $h_{kv}: 64 \to 1$ | 64× |
-| GQA | $h_{kv}: 64 \to 8$ | 8× |
-| MLA | $d_{\text{head}}$, effectively — cache a compressed latent instead | ~10× |
+| MQA | $`h_{kv}: 64 \to 1`$ | 64× |
+| GQA | $`h_{kv}: 64 \to 8`$ | 8× |
+| MLA | $`d_{\text{head}}`$, effectively — cache a compressed latent instead | ~10× |
 | Quantized cache | bytes/elem: $2\to1$ or $0.5$ | 2–4× |
 | Eviction / streaming | $T$ — stop storing all of it | Unbounded |
 
@@ -946,7 +946,7 @@ Every one of them attacks a different factor in that six-term product. That is t
 
 ▸ **Why GQA loses so little quality is the interesting part.** Attention heads turn out to be substantially redundant — many heads within a layer learn overlapping functions. Forcing groups of eight to share a key/value projection removes duplication rather than capability. MQA's quality loss appears when you compress past that point and heads that were doing  different jobs are made to share. **GQA sits at the knee of the curve, and $g$ is a clean dial**: $g = h$ recovers MHA exactly, $g = 1$ is MQA, and the interesting settings are in between.
 
-**MLA, in one sentence.** Instead of caching $K$ and $V$ directly, project them jointly down to a small latent vector $c_t$, cache *that*, and reconstruct $K$ and $V$ on the fly with a matrix multiply. It is the low-rank idea from §1.1.3 applied to the cache: **store the coefficients, not the reconstruction.** It buys extra FLOPs at read time to save bytes at rest — which, given the memory-versus-arithmetic ratio established in §12.5, is a trade in the favourable direction.
+**MLA, in one sentence.** Instead of caching $K$ and $V$ directly, project them jointly down to a small latent vector $`c_t`$, cache *that*, and reconstruct $K$ and $V$ on the fly with a matrix multiply. It is the low-rank idea from §1.1.3 applied to the cache: **store the coefficients, not the reconstruction.** It buys extra FLOPs at read time to save bytes at rest — which, given the memory-versus-arithmetic ratio established in §12.5, is a trade in the favourable direction.
 
 **Quantized cache, in one sentence.** Store each cached number in 8 or 4 bits instead of 16. Keys and values are activations with fairly well-behaved ranges, so the precision loss is tolerable — and it **multiplies with** the others, since it changes a different factor. GQA (8×) and int8 (2×) together give 16×.
 

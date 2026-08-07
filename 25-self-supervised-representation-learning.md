@@ -9,7 +9,7 @@
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $x^+$ | "x-plus" | A **positive** — a second view of the *same* thing |
-| $x_j$ | "x-j" | A **negative** — a view of a *different* thing |
+| $`x_j`$ | "x-j" | A **negative** — a view of a *different* thing |
 | $z$ | "z" | The **embedding**: the vector a network produces for an input |
 | $\mathrm{sim}(a,b)$ | "similarity" | Usually **cosine similarity** — alignment, ignoring length |
 | $\tau$ | "tau" | **Temperature** — divides scores before the softmax; small $\tau$ = sharper |
@@ -17,7 +17,7 @@
 | $I(x;x^+)$ | "mutual information" | How much knowing one view tells you about the other |
 | $f$ | "f" | The **encoder** — the network you actually keep |
 | $g$ | "g" | The **projection head** — a small network thrown away after training |
-| $\theta_k,\ \theta_q$ | "theta-k, theta-q" | Weights of the **key** (target) and **query** (online) encoders |
+| $`\theta_k,\ \theta_q`$ | "theta-k, theta-q" | Weights of the **key** (target) and **query** (online) encoders |
 | $m$ | "m" | **Momentum** for the EMA update, typically 0.999 |
 | $\leftarrow$ | "is assigned" | An **update**, i.e. a line of code — not an equation |
 | $\lvert P(i)\rvert$ | "size of P of i" | How many positives example $i$ has |
@@ -144,11 +144,11 @@ Given an anchor $x$, a positive $x^+$, and $N-1$ negatives:
 
 ### The mutual-information bound — derive it
 
-**Claim:** $I(x;x^+)\ \ge\ \log N - \mathcal{L}_{\text{InfoNCE}}$.
+**Claim:** $`I(x;x^+)\ \ge\ \log N - \mathcal{L}_{\text{InfoNCE}}`$.
 
 Sketch: the optimal critic for the $N$-way classification task is $f(x,x^+)\propto\frac{p(x^+\mid x)}{p(x^+)}$ (the density ratio). Substituting the optimal critic into the loss and taking expectations yields
 $$\mathcal{L}^{\text{opt}} = -\mathbb{E}\left[\log\frac{\frac{p(x^+|x)}{p(x^+)}}{\frac{p(x^+|x)}{p(x^+)} + \sum_{j\ne +}\frac{p(x_j|x)}{p(x_j)}}\right] \approx \log N - I(x;x^+)$$
-where the approximation uses $\sum_{j\ne+}\frac{p(x_j|x)}{p(x_j)}\approx (N-1)\,\mathbb{E}_{x_j}\!\left[\frac{p(x_j|x)}{p(x_j)}\right] = N-1$. Rearranging gives the bound. ∎
+where the approximation uses $`\sum_{j\ne+}\frac{p(x_j|x)}{p(x_j)}\approx (N-1)\,\mathbb{E}_{x_j}\!\left[\frac{p(x_j|x)}{p(x_j)}\right] = N-1`$. Rearranging gives the bound. ∎
 
 ▸ **Two consequences that are frequently asked about:**
 1. **More negatives ⇒ a tighter bound**, which is the theoretical case for large batches.
@@ -162,7 +162,7 @@ The formula looks forbidding but the text gives the key away: **it is cross-entr
 
 $$\mathcal{L}_{\text{InfoNCE}} = -\log\frac{\exp(\mathrm{sim}(z,z^+)/\tau)}{\sum_{j=1}^{N}\exp(\mathrm{sim}(z,z_j)/\tau)}$$
 
-Compare with softmax cross-entropy from §1.3.4: $-\log\frac{e^{z_y}}{\sum_j e^{z_j}}$. **They are the same formula.** The only difference is what plays the role of the logit — here it's a similarity score divided by temperature.
+Compare with softmax cross-entropy from §1.3.4: $`-\log\frac{e^{z_y}}{\sum_j e^{z_j}}`$. **They are the same formula.** The only difference is what plays the role of the logit — here it's a similarity score divided by temperature.
 
 So the model is being asked, for each anchor:
 
@@ -351,11 +351,11 @@ BYOL removed negatives entirely, which by the reasoning of §25.1 should collaps
 |---|---|
 | **Predictor** (extra network on the online branch only) | Breaks the symmetry between the two branches |
 | **Stop-gradient** on the target branch | The target is a *fixed* objective, not something to optimize against |
-| **EMA target** ($\theta_k \leftarrow m\theta_k + (1-m)\theta_q$) | The target moves slowly, so it never chases the online net into the constant solution |
+| **EMA target** ($`\theta_k \leftarrow m\theta_k + (1-m)\theta_q`$) | The target moves slowly, so it never chases the online net into the constant solution |
 
 ▸ **The intuition:** the constant solution *is* a fixed point, but the asymmetric architecture makes it **unstable** rather than attractive. The online network is always chasing a slightly stale copy of itself, and the predictor means it must model *how the target differs from itself* — a task with no content if everything is constant. Gradient descent doesn't find the collapse because the path there isn't downhill.
 
-**Reading the EMA update.** $\theta_k \leftarrow m\theta_k + (1-m)\theta_q$ with $m = 0.999$ means: *"keep 99.9% of the old target, mix in 0.1% of the current online weights."* The arrow is an **assignment**, not an equation (§0.11).
+**Reading the EMA update.** $`\theta_k \leftarrow m\theta_k + (1-m)\theta_q`$ with $m = 0.999$ means: *"keep 99.9% of the old target, mix in 0.1% of the current online weights."* The arrow is an **assignment**, not an equation (§0.11).
 
 Put a number on it: with $m=0.999$, the target's effective memory is about $1/(1-m) = 1000$ steps. It reflects roughly where the online network was a thousand steps ago — recent enough to be relevant, stale enough to be a stable target.
 

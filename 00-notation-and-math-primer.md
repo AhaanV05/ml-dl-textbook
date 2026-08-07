@@ -27,10 +27,10 @@ Before any specific symbol, here is the *method*. When you hit a formula that lo
 The left side is almost always the thing being named. The right side is the recipe for computing it. $\mathrm{Var}(X) = \mathbb{E}[X^2] - \mathbb{E}[X]^2$ is not a claim to verify, it's a *definition*: "the thing I'm calling variance is computed by this recipe."
 
 **Habit 2 — Read every symbol as a word, out loud.**
-$\|x\|_2 = \sqrt{\sum_i x_i^2}$ becomes *"the two-norm of x equals the square root of the sum over i of x-i squared."* Then translate to English: *"the length of the arrow x is the square root of the sum of its squared components."* Then to intuition: *"Pythagoras, in as many dimensions as you like."*
+$`\|x\|_2 = \sqrt{\sum_i x_i^2}`$ becomes *"the two-norm of x equals the square root of the sum over i of x-i squared."* Then translate to English: *"the length of the arrow x is the square root of the sum of its squared components."* Then to intuition: *"Pythagoras, in as many dimensions as you like."*
 
 **Habit 3 — Identify what varies and what is fixed.**
-In $\sum_j e^{z_j}$, the $j$ moves and everything else stands still. The index under a $\sum$ is a **loop counter** — literally a `for` loop. This one realization dissolves most of the fear of summation notation.
+In $`\sum_j e^{z_j}`$, the $j$ moves and everything else stands still. The index under a $\sum$ is a **loop counter** — literally a `for` loop. This one realization dissolves most of the fear of summation notation.
 
 **Habit 4 — Check the shapes.**
 Every quantity is a scalar (one number), a vector (a list), or a matrix (a grid). If you know the shape of every term, you can catch most errors without understanding the content at all. A formula where a $3\times4$ matrix is being added to a $7$-vector is wrong, and you know it's wrong without knowing what it means.
@@ -80,7 +80,7 @@ These four symbols cause more beginner panic than everything else combined, and 
 
 $$\sum_{i=1}^{n} x_i \quad=\quad x_1 + x_2 + \dots + x_n$$
 
-Read it as: **"start i at 1, go up to n, add each $x_i$ into a running total."** In code:
+Read it as: **"start i at 1, go up to n, add each $`x_i`$ into a running total."** In code:
 
 ```python
 total = 0
@@ -93,9 +93,9 @@ That is *all* it is. The three parts:
 - **Above** the $\sum$: where it stops.
 - **After** the $\sum$: the thing being added each time — the loop body.
 
-When you see $\sum_i$ or $\sum_j$ with nothing above or below, it means "over all of them" — the range is obvious from context.
+When you see $`\sum_i`$ or $`\sum_j`$ with nothing above or below, it means "over all of them" — the range is obvious from context.
 
-**Double sums are nested loops.** $\sum_{i}\sum_{j} A_{ij}$ is:
+**Double sums are nested loops.** $`\sum_{i}\sum_{j} A_{ij}`$ is:
 
 ```python
 total = 0
@@ -108,7 +108,7 @@ for i in ...:
 
 ### $\prod$ — "multiply up"
 
-Identical to $\sum$, but multiplying instead of adding. $\prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n$.
+Identical to $\sum$, but multiplying instead of adding. $`\prod_{i=1}^{n} x_i = x_1 \cdot x_2 \cdots x_n`$.
 
 ▸ **Why products matter and why logs always follow them:** products of many numbers explode or vanish fast. $0.9^{100} \approx 0.000027$. This is why probability calculations are done in **log space** — $\log$ turns products into sums ($\log(ab) = \log a + \log b$), and sums don't underflow. Every time you see a $\log$ in front of a probability in this book, this is why.
 
@@ -124,10 +124,10 @@ This distinction trips up nearly everyone, and it matters.
 
 | Notation | Returns | Example with $f(1){=}3,\ f(2){=}9,\ f(3){=}5$ |
 |---|---|---|
-| $\max_x f(x)$ | the **best value** | $9$ |
-| $\arg\max_x f(x)$ | the **input that achieves it** | $2$ |
+| $`\max_x f(x)`$ | the **best value** | $9$ |
+| $`\arg\max_x f(x)`$ | the **input that achieves it** | $2$ |
 
-▸ **"arg" means "argument," i.e. the input.** $\max$ gives you the height of the mountain; $\arg\max$ gives you the GPS coordinates of the summit. In machine learning we nearly always want $\arg\min_\theta \mathcal{L}(\theta)$ — *"the parameter settings that make the loss smallest"* — because we want the model, not the loss value.
+▸ **"arg" means "argument," i.e. the input.** $\max$ gives you the height of the mountain; $\arg\max$ gives you the GPS coordinates of the summit. In machine learning we nearly always want $`\arg\min_\theta \mathcal{L}(\theta)`$ — *"the parameter settings that make the loss smallest"* — because we want the model, not the loss value.
 
 ---
 
@@ -141,7 +141,7 @@ Greek letters are just variable names. There is no meaning inherent to $\theta$;
 | $\phi,\ \varphi$ | phi | A *second* set of parameters (e.g. the encoder's, in a VAE). |
 | $\eta$ | eta | **Learning rate** (step size). |
 | $\alpha$ | alpha | Learning rate, or a mixing/step coefficient. |
-| $\beta$ | beta | Momentum coefficient ($\beta_1,\beta_2$ in Adam), or an inverse temperature. |
+| $\beta$ | beta | Momentum coefficient ($`\beta_1,\beta_2`$ in Adam), or an inverse temperature. |
 | $\lambda$ | lambda | **Eigenvalue**, or **regularization strength**. Two very different jobs. |
 | $\mu$ | mu | **Mean** (average). |
 | $\sigma$ | sigma | See the trap below — **four different jobs**. |
@@ -162,19 +162,19 @@ Greek letters are just variable names. There is no meaning inherent to $\theta$;
 This is the single most confusing overload in machine learning, and this book — like every other — uses all four. **You must disambiguate from context:**
 
 1. **Standard deviation** — $\sigma^2$ is variance. Context: probability, initialization.
-2. **A singular value** — $\sigma_i$, $\sigma_{\max}$. Context: SVD, matrix norms, Chapter 1.
+2. **A singular value** — $`\sigma_i`$, $`\sigma_{\max}`$. Context: SVD, matrix norms, Chapter 1.
 3. **The sigmoid function** — $\sigma(x) = 1/(1+e^{-x})$. Context: gates, binary classification.
 4. **A generic activation function** — $\sigma(\cdot)$ meaning "whatever nonlinearity." Context: network definitions.
 
-▸ **How to tell them apart instantly:** if it has a subscript index ($\sigma_i$, $\sigma_{\max}$) it's a singular value. If it's squared ($\sigma^2$) it's a standard deviation. If it has a function argument in parentheses ($\sigma(z)$) it's sigmoid-or-activation. That rule covers essentially every occurrence.
+▸ **How to tell them apart instantly:** if it has a subscript index ($`\sigma_i`$, $`\sigma_{\max}`$) it's a singular value. If it's squared ($\sigma^2$) it's a standard deviation. If it has a function argument in parentheses ($\sigma(z)$) it's sigmoid-or-activation. That rule covers essentially every occurrence.
 
 ### ⚠ Trap 2: $\Sigma$ vs $\sum$
 
-Capital sigma $\Sigma$ is a **covariance matrix**. The summation operator $\sum$ is a *taller, different glyph* that always has an index attached ($\sum_i$). If it has a loop index under it, it's "add up." If it stands alone next to a $\mu$, it's a covariance matrix.
+Capital sigma $\Sigma$ is a **covariance matrix**. The summation operator $\sum$ is a *taller, different glyph* that always has an index attached ($`\sum_i`$). If it has a loop index under it, it's "add up." If it stands alone next to a $\mu$, it's a covariance matrix.
 
 ### ⚠ Trap 3: $\ell$ vs $L$ vs $\mathcal{L}$
 
-- $\ell$ (script-l) — a **per-example loss**, or a **layer index**, or the $\ell_p$ norm family.
+- $\ell$ (script-l) — a **per-example loss**, or a **layer index**, or the $`\ell_p`$ norm family.
 - $\mathcal{L}$ (calligraphic L) — **the total loss** being minimized.
 - $L$ — usually the **number of layers**.
 
@@ -205,7 +205,7 @@ Read: "for each possible value $x$, multiply the value by its probability, and a
 
 > **Analogy.** A lottery ticket pays nothing with probability $0.999$, and pays 1000 pounds with probability $0.001$. The expectation is $0(0.999) + 1000(0.001) = 1$ pound. That is the *fair price* — what you'd collect per ticket on average across a huge number of tickets. Note that you will never actually win one pound: the only possible outcomes are nothing and a thousand. **An expectation need not be a possible outcome.** It is a long-run average, not a prediction.
 
-The subscript tells you *what is random*: $\mathbb{E}_{x \sim p}[f(x)]$ means "average $f(x)$ as $x$ is drawn from distribution $p$." When you see $\mathbb{E}_{q_\phi}$, it means "average over samples from $q_\phi$."
+The subscript tells you *what is random*: $`\mathbb{E}_{x \sim p}[f(x)]`$ means "average $f(x)$ as $x$ is drawn from distribution $p$." When you see $`\mathbb{E}_{q_\phi}`$, it means "average over samples from $`q_\phi`$."
 
 ▸ **Why $\mathbb{E}$ is everywhere in ML:** you want your model to do well on *all possible data*, but you only have a finite sample. Every training objective in this book is secretly "minimize the *expected* loss," and every practical implementation replaces that expectation with an **average over a batch**. That swap — expectation → batch average — is the entire relationship between the theory and the code.
 
@@ -222,7 +222,7 @@ A mark placed *on* a symbol modifies its meaning. These are heavily used in this
 | $\tilde{x}$ | "x-tilde" | A modified/perturbed/approximate version of $x$. |
 | $A^\top$ | "A transpose" | Flip the matrix over its diagonal: rows become columns. |
 | $A^{-1}$ | "A inverse" | The matrix that undoes $A$. |
-| $x^*$ | "x-star" | The **optimal** value of $x$. |
+| $`x^*`$ | "x-star" | The **optimal** value of $x$. |
 | $\|x\|$ | "norm of x" | The **length** of the vector $x$. |
 | $\langle a, b\rangle$ | "inner product" | Same as the dot product $a^\top b$. |
 
@@ -242,11 +242,11 @@ $$A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6\end{pmatrix} \quad\Rightarrow\quad 
 
 Shape $2\times 3$ becomes $3 \times 2$. Its main job in this book is **making shapes line up so a multiplication is legal.** When you see a $^\top$ appear in a derivation, 90% of the time the reason is bookkeeping, not insight.
 
-### The Kronecker delta $\delta_{ij}$
+### The Kronecker delta $`\delta_{ij}`$
 
 $$\delta_{ij} = \begin{cases} 1 & \text{if } i = j \\ 0 & \text{otherwise}\end{cases}$$
 
-It's an `if i == j` written as a symbol. It shows up in derivatives because $\partial x_i/\partial x_j$ is $1$ when they're the same variable and $0$ when they're different. That's all it is ever doing.
+It's an `if i == j` written as a symbol. It shows up in derivatives because $`\partial x_i/\partial x_j`$ is $1$ when they're the same variable and $0$ when they're different. That's all it is ever doing.
 
 ---
 
@@ -264,19 +264,19 @@ The curly $\partial$ ("partial" or "der") signals *"there are other variables, a
 
 ### $\nabla$ — the gradient
 
-$\nabla_\theta \mathcal{L}$ ("grad theta L," or "del theta L") is simply **all the partial derivatives collected into one vector, one per parameter**:
+$`\nabla_\theta \mathcal{L}`$ ("grad theta L," or "del theta L") is simply **all the partial derivatives collected into one vector, one per parameter**:
 
 $$\nabla_\theta \mathcal{L} = \left(\frac{\partial \mathcal{L}}{\partial \theta_1},\ \frac{\partial \mathcal{L}}{\partial \theta_2},\ \dots,\ \frac{\partial \mathcal{L}}{\partial \theta_p}\right)$$
 
-▸ **The gradient points in the direction of steepest increase.** So $-\nabla_\theta\mathcal{L}$ points in the direction of steepest *decrease*, which is why every learning algorithm in this book is some variation of $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}$ — *"take a small step downhill."*
+▸ **The gradient points in the direction of steepest increase.** So $`-\nabla_\theta\mathcal{L}`$ points in the direction of steepest *decrease*, which is why every learning algorithm in this book is some variation of $`\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}`$ — *"take a small step downhill."*
 
 > **Analogy.** You're standing on a foggy hillside and can only feel the ground under your feet. The gradient is what your feet tell you: which way is uphill, and how steep. Gradient descent is the strategy "feel which way is downhill, take a step, repeat." The learning rate $\eta$ is how big a step you take. Too small and you're there all week; too big and you stride straight over the valley and up the other side.
 
-**The subscript on $\nabla$ says what you're differentiating with respect to.** $\nabla_\theta$ = with respect to parameters (for learning). $\nabla_x$ = with respect to the input (for adversarial examples and saliency maps).
+**The subscript on $\nabla$ says what you're differentiating with respect to.** $`\nabla_\theta`$ = with respect to parameters (for learning). $`\nabla_x`$ = with respect to the input (for adversarial examples and saliency maps).
 
 ### The shape rule, which catches most bugs
 
-▸ **A gradient always has the same shape as the thing you differentiated with respect to.** If $\theta$ is a $512\times 768$ matrix, then $\nabla_\theta \mathcal{L}$ is a $512 \times 768$ matrix. Always. No exceptions. This is worth more than any other single debugging heuristic in deep learning.
+▸ **A gradient always has the same shape as the thing you differentiated with respect to.** If $\theta$ is a $512\times 768$ matrix, then $`\nabla_\theta \mathcal{L}`$ is a $512 \times 768$ matrix. Always. No exceptions. This is worth more than any other single debugging heuristic in deep learning.
 
 ---
 
@@ -347,7 +347,7 @@ $p(x \mid y)$ is a **conditional probability**: *"the probability of $x$, in a w
 
 ### $\arg\max$ in probability, and the two big estimation ideas
 
-- **MLE (maximum likelihood):** $\arg\max_\theta p(\text{data}\mid\theta)$ — *"pick the parameters that make the data I actually observed as unsurprising as possible."*
+- **MLE (maximum likelihood):** $`\arg\max_\theta p(\text{data}\mid\theta)`$ — *"pick the parameters that make the data I actually observed as unsurprising as possible."*
 - **Posterior:** $p(\theta \mid \text{data})$ — *"having seen the data, what do I now believe about the parameters?"*
 
 ---
@@ -444,7 +444,7 @@ This section does that for the ideas the rest of the book leans on hardest.
 |---|---|
 | $f(x) = 3x$ | Double $x$, output doubles. Add inputs, outputs add. |
 | $f(x) = Ax$ for a matrix $A$ | The definition of a linear map |
-| Summing a batch of gradients | $\sum(a_i + b_i) = \sum a_i + \sum b_i$ |
+| Summing a batch of gradients | $`\sum(a_i + b_i) = \sum a_i + \sum b_i`$ |
 | Expectation, $\mathbb{E}[aX+bY]$ | Linear **always**, even for dependent variables |
 
 **❌ Near-misses — called "linear," but aren't**
@@ -459,7 +459,7 @@ This section does that for the ideas the rest of the book leans on hardest.
 
 ▸ **The boundary:** a straight line through the origin is linear; a straight line that misses the origin is affine. Nearly every "linear layer" in deep learning is affine, and the field simply doesn't care — but the distinction matters the moment you do algebra, because affine maps don't compose as cleanly.
 
-> **Common misconception.** *"Stacking linear layers makes a deeper, more powerful model."* It does not. $W_2(W_1x) = (W_2W_1)x$, and $W_2W_1$ is just another matrix. **A hundred stacked linear layers have exactly the expressive power of one.** This is precisely why activation functions exist — without a nonlinearity between them, depth buys you nothing at all. It is the single most important reason ReLU is in your network.
+> **Common misconception.** *"Stacking linear layers makes a deeper, more powerful model."* It does not. $`W_2(W_1x) = (W_2W_1)x`$, and $`W_2W_1`$ is just another matrix. **A hundred stacked linear layers have exactly the expressive power of one.** This is precisely why activation functions exist — without a nonlinearity between them, depth buys you nothing at all. It is the single most important reason ReLU is in your network.
 
 ### Is it a probability distribution?
 
@@ -508,15 +508,15 @@ This section does that for the ideas the rest of the book leans on hardest.
 
 | Example | Why |
 |---|---|
-| $\theta \leftarrow \theta - \eta\nabla_\theta\mathcal{L}$ | Move *against* the gradient — downhill |
+| $`\theta \leftarrow \theta - \eta\nabla_\theta\mathcal{L}`$ | Move *against* the gradient — downhill |
 | Adam, RMSProp, momentum | All of the above with a smarter step size |
 
 **❌ Near-misses**
 
 | Looks right | Why it's wrong |
 |---|---|
-| $\theta \leftarrow \theta + \eta\nabla_\theta\mathcal{L}$ | **Sign error** — this is gradient *ascent*. Your loss will climb. |
-| $\theta \leftarrow \theta - \eta\nabla_x\mathcal{L}$ | Differentiating w.r.t. the **input**, not the parameters. This makes adversarial examples, not training. |
+| $`\theta \leftarrow \theta + \eta\nabla_\theta\mathcal{L}`$ | **Sign error** — this is gradient *ascent*. Your loss will climb. |
+| $`\theta \leftarrow \theta - \eta\nabla_x\mathcal{L}`$ | Differentiating w.r.t. the **input**, not the parameters. This makes adversarial examples, not training. |
 | $\theta = \theta - \eta\nabla\mathcal{L}$ read as an equation | It's an **assignment**, not an equality. Reading `=` as math gives nonsense. |
 
 ▸ **The boundary:** the gradient points **uphill**, so descent subtracts it. The subscript on $\nabla$ tells you what you're changing — parameters (learning) or inputs (attacking).
@@ -527,7 +527,7 @@ This section does that for the ideas the rest of the book leans on hardest.
 
 | Example | Why |
 |---|---|
-| $\mathbb{E}[X] = \sum_x x\,p(x)$ | Weighted by probability |
+| $`\mathbb{E}[X] = \sum_x x\,p(x)`$ | Weighted by probability |
 | Mean loss over an i.i.d. batch | An **estimate** of the expectation |
 
 **❌ Near-misses**
@@ -818,7 +818,7 @@ A handful of acronyms mean **two completely different things** in this book. Con
 
 It is fair to ask why any of this needs symbols at all. Two honest reasons:
 
-1. **Precision.** "The average error is small" is ambiguous. $\mathbb{E}_{x\sim\mathcal{D}}[\mathcal{L}(f_\theta(x), y)] < \epsilon$ is not. Notation forces you to say *which* average, over *what* distribution, and *how* small.
+1. **Precision.** "The average error is small" is ambiguous. $`\mathbb{E}_{x\sim\mathcal{D}}[\mathcal{L}(f_\theta(x), y)] < \epsilon`$ is not. Notation forces you to say *which* average, over *what* distribution, and *how* small.
 2. **Compression.** The backprop rule $\bar{A} = \bar{y}x^\top$ is six characters and takes a paragraph to state in English. Once fluent, you read the six characters faster — and, crucially, you can *manipulate* them. You cannot do algebra on a paragraph.
 
 But notation is a **tool for thinking**, not a badge. If a formula in this book ever feels impenetrable, the failure is in the exposition, not in you. Come back to this chapter, apply the six habits, set $d = 1$, and try again.

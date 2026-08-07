@@ -15,12 +15,12 @@ This chapter has less mathematics than most, and more **jargon** than any. The s
 | $d^{-}$ | "d-minus" | A **negative**: one that does not |
 | $\mathrm{sim}(q,d)$ | "similarity of q and d" | A relevance score, almost always a dot product (§0.8) |
 | $\tau$ | "tau" | **Temperature** — divides the similarity scores. Small $\tau$ makes the loss sharp |
-| $\langle E_{q_i}, E_{d_j}\rangle$ | "inner product of E-q-i and E-d-j" | Similarity between token $i$'s vector in the query and token $j$'s in the document |
-| $\max_{j\in d}$ | "max over j in d" | Scan every token of the document, keep the best match (§0.3) |
-| $\mathrm{rank}_r(d)$ | "rank of d under retriever r" | Where retriever $r$ placed document $d$ — 1 is best |
+| $`\langle E_{q_i}, E_{d_j}\rangle`$ | "inner product of E-q-i and E-d-j" | Similarity between token $i$'s vector in the query and token $j$'s in the document |
+| $`\max_{j\in d}`$ | "max over j in d" | Scan every token of the document, keep the best match (§0.3) |
+| $`\mathrm{rank}_r(d)`$ | "rank of d under retriever r" | Where retriever $r$ placed document $d$ — 1 is best |
 | $\mathcal{O}(N)$ | "big-O of N" | Cost grows in proportion to corpus size (§0.10) |
-| $rel_i$ | "rel-i" | The graded relevance of the document at position $i$ (0 = useless, 3 = perfect) |
-| $\log_2(i+1)$ | "log base two of i plus one" | The **discount**: how much less a result is worth for being further down the page |
+| $`rel_i`$ | "rel-i" | The graded relevance of the document at position $i$ (0 = useless, 3 = perfect) |
+| $`\log_2(i+1)`$ | "log base two of i plus one" | The **discount**: how much less a result is worth for being further down the page |
 | $p^n$ | "p to the n" | Success probability of an $n$-step agent with per-step reliability $p$ |
 
 ### Full forms for the abbreviations in this chapter
@@ -144,7 +144,7 @@ BM25's scoring rests on three ideas, none of which require training:
 | **Inverse document frequency** (IDF) | A word appearing in few documents is more informative | "the" appears everywhere and tells you nothing; "pyridoxine" appears in six documents and tells you everything |
 | **Length normalization** | Long documents mention everything by accident | Otherwise the longest document in the corpus wins every query |
 
-▸ **IDF is the load-bearing idea, and it is one line of information theory.** A word's informativeness is roughly $\log(N/n_w)$ — the log of (total documents divided by documents containing that word). It is the *surprise* of encountering the word (Ch. 1 §1.4), used as a weight. Rare words carry the signal; common words are noise wearing the same clothes.
+▸ **IDF is the load-bearing idea, and it is one line of information theory.** A word's informativeness is roughly $`\log(N/n_w)`$ — the log of (total documents divided by documents containing that word). It is the *surprise* of encountering the word (Ch. 1 §1.4), used as a weight. Rare words carry the signal; common words are noise wearing the same clothes.
 
 **Why "vocabulary mismatch" is the whole weakness, and why it is not fatal.** BM25 matches strings. If the query says "car" and the document says "automobile," the score is zero — not low, **zero**. A dense retriever, which maps both into nearby points in embedding space, handles this effortlessly. That is the case for dense retrieval in one sentence.
 
@@ -175,7 +175,7 @@ But run it the other way. A user searches for the part number `MX-7741-B`, or a 
 
 > **Common misconception.** *"Dense retrieval is the modern version of BM25, so BM25 is a legacy baseline."* Dense retrieval is newer; it is not a superset. Published retrieval benchmarks repeatedly show BM25 beating strong dense models on out-of-domain corpora — because a dense retriever's quality is a property of *what it was trained on*, and a corpus of internal wiki pages, legal filings, or Verilog is nothing like the web text its encoder was fitted to. BM25 has no training distribution to be out of. The belief is tempting because on the in-domain benchmarks used to publish dense-retrieval papers, dense wins convincingly — and those are exactly the conditions your production corpus does not satisfy. **Treat BM25 as the control arm you must beat, on your data, before you believe a dense number.**
 
-> **Common misconception.** *"IDF weights rare words because rare words are unusual."* IDF weights rare words because rarity is a proxy for **informativeness**. A word occurring in 6 documents out of 10 million partitions the corpus almost perfectly; a word occurring in 9 million partitions nothing. The quantity $\log(N/n_w)$ is a surprise, in the Chapter 1 sense, and surprise is exactly how much a term narrows the search. The distinction matters because it tells you what breaks IDF: a corpus where every document shares boilerplate — a legal footer, a licence header, a template — has thousands of terms with tiny IDF, and the effective vocabulary is far smaller than the raw one suggests.
+> **Common misconception.** *"IDF weights rare words because rare words are unusual."* IDF weights rare words because rarity is a proxy for **informativeness**. A word occurring in 6 documents out of 10 million partitions the corpus almost perfectly; a word occurring in 9 million partitions nothing. The quantity $`\log(N/n_w)`$ is a surprise, in the Chapter 1 sense, and surprise is exactly how much a term narrows the search. The distinction matters because it tells you what breaks IDF: a corpus where every document shares boilerplate — a legal footer, a licence header, a template — has thousands of terms with tiny IDF, and the effective vocabulary is far smaller than the raw one suggests.
 
 > **Where this came from.** **Karen Spärck Jones** introduced inverse document frequency at Cambridge in 1972, in a paper about term specificity, and it may be the highest ratio of practical impact to page count in the history of information retrieval — the idea underlies essentially every search engine ever built. **Stephen Robertson** and colleagues developed the BM25 formula in the 1990s around the **Okapi** system at City University London, and the acronym is exactly what it looks like: **"Best Match 25,"** the twenty-fifth in a numbered series of ranking-function variants the group worked through. Nobody expected the twenty-fifth to be the one still in production thirty years later.
 >
@@ -217,9 +217,9 @@ $$\frac{\text{the right document's score}}{\text{everyone's scores}}$$
 | Document | $\mathrm{sim}$ | $\mathrm{sim}/\tau$ | $\exp(\cdot)$ |
 |---|---|---|---|
 | $d^{+}$ | 0.80 | 16 | 8,886,000 |
-| $d^{-}_1$ | 0.70 | 14 | 1,203,000 |
-| $d^{-}_2$ | 0.30 | 6 | 403 |
-| $d^{-}_3$ | 0.10 | 2 | 7.4 |
+| $`d^{-}_1`$ | 0.70 | 14 | 1,203,000 |
+| $`d^{-}_2`$ | 0.30 | 6 | 403 |
+| $`d^{-}_3`$ | 0.10 | 2 | 7.4 |
 
 The positive's share is $8{,}886{,}000/10{,}089{,}000 = 0.881$, so $\mathcal{L} = -\log(0.881) = \mathbf{0.127}$. **A real loss, with a real gradient.**
 
@@ -330,9 +330,9 @@ $$s(q,d)=\sum_{i\in q}\max_{j\in d}\ \langle E_{q_i}, E_{d_j}\rangle$$
 
 **Read it inside-out**, which is how every nested formula should be read:
 
-- $\langle E_{q_i}, E_{d_j}\rangle$ — the inner product (§0.8) between the vector for **query token $i$** and the vector for **document token $j$**. One number: how well those two words match.
-- $\max_{j\in d}$ — scan **every token in the document** and keep the best match for this one query token. *"What is the best home this word finds anywhere in the document?"*
-- $\sum_{i\in q}$ — do that for **every query token**, and add up the results.
+- $`\langle E_{q_i}, E_{d_j}\rangle`$ — the inner product (§0.8) between the vector for **query token $i$** and the vector for **document token $j$**. One number: how well those two words match.
+- $`\max_{j\in d}`$ — scan **every token in the document** and keep the best match for this one query token. *"What is the best home this word finds anywhere in the document?"*
+- $`\sum_{i\in q}`$ — do that for **every query token**, and add up the results.
 
 **Read aloud:** *"for each word of the query, find its single best match anywhere in the document, and total those up."*
 
@@ -374,9 +374,9 @@ $$\mathrm{RRF}(d) = \sum_{r\in\text{retrievers}}\frac{1}{k + \mathrm{rank}_r(d)}
 
 **Read aloud:** *"for each retriever, take one divided by sixty-plus-the-position-it-gave-this-document, and add those up across retrievers."*
 
-- $\mathrm{rank}_r(d)$ is an **ordinal position**, not a score: 1 for the top hit, 2 for the next, and so on.
+- $`\mathrm{rank}_r(d)`$ is an **ordinal position**, not a score: 1 for the top hit, 2 for the next, and so on.
 - $k = 60$ is a damping constant. Its job is explained below and is the only interesting thing in the formula.
-- $\sum_{r}$ loops over your retrievers — typically two (BM25 and dense), sometimes more.
+- $`\sum_{r}`$ loops over your retrievers — typically two (BM25 and dense), sometimes more.
 
 **Why ranks and not scores.** BM25 produces unbounded positive numbers whose typical range depends on the query, the corpus, and the length of the document. A dense retriever produces cosines in $[-1, 1]$. **These live on incomparable scales, and there is no correct constant to multiply one by.** Worse, the usual repair — min–max normalizing each result list — makes a document's score depend on *which other documents happened to be retrieved*, so adding one irrelevant result to the bottom of a list changes the score at the top. Ranks have none of these problems: position 3 means the same thing to every retriever, forever.
 
@@ -423,7 +423,7 @@ Query → (rewrite) → retrieve (hybrid) → rerank → assemble context → ge
 
 **First, why chunk at all.** A retriever compares vectors. If a 50-page manual becomes *one* 768-dimensional vector, that vector is an average of everything the manual discusses — and an average of many things is specifically close to none of them.
 
-**This can be made exact, using Ch. 1 §1.1.5.** Suppose a chunk covers $n$ distinct topics whose embedding directions are roughly orthogonal — which, in 768 dimensions, is what unrelated directions actually are. The chunk's embedding is their average $v = \frac{1}{n}\sum_i u_i$, and
+**This can be made exact, using Ch. 1 §1.1.5.** Suppose a chunk covers $n$ distinct topics whose embedding directions are roughly orthogonal — which, in 768 dimensions, is what unrelated directions actually are. The chunk's embedding is their average $`v = \frac{1}{n}\sum_i u_i`$, and
 
 $$\lVert v\rVert = \frac{1}{\sqrt n}, \qquad \cos(v, u_i) = \frac{1/n}{1/\sqrt n} = \frac{1}{\sqrt n}$$
 
@@ -527,7 +527,7 @@ The reason it works is that questions and answers do not look alike:
 
 ▸ **Evaluate the stages separately, always.** An end-to-end score cannot tell you whether the retriever missed the document or the generator ignored it.
 
-**Retrieval:** Recall@k (the important one — the ceiling on everything downstream), Precision@k, MRR $=\frac1{|Q|}\sum\frac{1}{\mathrm{rank}_1}$, and **nDCG**:
+**Retrieval:** Recall@k (the important one — the ceiling on everything downstream), Precision@k, MRR $`=\frac1{|Q|}\sum\frac{1}{\mathrm{rank}_1}`$, and **nDCG**:
 $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nDCG@k}=\frac{\mathrm{DCG@k}}{\mathrm{IDCG@k}}$$
 
 **Generation:**
@@ -564,7 +564,7 @@ $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nD
 
 **DCG** is **D**iscounted **C**umulative **G**ain, and the name is the formula: *gain*, *discounted*, then *cumulated*.
 
-**The numerator — gain.** $rel_i$ is a graded relevance judgement for the document at position $i$, usually on a small scale. The $2^{rel}-1$ transform makes the grades non-linear:
+**The numerator — gain.** $`rel_i`$ is a graded relevance judgement for the document at position $i$, usually on a small scale. The $2^{rel}-1$ transform makes the grades non-linear:
 
 | $rel$ | Meaning | Gain $2^{rel}-1$ |
 |---|---|---|
@@ -575,9 +575,9 @@ $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nD
 
 **One perfect document is worth seven marginal ones**, deliberately. That is a value judgement baked into the metric, and it matches how people actually search.
 
-**The denominator — discount.** $\log_2(i+1)$ grows slowly, so results further down are worth less, but not dramatically less:
+**The denominator — discount.** $`\log_2(i+1)`$ grows slowly, so results further down are worth less, but not dramatically less:
 
-| Position $i$ | $\log_2(i+1)$ | Fraction of full credit |
+| Position $i$ | $`\log_2(i+1)`$ | Fraction of full credit |
 |---|---|---|
 | 1 | 1.00 | 100% |
 | 2 | 1.58 | 63% |

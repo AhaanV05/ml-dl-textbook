@@ -12,23 +12,23 @@ Skim once now; each entry is unpacked properly where it first appears.
 |---|---|---|
 | $x$ | "x" | The **prompt** — everything the user typed |
 | $y$ | "y" | A **response** — a whole completion, not a single token |
-| $y_w \succ y_l$ | "y-win beats y-lose" | A human (or judge) preferred response $y_w$ over $y_l$. $w$ = winner, $l$ = loser |
-| $r^*(x,y)$ | "r-star of x, y" | The **true, unknown** reward: how good response $y$ is for prompt $x$ |
-| $r_\phi(x,y)$ | "r-phi" | Our **learned** reward model. $\phi$ ("phi") are its weights |
+| $`y_w \succ y_l`$ | "y-win beats y-lose" | A human (or judge) preferred response $`y_w`$ over $`y_l`$. $w$ = winner, $l$ = loser |
+| $`r^*(x,y)`$ | "r-star of x, y" | The **true, unknown** reward: how good response $y$ is for prompt $x$ |
+| $`r_\phi(x,y)`$ | "r-phi" | Our **learned** reward model. $\phi$ ("phi") are its weights |
 | $\sigma(z)$ | "sigmoid of z" | $1/(1+e^{-z})$ — squashes any real number into $(0,1)$ |
-| $\pi_\theta(y \mid x)$ | "pi-theta of y given x" | The **policy**: the model's probability of producing $y$ after seeing $x$. $\theta$ = its weights |
-| $\pi_{\text{ref}}$ | "pi-ref" | The **reference policy** — a frozen copy of the model before RL started |
+| $`\pi_\theta(y \mid x)`$ | "pi-theta of y given x" | The **policy**: the model's probability of producing $y$ after seeing $x$. $\theta$ = its weights |
+| $`\pi_{\text{ref}}`$ | "pi-ref" | The **reference policy** — a frozen copy of the model before RL started |
 | $\beta$ | "beta" | How tightly the new model is leashed to the old one |
 | $\mathrm{KL}(p \Vert q)$ | "KL of p from q" | How much you lose by believing $q$ when reality is $p$ |
 | $Z(x)$ | "Z of x" | The **partition function** — the normalizing sum that makes probabilities add to 1 |
-| $\hat A_t$ | "A-hat at t" | The **advantage**: how much better this action was than average |
-| $\rho_t$ | "rho at t" | The **probability ratio** between the new policy and the old one |
+| $`\hat A_t`$ | "A-hat at t" | The **advantage**: how much better this action was than average |
+| $`\rho_t`$ | "rho at t" | The **probability ratio** between the new policy and the old one |
 | $\mathrm{clip}(z, a, b)$ | "clip z between a and b" | Squash $z$ into $[a,b]$: `min(max(z,a),b)` |
 | $\mathbb{1}[\,\cdot\,]$ | "indicator of" | 1 if the statement inside is true, 0 otherwise |
 | $G$ | "G" | **Group size** — how many completions we sample per prompt in GRPO |
 | $\mathcal{D}$ | "script D" | The **dataset** we're averaging over |
 | $\mathcal{L}$ | "script L" | A **loss** — the thing we minimize |
-| $\nabla_\theta$ | "grad theta" | Which way to nudge each weight to *increase* what follows |
+| $`\nabla_\theta`$ | "grad theta" | Which way to nudge each weight to *increase* what follows |
 | $\epsilon$ | "epsilon" | The PPO clip width, typically 0.2 |
 
 ### Abbreviations in this chapter, in full
@@ -166,7 +166,7 @@ Written out, with $T$ the number of tokens in the response:
 
 $$\mathcal{L}_{\text{SFT}} = -\sum_{t=1}^{T}\log \pi_\theta\big(y_t \mid x,\, y_{<t}\big)$$
 
-Read aloud: *"minus the sum, over each response token, of the log-probability the model assigned to that token given the prompt and everything it has written so far."* $y_{<t}$ ("y less than t") means "all response tokens before position $t$."
+Read aloud: *"minus the sum, over each response token, of the log-probability the model assigned to that token given the prompt and everything it has written so far."* $`y_{<t}`$ ("y less than t") means "all response tokens before position $t$."
 
 **"masking the loss on prompt tokens."** This is the one line people get wrong when they implement it. Concretely, suppose the full sequence fed to the model is 9 tokens:
 
@@ -236,7 +236,7 @@ We can't write down a reward function for "helpful." But humans can *compare* tw
 
 ### Bradley–Terry
 
-Assume a latent scalar reward $r^*(x,y)$ such that the probability a human prefers $y_w$ over $y_l$ given prompt $x$ is:
+Assume a latent scalar reward $`r^*(x,y)`$ such that the probability a human prefers $`y_w`$ over $`y_l`$ given prompt $x$ is:
 
 ▸ $$p^*(y_w\succ y_l\mid x) = \frac{\exp r^*(x,y_w)}{\exp r^*(x,y_w)+\exp r^*(x,y_l)} = \sigma\big(r^*(x,y_w)-r^*(x,y_l)\big)$$
 
@@ -254,10 +254,10 @@ Start with the symbols, then put numbers in.
 
 | Piece | Read aloud | What it means |
 |---|---|---|
-| $y_w$, $y_l$ | "y-win", "y-lose" | The response the human preferred, and the one they didn't |
-| $y_w \succ y_l$ | "y-win is preferred to y-lose" | $\succ$ is a preference symbol, not "greater than" |
-| $p^*(\cdot \mid x)$ | "p-star, given x" | The **true** probability a human picks this way, for this prompt |
-| $r^*(x,y)$ | "r-star of x, y" | A single number: how good $y$ is as a response to $x$. Nobody can see it |
+| $`y_w`$, $`y_l`$ | "y-win", "y-lose" | The response the human preferred, and the one they didn't |
+| $`y_w \succ y_l`$ | "y-win is preferred to y-lose" | $\succ$ is a preference symbol, not "greater than" |
+| $`p^*(\cdot \mid x)`$ | "p-star, given x" | The **true** probability a human picks this way, for this prompt |
+| $`r^*(x,y)`$ | "r-star of x, y" | A single number: how good $y$ is as a response to $x$. Nobody can see it |
 | $\exp(\cdot)$ | "e to the" | Makes everything positive, so the fraction is a valid probability |
 | $\sigma(z)$ | "sigmoid of z" | $1/(1+e^{-z})$ — turns a difference into a probability |
 
@@ -265,15 +265,15 @@ The whole claim in one sentence: **there is some hidden quality score for every 
 
 > **Analogy.** Two chess players have hidden strengths. You never observe "strength" — you only observe who won. But watch enough games and you can reconstruct a rating for each player, up to a shared offset, because the win probability depends only on the *rating difference*. Bradley–Terry is exactly this, with "response" in place of "player" and "a human preferred it" in place of "won the game." That is not an analogy by coincidence; it is literally the same model, and §16.9's Elo ratings are the same equation again.
 
-**Numbers, please.** Suppose the true rewards for a prompt are $r^*(x,y_w) = 2.0$ and $r^*(x,y_l) = 0.5$.
+**Numbers, please.** Suppose the true rewards for a prompt are $`r^*(x,y_w) = 2.0`$ and $`r^*(x,y_l) = 0.5`$.
 
 $$p^*(y_w \succ y_l \mid x) = \sigma(2.0 - 0.5) = \sigma(1.5) = \frac{1}{1+e^{-1.5}} = \frac{1}{1+0.2231} = 0.818$$
 
-So a human picks $y_w$ about **82% of the time** — not always. That residual 18% is the model saying *humans are noisy and sometimes prefer the worse answer*, which is both true and important.
+So a human picks $`y_w`$ about **82% of the time** — not always. That residual 18% is the model saying *humans are noisy and sometimes prefer the worse answer*, which is both true and important.
 
 Now watch the gap change:
 
-| $r_w - r_l$ | $\sigma(\text{gap})$ | In words |
+| $`r_w - r_l`$ | $\sigma(\text{gap})$ | In words |
 |---|---|---|
 | $0$ | $0.500$ | A coin flip. The responses are equally good |
 | $0.5$ | $0.622$ | A weak preference |
@@ -287,7 +287,7 @@ Now watch the gap change:
 
 $$\frac{e^{r_w}}{e^{r_w}+e^{r_l}} = \frac{e^{r_w}/e^{r_w}}{(e^{r_w}+e^{r_l})/e^{r_w}} = \frac{1}{1+e^{-(r_w - r_l)}} = \sigma(r_w - r_l)$$
 
-Divide top and bottom by $e^{r_w}$ and the two-way softmax collapses into a sigmoid of the difference. This is why the identifiability gap exists: add any constant $c(x)$ to *both* rewards and $e^{c}$ cancels top and bottom. **The model can only ever see gaps.**
+Divide top and bottom by $`e^{r_w}`$ and the two-way softmax collapses into a sigmoid of the difference. This is why the identifiability gap exists: add any constant $c(x)$ to *both* rewards and $e^{c}$ cancels top and bottom. **The model can only ever see gaps.**
 
 #### Unpacking the reward-model loss
 
@@ -295,13 +295,13 @@ $$\mathcal{L}_{\text{RM}} = -\mathbb{E}_{(x,y_w,y_l)\sim\mathcal{D}}\big[\log\si
 
 Read aloud: *"the average, over labelled preference triples, of minus the log of the sigmoid of the reward gap."* Piece by piece:
 
-- $\mathbb{E}_{(x,y_w,y_l)\sim\mathcal{D}}$ — "average over triples drawn from the dataset." A triple is (prompt, better response, worse response).
-- $r_\phi$ — the *learned* reward model with weights $\phi$, as opposed to the unknowable $r^*$.
+- $`\mathbb{E}_{(x,y_w,y_l)\sim\mathcal{D}}`$ — "average over triples drawn from the dataset." A triple is (prompt, better response, worse response).
+- $`r_\phi`$ — the *learned* reward model with weights $\phi$, as opposed to the unknowable $`r^*`$.
 - $-\log\sigma(\cdot)$ — the standard binary cross-entropy penalty, with the label always "the winner won."
 
 **A tiny worked example.** Three training pairs, current model outputs:
 
-| Pair | $r_\phi(y_w)$ | $r_\phi(y_l)$ | Gap | $\sigma(\text{gap})$ | $-\log\sigma$ |
+| Pair | $`r_\phi(y_w)`$ | $`r_\phi(y_l)`$ | Gap | $\sigma(\text{gap})$ | $-\log\sigma$ |
 |---|---|---|---|---|---|
 | 1 | $3.1$ | $1.0$ | $+2.1$ | $0.891$ | $0.115$ |
 | 2 | $0.4$ | $0.2$ | $+0.2$ | $0.550$ | $0.598$ |
@@ -395,7 +395,7 @@ The standard diagnostic: plot mean response length against training step. If it 
 2. It preserves fluency and knowledge from pretraining.
 3. Without it, the policy collapses onto a small set of reward-maximizing degenerate outputs — the classic failure is a model that emits the same flattering paragraph for every prompt.
 
-Typical $\beta = 0.01$–$0.1$. Implemented as a per-token penalty added to the reward: $r_t = -\beta\big(\log\pi_\theta(y_t\mid\cdot) - \log\pi_{\text{ref}}(y_t\mid\cdot)\big)$, with the RM's scalar score added at the final token.
+Typical $\beta = 0.01$–$0.1$. Implemented as a per-token penalty added to the reward: $`r_t = -\beta\big(\log\pi_\theta(y_t\mid\cdot) - \log\pi_{\text{ref}}(y_t\mid\cdot)\big)`$, with the RM's scalar score added at the final token.
 
 #### Reading the RLHF objective in plain English
 
@@ -405,12 +405,12 @@ Read aloud: *"choose the policy that maximizes the average reward of the respons
 
 | Piece | Read aloud | What it means |
 |---|---|---|
-| $\max_{\pi_\theta}$ | "max over pi-theta" | Search over model weights $\theta$; the thing we're choosing is a whole *distribution over responses* |
+| $`\max_{\pi_\theta}`$ | "max over pi-theta" | Search over model weights $\theta$; the thing we're choosing is a whole *distribution over responses* |
 | $x\sim\mathcal{D}$ | "x drawn from script-D" | Sample a prompt from a prompt set. Note: only prompts are needed here, **no reference answers** |
-| $y\sim\pi_\theta(\cdot\mid x)$ | "y drawn from pi-theta given x" | The model **generates** its own response. This is what makes it RL rather than supervised |
-| $r_\phi(x,y)$ | "r-phi of x, y" | The frozen reward model's score for that generated response |
+| $`y\sim\pi_\theta(\cdot\mid x)`$ | "y drawn from pi-theta given x" | The model **generates** its own response. This is what makes it RL rather than supervised |
+| $`r_\phi(x,y)`$ | "r-phi of x, y" | The frozen reward model's score for that generated response |
 | $\beta$ | "beta" | The leash length. Small $\beta$ = long leash |
-| $\mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})$ | "KL of pi-theta from pi-ref" | How surprised the reference model would be by the new model's outputs |
+| $`\mathrm{KL}(\pi_\theta \Vert \pi_{\text{ref}})`$ | "KL of pi-theta from pi-ref" | How surprised the reference model would be by the new model's outputs |
 
 > **Analogy.** You are training a chef by taste-testing (the reward model) rather than by giving recipes. Left unchecked, a chef optimizing purely for "the taster smiles" converges on pouring sugar into everything. The KL term is a contract clause: *you may adjust the recipe, but a diner must still recognize the dish.* Set $\beta$ too high and the chef never changes anything; too low and you get sugar.
 
@@ -431,7 +431,7 @@ With $\beta = 0.05$ that token is penalized $0.05 \times 1.0986 = 0.055$. Over a
 
 #### What would break: setting $\beta = 0$
 
-Drop the KL term and the objective becomes $\max_\pi \mathbb{E}_{y\sim\pi}[r_\phi(x,y)]$, whose exact solution is a **point mass** on whatever single string maximizes $r_\phi$ — the argmax. Not a distribution over good answers: one string. In practice, runs with $\beta=0$ show a recognizable progression:
+Drop the KL term and the objective becomes $`\max_\pi \mathbb{E}_{y\sim\pi}[r_\phi(x,y)]`$, whose exact solution is a **point mass** on whatever single string maximizes $`r_\phi`$ — the argmax. Not a distribution over good answers: one string. In practice, runs with $\beta=0$ show a recognizable progression:
 
 1. Steps 0–200: reward rises, text still looks normal. Everything seems fine.
 2. Steps 200–600: responses get longer, more effusive, more hedged. Reward accelerates.
@@ -445,9 +445,9 @@ Drop the KL term and the objective becomes $\max_\pi \mathbb{E}_{y\sim\pi}[r_\ph
 
 | Example | Mechanism |
 |---|---|
-| Stops the policy emitting `!!!!!!!!!!` even if the RM scores it well | Such strings have near-zero probability under $\pi_{\text{ref}}$, so the log-ratio is enormous |
-| Preserves grammar and factual recall acquired in pretraining | Drifting away from $\pi_{\text{ref}}$ is expensive everywhere, not only where the RM is wrong |
-| Keeps the policy inside the RM's valid region | The RM was trained on $\pi_{\text{ref}}$-like samples |
+| Stops the policy emitting `!!!!!!!!!!` even if the RM scores it well | Such strings have near-zero probability under $`\pi_{\text{ref}}`$, so the log-ratio is enormous |
+| Preserves grammar and factual recall acquired in pretraining | Drifting away from $`\pi_{\text{ref}}`$ is expensive everywhere, not only where the RM is wrong |
+| Keeps the policy inside the RM's valid region | The RM was trained on $`\pi_{\text{ref}}`$-like samples |
 | Preserves output diversity | Collapsing to one string maximizes KL cost |
 
 **❌ Near-misses — things the KL penalty does not do**
@@ -455,9 +455,9 @@ Drop the KL term and the objective becomes $\max_\pi \mathbb{E}_{y\sim\pi}[r_\ph
 | Assumed | Why it fails | What actually does it |
 |---|---|---|
 | Prevents reward hacking | It only bounds *how far* the policy can travel; exploits within the leash are reachable | Better reward models, ensembles, verifiable rewards |
-| Guarantees factual accuracy | $\pi_{\text{ref}}$ hallucinates too, and staying near it preserves that | Retrieval, verifiers, honesty-focused preference data |
-| Acts like weight decay | It constrains the **output distribution**, not the parameter vector; two very different weight vectors can have tiny KL | $\ell_2$ regularization, if that's what you want |
-| Is a distance between models | KL is asymmetric — $\mathrm{KL}(\pi_\theta\Vert\pi_{\text{ref}})$ and $\mathrm{KL}(\pi_{\text{ref}}\Vert\pi_\theta)$ differ, and the choice here is deliberate | Nothing; the asymmetry is a feature |
+| Guarantees factual accuracy | $`\pi_{\text{ref}}`$ hallucinates too, and staying near it preserves that | Retrieval, verifiers, honesty-focused preference data |
+| Acts like weight decay | It constrains the **output distribution**, not the parameter vector; two very different weight vectors can have tiny KL | $`\ell_2`$ regularization, if that's what you want |
+| Is a distance between models | KL is asymmetric — $`\mathrm{KL}(\pi_\theta\Vert\pi_{\text{ref}})`$ and $`\mathrm{KL}(\pi_{\text{ref}}\Vert\pi_\theta)`$ differ, and the choice here is deliberate | Nothing; the asymmetry is a feature |
 
 ▸ **The boundary:** the KL penalty constrains **where in output-space the policy is allowed to go**, and nothing else. Every property you want that is not "stay near the reference" must come from somewhere else.
 
@@ -469,7 +469,7 @@ Drop the KL term and the objective becomes $\max_\pi \mathbb{E}_{y\sim\pi}[r_\ph
 
 - **State:** the prompt plus tokens generated so far.
 - **Action:** the next token.
-- **Reward:** the KL penalty every step, plus $r_\phi$ at the end. **Extremely sparse.**
+- **Reward:** the KL penalty every step, plus $`r_\phi`$ at the end. **Extremely sparse.**
 - **Episode:** one completion.
 
 PPO's clipped surrogate (full derivation in Ch. 27 §27.7):
@@ -483,13 +483,13 @@ $$\mathcal{L}^{\text{CLIP}} = \mathbb{E}_t\left[\min\left(\rho_t\hat A_t,\ \math
 
 Two objects, then the trick.
 
-**$\rho_t$, the probability ratio.** Read: *"how much more likely is the new policy to take this action than the policy that actually generated the data?"* If the old policy gave the token probability $0.10$ and the new one gives $0.13$, then $\rho_t = 1.3$. $\rho_t = 1$ means nothing changed.
+**$`\rho_t`$, the probability ratio.** Read: *"how much more likely is the new policy to take this action than the policy that actually generated the data?"* If the old policy gave the token probability $0.10$ and the new one gives $0.13$, then $`\rho_t = 1.3`$. $`\rho_t = 1`$ means nothing changed.
 
-**$\hat A_t$, the advantage.** Read: *"how much better than average was this?"* Positive means "this turned out better than expected — do more of it." Negative means the opposite. The whole reason PPO needs a **value model** is to estimate that "expected" baseline.
+**$`\hat A_t`$, the advantage.** Read: *"how much better than average was this?"* Positive means "this turned out better than expected — do more of it." Negative means the opposite. The whole reason PPO needs a **value model** is to estimate that "expected" baseline.
 
-**The clip.** With $\epsilon = 0.2$, $\rho_t$ is squashed into $[0.8, 1.2]$ inside the second branch, and we take the **minimum** of clipped and unclipped. Watch what that does:
+**The clip.** With $\epsilon = 0.2$, $`\rho_t`$ is squashed into $[0.8, 1.2]$ inside the second branch, and we take the **minimum** of clipped and unclipped. Watch what that does:
 
-| $\hat A_t$ | $\rho_t$ | Unclipped $\rho\hat A$ | Clipped $\rho\hat A$ | $\min$ | Effect |
+| $`\hat A_t`$ | $`\rho_t`$ | Unclipped $\rho\hat A$ | Clipped $\rho\hat A$ | $\min$ | Effect |
 |---|---|---|---|---|---|
 | $+2$ | $1.05$ | $2.10$ | $2.10$ | $2.10$ | Normal update, inside the trust region |
 | $+2$ | $1.50$ | $3.00$ | $2.40$ | $2.40$ | **Gain capped.** No extra reward for moving further |
@@ -504,10 +504,10 @@ For a 7-billion-parameter model in bfloat16 (2 bytes per parameter), just the *w
 
 | Model | Trainable? | Weights | Optimizer state (Adam, fp32) |
 |---|---|---|---|
-| Policy $\pi_\theta$ | Yes | 14 GB | ~56 GB (fp32 master copy + two moments) |
-| Reference $\pi_{\text{ref}}$ | No, frozen | 14 GB | 0 |
-| Reward model $r_\phi$ | No, frozen | 14 GB | 0 |
-| Value model $V_\psi$ | Yes | 14 GB | ~56 GB |
+| Policy $`\pi_\theta`$ | Yes | 14 GB | ~56 GB (fp32 master copy + two moments) |
+| Reference $`\pi_{\text{ref}}`$ | No, frozen | 14 GB | 0 |
+| Reward model $`r_\phi`$ | No, frozen | 14 GB | 0 |
+| Value model $`V_\psi`$ | Yes | 14 GB | ~56 GB |
 | **Total** | | **56 GB** | **~112 GB** |
 
 Around **170 GB before a single activation is stored**, plus a generation buffer, for a model whose inference footprint is 14 GB. An 80 GB H100 cannot hold it. **This is the "practical burden" made concrete, and it is why the two ideas that follow — GRPO (delete the value model) and DPO (delete the reward model, the value model, and generation) — were received the way they were.**
@@ -529,11 +529,11 @@ $$\max_\pi\ \mathbb{E}_{y\sim\pi}[r(x,y)] - \beta\,\mathrm{KL}(\pi\|\pi_{\text{r
 Write it as a single expectation:
 $$= \max_\pi\ \mathbb{E}_{y\sim\pi}\left[r(x,y) - \beta\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\right] = \max_\pi -\beta\,\mathbb{E}_{y\sim\pi}\left[\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}}\right]$$
 
-Define $Z(x) = \sum_y \pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}$ and $\pi^*(y\mid x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}$. Then
+Define $`Z(x) = \sum_y \pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}`$ and $`\pi^*(y\mid x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}`$. Then
 
 $$= \max_\pi\ -\beta\left[\mathrm{KL}\big(\pi\,\|\,\pi^*\big) - \log Z(x)\right]$$
 
-$Z(x)$ doesn't depend on $\pi$, and KL is minimized at zero when $\pi=\pi^*$. Therefore:
+$Z(x)$ doesn't depend on $\pi$, and KL is minimized at zero when $`\pi=\pi^*`$. Therefore:
 
 ▸ $$\boxed{\ \pi^*(y\mid x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y\mid x)\exp\left(\frac{1}{\beta}r(x,y)\right)\ }$$
 
@@ -543,9 +543,9 @@ $Z(x)$ doesn't depend on $\pi$, and KL is minimized at zero when $\pi=\pi^*$. Th
 
 This derivation is four lines of algebra and one  clever move. Here is every line again, slowly.
 
-**Line 1 — the objective.** $\max_\pi\ \mathbb{E}_{y\sim\pi}[r(x,y)] - \beta\,\mathrm{KL}(\pi\|\pi_{\text{ref}})$. Read: *"find the response distribution with the highest average reward, penalized for drifting from the reference."*
+**Line 1 — the objective.** $`\max_\pi\ \mathbb{E}_{y\sim\pi}[r(x,y)] - \beta\,\mathrm{KL}(\pi\|\pi_{\text{ref}})`$. Read: *"find the response distribution with the highest average reward, penalized for drifting from the reference."*
 
-**Line 2 — fold the KL into the expectation.** By definition, $\mathrm{KL}(\pi\|\pi_{\text{ref}}) = \mathbb{E}_{y\sim\pi}\big[\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\big]$ — KL *is already* an average over $\pi$. So the two terms are averages over the same distribution and can be merged into one:
+**Line 2 — fold the KL into the expectation.** By definition, $`\mathrm{KL}(\pi\|\pi_{\text{ref}}) = \mathbb{E}_{y\sim\pi}\big[\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\big]`$ — KL *is already* an average over $\pi$. So the two terms are averages over the same distribution and can be merged into one:
 
 $$\mathbb{E}_{y\sim\pi}\left[r(x,y) - \beta\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)}\right]$$
 
@@ -553,17 +553,17 @@ $$\mathbb{E}_{y\sim\pi}\left[r(x,y) - \beta\log\frac{\pi(y\mid x)}{\pi_{\text{re
 
 $$-\beta\,\mathbb{E}_{y\sim\pi}\left[\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)\,e^{r(x,y)/\beta}}\right]$$
 
-**Line 4 — the clever move.** That fraction *almost* looks like a KL divergence between $\pi$ and something. The obstacle is that $\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}$ is not a probability distribution — its values don't sum to 1. So **divide by whatever it does sum to**, call that $Z(x)$, and you have manufactured a legitimate distribution $\pi^*$. The division costs you a $\log Z(x)$ term, which comes out of the expectation because it doesn't depend on $y$:
+**Line 4 — the clever move.** That fraction *almost* looks like a KL divergence between $\pi$ and something. The obstacle is that $`\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}`$ is not a probability distribution — its values don't sum to 1. So **divide by whatever it does sum to**, call that $Z(x)$, and you have manufactured a legitimate distribution $`\pi^*`$. The division costs you a $\log Z(x)$ term, which comes out of the expectation because it doesn't depend on $y$:
 
 $$= -\beta\left[\mathrm{KL}(\pi\|\pi^*) - \log Z(x)\right]$$
 
-**Line 5 — read off the answer.** $\log Z(x)$ is a constant as far as $\pi$ is concerned. KL is $\ge 0$ always, and equals 0 exactly when the two distributions are identical. So the maximum is achieved at $\pi = \pi^*$. **Done — no gradient descent, no approximation, an exact closed form.**
+**Line 5 — read off the answer.** $\log Z(x)$ is a constant as far as $\pi$ is concerned. KL is $\ge 0$ always, and equals 0 exactly when the two distributions are identical. So the maximum is achieved at $`\pi = \pi^*`$. **Done — no gradient descent, no approximation, an exact closed form.**
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $Z(x)$ | "Z of x" | The **partition function**: $\sum_y \pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}$, a sum over *every possible response* |
+| $Z(x)$ | "Z of x" | The **partition function**: $`\sum_y \pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}`$, a sum over *every possible response* |
 | $e^{r/\beta}$ | "e to the r over beta" | The **tilt factor**. Reward 2 with $\beta=0.5$ gives $e^{4}\approx 54.6$ |
-| $\pi^*$ | "pi-star" | The optimal policy — the reference reweighted by that tilt |
+| $`\pi^*`$ | "pi-star" | The optimal policy — the reference reweighted by that tilt |
 
 **Why $Z(x)$ is hopeless to compute, and why that's fine.** The sum runs over all possible responses: for a 200-token response with a 128,000-token vocabulary that is $128{,}000^{200}$ terms, a number with about 1,000 digits. There is no algorithm, no approximation, no amount of compute. **The entire elegance of DPO is that this quantity cancels before anyone has to look at it.**
 
@@ -571,29 +571,29 @@ $$= -\beta\left[\mathrm{KL}(\pi\|\pi^*) - \log Z(x)\right]$$
 
 Set $\beta = 0.5$ and imagine a toy universe with only three possible responses to some prompt:
 
-| Response | $\pi_{\text{ref}}(y)$ | $r(x,y)$ | $e^{r/\beta}$ | $\pi_{\text{ref}}\cdot e^{r/\beta}$ | $\pi^*(y)$ |
+| Response | $`\pi_{\text{ref}}(y)`$ | $r(x,y)$ | $e^{r/\beta}$ | $`\pi_{\text{ref}}\cdot e^{r/\beta}`$ | $`\pi^*(y)`$ |
 |---|---|---|---|---|---|
 | A: "Sure, here's how..." | $0.20$ | $2.0$ | $54.60$ | $10.92$ | $0.855$ |
 | B: "I'm not sure." | $0.50$ | $0.0$ | $1.00$ | $0.50$ | $0.039$ |
 | C: "What's the capital of Germany?" | $0.30$ | $-1.0$ | $0.135$ | $0.041$ | $0.003$ |
 
-Here $Z(x) = 10.92 + 0.50 + 0.041 = 11.46$, and each $\pi^*$ entry is its unnormalized value divided by $Z$. (The three don't quite sum to 1 because of rounding; exactly, they do.)
+Here $Z(x) = 10.92 + 0.50 + 0.041 = 11.46$, and each $`\pi^*`$ entry is its unnormalized value divided by $Z$. (The three don't quite sum to 1 because of rounding; exactly, they do.)
 
 Read what happened. Response B was the *most likely* thing the reference model would say — probability 0.50, the plurality winner. After the tilt it has probability **0.039**. Response A went from 0.20 to **0.855**. A reward gap of 2.0 with $\beta=0.5$ multiplied A's relative odds by $e^{2/0.5} = e^4 \approx 55$.
 
 Now change only $\beta$:
 
-| $\beta$ | $\pi^*(A)$ | $\pi^*(B)$ | $\pi^*(C)$ | Interpretation |
+| $\beta$ | $`\pi^*(A)`$ | $`\pi^*(B)`$ | $`\pi^*(C)`$ | Interpretation |
 |---|---|---|---|---|
 | $0.25$ | $0.9993$ | $0.0007$ | $\approx 0$ | Nearly deterministic — the leash is off |
 | $0.5$ | $0.855$ | $0.039$ | $0.003$ | Strong preference, some diversity kept |
 | $2.0$ | $0.470$ | $0.432$ | $0.098$ | Gentle tilt |
-| $\to\infty$ | $0.20$ | $0.50$ | $0.30$ | Exactly $\pi_{\text{ref}}$ — no change at all |
+| $\to\infty$ | $0.20$ | $0.50$ | $0.30$ | Exactly $`\pi_{\text{ref}}`$ — no change at all |
 | $\to 0$ | $1$ | $0$ | $0$ | A point mass on the argmax — the $\beta=0$ collapse from §16.4, derived |
 
-▸ **$\beta$ is temperature.** Literally: $\pi^* \propto \pi_{\text{ref}}\,e^{r/\beta}$ is the Boltzmann distribution with $\beta$ playing the role of $T$. Large $\beta$ = hot = the reward barely matters = stay near the reference. Small $\beta$ = cold = freeze onto the single best response. **The formula that governs how tightly you can align a language model is the same formula that governs how gas molecules distribute across energy states**, and the parameter means the same thing in both.
+▸ **$\beta$ is temperature.** Literally: $`\pi^* \propto \pi_{\text{ref}}\,e^{r/\beta}`$ is the Boltzmann distribution with $\beta$ playing the role of $T$. Large $\beta$ = hot = the reward barely matters = stay near the reference. Small $\beta$ = cold = freeze onto the single best response. **The formula that governs how tightly you can align a language model is the same formula that governs how gas molecules distribute across energy states**, and the parameter means the same thing in both.
 
-> **Analogy.** $\pi_{\text{ref}}$ is a crowd's natural distribution across the rooms of a building. $r(x,y)$ is how warm each room is. $\beta$ is how much people care about warmth. Cold-blooded people ($\beta$ small) all end up crammed in the warmest room; indifferent people ($\beta$ large) stay spread out as before. Nobody teleports — you can only redistribute the crowd that was already there, which is exactly why $\pi^*$ can never put mass on a response $\pi_{\text{ref}}$ assigns probability zero. **If the reference model would never say it, no amount of reward makes it appear.** Look at the formula: $\pi_{\text{ref}}(y) = 0 \Rightarrow \pi^*(y) = 0$, whatever $r$ says.
+> **Analogy.** $`\pi_{\text{ref}}`$ is a crowd's natural distribution across the rooms of a building. $r(x,y)$ is how warm each room is. $\beta$ is how much people care about warmth. Cold-blooded people ($\beta$ small) all end up crammed in the warmest room; indifferent people ($\beta$ large) stay spread out as before. Nobody teleports — you can only redistribute the crowd that was already there, which is exactly why $`\pi^*`$ can never put mass on a response $`\pi_{\text{ref}}`$ assigns probability zero. **If the reference model would never say it, no amount of reward makes it appear.** Look at the formula: $`\pi_{\text{ref}}(y) = 0 \Rightarrow \pi^*(y) = 0`$, whatever $r$ says.
 
 ### Step 2: invert
 
@@ -601,7 +601,7 @@ $$r(x,y) = \beta\log\frac{\pi^*(y\mid x)}{\pi_{\text{ref}}(y\mid x)} + \beta\log
 
 ### Step 3: substitute into Bradley–Terry
 
-The BT likelihood depends only on the **difference** $r(x,y_w)-r(x,y_l)$, and $\beta\log Z(x)$ is the same for both — **it cancels.** This is the crucial step, and it's why the intractable partition function never has to be computed.
+The BT likelihood depends only on the **difference** $`r(x,y_w)-r(x,y_l)`$, and $\beta\log Z(x)$ is the same for both — **it cancels.** This is the crucial step, and it's why the intractable partition function never has to be computed.
 
 ▸ $$\boxed{\ \mathcal{L}_{\text{DPO}} = -\mathbb{E}\left[\log\sigma\left(\beta\log\frac{\pi_\theta(y_w\mid x)}{\pi_{\text{ref}}(y_w\mid x)} - \beta\log\frac{\pi_\theta(y_l\mid x)}{\pi_{\text{ref}}(y_l\mid x)}\right)\right]\ }$$
 
@@ -609,15 +609,15 @@ The BT likelihood depends only on the **difference** $r(x,y_w)-r(x,y_l)$, and $\
 
 #### Steps 2 and 3, decoded — where the reward model goes
 
-**Step 2 is ordinary algebra.** Take $\pi^*(y\mid x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}$, divide both sides by $\pi_{\text{ref}}$, take logs, multiply by $\beta$:
+**Step 2 is ordinary algebra.** Take $`\pi^*(y\mid x) = \frac{1}{Z(x)}\pi_{\text{ref}}(y\mid x)e^{r(x,y)/\beta}`$, divide both sides by $`\pi_{\text{ref}}`$, take logs, multiply by $\beta$:
 
 $$\log\frac{\pi^*}{\pi_{\text{ref}}} = \frac{r}{\beta} - \log Z(x) \quad\Longrightarrow\quad r(x,y) = \beta\log\frac{\pi^*(y\mid x)}{\pi_{\text{ref}}(y\mid x)} + \beta\log Z(x)$$
 
 Read the result aloud: *"the reward of a response equals beta times the log of how much more likely the optimal policy is to say it than the reference policy would be, plus a per-prompt constant."*
 
-▸ **This is the sentence the whole chapter turns on.** It says a reward function and a policy are **two descriptions of the same object.** You do not need to learn a reward and then optimize it — a policy *is already* a reward function, read through the lens $\beta\log(\pi/\pi_{\text{ref}})$. The DPO paper's title says exactly this: *Your Language Model Is Secretly a Reward Model*.
+▸ **This is the sentence the whole chapter turns on.** It says a reward function and a policy are **two descriptions of the same object.** You do not need to learn a reward and then optimize it — a policy *is already* a reward function, read through the lens $`\beta\log(\pi/\pi_{\text{ref}})`$. The DPO paper's title says exactly this: *Your Language Model Is Secretly a Reward Model*.
 
-**Step 3 is the cancellation.** Bradley–Terry needs only the *difference* $r(x,y_w) - r(x,y_l)$. Substitute:
+**Step 3 is the cancellation.** Bradley–Terry needs only the *difference* $`r(x,y_w) - r(x,y_l)`$. Substitute:
 
 $$r(x,y_w) - r(x,y_l) = \beta\log\frac{\pi(y_w\mid x)}{\pi_{\text{ref}}(y_w\mid x)} - \beta\log\frac{\pi(y_l\mid x)}{\pi_{\text{ref}}(y_l\mid x)} + \underbrace{\beta\log Z(x) - \beta\log Z(x)}_{=\ 0}$$
 
@@ -633,7 +633,7 @@ Define the shorthand the paper uses:
 
 $$\hat r_\theta(x,y) \;=\; \beta\log\frac{\pi_\theta(y\mid x)}{\pi_{\text{ref}}(y\mid x)}$$
 
-Call $\hat r_\theta$ the **implicit reward**: it is not produced by any reward network, it is *computed from the policy itself*. Then $\mathcal{L}_{\text{DPO}} = -\mathbb{E}[\log\sigma(\hat r_\theta(x,y_w) - \hat r_\theta(x,y_l))]$ — **which is character-for-character the reward-model loss from §16.3**, with $r_\phi$ replaced by $\hat r_\theta$. Nothing new was invented. A quantity that used to require a separate network is now read directly off the policy.
+Call $`\hat r_\theta`$ the **implicit reward**: it is not produced by any reward network, it is *computed from the policy itself*. Then $`\mathcal{L}_{\text{DPO}} = -\mathbb{E}[\log\sigma(\hat r_\theta(x,y_w) - \hat r_\theta(x,y_l))]`$ — **which is character-for-character the reward-model loss from §16.3**, with $`r_\phi`$ replaced by $`\hat r_\theta`$. Nothing new was invented. A quantity that used to require a separate network is now read directly off the policy.
 
 **How you actually compute it.** For each of the four terms you need one number: the summed log-probability of a response's tokens.
 
@@ -658,10 +658,10 @@ Take $\beta = 0.1$ and a preference pair. Log-probabilities of whole responses a
 
 | Quantity | Value |
 |---|---|
-| $\log\pi_\theta(y_w\mid x)$ | $-40.0$ |
-| $\log\pi_{\text{ref}}(y_w\mid x)$ | $-43.0$ |
-| $\log\pi_\theta(y_l\mid x)$ | $-38.0$ |
-| $\log\pi_{\text{ref}}(y_l\mid x)$ | $-39.0$ |
+| $`\log\pi_\theta(y_w\mid x)`$ | $-40.0$ |
+| $`\log\pi_{\text{ref}}(y_w\mid x)`$ | $-43.0$ |
+| $`\log\pi_\theta(y_l\mid x)`$ | $-38.0$ |
+| $`\log\pi_{\text{ref}}(y_l\mid x)`$ | $-39.0$ |
 
 Implicit rewards:
 
@@ -670,18 +670,18 @@ $$\hat r_l = 0.1\times(-38.0 - (-39.0)) = 0.1 \times 1.0 = 0.10$$
 
 Margin $= 0.30 - 0.10 = 0.20$. Loss $= -\log\sigma(0.20) = -\log(0.5498) = 0.598$ nats.
 
-**Now read the diagnostics.** Note $\log\pi_\theta(y_l) = -38.0$ is *higher* than $\log\pi_\theta(y_w) = -40.0$: under raw likelihood the model still prefers the loser. DPO doesn't care, because the comparison is against the reference — the winner was pushed up by 3.0 nats while the loser was pushed up by only 1.0. **DPO optimizes relative movement, not absolute likelihood.** This is exactly the mechanism behind the failure mode flagged two sections down: both $y_w$ and $y_l$ can have their absolute probabilities *fall* and the loss will still improve, as long as the loser falls faster.
+**Now read the diagnostics.** Note $`\log\pi_\theta(y_l) = -38.0`$ is *higher* than $`\log\pi_\theta(y_w) = -40.0`$: under raw likelihood the model still prefers the loser. DPO doesn't care, because the comparison is against the reference — the winner was pushed up by 3.0 nats while the loser was pushed up by only 1.0. **DPO optimizes relative movement, not absolute likelihood.** This is exactly the mechanism behind the failure mode flagged two sections down: both $`y_w`$ and $`y_l`$ can have their absolute probabilities *fall* and the loss will still improve, as long as the loser falls faster.
 
 Three states of the same pair:
 
-| State | $\hat r_w$ | $\hat r_l$ | Margin | Loss | $\sigma(\hat r_l - \hat r_w)$ (gradient weight) |
+| State | $`\hat r_w`$ | $`\hat r_l`$ | Margin | Loss | $`\sigma(\hat r_l - \hat r_w)`$ (gradient weight) |
 |---|---|---|---|---|---|
-| Untrained ($\pi_\theta = \pi_{\text{ref}}$) | $0$ | $0$ | $0$ | $0.693$ | $0.50$ — full-strength update |
+| Untrained ($`\pi_\theta = \pi_{\text{ref}}`$) | $0$ | $0$ | $0$ | $0.693$ | $0.50$ — full-strength update |
 | Partly trained | $0.30$ | $0.10$ | $0.20$ | $0.598$ | $0.45$ |
 | Well trained | $2.0$ | $-1.0$ | $3.0$ | $0.049$ | $0.047$ — nearly ignored |
 | **Backwards** | $-0.5$ | $1.5$ | $-2.0$ | $2.127$ | $0.88$ — dominates the batch |
 
-▸ Notice the first row: at initialization $\pi_\theta$ *is* $\pi_{\text{ref}}$, so every implicit reward is exactly 0 and the loss is exactly $\log 2 = 0.693$ for every pair. **If your DPO run doesn't start at 0.693, something is wrong with your reference model** — usually you forgot to freeze it, or loaded the wrong checkpoint. It is the cheapest sanity check in this chapter.
+▸ Notice the first row: at initialization $`\pi_\theta`$ *is* $`\pi_{\text{ref}}`$, so every implicit reward is exactly 0 and the loss is exactly $\log 2 = 0.693$ for every pair. **If your DPO run doesn't start at 0.693, something is wrong with your reference model** — usually you forgot to freeze it, or loaded the wrong checkpoint. It is the cheapest sanity check in this chapter.
 
 ### What the gradient does
 
@@ -695,9 +695,9 @@ Three factors, multiplied:
 
 | Factor | Read aloud | What it does |
 |---|---|---|
-| $\sigma(\hat r_l - \hat r_w)$ | "sigmoid of loser-minus-winner" | A scalar in $(0,1)$: **how wrong am I on this pair?** Near 1 when inverted, near 0 when already right |
-| $\nabla\log\pi_\theta(y_w)$ | "grad log pi of the winner" | The direction in weight space that makes $y_w$ **more** likely |
-| $-\nabla\log\pi_\theta(y_l)$ | "minus grad log pi of the loser" | The direction that makes $y_l$ **less** likely |
+| $`\sigma(\hat r_l - \hat r_w)`$ | "sigmoid of loser-minus-winner" | A scalar in $(0,1)$: **how wrong am I on this pair?** Near 1 when inverted, near 0 when already right |
+| $`\nabla\log\pi_\theta(y_w)`$ | "grad log pi of the winner" | The direction in weight space that makes $`y_w`$ **more** likely |
+| $`-\nabla\log\pi_\theta(y_l)`$ | "minus grad log pi of the loser" | The direction that makes $`y_l`$ **less** likely |
 
 Using the numbers from the table above, with the well-trained row: $\sigma(-1.0 - 2.0) = \sigma(-3.0) = 0.047$. That pair's contribution is scaled by **4.7%**. The backwards row gets $\sigma(1.5 - (-0.5)) = \sigma(2.0) = 0.88$ — **an 18× larger update from the same batch.**
 
@@ -711,9 +711,9 @@ Using the numbers from the table above, with the well-trained row: $\sigma(-1.0 
 |---|---|
 | It is a binary classification loss over preference pairs | Literally $-\log\sigma(\text{margin})$, the logistic loss |
 | It optimizes the *same* KL-regularized objective as PPO-RLHF | Steps 1–3 are an exact re-parameterization, not an approximation |
-| It still has a reward model | The reward is $\beta\log(\pi_\theta/\pi_{\text{ref}})$ — implicit, but present, and you can read it out |
+| It still has a reward model | The reward is $`\beta\log(\pi_\theta/\pi_{\text{ref}})`$ — implicit, but present, and you can read it out |
 | It still has a $\beta$ and a KL leash | $\beta$ appears explicitly; the reference model is still loaded |
-| It requires exactly one frozen extra model | Only $\pi_{\text{ref}}$, and its log-probs can be precomputed once and cached |
+| It requires exactly one frozen extra model | Only $`\pi_{\text{ref}}`$, and its log-probs can be precomputed once and cached |
 
 **❌ Near-misses — commonly said about DPO, and wrong**
 
@@ -722,12 +722,12 @@ Using the numbers from the table above, with the well-trained row: $\sigma(-1.0 
 | "DPO has no reward model" | It has an implicit one, definitionally | DPO has no **separately trained** reward network |
 | "DPO is RLHF without the RL" | The objective is identical; what's gone is the *sampling loop* | DPO is the same objective solved **offline** |
 | "DPO removes the KL constraint" | $\beta$ is right there in the loss | DPO enforces KL **only on responses in the dataset** |
-| "DPO is just SFT on the chosen responses" | SFT on $y_w$ alone has no $y_l$ term and no reference | SFT is the $\beta\to\infty$-ish degenerate cousin; the contrastive term is the whole point |
+| "DPO is just SFT on the chosen responses" | SFT on $`y_w`$ alone has no $`y_l`$ term and no reference | SFT is the $\beta\to\infty$-ish degenerate cousin; the contrastive term is the whole point |
 | "DPO can't over-optimize because there's no reward to hack" | It over-optimizes the implicit reward on unseen $y$ | DPO's failure mode is **off-distribution**, not off-metric |
 
 ▸ **The boundary:** DPO and PPO-RLHF differ in **where the responses come from**, not in what is being optimized. PPO samples from the current policy every step (**on-policy**), so the KL leash binds wherever the policy actually goes. DPO reads from a fixed file (**off-policy**), so the leash binds only where the file has data — and the policy is free to do anything it likes everywhere else.
 
-> **Common misconception.** *"DPO's derivation shows it's equivalent to RLHF, so they should give the same model."* The **objectives** are equivalent; the **optimization problems** are not. PPO's expectation is taken over $y \sim \pi_\theta$, which is re-drawn as $\theta$ changes; DPO's is taken over a fixed dataset collected from some other policy. Equivalent objectives optimized over different sampling distributions reach different solutions. The misconception is tempting precisely *because* the derivation is exact — it is easy to read "exact re-parameterization" as "same algorithm." It is the difference between a map being correct and a map telling you which roads are open.
+> **Common misconception.** *"DPO's derivation shows it's equivalent to RLHF, so they should give the same model."* The **objectives** are equivalent; the **optimization problems** are not. PPO's expectation is taken over $`y \sim \pi_\theta`$, which is re-drawn as $\theta$ changes; DPO's is taken over a fixed dataset collected from some other policy. Equivalent objectives optimized over different sampling distributions reach different solutions. The misconception is tempting precisely *because* the derivation is exact — it is easy to read "exact re-parameterization" as "same algorithm." It is the difference between a map being correct and a map telling you which roads are open.
 
 ### The trade-offs
 
@@ -739,7 +739,7 @@ Using the numbers from the table above, with the well-trained row: $\sigma(-1.0 
 | **Offline** — fixed preference data | **Online** — learns from its own samples |
 | Can over-optimize on OOD responses | KL constraint is enforced on-policy |
 
-▸ **Where DPO is weaker, and why:** its constraint is only enforced on the responses in the dataset. For $y$ far from the data, $\log\frac{\pi_\theta}{\pi_{\text{ref}}}$ is unconstrained, so DPO can push probability mass onto unseen outputs — the observed failure is that DPO often *decreases* the likelihood of both $y_w$ and $y_l$ while increasing the likelihood of neither. Fixes: **iterative/online DPO** (regenerate preferences from the current policy each round), and adding an SFT term on $y_w$.
+▸ **Where DPO is weaker, and why:** its constraint is only enforced on the responses in the dataset. For $y$ far from the data, $`\log\frac{\pi_\theta}{\pi_{\text{ref}}}`$ is unconstrained, so DPO can push probability mass onto unseen outputs — the observed failure is that DPO often *decreases* the likelihood of both $`y_w`$ and $`y_l`$ while increasing the likelihood of neither. Fixes: **iterative/online DPO** (regenerate preferences from the current policy each round), and adding an SFT term on $`y_w`$.
 
 Careful head-to-head studies find well-tuned online PPO still edges out DPO on the hardest tasks; DPO wins decisively on cost.
 
@@ -747,7 +747,7 @@ Careful head-to-head studies find well-tuned online PPO still edges out DPO on t
 
 This is the most-reported surprise in practical DPO, and it is worth seeing as numbers rather than as a warning.
 
-| Step | $\log\pi_\theta(y_w)$ | $\log\pi_\theta(y_l)$ | $\hat r_w$ | $\hat r_l$ | Margin | Loss |
+| Step | $`\log\pi_\theta(y_w)`$ | $`\log\pi_\theta(y_l)`$ | $`\hat r_w`$ | $`\hat r_l`$ | Margin | Loss |
 |---|---|---|---|---|---|---|
 | 0 | $-43.0$ | $-39.0$ | $0.00$ | $0.00$ | $0.00$ | $0.693$ |
 | 200 | $-44.0$ | $-43.0$ | $-0.10$ | $-0.40$ | $0.30$ | $0.554$ |
@@ -757,9 +757,9 @@ This is the most-reported surprise in practical DPO, and it is worth seeing as n
 
 The loss halves. The margin triples. **And the model has become less likely to produce the preferred response than when it started** — $-47.0$ versus $-43.0$, a factor of $e^{-4}\approx 0.018$. Every number on the dashboard is green.
 
-Where did the probability go? Onto responses that appear in *neither* column, which the loss function never looks at. The loss only constrains the *difference* $\hat r_w - \hat r_l$, and pushing the loser down by 5 while pushing the winner down by 4 satisfies it perfectly.
+Where did the probability go? Onto responses that appear in *neither* column, which the loss function never looks at. The loss only constrains the *difference* $`\hat r_w - \hat r_l`$, and pushing the loser down by 5 while pushing the winner down by 4 satisfies it perfectly.
 
-▸ **The diagnostic every DPO run should log:** not just loss and margin, but **the absolute $\log\pi_\theta(y_w)$**. If it falls steadily, you are draining probability mass into unexamined territory, and the model that comes out will be confidently strange. The two standard repairs are to add an SFT term $-\lambda\log\pi_\theta(y_w\mid x)$ that anchors the winner's absolute likelihood, and to regenerate preference pairs from the current policy every few hundred steps (**iterative** or **online DPO**) so the dataset never goes stale.
+▸ **The diagnostic every DPO run should log:** not just loss and margin, but **the absolute $`\log\pi_\theta(y_w)`$**. If it falls steadily, you are draining probability mass into unexamined territory, and the model that comes out will be confidently strange. The two standard repairs are to add an SFT term $`-\lambda\log\pi_\theta(y_w\mid x)`$ that anchors the winner's absolute likelihood, and to regenerate preference pairs from the current policy every few hundred steps (**iterative** or **online DPO**) so the dataset never goes stale.
 
 > **Common misconception.** *"Offline methods are safer than online ones because nothing can drift."* The opposite is true here, and the reason is precise: an **on-policy** method's KL constraint is evaluated on whatever the policy is actually producing right now, so drift is measured and penalized the instant it happens. An **offline** method's constraint is evaluated only on a fixed file of responses, so the policy is unconstrained everywhere the file is silent — which, in a space of $128{,}000^{200}$ possible responses, is essentially everywhere. The misconception is tempting because "offline" sounds like "contained." It means "unobserved."
 
@@ -779,7 +779,7 @@ Where did the probability go? Onto responses that appear in *neither* column, wh
 
 Each of these fixes one specific defect. Knowing *which* defect is the whole value of the table.
 
-**IPO — identity preference optimization.** The defect: if your annotators are unanimous ($p^* = 1.0$ for a pair, not 0.7), the Bradley–Terry model's only way to represent certainty is an **infinite** reward gap. So the loss keeps rewarding a wider margin forever, and $\pi_\theta$ is driven toward a point mass — the $\beta\to 0$ collapse, arriving through the back door even though $\beta$ is finite. IPO replaces $-\log\sigma(m)$ with a squared loss around a finite target margin, so the optimum is at a *specific* margin rather than at infinity. **Use it when your preference labels are deterministic** — for example, when the "preference" came from a rule rather than a person.
+**IPO — identity preference optimization.** The defect: if your annotators are unanimous ($`p^* = 1.0`$ for a pair, not 0.7), the Bradley–Terry model's only way to represent certainty is an **infinite** reward gap. So the loss keeps rewarding a wider margin forever, and $`\pi_\theta`$ is driven toward a point mass — the $\beta\to 0$ collapse, arriving through the back door even though $\beta$ is finite. IPO replaces $-\log\sigma(m)$ with a squared loss around a finite target margin, so the optimum is at a *specific* margin rather than at infinity. **Use it when your preference labels are deterministic** — for example, when the "preference" came from a rule rather than a person.
 
 **KTO — Kahneman–Tversky optimization.** The defect: paired data is expensive. You need two responses to the same prompt, both graded. But every product already logs thumbs-up and thumbs-down on *single* responses. KTO learns from that unpaired signal, using a value function shaped by prospect theory — losses weigh more than equivalent gains, mirroring how humans actually evaluate outcomes. **Use it when you have a thumbs-up/down stream and no paired comparisons.**
 
@@ -791,7 +791,7 @@ $$\hat r_{\text{SimPO}}(x,y) = \frac{\beta}{\lvert y\rvert}\sum_{t=1}^{\lvert y\
 
 Dividing by $\lvert y \rvert$ makes the reward a *rate* rather than a total, which is why it is structurally immune to padding. **Use it when length bias is your visible failure.**
 
-**RRHF and RSO.** RRHF ranks $k>2$ candidate responses at once rather than handling pairs; RSO first uses rejection sampling to draw preference pairs from something closer to the optimal policy $\pi^*$, correcting the fact that DPO's derivation assumes on-policy data while its practice uses whatever file you have.
+**RRHF and RSO.** RRHF ranks $k>2$ candidate responses at once rather than handling pairs; RSO first uses rejection sampling to draw preference pairs from something closer to the optimal policy $`\pi^*`$, correcting the fact that DPO's derivation assumes on-policy data while its practice uses whatever file you have.
 
 #### Examples and non-examples: choosing a post-training method
 
@@ -810,10 +810,10 @@ Dividing by $\lvert y \rvert$ makes the reward a *rate* rather than a total, whi
 
 | Situation | Tempting but wrong | Why it fails | Do instead |
 |---|---|---|---|
-| No SFT stage, straight to DPO from a base model | "DPO subsumes SFT" | The reference model is a *base* model that doesn't follow instructions, so the leash anchors you to non-compliance | SFT first, use that as $\pi_{\text{ref}}$ |
+| No SFT stage, straight to DPO from a base model | "DPO subsumes SFT" | The reference model is a *base* model that doesn't follow instructions, so the leash anchors you to non-compliance | SFT first, use that as $`\pi_{\text{ref}}`$ |
 | RLHF to teach a model a new API's syntax | "RL will figure it out" | A preference signal cannot transmit facts; you'd need $\sim 10^6$ comparisons to convey what one document says | SFT, or retrieval |
 | Preference data where the annotator saw only the longer answer's first paragraph | "More data is better" | You are labelling *presentation*, and the RM will learn it perfectly | Fix the annotation interface first |
-| DPO for 8 epochs on 2,000 pairs | "It's just fine-tuning" | Margins blow up, absolute likelihoods collapse | 1–2 epochs, monitor $\log\pi_\theta(y_w)$ |
+| DPO for 8 epochs on 2,000 pairs | "It's just fine-tuning" | Margins blow up, absolute likelihoods collapse | 1–2 epochs, monitor $`\log\pi_\theta(y_w)`$ |
 | Reusing a reward model across a major policy update | "The RM is a fixed function" | The policy has drifted off the RM's training distribution | Retrain or re-anchor the RM |
 
 ▸ **The boundary:** SFT transfers **behaviour you can demonstrate**; preference methods transfer **judgements you can only compare**; verifiable rewards transfer **outcomes you can check**. Choose by asking what kind of signal you can actually produce cheaply — the method follows from the data, never the other way round.
@@ -847,16 +847,16 @@ Read aloud: *"take this completion's reward, subtract the average reward of its 
 | Piece | Read aloud | What it means |
 |---|---|---|
 | $G$ | "G" | Group size — how many completions we sample for the *same* prompt. Typically 4–64 |
-| $r_i$ | "r sub i" | The reward of the $i$-th completion in the group |
-| $\mathrm{mean}(r_1,\dots,r_G)$ | "the group mean" | The **baseline** — "what a typical attempt at this prompt scores" |
+| $`r_i`$ | "r sub i" | The reward of the $i$-th completion in the group |
+| $`\mathrm{mean}(r_1,\dots,r_G)`$ | "the group mean" | The **baseline** — "what a typical attempt at this prompt scores" |
 | $\mathrm{std}(\cdot)$ | "the standard deviation" | Rescales so every prompt contributes comparably |
-| $\hat A_i$ | "A-hat sub i" | Positive: better than my own siblings. Negative: worse |
+| $`\hat A_i`$ | "A-hat sub i" | Positive: better than my own siblings. Negative: worse |
 
 > **Analogy.** Grading on a curve, per question. PPO hires a separate professional forecaster (the value network) to predict "a typical student scores 62 on this question." GRPO just has four students answer it and uses their average. The forecaster is more sample-efficient when it's accurate, but it has to be trained, it has to be as large as the model, and for language its regression target is so noisy that it's frequently wrong. **Four students are noisier but never wrong about what four students scored.**
 
 **Numbers, please.** Take a math problem, $G = 4$, binary correctness rewards:
 
-| Completion | $r_i$ | $r_i - \text{mean}$ | $\hat A_i$ |
+| Completion | $`r_i`$ | $`r_i - \text{mean}`$ | $`\hat A_i`$ |
 |---|---|---|---|
 | 1 (correct) | $1$ | $+0.5$ | $+0.87$ |
 | 2 (correct) | $1$ | $+0.5$ | $+0.87$ |
@@ -867,7 +867,7 @@ Mean $= 0.5$, standard deviation $= \sqrt{0.25} = 0.5$ (population), so $\hat A 
 
 Now a harder problem where only one of four succeeds:
 
-| Completion | $r_i$ | $\hat A_i$ (sample std $=0.5$) |
+| Completion | $`r_i`$ | $`\hat A_i`$ (sample std $=0.5$) |
 |---|---|---|
 | 1 (correct) | $1$ | $+1.5$ |
 | 2–4 (wrong) | $0$ | $-0.5$ each |
@@ -876,7 +876,7 @@ The single success gets a **3× larger** update than each failure gets a penalty
 
 #### What would break: when the group is unanimous
 
-Set all four rewards to 1 (the problem is trivial) or all four to 0 (the problem is impossible). Then $\mathrm{mean} = r_i$ for every $i$, the numerator is exactly 0, and the denominator is **also** 0.
+Set all four rewards to 1 (the problem is trivial) or all four to 0 (the problem is impossible). Then $`\mathrm{mean} = r_i`$ for every $i$, the numerator is exactly 0, and the denominator is **also** 0.
 
 $$\hat A_i = \frac{0}{0}$$
 
@@ -900,7 +900,7 @@ The claim "any baseline that does not depend on the action leaves the gradient u
 | Baseline | Why it's valid |
 |---|---|
 | The group mean of rewards for the *same prompt* | Depends on the prompt and on the sampling process, not on which action you're evaluating |
-| A learned $V_\psi(s)$ — PPO's value network | A function of state only |
+| A learned $`V_\psi(s)`$ — PPO's value network | A function of state only |
 | A running average of all rewards seen so far | Constant with respect to the current action |
 | Zero | Trivially independent of the action; this is vanilla REINFORCE |
 
@@ -908,12 +908,12 @@ The claim "any baseline that does not depend on the action leaves the gradient u
 
 | Looks like it | Why it fails | Consequence |
 |---|---|---|
-| Subtracting $r_i$ itself | Depends on the action being evaluated | Every advantage is 0; no learning at all |
+| Subtracting $`r_i`$ itself | Depends on the action being evaluated | Every advantage is 0; no learning at all |
 | A baseline computed from the action's own reward, e.g. $\mathrm{median}$ including $i$ with $G=2$ | The action's reward leaks into its own baseline | Systematically biased toward pushing down whatever was sampled |
 | $Q(s,a)$ — the action-value | Explicitly a function of the action | This is the thing the baseline is meant to be subtracted *from* |
 | The *best* reward in the group | Determined by which action happened to be best | Biases against high-variance strategies |
 
-▸ **The boundary:** a baseline is valid exactly when it is **conditionally independent of the action given the state.** The proof is one line — $\mathbb{E}_{a\sim\pi}[b(s)\nabla\log\pi(a\mid s)] = b(s)\nabla\sum_a \pi(a\mid s) = b(s)\nabla 1 = 0$ — so subtracting it changes the variance and nothing else. Strictly, GRPO's group mean *does* include $r_i$ in its own average, so it is very slightly biased at small $G$; in practice this is dwarfed by the variance it removes, and dividing by the standard deviation introduces a similar mild distortion for the same reason and the same trade.
+▸ **The boundary:** a baseline is valid exactly when it is **conditionally independent of the action given the state.** The proof is one line — $`\mathbb{E}_{a\sim\pi}[b(s)\nabla\log\pi(a\mid s)] = b(s)\nabla\sum_a \pi(a\mid s) = b(s)\nabla 1 = 0`$ — so subtracting it changes the variance and nothing else. Strictly, GRPO's group mean *does* include $`r_i`$ in its own average, so it is very slightly biased at small $G$; in practice this is dwarfed by the variance it removes, and dividing by the standard deviation introduces a similar mild distortion for the same reason and the same trade.
 
 > **Where this came from.** **GRPO** was introduced in **DeepSeekMath (Shao and colleagues, 2024)** as a way to make large-scale RL on mathematics affordable, and reached wide attention through **DeepSeek-R1 (2025)**, where it was the engine of the reasoning training. The underlying idea — use several samples from the same state as each other's baseline — is not new; it appears in the RL literature under names like *vine* sampling and leave-one-out control variates, and the simplest version dates back to the variance-reduction techniques accompanying **Ronald Williams' REINFORCE in 1992**. What was new was recognizing that in language modelling the economics have inverted: generation runs on optimized inference kernels with batching and KV-caching, so **sampling 16 completions is cheaper than training and storing a second 7-billion-parameter network.** GRPO is less a theoretical advance than a correct reading of a hardware cost curve.
 
@@ -941,7 +941,7 @@ def reward(problem, completion):
 
 That is the entire reward model. No parameters, no training, no distribution shift, no ensemble, no drift. Compare its properties with a learned reward model, side by side:
 
-| Property | Learned RM $r_\phi$ | Verifier $\mathbb{1}[\cdot]$ |
+| Property | Learned RM $`r_\phi`$ | Verifier $\mathbb{1}[\cdot]$ |
 |---|---|---|
 | Parameters | ~7 billion | 0 |
 | Can be wrong | Yes, ~25–35% of pairs | Only if the gold answer is wrong |
@@ -958,7 +958,7 @@ That is the entire reward model. No parameters, no training, no distribution shi
 
 | Task | The verifier | Why it's sound |
 |---|---|---|
-| "What is $\int_0^1 3x^2\,dx$?" | Compare to $1$ symbolically | One correct answer, checkable without judgement |
+| "What is $`\int_0^1 3x^2\,dx`$?" | Compare to $1$ symbolically | One correct answer, checkable without judgement |
 | "Write a function that returns the $n$-th prime" | Run a held-out test suite | Execution is ground truth |
 | "Is this Lean proof valid?" | Run the Lean type-checker | A proof assistant *is* the definition of correctness |
 | "Solve this Sudoku" | Check the constraints | Verification is far cheaper than solution |
@@ -1071,7 +1071,7 @@ Nothing in the objective mentions length. So why does it rise? Because length is
 
 Trace it through GRPO. The model attempts a hard problem four times. Two of the attempts happened to include a step like "wait, let me check that" and both got the answer right; the two that charged straight through got it wrong.
 
-| Attempt | Contains a self-check | Correct | $r_i$ | $\hat A_i$ |
+| Attempt | Contains a self-check | Correct | $`r_i`$ | $`\hat A_i`$ |
 |---|---|---|---|---|
 | 1 | Yes | ✅ | $1$ | $+0.87$ |
 | 2 | Yes | ✅ | $1$ | $+0.87$ |
@@ -1258,9 +1258,9 @@ The mechanism for the perplexity part is not mysterious and does not indicate da
 
 - **A 1.3-billion-parameter aligned model beat a 175-billion-parameter one on human preference.** That was InstructGPT's headline result in 2022 — a 100× smaller model preferred by raters over the GPT-3 it was derived from. Post-training compute is a rounding error against pretraining compute, which makes it the highest-leverage stage in the pipeline by an enormous margin.
 
-- **The DPO paper's subtitle is the entire result.** *Your Language Model Is Secretly a Reward Model.* The claim is literal: $\beta\log(\pi_\theta/\pi_{\text{ref}})$ is a reward function, readable off any policy, with no extra network needed.
+- **The DPO paper's subtitle is the entire result.** *Your Language Model Is Secretly a Reward Model.* The claim is literal: $`\beta\log(\pi_\theta/\pi_{\text{ref}})`$ is a reward function, readable off any policy, with no extra network needed.
 
-- **The equation governing how tightly you can align a model is 19th-century thermodynamics.** $\pi^* \propto \pi_{\text{ref}}\,e^{r/\beta}$ is the Boltzmann distribution from 1868, and $\beta$ plays exactly the role of inverse temperature. Cool the system and it freezes onto the single highest-reward output; heat it and it relaxes back to the reference. The physics analogy is not decoration — it is the same formula with the same meaning.
+- **The equation governing how tightly you can align a model is 19th-century thermodynamics.** $`\pi^* \propto \pi_{\text{ref}}\,e^{r/\beta}`$ is the Boltzmann distribution from 1868, and $\beta$ plays exactly the role of inverse temperature. Cool the system and it freezes onto the single highest-reward output; heat it and it relaxes back to the reference. The physics analogy is not decoration — it is the same formula with the same meaning.
 
 - **KTO's value function comes from a 1979 economics paper about gambling.** Kahneman and Tversky's prospect theory showed that people weigh losses about twice as heavily as equivalent gains. KTO writes that asymmetry into a language-model loss. Kahneman won the Nobel Memorial Prize in 2002; Tversky had died in 1996, and the prize is not awarded posthumously.
 
@@ -1270,7 +1270,7 @@ The mechanism for the perplexity part is not mysterious and does not indicate da
 
 - **The models learned to say "wait" without anyone teaching them to.** In outcome-only RL on math and code, response length grows steadily with no length term anywhere in the objective, and self-correcting phrases appear spontaneously. The mechanism is simple and worth restating: chains containing self-checks got the answer right more often, so every token in those chains — including the word "wait" — got reinforced.
 
-- **You cannot make a model say something its base model would never say.** Look at $\pi^*(y\mid x) \propto \pi_{\text{ref}}(y\mid x)e^{r/\beta}$: if the reference assigns probability exactly zero, the product is zero for any finite reward. Alignment can only redistribute probability mass that already exists. **RLHF is a filter, not a generator.**
+- **You cannot make a model say something its base model would never say.** Look at $`\pi^*(y\mid x) \propto \pi_{\text{ref}}(y\mid x)e^{r/\beta}`$: if the reference assigns probability exactly zero, the product is zero for any finite reward. Alignment can only redistribute probability mass that already exists. **RLHF is a filter, not a generator.**
 
 ---
 

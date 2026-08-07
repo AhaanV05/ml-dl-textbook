@@ -12,17 +12,17 @@ This chapter is Chapter 20 with the Gaussians swapped out for matrices. **Every 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $K$ | "K" | The **vocabulary size** — how many distinct tokens exist |
-| $x_t$ (here) | "x-t" | A token at corruption level $t$, written as a **one-hot row vector** of length $K$ |
-| $Q_t$ | "Q-t" | The **transition matrix** for one step. $K\times K$, rows sum to 1 |
-| $[Q_t]_{ij}$ | "Q-t, i-j" | Probability that token $i$ becomes token $j$ in one step |
-| $\bar Q_t$ | "Q-bar-t" | $Q_1Q_2\cdots Q_t$ — the $t$-step transition matrix. The discrete $\bar\alpha_t$ |
-| $\mathrm{Cat}(x;\ p)$ | "categorical" | A weighted die: outcome $j$ with probability $p_j$ |
-| $x_{t-1}Q_t$ | "x times Q" | Row-vector times matrix — **looks up the row of $Q_t$ for the current token** |
+| $`x_t`$ (here) | "x-t" | A token at corruption level $t$, written as a **one-hot row vector** of length $K$ |
+| $`Q_t`$ | "Q-t" | The **transition matrix** for one step. $K\times K$, rows sum to 1 |
+| $`[Q_t]_{ij}`$ | "Q-t, i-j" | Probability that token $i$ becomes token $j$ in one step |
+| $`\bar Q_t`$ | "Q-bar-t" | $`Q_1Q_2\cdots Q_t`$ — the $t$-step transition matrix. The discrete $`\bar\alpha_t`$ |
+| $\mathrm{Cat}(x;\ p)$ | "categorical" | A weighted die: outcome $j$ with probability $`p_j`$ |
+| $`x_{t-1}Q_t`$ | "x times Q" | Row-vector times matrix — **looks up the row of $`Q_t`$ for the current token** |
 | $\odot$ | "elementwise" / "Hadamard" | Multiply matching entries, keep them separate (Ch. 0 §0.8) |
 | $\mathbf{1}$ | "the all-ones vector" | A column of $K$ ones |
 | $\mathbf{1}\mathbf{1}^\top$ | "one one-transpose" | The $K\times K$ matrix of all ones (an outer product) |
-| $e_{[\text{MASK}]}$ | "e-mask" | The one-hot vector selecting the `[MASK]` token |
-| $\tilde p_\theta(x_0\mid x_t)$ | "p-tilde-theta" | The network's guess at **the original clean token** |
+| $`e_{[\text{MASK}]}`$ | "e-mask" | The one-hot vector selecting the `[MASK]` token |
+| $`\tilde p_\theta(x_0\mid x_t)`$ | "p-tilde-theta" | The network's guess at **the original clean token** |
 | $\lambda$ | "lambda" | Here: the weight on the auxiliary loss. Not an eigenvalue |
 | $\gamma(c),\ \beta(c)$ | "gamma of c", "beta of c" | Learned **scale** and **shift**, computed from the condition $c$ |
 | $\alpha(c)$ | "alpha of c" | The AdaLN-Zero **gate** — starts at exactly 0 |
@@ -72,7 +72,7 @@ Two responses:
 
 #### Why "token 47 is not between 46 and 48" is the whole problem
 
-Chapter 20's forward process was $x_t = \sqrt{1-\beta_t}\,x_{t-1} + \sqrt{\beta_t}\,\epsilon$. Every operation in that line — multiply by a fraction, add a small number — assumes the values live on a **number line**, where "a little bit more" and "halfway between" are meaningful.
+Chapter 20's forward process was $`x_t = \sqrt{1-\beta_t}\,x_{t-1} + \sqrt{\beta_t}\,\epsilon`$. Every operation in that line — multiply by a fraction, add a small number — assumes the values live on a **number line**, where "a little bit more" and "halfway between" are meaningful.
 
 Pixel values pass that test. A pixel of brightness 128 really is halfway between 127 and 129, and nudging it by 0.4 produces a valid, slightly different pixel.
 
@@ -107,7 +107,7 @@ The whole chapter turns on one test: **does "halfway between" mean anything?**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| Pixel intensities discretized to 0–255 | 128 really is between 127 and 129, and a nudge of $0.4$ gives a valid pixel | **Ordinal** with a metric — exactly the case for the band kernel $Q_{ij}\propto\exp(-\lvert i-j\rvert^2/\sigma^2)$ |
+| Pixel intensities discretized to 0–255 | 128 really is between 127 and 129, and a nudge of $0.4$ gives a valid pixel | **Ordinal** with a metric — exactly the case for the band kernel $`Q_{ij}\propto\exp(-\lvert i-j\rvert^2/\sigma^2)`$ |
 | Star ratings 1–5 | 3 is  between 2 and 4. An error of one star is smaller than an error of three | Ordinal — treating it as unordered throws away real structure |
 | Quantized audio samples | The quantization is an artefact of storage; the underlying signal is a waveform | Continuous data, discretized for convenience |
 | Bucketed ages (0–9, 10–19, …) | The buckets sit on a line and the line is the point | Binned continuous data |
@@ -117,7 +117,7 @@ The whole chapter turns on one test: **does "halfway between" mean anything?**
 
 > **Common misconception.** *"Tokens have embeddings, and embeddings are continuous vectors, so continuous diffusion works fine on text."* Embeddings are continuous, but only $K$ of the infinitely many points in that space are **valid tokens** — the rest are nothing at all. Continuous diffusion happily produces a vector 0.3 of the way between `" cat"` and `" democracy"`, and there is no token there; you must round, and the rounding is a decision the model never made probabilistically. The belief is tempting because Diffusion-LM and Bit Diffusion do work, and work reasonably well. **They work despite the geometry, not because of it** — and the capacity spent learning the shape of a $K$-point cloud in $d$ dimensions is capacity not spent on language.
 
-> **Common misconception.** *"The simplex is where the tokens live."* Tokens live at the **corners** of the simplex — the $K$ one-hot vectors. The interior is where *distributions over tokens* live. This matters because it locates the two objects the chapter juggles: $x_t$ is always a corner (a real token, or `[MASK]`), while $x_{t-1}Q_t$ and $\tilde p_\theta(x_0\mid x_t)$ are interior points you sample from. **Confusing the two is the source of most sign and shape errors when implementing D3PM.**
+> **Common misconception.** *"The simplex is where the tokens live."* Tokens live at the **corners** of the simplex — the $K$ one-hot vectors. The interior is where *distributions over tokens* live. This matters because it locates the two objects the chapter juggles: $`x_t`$ is always a corner (a real token, or `[MASK]`), while $`x_{t-1}Q_t`$ and $`\tilde p_\theta(x_0\mid x_t)`$ are interior points you sample from. **Confusing the two is the source of most sign and shape errors when implementing D3PM.**
 
 ---
 
@@ -133,7 +133,7 @@ A game of telephone with a specific corruption rule. At each round, every word i
 
 ### The forward process
 
-Let $x_t \in \{1,\dots,K\}$ be a token, represented as a one-hot row vector. The forward step is a categorical distribution defined by a transition matrix $Q_t \in \mathbb{R}^{K\times K}$ with $[Q_t]_{ij} = q(x_t=j\mid x_{t-1}=i)$, rows summing to 1:
+Let $`x_t \in \{1,\dots,K\}`$ be a token, represented as a one-hot row vector. The forward step is a categorical distribution defined by a transition matrix $`Q_t \in \mathbb{R}^{K\times K}`$ with $`[Q_t]_{ij} = q(x_t=j\mid x_{t-1}=i)`$, rows summing to 1:
 
 ▸ $$q(x_t\mid x_{t-1}) = \mathrm{Cat}\big(x_t;\ p = x_{t-1}Q_t\big)$$
 
@@ -143,28 +143,28 @@ Everything here rests on one representational choice: **write a token as a one-h
 
 If $K=5$ and the token is "cat" (index 3), then $x = (0,0,1,0,0)$. That looks wasteful — five numbers to store one integer — but it converts "which token is it?" into linear algebra, and linear algebra is what makes the closed form exist.
 
-**Now $Q_t$.** It is a $K\times K$ grid where
+**Now $`Q_t`$.** It is a $K\times K$ grid where
 
 $$[Q_t]_{ij} = q(x_t = j \mid x_{t-1} = i) = \text{"probability that token } i \text{ turns into token } j \text{ this step."}$$
 
 **Rows sum to 1** because from any starting token *something* must happen: it either stays or becomes one of the others, and those possibilities exhaust the options. (A matrix with non-negative entries and rows summing to 1 is called **row-stochastic**; this is the standard object of Markov chain theory.)
 
-**Why $x_{t-1}Q_t$ and not $Q_t x_{t-1}$.** Multiplying a *row* vector on the left of a matrix selects a weighted combination of the matrix's **rows** (Ch. 1 §1.1.1's second reading). And since $x_{t-1}$ is one-hot, the "weighted combination" is just **row $i$, extracted whole**:
+**Why $`x_{t-1}Q_t`$ and not $`Q_t x_{t-1}`$.** Multiplying a *row* vector on the left of a matrix selects a weighted combination of the matrix's **rows** (Ch. 1 §1.1.1's second reading). And since $`x_{t-1}`$ is one-hot, the "weighted combination" is just **row $i$, extracted whole**:
 
 $$\underbrace{(0,0,1,0,0)}_{\text{token 3}}\ \begin{pmatrix} \cdot&\cdot&\cdot&\cdot&\cdot \\ \cdot&\cdot&\cdot&\cdot&\cdot \\ 0.02&0.02&0.90&0.03&0.03 \\ \cdot&\cdot&\cdot&\cdot&\cdot \\ \cdot&\cdot&\cdot&\cdot&\cdot\end{pmatrix} \;=\; (0.02,\ 0.02,\ 0.90,\ 0.03,\ 0.03)$$
 
-▸ **The matrix multiply is a table lookup wearing a costume.** In code nobody forms $Q_t$; you index. But writing it as a matrix product is what lets you *compose* steps by multiplying matrices, which is the whole point.
+▸ **The matrix multiply is a table lookup wearing a costume.** In code nobody forms $`Q_t`$; you index. But writing it as a matrix product is what lets you *compose* steps by multiplying matrices, which is the whole point.
 
-**$\mathrm{Cat}(x_t;\ p)$, decoded.** "Categorical distribution" — a weighted die with $K$ faces. Reading the row above: *"with probability 0.90 the token stays 'cat'; with probability 0.02 it becomes token 1; with probability 0.03 it becomes token 4"*, and so on. Sample from it and you have taken one forward step.
+**$`\mathrm{Cat}(x_t;\ p)`$, decoded.** "Categorical distribution" — a weighted die with $K$ faces. Reading the row above: *"with probability 0.90 the token stays 'cat'; with probability 0.02 it becomes token 1; with probability 0.03 it becomes token 4"*, and so on. Sample from it and you have taken one forward step.
 
 **The correspondence with Chapter 20, line by line:**
 
 | Chapter 20 (continuous) | Chapter 21 (discrete) |
 |---|---|
-| $x_t$ is a real vector | $x_t$ is a one-hot row vector |
+| $`x_t`$ is a real vector | $`x_t`$ is a one-hot row vector |
 | Add Gaussian noise | Resample from a categorical distribution |
-| Shrink by $\sqrt{1-\beta_t}$ | Multiply by $Q_t$ |
-| $\bar\alpha_t = \prod \alpha_s$ (a scalar) | $\bar Q_t = \prod Q_s$ (a matrix) |
+| Shrink by $`\sqrt{1-\beta_t}`$ | Multiply by $`Q_t`$ |
+| $`\bar\alpha_t = \prod \alpha_s`$ (a scalar) | $`\bar Q_t = \prod Q_s`$ (a matrix) |
 | Endpoint $\mathcal{N}(0,I)$ | Endpoint = the chain's stationary distribution |
 | KL between Gaussians | KL between categoricals |
 
@@ -179,7 +179,7 @@ Take $K=3$ throughout.
 | Matrix | Why it qualifies |
 |---|---|
 | $\begin{pmatrix}0.8&0.1&0.1\\0.1&0.8&0.1\\0.1&0.1&0.8\end{pmatrix}$ | Non-negative, every row sums to 1. "Mostly stay, sometimes swap" |
-| $\begin{pmatrix}1&0&0\\0&1&0\\0&0&1\end{pmatrix}$ | The identity. A perfectly valid chain that does nothing — $\beta_t = 0$ |
+| $\begin{pmatrix}1&0&0\\0&1&0\\0&0&1\end{pmatrix}$ | The identity. A perfectly valid chain that does nothing — $`\beta_t = 0`$ |
 | $\begin{pmatrix}0.9&0&0.1\\0&0.9&0.1\\0&0&1\end{pmatrix}$ | The absorbing kernel with state 3 as `[MASK]`. Row 3 is $(0,0,1)$: once there, never leave |
 | $\begin{pmatrix}0&1&0\\0&0&1\\1&0&0\end{pmatrix}$ | A deterministic cycle. Every row sums to 1; determinism is allowed |
 
@@ -189,15 +189,15 @@ Take $K=3$ throughout.
 |---|---|---|
 | $\begin{pmatrix}0.8&0.1&0.1\\0.2&0.7&0.2\\0.1&0.1&0.8\end{pmatrix}$ | Row 2 sums to $1.1$. From token 2, the "probabilities" of what happens next total more than certainty | A non-normalized array — the single most common D3PM implementation bug |
 | $\begin{pmatrix}0.9&0.2&-0.1\\ \cdot&\cdot&\cdot\\ \cdot&\cdot&\cdot\end{pmatrix}$ | A negative entry. Row sums to 1, and there is no such thing as a $-10\%$ chance | Not a probability distribution at all |
-| A matrix whose **columns** sum to 1 | Column-stochastic. Every formula in this chapter uses $x_{t-1}Q_t$ with $x$ a **row** vector; column-stochastic requires $Qx$ with $x$ a column | The transpose convention — correct mathematics, wrong side of the multiply |
+| A matrix whose **columns** sum to 1 | Column-stochastic. Every formula in this chapter uses $`x_{t-1}Q_t`$ with $x$ a **row** vector; column-stochastic requires $Qx$ with $x$ a column | The transpose convention — correct mathematics, wrong side of the multiply |
 | A symmetric similarity matrix from an embedding model | Symmetric and non-negative, but rows sum to arbitrary numbers | A kernel matrix, one `row_normalize` away from being usable |
-| $\bar Q_t$ built as $Q_1 + Q_2 + \dots + Q_t$ | Composing steps is **multiplication**, not addition. Adding gives row sums of $t$ | Nothing meaningful |
+| $`\bar Q_t`$ built as $`Q_1 + Q_2 + \dots + Q_t`$ | Composing steps is **multiplication**, not addition. Adding gives row sums of $t$ | Nothing meaningful |
 
-▸ **The boundary:** a matrix defines a one-step corruption if and only if it is **non-negative with rows summing to exactly 1** — because "from token $i$, something must happen, and each possibility has a real probability." Every product of row-stochastic matrices is row-stochastic, which is precisely what makes $\bar Q_t = Q_1\cdots Q_t$ a legitimate object rather than an accident.
+▸ **The boundary:** a matrix defines a one-step corruption if and only if it is **non-negative with rows summing to exactly 1** — because "from token $i$, something must happen, and each possibility has a real probability." Every product of row-stochastic matrices is row-stochastic, which is precisely what makes $`\bar Q_t = Q_1\cdots Q_t`$ a legitimate object rather than an accident.
 
-> **Common misconception.** *"The forward process needs a neural network too."* It has **no parameters at all.** $Q_t$ is chosen by you, in advance, from a schedule — exactly as $\beta_t$ was in Chapter 20. All the learning is in the reverse direction. The belief is tempting because in a variational autoencoder the encoder *is* learned, and diffusion is presented as a hierarchical VAE. **The defining move of diffusion, in both chapters, is freezing the encoder** — which is what makes the posterior available in closed form and the training objective decomposable.
+> **Common misconception.** *"The forward process needs a neural network too."* It has **no parameters at all.** $`Q_t`$ is chosen by you, in advance, from a schedule — exactly as $`\beta_t`$ was in Chapter 20. All the learning is in the reverse direction. The belief is tempting because in a variational autoencoder the encoder *is* learned, and diffusion is presented as a hierarchical VAE. **The defining move of diffusion, in both chapters, is freezing the encoder** — which is what makes the posterior available in closed form and the training objective decomposable.
 
-> **Common misconception.** *"So a $50{,}000 \times 50{,}000$ matrix is multiplied at every step."* Never. $\bar Q_t$ for a 50k vocabulary is $2.5\times10^9$ entries **per timestep**, and nobody has ever materialized one. Both practical kernels are $(1-\bar\beta_t) I$ plus a rank-one term, so the entire object is described by one scalar per timestep and applied by indexing. **The matrix is a notation for thinking; a scalar and an `if` statement are the implementation.** The confusion is worth resolving early, because it makes people believe discrete diffusion is intractable at realistic vocabulary sizes when it is arguably cheaper than the continuous version.
+> **Common misconception.** *"So a $50{,}000 \times 50{,}000$ matrix is multiplied at every step."* Never. $`\bar Q_t`$ for a 50k vocabulary is $2.5\times10^9$ entries **per timestep**, and nobody has ever materialized one. Both practical kernels are $`(1-\bar\beta_t) I`$ plus a rank-one term, so the entire object is described by one scalar per timestep and applied by indexing. **The matrix is a notation for thinking; a scalar and an `if` statement are the implementation.** The confusion is worth resolving early, because it makes people believe discrete diffusion is intractable at realistic vocabulary sizes when it is arguably cheaper than the continuous version.
 
 > **Where this came from.** The mathematics of a state jumping between discrete possibilities with fixed probabilities is **Markov chain theory**, introduced by **Andrey Markov** in 1906. His motivation was a public argument, not an application: the mathematician Pavel Nekrasov had claimed that the law of large numbers required independent events, and had drawn theological conclusions from it about free will. Markov set out to construct **dependent** sequences that obey the law of large numbers anyway — and succeeded, inventing the chain in the process. In 1913 he demonstrated it on the first 20,000 letters of Pushkin's *Eugene Onegin*, counting by hand how often a vowel followed a consonant. **The first application of Markov chains was to the statistics of a novel in verse**, and it is a reasonable claim that the first statistical language model was built with pencil and paper in 1913.
 
@@ -207,13 +207,13 @@ Because the process is a Markov chain, the $t$-step transition is just the matri
 
 ▸ $$\bar Q_t = Q_1Q_2\cdots Q_t,\qquad q(x_t\mid x_0) = \mathrm{Cat}\big(x_t;\ p = x_0\bar Q_t\big)$$
 
-**This is the exact analogue of $q(x_t|x_0)=\mathcal{N}(\sqrt{\bar\alpha_t}x_0,(1-\bar\alpha_t)I)$** and serves the same essential purpose: one-shot corruption to any level, so training doesn't require simulating the chain.
+**This is the exact analogue of $`q(x_t|x_0)=\mathcal{N}(\sqrt{\bar\alpha_t}x_0,(1-\bar\alpha_t)I)`$** and serves the same essential purpose: one-shot corruption to any level, so training doesn't require simulating the chain.
 
 #### Why "just multiply the matrices" is legitimate
 
 $$\bar Q_t = Q_1Q_2\cdots Q_t$$
 
-Read the bar the same way as in Chapter 20: **cumulative.** $\bar Q_t$ answers *"starting from token $i$, what is the probability I am at token $j$ after $t$ steps?"*
+Read the bar the same way as in Chapter 20: **cumulative.** $`\bar Q_t`$ answers *"starting from token $i$, what is the probability I am at token $j$ after $t$ steps?"*
 
 **Why it works.** Composing two probabilistic steps means summing over every intermediate possibility:
 
@@ -227,11 +227,11 @@ $$Q = \begin{pmatrix} 0.9 & 0.1 \\ 0.1 & 0.9\end{pmatrix},\qquad Q^2 = \begin{pm
 
 After ten steps you have a 55% chance of still being A, barely better than a coin flip. After fifty steps the matrix is essentially $\begin{pmatrix}0.5&0.5\\0.5&0.5\end{pmatrix}$ — **all memory of the starting token is gone.** That limiting matrix is the **stationary distribution**, and it is the discrete counterpart of $\mathcal{N}(0,I)$: a distribution you can sample from without knowing anything about the data.
 
-**Why it converges, and how fast.** $Q^t$ is a matrix raised to a power, so its behaviour is governed by eigenvalues (Ch. 1 §1.1.2). Every row-stochastic matrix has $\lambda_1 = 1$ (the stationary direction); the **second-largest** eigenvalue controls the rate. Here $\lambda_2 = 0.8$, and $0.8^{10}\approx 0.107$ — matching the $0.55 = 0.5 + 0.107/2$ we computed. ▸ **"How many steps until the text is destroyed?" is the question "how fast does $\lambda_2^t$ decay?", which is the identical mathematics as Chapter 20's $\bar\alpha_t = \prod\alpha_s$ and as vanishing gradients.** Three chapters, one exponential.
+**Why it converges, and how fast.** $Q^t$ is a matrix raised to a power, so its behaviour is governed by eigenvalues (Ch. 1 §1.1.2). Every row-stochastic matrix has $`\lambda_1 = 1`$ (the stationary direction); the **second-largest** eigenvalue controls the rate. Here $`\lambda_2 = 0.8`$, and $0.8^{10}\approx 0.107$ — matching the $0.55 = 0.5 + 0.107/2$ we computed. ▸ **"How many steps until the text is destroyed?" is the question "how fast does $`\lambda_2^t`$ decay?", which is the identical mathematics as Chapter 20's $`\bar\alpha_t = \prod\alpha_s`$ and as vanishing gradients.** Three chapters, one exponential.
 
-**The practical payoff is identical to Chapter 20's.** Precompute $\bar Q_1,\dots,\bar Q_T$ once, at startup. Then corrupting a training example to level 843 is a single lookup and a single categorical sample — no simulation of 843 steps, and every example in a batch can sit at a different $t$ with no coordination. **A billion training examples become a billion independent one-shot corruptions.**
+**The practical payoff is identical to Chapter 20's.** Precompute $`\bar Q_1,\dots,\bar Q_T`$ once, at startup. Then corrupting a training example to level 843 is a single lookup and a single categorical sample — no simulation of 843 steps, and every example in a batch can sit at a different $t$ with no coordination. **A billion training examples become a billion independent one-shot corruptions.**
 
-**One honest caveat about memory.** $\bar Q_t$ is $K\times K$, and for a 50,000-token vocabulary that is $2.5\times10^9$ entries **per timestep** — completely impractical to store. This is why the kernels of the next section are chosen to have *structure*: for the uniform and absorbing kernels, $\bar Q_t$ has a closed form in terms of a single scalar, and you never materialize the matrix at all. ▸ **The matrix formulation is how you think about it; a scalar is how you compute it.**
+**One honest caveat about memory.** $`\bar Q_t`$ is $K\times K$, and for a 50,000-token vocabulary that is $2.5\times10^9$ entries **per timestep** — completely impractical to store. This is why the kernels of the next section are chosen to have *structure*: for the uniform and absorbing kernels, $`\bar Q_t`$ has a closed form in terms of a single scalar, and you never materialize the matrix at all. ▸ **The matrix formulation is how you think about it; a scalar is how you compute it.**
 
 ### The exact posterior
 
@@ -239,7 +239,7 @@ By Bayes, with $\odot$ elementwise:
 
 ▸ $$q(x_{t-1}\mid x_t,x_0) = \mathrm{Cat}\!\left(x_{t-1};\ p = \frac{\big(x_tQ_t^\top\big)\odot\big(x_0\bar Q_{t-1}\big)}{x_0\bar Q_t x_t^\top}\right)$$
 
-The denominator $x_0\bar Q_tx_t^\top$ is the scalar $q(x_t\mid x_0)$ — the normalizer. Everything is a $K$-vector operation, so the KL terms in the ELBO are **exact, closed-form categorical KLs.** No approximation anywhere.
+The denominator $`x_0\bar Q_tx_t^\top`$ is the scalar $`q(x_t\mid x_0)`$ — the normalizer. Everything is a $K$-vector operation, so the KL terms in the ELBO are **exact, closed-form categorical KLs.** No approximation anywhere.
 
 #### Reading the exact posterior
 
@@ -249,19 +249,19 @@ It is Bayes' rule, and it has exactly three moving parts.
 
 | Piece | Shape | What it asks |
 |---|---|---|
-| $x_tQ_t^\top$ | $K$-vector | **"For each candidate previous token, how likely was it to produce what I see now?"** The likelihood |
-| $x_0\bar Q_{t-1}$ | $K$-vector | **"For each candidate previous token, how likely was it to arise from $x_0$ in $t-1$ steps?"** The prior |
+| $`x_tQ_t^\top`$ | $K$-vector | **"For each candidate previous token, how likely was it to produce what I see now?"** The likelihood |
+| $`x_0\bar Q_{t-1}`$ | $K$-vector | **"For each candidate previous token, how likely was it to arise from $`x_0`$ in $t-1$ steps?"** The prior |
 | $\odot$ | — | Multiply the two, entry by entry (Ch. 0 §0.8) |
 | denominator | scalar | Divide so the $K$ numbers sum to 1 |
 
 ▸ **Posterior $\propto$ likelihood $\times$ prior, computed for all $K$ candidates at once by an elementwise product of two $K$-vectors.** Compare §20.3, where the same Bayes step required completing the square in a Gaussian exponent. **Here it is one line of vector arithmetic** — which is the recurring pleasure of the discrete formulation: everything you had to derive analytically in Chapter 20 you can now simply *enumerate*, because there are only $K$ possibilities.
 
-**Why the transpose appears.** $Q_t$ answers "from $i$, where do I go?" But here we ask the reverse: "given that I arrived at $j$, where might I have come from?" Transposing reverses every arrow (Ch. 1 §1.2.2's rule 2, and for the identical reason). $x_tQ_t^\top$ picks out **column** $j$ of $Q_t$, which is the list of all the ways to *arrive* at $j$.
+**Why the transpose appears.** $`Q_t`$ answers "from $i$, where do I go?" But here we ask the reverse: "given that I arrived at $j$, where might I have come from?" Transposing reverses every arrow (Ch. 1 §1.2.2's rule 2, and for the identical reason). $`x_tQ_t^\top`$ picks out **column** $j$ of $`Q_t`$, which is the list of all the ways to *arrive* at $j$.
 
-**Work it small.** $K=3$, absorbing kernel, $\beta_t = 0.1$, and suppose $x_t$ is `[MASK]` (index 3) while $x_0$ is token 1.
+**Work it small.** $K=3$, absorbing kernel, $`\beta_t = 0.1`$, and suppose $`x_t`$ is `[MASK]` (index 3) while $`x_0`$ is token 1.
 
-- **Likelihood** $x_tQ_t^\top$: which tokens could have become `[MASK]`? Token 1 with probability 0.1, token 2 with probability 0.1, and `[MASK]` itself with probability 1.0 → $(0.1,\ 0.1,\ 1.0)$.
-- **Prior** $x_0\bar Q_{t-1}$: what could token 1 have become in $t-1$ steps? Say it is still token 1 with probability 0.4, or masked with probability 0.6 → $(0.4,\ 0,\ 0.6)$. (It can never become token 2 — the absorbing kernel only maps to `[MASK]`.)
+- **Likelihood** $`x_tQ_t^\top`$: which tokens could have become `[MASK]`? Token 1 with probability 0.1, token 2 with probability 0.1, and `[MASK]` itself with probability 1.0 → $(0.1,\ 0.1,\ 1.0)$.
+- **Prior** $`x_0\bar Q_{t-1}`$: what could token 1 have become in $t-1$ steps? Say it is still token 1 with probability 0.4, or masked with probability 0.6 → $(0.4,\ 0,\ 0.6)$. (It can never become token 2 — the absorbing kernel only maps to `[MASK]`.)
 - **Product**: $(0.04,\ 0,\ 0.60)$. **Normalize**: $(0.0625,\ 0,\ 0.9375)$.
 
 Read the answer: *"given that this position is masked now and the original was token 1, there is a 6.25% chance it was still token 1 one step ago and a 93.75% chance it was already masked."* **Sensible, exact, and computed with six multiplications.**
@@ -272,7 +272,7 @@ Read the answer: *"given that this position is masked now and the original was t
 
 **Uniform / multinomial:**
 ▸ $$Q_t = (1-\beta_t)I + \frac{\beta_t}{K}\mathbf{1}\mathbf{1}^\top$$
-Each token stays with probability $1-\beta_t+\beta_t/K$, or jumps to a uniformly random token. Stationary distribution: uniform. **Analogue of the Gaussian kernel.**
+Each token stays with probability $`1-\beta_t+\beta_t/K`$, or jumps to a uniformly random token. Stationary distribution: uniform. **Analogue of the Gaussian kernel.**
 
 **Absorbing / masking:**
 ▸ $$Q_t = (1-\beta_t)I + \beta_t\,\mathbf{1}\,e_{[\text{MASK}]}^\top$$
@@ -280,30 +280,30 @@ Each token either stays or is permanently replaced by `[MASK]`. Stationary distr
 
 ▸ **The absorbing kernel is the one that won.** Reasons: (i) the model always knows *which* positions are corrupted, so it never wastes capacity deciding whether a token is real; (ii) it connects directly to BERT-style masked modelling, so the objective is familiar and well-conditioned; (iii) the posterior simplifies dramatically — an unmasked token stays unmasked with probability 1, so only masked positions need prediction.
 
-**Structured kernels:** if the state space has metric structure (discretized pixel intensities, ordinal categories), use a **discretized Gaussian band** $Q_{ij}\propto\exp(-|i-j|^2/\sigma^2)$ so corruption respects locality. For molecules, kernels can be built from a **token similarity matrix** (e.g. chemically similar atom types more likely to interchange), or from the data's marginal distribution ($Q_t = (1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top$ with $\tilde p$ the empirical unigram), which makes the noise process match the data's own statistics.
+**Structured kernels:** if the state space has metric structure (discretized pixel intensities, ordinal categories), use a **discretized Gaussian band** $`Q_{ij}\propto\exp(-|i-j|^2/\sigma^2)`$ so corruption respects locality. For molecules, kernels can be built from a **token similarity matrix** (e.g. chemically similar atom types more likely to interchange), or from the data's marginal distribution ($`Q_t = (1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top`$ with $\tilde p$ the empirical unigram), which makes the noise process match the data's own statistics.
 
 #### The two kernels, decoded
 
 Both formulas have the same shape — **"mostly stay put, occasionally do something else"** — and differ only in what the something-else is.
 
-**Uniform kernel.** $Q_t = (1-\beta_t)I + \frac{\beta_t}{K}\mathbf{1}\mathbf{1}^\top$
+**Uniform kernel.** $`Q_t = (1-\beta_t)I + \frac{\beta_t}{K}\mathbf{1}\mathbf{1}^\top`$
 
 - $I$ — the identity matrix: "stay exactly where you are."
 - $\mathbf{1}\mathbf{1}^\top$ — the outer product of the all-ones column with the all-ones row, giving **a $K\times K$ matrix every entry of which is 1** (Ch. 0 §0.8). Divided by $K$, its rows are the uniform distribution.
-- So: **with probability $1-\beta_t$ do nothing; with probability $\beta_t$ pick a token uniformly at random.**
+- So: **with probability $`1-\beta_t`$ do nothing; with probability $`\beta_t`$ pick a token uniformly at random.**
 
-Write it out for $K=3$, $\beta_t = 0.3$:
+Write it out for $K=3$, $`\beta_t = 0.3`$:
 
 $$Q_t = 0.7\begin{pmatrix}1&0&0\\0&1&0\\0&0&1\end{pmatrix} + 0.1\begin{pmatrix}1&1&1\\1&1&1\\1&1&1\end{pmatrix} = \begin{pmatrix}0.8&0.1&0.1\\0.1&0.8&0.1\\0.1&0.1&0.8\end{pmatrix}$$
 
-Rows sum to 1. ✓ The diagonal is $1-\beta_t+\beta_t/K = 0.7+0.1 = 0.8$ — slightly more than $1-\beta_t$, because "pick uniformly at random" sometimes picks the token you already had.
+Rows sum to 1. ✓ The diagonal is $`1-\beta_t+\beta_t/K = 0.7+0.1 = 0.8`$ — slightly more than $`1-\beta_t`$, because "pick uniformly at random" sometimes picks the token you already had.
 
-**Absorbing kernel.** $Q_t = (1-\beta_t)I + \beta_t\,\mathbf{1}\,e_{[\text{MASK}]}^\top$
+**Absorbing kernel.** $`Q_t = (1-\beta_t)I + \beta_t\,\mathbf{1}\,e_{[\text{MASK}]}^\top`$
 
-- $\mathbf{1}\,e_{[\text{MASK}]}^\top$ — an outer product giving a matrix that is **all zeros except one column of ones**, the `[MASK]` column. Every row says "go to `[MASK]`."
-- So: **with probability $1-\beta_t$ stay; with probability $\beta_t$ become `[MASK]` — permanently.**
+- $`\mathbf{1}\,e_{[\text{MASK}]}^\top`$ — an outer product giving a matrix that is **all zeros except one column of ones**, the `[MASK]` column. Every row says "go to `[MASK]`."
+- So: **with probability $`1-\beta_t`$ stay; with probability $`\beta_t`$ become `[MASK]` — permanently.**
 
-"**Absorbing**" is standard Markov-chain vocabulary for a state you can enter but never leave: $[Q_t]_{\text{MASK},\text{MASK}} = 1$. Once masked, always masked.
+"**Absorbing**" is standard Markov-chain vocabulary for a state you can enter but never leave: $`[Q_t]_{\text{MASK},\text{MASK}} = 1`$. Once masked, always masked.
 
 > **Analogy for the two kernels.** Uniform corruption is a **photocopier with a fault** that occasionally substitutes a random glyph — you cannot tell corrupted characters from real ones, and you must decide, for every character, whether to trust it. Absorbing corruption is a **redaction marker** — the ink is unmistakable, and you know exactly which words need reconstructing and exactly which are safe. The redaction is strictly more informative, which is why it wins.
 
@@ -313,7 +313,7 @@ Rows sum to 1. ✓ The diagonal is $1-\beta_t+\beta_t/K = 0.7+0.1 = 0.8$ — sli
 
 **The stationary distributions differ interestingly.** Uniform → the endpoint is a uniformly random token sequence; the "prior" you sample from at generation time is `randint(0, K)` at every position. Absorbing → the endpoint is a sequence of *all* `[MASK]`, which is a **single deterministic state.** ▸ **Discrete diffusion with an absorbing kernel starts generation from a blank page, not from noise** — and all the randomness enters through the sampling of the reverse steps rather than through the initial state. That is a real structural difference from Chapter 20 and worth being able to state.
 
-**Structured kernels, in one line each.** The band kernel $Q_{ij}\propto\exp(-|i-j|^2/\sigma^2)$ says *"a corrupted value is likely to be near the true one"* — appropriate when the categories  sit on a line (pixel intensity 128 really is next to 129), which was the case the whole chapter opened by ruling out for text. The unigram kernel $Q_t = (1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top$ replaces "uniformly random token" with "a token drawn from the corpus's own frequency distribution," so corruption produces `the` far more often than `zygote` — **matching the noise to the data's marginal statistics, exactly as the discretized-Gaussian schedule matches noise to image statistics.**
+**Structured kernels, in one line each.** The band kernel $`Q_{ij}\propto\exp(-|i-j|^2/\sigma^2)`$ says *"a corrupted value is likely to be near the true one"* — appropriate when the categories  sit on a line (pixel intensity 128 really is next to 129), which was the case the whole chapter opened by ruling out for text. The unigram kernel $`Q_t = (1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top`$ replaces "uniformly random token" with "a token drawn from the corpus's own frequency distribution," so corruption produces `the` far more often than `zygote` — **matching the noise to the data's marginal statistics, exactly as the discretized-Gaussian schedule matches noise to image statistics.**
 
 #### Examples and non-examples: choosing the corruption kernel
 
@@ -323,8 +323,8 @@ Rows sum to 1. ✓ The diagonal is $1-\beta_t+\beta_t/K = 0.7+0.1 = 0.8$ — sli
 |---|---|---|
 | Natural-language tokens | **Absorbing / masking** | No metric between tokens; corruption should be self-announcing so the model never has to detect it |
 | Molecular graphs (atom and bond types) | **Absorbing**, usually | Atom types are unordered labels; and the user often wants to fix a scaffold and fill the rest — which is masking by construction |
-| Discretized pixel intensities 0–255 | **Band**, $Q_{ij}\propto\exp(-\lvert i-j\rvert^2/\sigma^2)$ | The categories  sit on a line. Corrupting 128 to 131 is a small error; to 7, a large one |
-| Text where you want the noise to look like text | **Unigram**, $Q_t=(1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top$ | Corruption produces `the` far more often than `zygote`, so the noise distribution matches the data's marginal |
+| Discretized pixel intensities 0–255 | **Band**, $`Q_{ij}\propto\exp(-\lvert i-j\rvert^2/\sigma^2)`$ | The categories  sit on a line. Corrupting 128 to 131 is a small error; to 7, a large one |
+| Text where you want the noise to look like text | **Unigram**, $`Q_t=(1-\beta_t)I+\beta_t\mathbf{1}\tilde p^\top`$ | Corruption produces `the` far more often than `zygote`, so the noise distribution matches the data's marginal |
 
 **❌ Near-misses — kernel choices that look reasonable and cost you**
 
@@ -333,14 +333,14 @@ Rows sum to 1. ✓ The diagonal is $1-\beta_t+\beta_t/K = 0.7+0.1 = 0.8$ — sli
 | Uniform kernel on a 50k vocabulary, because it is "the analogue of Gaussian noise" | The model must now solve a **detection** problem it cannot solve: a plausible word might be original or a lucky random substitution. Capacity goes into "is this real?" instead of "what was it?" | The aesthetically parallel choice, not the informative one |
 | Band kernel on token IDs | Token 4711 and 4712 are `" cat"` and `" catalog"`. The kernel encodes a locality that does not exist | Imposing a false metric — actively worse than uniform |
 | Absorbing kernel on discretized pixel values | Throws away the one thing pixels have that tokens don't: order. The model must reconstruct from nothing rather than from "near 128" | A kernel that discards usable structure |
-| Adding `[MASK]` to the vocabulary but letting it be re-emitted | If $[Q_t]_{\text{MASK},\text{MASK}} < 1$, the state is not absorbing, the posterior no longer collapses, and the "only masked positions need prediction" simplification is gone | A **leaky** absorbing kernel — a bug that silently doubles the work |
-| A kernel where some token has zero probability of ever being reached | The chain never mixes to its stationary distribution, so $q(x_T\mid x_0)$ still depends on $x_0$ and the $L_T$ term never vanishes | A reducible chain — the discrete version of "the noise schedule doesn't reach pure noise" |
+| Adding `[MASK]` to the vocabulary but letting it be re-emitted | If $`[Q_t]_{\text{MASK},\text{MASK}} < 1`$, the state is not absorbing, the posterior no longer collapses, and the "only masked positions need prediction" simplification is gone | A **leaky** absorbing kernel — a bug that silently doubles the work |
+| A kernel where some token has zero probability of ever being reached | The chain never mixes to its stationary distribution, so $`q(x_T\mid x_0)`$ still depends on $`x_0`$ and the $`L_T`$ term never vanishes | A reducible chain — the discrete version of "the noise schedule doesn't reach pure noise" |
 
 ▸ **The boundary:** the right kernel is the one whose corruption **destroys exactly the information the model must learn to restore, and announces itself while doing so.** Absorbing wins on text because masking is maximally self-announcing; band wins on ordinal data because it destroys precision while preserving magnitude; uniform wins almost nowhere, and survives in the literature mainly because it is the most obvious translation of Gaussian noise.
 
 > **Common misconception.** *"The absorbing kernel is a simplification, so it must be less expressive."* It is not a restriction of the model family — the reverse model still assigns a full distribution over all $K$ tokens at every masked position. What masking removes is a *subproblem the model would otherwise have to solve badly*: deciding which positions are corrupted. **Deleting a subproblem entirely is a bigger win than solving it well**, and the belief is tempting because "less to do" usually means "less capable." Here it means the same capacity is aimed at one question instead of two.
 
-> **Common misconception.** *"`[MASK]` is just another word in the vocabulary."* It is a state with $[Q]_{\text{MASK},\text{MASK}}=1$ — enter it and you never leave, which is what "absorbing" means in Markov-chain vocabulary. Concretely: it expands the state space to $K+1$, it never appears in real data, the model must never *predict* it, and it is the entire terminal distribution of the forward chain. **Treating it as an ordinary token is how implementations end up with a model that fluently generates `[MASK]` at inference time.**
+> **Common misconception.** *"`[MASK]` is just another word in the vocabulary."* It is a state with $`[Q]_{\text{MASK},\text{MASK}}=1`$ — enter it and you never leave, which is what "absorbing" means in Markov-chain vocabulary. Concretely: it expands the state space to $K+1$, it never appears in real data, the model must never *predict* it, and it is the entire terminal distribution of the forward chain. **Treating it as an ordinary token is how implementations end up with a model that fluently generates `[MASK]` at inference time.**
 
 > **Where this came from.** **D3PM** — *Structured Denoising Diffusion Models in Discrete State-Spaces* — is by **Jacob Austin, Daniel Johnson, Jonathan Ho, Daniel Tarlow, and Rianne van den Berg** at Google, 2021. Note that Jonathan Ho is a co-author of DDPM as well; D3PM is very deliberately the discrete rewrite of his own continuous paper, kernel by kernel. A closely related formulation, *multinomial diffusion*, was published independently at nearly the same time by **Emiel Hoogeboom and co-authors**. The absorbing kernel's dominance was not obvious at the time — D3PM presents it as one of several options, alongside uniform, band, and nearest-neighbour kernels. **It took another two to three years of empirical work for the field to conclude that masking was not merely one option but the right one.**
 
@@ -350,13 +350,13 @@ The ELBO is the same structure as Chapter 20:
 
 $$L_{\text{vb}} = \mathbb{E}_q\Big[\underbrace{\mathrm{KL}(q(x_T|x_0)\|p(x_T))}_{L_T} + \sum_{t=2}^{T}\underbrace{\mathrm{KL}\big(q(x_{t-1}|x_t,x_0)\,\|\,p_\theta(x_{t-1}|x_t)\big)}_{L_{t-1}} - \underbrace{\log p_\theta(x_0|x_1)}_{L_0}\Big]$$
 
-**The parameterization that makes it work:** rather than predicting $p_\theta(x_{t-1}\mid x_t)$ directly, the network predicts a distribution over the **clean data** $\tilde p_\theta(x_0\mid x_t)$, and the reverse step is obtained by plugging that into the known posterior:
+**The parameterization that makes it work:** rather than predicting $`p_\theta(x_{t-1}\mid x_t)`$ directly, the network predicts a distribution over the **clean data** $`\tilde p_\theta(x_0\mid x_t)`$, and the reverse step is obtained by plugging that into the known posterior:
 
 ▸ $$p_\theta(x_{t-1}\mid x_t) \ \propto\ \sum_{\tilde x_0} q(x_{t-1}\mid x_t,\tilde x_0)\,\tilde p_\theta(\tilde x_0\mid x_t)$$
 
 This is exactly the discrete analogue of $\epsilon$-prediction: **let the network solve the easy, well-posed problem (what was the original token?) and let the known posterior handle the rest.** It also means sampling can skip steps trivially.
 
-#### The parameterization, decoded — why predict $x_0$ and not the reverse step
+#### The parameterization, decoded — why predict $`x_0`$ and not the reverse step
 
 $$p_\theta(x_{t-1}\mid x_t) \ \propto\ \sum_{\tilde x_0} q(x_{t-1}\mid x_t,\tilde x_0)\,\tilde p_\theta(\tilde x_0\mid x_t)$$
 
@@ -364,23 +364,23 @@ Read the sum as a weighted vote:
 
 > **"For every token the original *might* have been, ask the known posterior what the previous step would look like in that case, and average those answers weighted by how likely the network thinks each candidate is."**
 
-- $\tilde p_\theta(\tilde x_0\mid x_t)$ — the network's output: **a softmax over the vocabulary**, exactly what any language model produces. It answers "what was the original token here?"
-- $q(x_{t-1}\mid x_t,\tilde x_0)$ — the exact posterior from two sections ago, which requires no learning at all.
-- $\sum_{\tilde x_0}$ — a loop over all $K$ candidates. Because the posterior is available in closed form, this whole sum is a matrix–vector product; **it does not cost $K$ network evaluations, it costs one.**
+- $`\tilde p_\theta(\tilde x_0\mid x_t)`$ — the network's output: **a softmax over the vocabulary**, exactly what any language model produces. It answers "what was the original token here?"
+- $`q(x_{t-1}\mid x_t,\tilde x_0)`$ — the exact posterior from two sections ago, which requires no learning at all.
+- $`\sum_{\tilde x_0}`$ — a loop over all $K$ candidates. Because the posterior is available in closed form, this whole sum is a matrix–vector product; **it does not cost $K$ network evaluations, it costs one.**
 
-▸ **The division of labour is the point.** The network is given the one job it is good at — *"look at this partially destroyed sentence and guess the missing word"* — and every piece of probabilistic bookkeeping is handled by formulas we derived. Compare Chapter 20, where the network predicts $\epsilon$ and the closed-form relation to $\tilde\mu_t$ does the rest. **Same architecture of responsibility, different currency.**
+▸ **The division of labour is the point.** The network is given the one job it is good at — *"look at this partially destroyed sentence and guess the missing word"* — and every piece of probabilistic bookkeeping is handled by formulas we derived. Compare Chapter 20, where the network predicts $\epsilon$ and the closed-form relation to $`\tilde\mu_t`$ does the rest. **Same architecture of responsibility, different currency.**
 
 > **Analogy — the restorer and the archivist.** A painting restorer looks at a damaged canvas and says "this patch was probably ultramarine." An archivist, who knows exactly how the damage process works, then computes what the canvas must have looked like one stage earlier, given that guess. Neither could do the other's job. **The network is the restorer; the exact posterior is the archivist.**
 
-**Why "sampling can skip steps trivially" follows.** The reverse step is assembled from $\tilde p_\theta(x_0\mid x_t)$ and a posterior that is available for *any* pair of indices, not just adjacent ones. So $q(x_{t-10}\mid x_t, \tilde x_0)$ is just as computable as $q(x_{t-1}\mid x_t,\tilde x_0)$ — substitute $\bar Q_{t-10}$ for $\bar Q_{t-1}$ and every formula still holds. **This is the same argument that made DDIM's step-skipping legal in §20.7, arriving here for free rather than as a discovery.**
+**Why "sampling can skip steps trivially" follows.** The reverse step is assembled from $`\tilde p_\theta(x_0\mid x_t)`$ and a posterior that is available for *any* pair of indices, not just adjacent ones. So $`q(x_{t-10}\mid x_t, \tilde x_0)`$ is just as computable as $`q(x_{t-1}\mid x_t,\tilde x_0)`$ — substitute $`\bar Q_{t-10}`$ for $`\bar Q_{t-1}`$ and every formula still holds. **This is the same argument that made DDIM's step-skipping legal in §20.7, arriving here for free rather than as a discovery.**
 
 **What it looks like at sampling time with the absorbing kernel.** Start from all `[MASK]`. At each step the network predicts a distribution over the true token at every masked position; you then **unmask some fraction of positions** by sampling from those predictions, and leave the rest masked for later steps. Generation is progressive un-redaction, and the number of steps is simply how many rounds of unmasking you choose to do. ▸ **Every position is decoded in parallel within a step, which is exactly the "parallel generation" advantage of §21.3 — and the independence *within* a step is exactly its weakness.**
 
-> **Common misconception.** *"If the network predicts $x_0$ directly, why run $T$ steps at all? Just take its answer."* You can, and the result is bad in a specific and instructive way. $\tilde p_\theta(x_0\mid x_t)$ is a distribution over each position **independently**. Committing to all of them at once samples every position from its own marginal and ignores every correlation between them — which is how you get *"New Delhi"* when the model's joint distribution strongly preferred *"New York"*. **The iterative procedure is not there to refine the network's guess; it is there to introduce the correlations that a per-position softmax structurally cannot express.** Each step unmasks a few positions, and the *next* step's prediction is conditioned on what was just committed. This is the whole reason step count trades against coherence, and it is the same reason a single-step diffusion sampler blurs images: one shot at a factorized distribution can only ever give you the product of the marginals.
+> **Common misconception.** *"If the network predicts $`x_0`$ directly, why run $T$ steps at all? Just take its answer."* You can, and the result is bad in a specific and instructive way. $`\tilde p_\theta(x_0\mid x_t)`$ is a distribution over each position **independently**. Committing to all of them at once samples every position from its own marginal and ignores every correlation between them — which is how you get *"New Delhi"* when the model's joint distribution strongly preferred *"New York"*. **The iterative procedure is not there to refine the network's guess; it is there to introduce the correlations that a per-position softmax structurally cannot express.** Each step unmasks a few positions, and the *next* step's prediction is conditioned on what was just committed. This is the whole reason step count trades against coherence, and it is the same reason a single-step diffusion sampler blurs images: one shot at a factorized distribution can only ever give you the product of the marginals.
 
-> **Common misconception.** *"Predicting $x_0$ and predicting $x_{t-1}$ are two parameterizations of the same thing, so it's a matter of taste."* They describe the same family, and they are wildly different to *learn*. "What was the original token?" has a fixed, well-posed answer with a gradient of order 1 at every noise level. "What is the distribution one step back?" has an answer that at large $t$ is *almost independent of the data* — the posterior says "still masked" no matter what $x_0$ was — so the target carries almost no signal exactly where you most need the network to be learning something. **Reparameterizing does not change what is representable; it changes what is easy to descend**, and Chapter 20's $\epsilon$-prediction is the identical manoeuvre in the identical place.
+> **Common misconception.** *"Predicting $`x_0`$ and predicting $`x_{t-1}`$ are two parameterizations of the same thing, so it's a matter of taste."* They describe the same family, and they are wildly different to *learn*. "What was the original token?" has a fixed, well-posed answer with a gradient of order 1 at every noise level. "What is the distribution one step back?" has an answer that at large $t$ is *almost independent of the data* — the posterior says "still masked" no matter what $`x_0`$ was — so the target carries almost no signal exactly where you most need the network to be learning something. **Reparameterizing does not change what is representable; it changes what is easy to descend**, and Chapter 20's $\epsilon$-prediction is the identical manoeuvre in the identical place.
 
-### The auxiliary $x_0$ loss
+### The auxiliary $`x_0`$ loss
 
 D3PM's full objective adds a direct cross-entropy term on the clean-data prediction:
 
@@ -388,7 +388,7 @@ D3PM's full objective adds a direct cross-entropy term on the clean-data predict
 
 typically $\lambda = 0.001$–$0.01$.
 
-▸ **Why it's there:** the VLB's per-timestep KL terms are small and noisy at large $t$ (where the posterior is nearly the stationary distribution regardless of $x_0$), giving a weak training signal. The direct cross-entropy on $x_0$ is a dense, well-scaled auxiliary target at every timestep. It plays the same role as $\mathcal{L}_{\text{simple}}$'s reweighting in continuous diffusion — trading likelihood optimality for sample quality and trainability.
+▸ **Why it's there:** the VLB's per-timestep KL terms are small and noisy at large $t$ (where the posterior is nearly the stationary distribution regardless of $`x_0`$), giving a weak training signal. The direct cross-entropy on $`x_0`$ is a dense, well-scaled auxiliary target at every timestep. It plays the same role as $`\mathcal{L}_{\text{simple}}`$'s reweighting in continuous diffusion — trading likelihood optimality for sample quality and trainability.
 
 **This auxiliary term is the quantity most implementations log as the primary training/validation metric**, since it is interpretable directly as a token-level cross-entropy (compare to $\log K$; see Ch. 1 §1.4.2). It is what Case Study A's `val_realCE` measures.
 
@@ -398,13 +398,13 @@ typically $\lambda = 0.001$–$0.01$.
 
 $$\mathcal{L} = \mathcal{L}_{\text{vb}} + \lambda\ \mathbb{E}_{x_0,t,x_t}\big[-\log\tilde p_\theta(x_0\mid x_t)\big]$$
 
-- $\mathcal{L}_{\text{vb}}$ — the principled variational bound: a sum of KL terms.
-- $-\log\tilde p_\theta(x_0\mid x_t)$ — **plain cross-entropy.** "How surprised was the network by the correct token?" Assign the right token 90% probability and pay $-\log 0.9 = 0.105$ nats; assign it 1% and pay $4.6$ nats (Ch. 1 §1.4.2).
+- $`\mathcal{L}_{\text{vb}}`$ — the principled variational bound: a sum of KL terms.
+- $`-\log\tilde p_\theta(x_0\mid x_t)`$ — **plain cross-entropy.** "How surprised was the network by the correct token?" Assign the right token 90% probability and pay $-\log 0.9 = 0.105$ nats; assign it 1% and pay $4.6$ nats (Ch. 1 §1.4.2).
 - $\lambda \approx 0.001$–$0.01$ — a small weight, because the auxiliary term is a *guide*, not the objective.
 
-▸ **The whole equation says: "optimize the principled thing, plus a small nudge from the practical thing."** And this is the same manoeuvre as Chapter 20's $\mathcal{L}_{\text{simple}}$ — knowingly deviate from the exact bound to get a better-conditioned training signal — arrived at by a different route. **Both chapters discovered that the exact variational objective is a bad thing to descend.**
+▸ **The whole equation says: "optimize the principled thing, plus a small nudge from the practical thing."** And this is the same manoeuvre as Chapter 20's $`\mathcal{L}_{\text{simple}}`$ — knowingly deviate from the exact bound to get a better-conditioned training signal — arrived at by a different route. **Both chapters discovered that the exact variational objective is a bad thing to descend.**
 
-**Why the VLB's signal goes weak at large $t$, concretely.** At $t=900$ with an absorbing kernel, nearly every position is `[MASK]`, and the exact posterior $q(x_{t-1}\mid x_t, x_0)$ says "almost certainly still masked" **regardless of what $x_0$ was.** The KL between that and the model's version is therefore tiny and barely depends on whether the model understood anything. The gradient is real but small, and it is swamped by the noise of a single sampled $t$.
+**Why the VLB's signal goes weak at large $t$, concretely.** At $t=900$ with an absorbing kernel, nearly every position is `[MASK]`, and the exact posterior $`q(x_{t-1}\mid x_t, x_0)`$ says "almost certainly still masked" **regardless of what $`x_0`$ was.** The KL between that and the model's version is therefore tiny and barely depends on whether the model understood anything. The gradient is real but small, and it is swamped by the noise of a single sampled $t$.
 
 The auxiliary cross-entropy has no such problem: **at every $t$, including $t=900$, "what was the original token?" is a well-posed question with a definite answer and a gradient of order 1.** It is a dense target where the VLB is sparse.
 
@@ -451,7 +451,7 @@ $$\mathcal{L} \propto \mathbb{E}_{t}\left[\frac{1}{t}\,\mathbb{E}\big[-\log p_\t
 
 #### The modern landscape, decoded
 
-**SEDD and the "concrete score."** Chapter 20's score is $\nabla_x\log p(x)$ — a derivative, which requires $x$ to live somewhere you can take derivatives. Tokens don't. SEDD's move is to notice **what the score is actually *for*:** it tells you the relative preference between a point and its neighbours. In a discrete space you can ask that question directly, without calculus:
+**SEDD and the "concrete score."** Chapter 20's score is $`\nabla_x\log p(x)`$ — a derivative, which requires $x$ to live somewhere you can take derivatives. Tokens don't. SEDD's move is to notice **what the score is actually *for*:** it tells you the relative preference between a point and its neighbours. In a discrete space you can ask that question directly, without calculus:
 
 $$\text{concrete score}(x \to y) = \frac{p(y)}{p(x)}$$
 
@@ -465,8 +465,8 @@ $$\mathcal{L} \propto \mathbb{E}_{t}\left[\frac{1}{t}\,\mathbb{E}\big[-\log p_\t
 
 Read the pieces:
 
-- $-\log p_\theta(x_0^{\text{masked}}\mid x_t)$ — **the BERT objective.** Mask some tokens, predict them, score with cross-entropy. Nothing else.
-- $\mathbb{E}_t$ — averaged over mask *rates*, rather than at a single fixed rate.
+- $`-\log p_\theta(x_0^{\text{masked}}\mid x_t)`$ — **the BERT objective.** Mask some tokens, predict them, score with cross-entropy. Nothing else.
+- $`\mathbb{E}_t`$ — averaged over mask *rates*, rather than at a single fixed rate.
 - $1/t$ — a principled weighting that falls out of the continuous-time limit; it up-weights the low-mask-rate regime.
 
 ▸ **"Discrete diffusion with an absorbing kernel is BERT with a random, continuously-varying mask rate and a principled weighting."** BERT masks 15% of tokens, always. Masked diffusion masks $r\%$ where $r$ is drawn uniformly from 0 to 100 — and, crucially, **it derives the weighting rather than choosing it**, which is what turns a representation-learning objective into a *generative* one. BERT could never generate text because it was only ever trained at one mask rate and had no principled way to go from 100% masked to 0%. **Sweep the rate and add the right weights, and the same architecture and the same loss become a generative model.**
@@ -602,7 +602,7 @@ $$\mathrm{FiLM}(h\mid c) = \gamma(c)\odot h + \beta(c)$$
 | $c$ | "c" | The condition, as a single vector |
 | $\gamma(c)$ | "gamma of c" | A learned **scale**, one number per feature. Output of a small MLP fed $c$ |
 | $\beta(c)$ | "beta of c" | A learned **shift**, one number per feature. Same MLP |
-| $\odot$ | "elementwise" | Multiply feature $i$ by $\gamma_i$, keep them separate (Ch. 0 §0.8) |
+| $\odot$ | "elementwise" | Multiply feature $i$ by $`\gamma_i`$, keep them separate (Ch. 0 §0.8) |
 
 ▸ **Read it as: "the condition gets to turn each feature's volume knob up or down, and nudge its baseline."** It cannot mix features together, it cannot move information between positions, and it cannot add new content. **That severe restriction is why it is cheap and why it works** — the network already computes useful features; the condition only has to decide which ones matter right now.
 
@@ -767,7 +767,7 @@ Worth building into any conditional generative project:
 | The samples look good | A strong unconditional model produces good samples while ignoring $c$ entirely | Sample quality, which is not conditioning |
 | Aggregate validation loss went down | Dominated by the common conditions; a model excellent on the top 5% and useless elsewhere scores well | Average performance, hiding the tail |
 | The loss is lower with conditioning than without | Could be a small constant gain from the extra parameters rather than from using $c$ | Weak evidence at best — run the ablation |
-| The CFG curve is flat as $w$ varies | This is a **failure** signal, not a null result: $\ell_c \approx \ell_\varnothing$ means the branches never differentiated | Broken AdaLN-Zero, too-high condition dropout, or a condition path that was never wired in |
+| The CFG curve is flat as $w$ varies | This is a **failure** signal, not a null result: $`\ell_c \approx \ell_\varnothing`$ means the branches never differentiated | Broken AdaLN-Zero, too-high condition dropout, or a condition path that was never wired in |
 | Two different prompts give two different images | Different random seeds also give different images. Compare distributions, at fixed seed | Nothing, without a controlled comparison |
 
 ▸ **The boundary:** conditioning is demonstrated only by a **controlled contrast** — the same model, the same noise, one thing changed, and a measured difference in the output distribution. Any observation that does not vary $c$ while holding everything else fixed cannot distinguish "conditioned" from "good."
@@ -798,7 +798,7 @@ $$\ell_{\text{guided}} = \ell_\varnothing + w\,(\ell_c - \ell_\varnothing)$$
 
 The formula is **identical in shape to continuous CFG** (§20.8): interpolate from the unconditional prediction toward the conditional one, and keep going past it. Only the currency changed — noise vectors became logit vectors. **Extrapolate, then softmax.**
 
-**Why extrapolating logits is a product of experts.** Softmax turns logits into probabilities via $p_i \propto e^{\ell_i}$. So adding logits multiplies probabilities, and scaling logits raises probabilities to a power:
+**Why extrapolating logits is a product of experts.** Softmax turns logits into probabilities via $`p_i \propto e^{\ell_i}`$. So adding logits multiplies probabilities, and scaling logits raises probabilities to a power:
 
 $$e^{\ell_\varnothing + w(\ell_c-\ell_\varnothing)} \;=\; e^{\ell_\varnothing}\cdot\left(\frac{e^{\ell_c}}{e^{\ell_\varnothing}}\right)^{w} \;\propto\; p_\varnothing(x)\left(\frac{p_c(x)}{p_\varnothing(x)}\right)^{w}$$
 
@@ -806,7 +806,7 @@ $$e^{\ell_\varnothing + w(\ell_c-\ell_\varnothing)} \;=\; e^{\ell_\varnothing}\c
 
 **A product of experts** (the term is Geoffrey Hinton's, from work on combining probabilistic models in the late 1990s) is a combination rule where **every factor can veto.** Adding distributions gives you a union — anything one expert likes survives. *Multiplying* them gives an intersection — a token needs support from **both** factors to survive. That is why guidance sharpens rather than blurs, and why at large $w$ everything but the single most-favoured token is annihilated.
 
-**Work it small.** $K=3$, with $p_\varnothing = (0.5, 0.3, 0.2)$ and $p_c = (0.6, 0.3, 0.1)$ — the prompt mildly prefers token 1 and disfavours token 3.
+**Work it small.** $K=3$, with $`p_\varnothing = (0.5, 0.3, 0.2)`$ and $`p_c = (0.6, 0.3, 0.1)`$ — the prompt mildly prefers token 1 and disfavours token 3.
 
 | $w$ | Guided distribution | Comment |
 |---|---|---|
@@ -824,10 +824,10 @@ $$e^{\ell_\varnothing + w(\ell_c-\ell_\varnothing)} \;=\; e^{\ell_\varnothing}\c
 
 | Statement | Why it holds |
 |---|---|
-| $w=0$ recovers the unconditional model | $\ell_\varnothing + 0\cdot(\ell_c-\ell_\varnothing) = \ell_\varnothing$. The condition is discarded entirely |
-| $w=1$ recovers the ordinary conditional model | The bracket telescopes to $\ell_c$. No guidance at all |
+| $w=0$ recovers the unconditional model | $`\ell_\varnothing + 0\cdot(\ell_c-\ell_\varnothing) = \ell_\varnothing`$. The condition is discarded entirely |
+| $w=1$ recovers the ordinary conditional model | The bracket telescopes to $`\ell_c`$. No guidance at all |
 | $w>1$ **extrapolates past** the conditional prediction | This is the entire mechanism, and the reason it is called guidance rather than interpolation |
-| $w$ raises the likelihood ratio to a power | $p_\varnothing\,(p_c/p_\varnothing)^w$ — the product-of-experts form. At $w=3$, a $2\times$ preference becomes $8\times$ |
+| $w$ raises the likelihood ratio to a power | $`p_\varnothing\,(p_c/p_\varnothing)^w`$ — the product-of-experts form. At $w=3$, a $2\times$ preference becomes $8\times$ |
 | Large $w$ collapses the distribution onto its mode | Each factor can veto; multiply hard enough and only the argmax survives |
 
 **❌ Near-misses — things $w$ is often assumed to be**
@@ -835,22 +835,22 @@ $$e^{\ell_\varnothing + w(\ell_c-\ell_\varnothing)} \;=\; e^{\ell_\varnothing}\c
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
 | "A dial for how well the output matches the prompt, with no downside" | Fidelity and diversity move in opposite directions. High $w$ produces prompt-adherent output that is also the *same* output every time | A trade, not an improvement |
-| "At $w=5$ I am sampling from $p(x\mid c)$, just more confidently" | You are sampling from $p_\varnothing (p_c/p_\varnothing)^5$, which is the posterior of **nothing**. It is a deliberately distorted distribution chosen because it looks better | A tempered product of experts |
+| "At $w=5$ I am sampling from $p(x\mid c)$, just more confidently" | You are sampling from $`p_\varnothing (p_c/p_\varnothing)^5`$, which is the posterior of **nothing**. It is a deliberately distorted distribution chosen because it looks better | A tempered product of experts |
 | "It works the same as in image diffusion, so reuse $w=7.5$" | Image CFG perturbs a continuous quantity that a thousand small steps re-average. Discrete guidance perturbs a **decision**, and once a token is unmasked it is final | Compounding, which is why discrete $w$ is typically much smaller |
 | "A temperature" | Temperature scales all logits toward or away from uniform, using no condition. Guidance scales the *difference* between two conditioned predictions | A different operation that happens to also sharpen |
 | "It needs no extra compute" | Every step requires **two** forward passes, one with $c$ and one with $\varnothing$ | Roughly a 2× inference cost, before any batching tricks |
 
-▸ **The boundary:** $w$ interpolates along the line from $\ell_\varnothing$ to $\ell_c$ and then keeps going. Everything surprising about guidance — the sharpening, the diversity loss, the mode collapse at large $w$ — follows from that one word, **extrapolation**, plus the fact that softmax turns additive extrapolation into multiplicative reweighting.
+▸ **The boundary:** $w$ interpolates along the line from $`\ell_\varnothing`$ to $`\ell_c`$ and then keeps going. Everything surprising about guidance — the sharpening, the diversity loss, the mode collapse at large $w$ — follows from that one word, **extrapolation**, plus the fact that softmax turns additive extrapolation into multiplicative reweighting.
 
-> **Common misconception.** *"Condition dropout is a regularizer, like dropout in a hidden layer."* It shares a name and nothing else. Standard dropout randomly zeroes *activations* to prevent co-adaptation. Condition dropout replaces $c$ with the null token $\varnothing$ on roughly 10% of training examples for one purpose: **to train an unconditional branch inside the same network**, so that $\ell_\varnothing$ exists at inference time and CFG has something to extrapolate from. It is not fighting overfitting; it is manufacturing a second model for free. The consequences of getting it wrong are correspondingly specific — too low and $\ell_\varnothing$ is undertrained and noisy, so the extrapolation direction is garbage; too high and you have spent 30% of your training budget on a branch you only use as a reference point.
+> **Common misconception.** *"Condition dropout is a regularizer, like dropout in a hidden layer."* It shares a name and nothing else. Standard dropout randomly zeroes *activations* to prevent co-adaptation. Condition dropout replaces $c$ with the null token $\varnothing$ on roughly 10% of training examples for one purpose: **to train an unconditional branch inside the same network**, so that $`\ell_\varnothing`$ exists at inference time and CFG has something to extrapolate from. It is not fighting overfitting; it is manufacturing a second model for free. The consequences of getting it wrong are correspondingly specific — too low and $`\ell_\varnothing`$ is undertrained and noisy, so the extrapolation direction is garbage; too high and you have spent 30% of your training budget on a branch you only use as a reference point.
 
 ---
 
 ## 21.7 Practical guidance for discrete diffusion projects
 
 1. **Prefer the absorbing/masking kernel** unless there is a specific reason for uniform or structured noise.
-2. **Predict $x_0$**, not the reverse transition directly.
-3. **Include the auxiliary $x_0$ cross-entropy** with $\lambda\approx0.01$; it is what makes training stable and the metric interpretable.
+2. **Predict $`x_0`$**, not the reverse transition directly.
+3. **Include the auxiliary $`x_0`$ cross-entropy** with $\lambda\approx0.01$; it is what makes training stable and the metric interpretable.
 4. **Log per-$t$-bucket cross-entropy**, always. The aggregate is nearly uninterpretable on its own.
 5. **Fix the validation $t$ grid** (stratified) and the validation subset. This is free and typically reduces metric noise by an order of magnitude (Ch. 3 §3.6).
 6. **Maintain an EMA of the weights** ($\gamma\approx0.9999$) and evaluate the EMA.
@@ -906,7 +906,7 @@ Ten items is a lot to hold. They fall into four groups, and remembering the grou
 
 ## Check for Understanding
 
-**Discrete diffusion replaces Gaussian noise with a categorical transition matrix, keeping every structural feature of Chapter 20 — a closed-form cumulative corruption $\bar Q_t$, an exact posterior, a clean-data parameterization, and an auxiliary $x_0$ cross-entropy that carries most of the training signal — and with an absorbing kernel it reduces to BERT with a continuously varying mask rate; conditioning enters through AdaLN-Zero, whose zero-initialized gate makes every block start as the identity, which is the same trick that made deep residual networks trainable in the first place.**
+**Discrete diffusion replaces Gaussian noise with a categorical transition matrix, keeping every structural feature of Chapter 20 — a closed-form cumulative corruption $`\bar Q_t`$, an exact posterior, a clean-data parameterization, and an auxiliary $`x_0`$ cross-entropy that carries most of the training signal — and with an absorbing kernel it reduces to BERT with a continuously varying mask rate; conditioning enters through AdaLN-Zero, whose zero-initialized gate makes every block start as the identity, which is the same trick that made deep residual networks trainable in the first place.**
 
 ### Can you explain these out loud?
 

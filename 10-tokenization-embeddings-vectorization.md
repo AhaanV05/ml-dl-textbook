@@ -12,17 +12,17 @@ Skim this once now; each entry is unpacked properly where it first appears.
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $\lvert V\rvert$ | "size of V" / "vocab size" | How many distinct tokens exist. Typically 32,000–256,000 |
-| $e_i$ | "e-i" | A **one-hot vector**: all zeros except a single $1$ at position $i$ |
+| $`e_i`$ | "e-i" | A **one-hot vector**: all zeros except a single $1$ at position $i$ |
 | $d$ | "d" | The **width** of a vector — how many numbers describe one token |
 | $E \in \mathbb{R}^{\lvert V\rvert \times d}$ | "E in R, V-by-d" | The **embedding table**: one row of $d$ numbers per token |
 | $\mathrm{tf}(t,d)$ | "t-f of t, d" | How many times term $t$ appears inside document $d$ |
 | $\mathrm{df}(t)$ | "d-f of t" | In **how many documents** term $t$ appears at all |
 | $\overline{\lvert d\rvert}$ | "average doc length" | The mean document length across the whole corpus |
-| $u_o^\top v_c$ | "u-o transpose v-c" | Dot product of two word vectors — a **similarity score** |
+| $`u_o^\top v_c`$ | "u-o transpose v-c" | Dot product of two word vectors — a **similarity score** |
 | $\sigma(z)$ | "sigmoid of z" | $1/(1+e^{-z})$; squashes any number into $(0,1)$. In this chapter $\sigma$ is **always** the sigmoid, never a standard deviation |
-| $P_n(w)$ | "P-n of w" | The **noise distribution** — how fake ("negative") words get drawn |
+| $`P_n(w)`$ | "P-n of w" | The **noise distribution** — how fake ("negative") words get drawn |
 | $\mathrm{PMI}(w,c)$ | "P-M-I of w, c" | **Pointwise mutual information**: how much more often $w$ and $c$ co-occur than chance predicts |
-| $X_{ij}$ | "X-i-j" | How many times word $j$ appeared in word $i$'s context window |
+| $`X_{ij}`$ | "X-i-j" | How many times word $j$ appeared in word $i$'s context window |
 | $\propto$ | "is proportional to" | Equal after multiplying by a constant nobody cares about |
 | $\tau$ | "tau" | **Temperature** — divides scores before a softmax; small $\tau$ sharpens |
 | $\cos(a,b)$ | "cosine similarity" | $a^\top b / (\lVert a\rVert \lVert b\rVert)$ — alignment, with length ignored |
@@ -79,9 +79,9 @@ You are building a library catalogue. First you must decide what a "unit" is —
 
 $x\in\{0,1\}^{|V|}$, exactly one 1.
 
-**Problems:** dimension $=|V|$ (50k–250k); every pair of distinct words is **exactly equidistant** ($\|e_i-e_j\|=\sqrt2$ for all $i\ne j$); no notion of similarity; no generalization to unseen words.
+**Problems:** dimension $=|V|$ (50k–250k); every pair of distinct words is **exactly equidistant** ($`\|e_i-e_j\|=\sqrt2`$ for all $i\ne j$); no notion of similarity; no generalization to unseen words.
 
-▸ **Key insight:** $We_i$ = the $i$-th **column** of $W$ (Ch. 1 §1.1.1). So an embedding layer is not a matrix multiply — it is a row lookup. `nn.Embedding` is `W[idx]`, $O(1)$, not $O(|V|d)$.
+▸ **Key insight:** $`We_i`$ = the $i$-th **column** of $W$ (Ch. 1 §1.1.1). So an embedding layer is not a matrix multiply — it is a row lookup. `nn.Embedding` is `W[idx]`, $O(1)$, not $O(|V|d)$.
 
 #### Unpacking one-hot encoding
 
@@ -93,7 +93,7 @@ $$e_2 = (0,\ 1,\ 0,\ 0,\ 0)$$
 
 **a light switch panel with exactly one switch flipped on.** That is the whole idea, and it is where the name comes from: in digital circuit design, a "one-hot" register is one where exactly one bit is high.
 
-**Now the damning property, with numbers.** Take `cat` $= e_1 = (1,0,0,0,0)$ and `dog` $= e_2 = (0,1,0,0,0)$. Their difference is $(1,-1,0,0,0)$, whose length is $\sqrt{1^2 + (-1)^2} = \sqrt{2} \approx 1.414$. Now take `cat` and `sat` $= e_5$: the difference is $(1,0,0,0,-1)$, length $\sqrt2$ again. **Every** pair gives $\sqrt2$, because any two distinct one-hot vectors disagree in exactly two places, each by exactly 1.
+**Now the damning property, with numbers.** Take `cat` $`= e_1 = (1,0,0,0,0)`$ and `dog` $`= e_2 = (0,1,0,0,0)`$. Their difference is $(1,-1,0,0,0)$, whose length is $\sqrt{1^2 + (-1)^2} = \sqrt{2} \approx 1.414$. Now take `cat` and `sat` $`= e_5`$: the difference is $(1,0,0,0,-1)$, length $\sqrt2$ again. **Every** pair gives $\sqrt2$, because any two distinct one-hot vectors disagree in exactly two places, each by exactly 1.
 
 ▸ **This is the fatal flaw stated precisely: in one-hot space, `cat` is exactly as far from `dog` as it is from `Tuesday`.** The representation contains no information beyond identity. A model given one-hot inputs must learn everything about every word from scratch, with no ability to transfer what it learned about `cat` to `kitten`. Every idea in the rest of this chapter exists to replace that flat, uninformative geometry with one where distance means something.
 
@@ -101,11 +101,11 @@ $$e_2 = (0,\ 1,\ 0,\ 0,\ 0)$$
 
 **"Not a matrix multiply — a lookup," decoded.** Mathematically, multiplying the embedding matrix by a one-hot vector *selects* a single column (Ch. 1 §1.1.1: a matrix–vector product is a weighted sum of columns, and here all the weights are zero except one). Doing it literally would cost $\lvert V\rvert \times d$ multiply-adds — with $\lvert V\rvert = 128{,}000$ and $d = 4096$ that is **524 million operations to retrieve 4096 numbers**, virtually all of them multiplications by zero. So frameworks index instead: $O(1)$.
 
-Two orientations are floating around here and they trip people up. If you write the table as $W \in \mathbb{R}^{d\times\lvert V\rvert}$ (tokens as *columns*), the lookup is a column selection $We_i$. If you write it as $E \in \mathbb{R}^{\lvert V\rvert\times d}$ (tokens as *rows*, which is what `nn.Embedding` stores and what §10.5 uses), the lookup is a row selection `E[idx]`. **Same operation, transposed bookkeeping.** Check which convention a piece of code or a paper is using before you trust a shape.
+Two orientations are floating around here and they trip people up. If you write the table as $W \in \mathbb{R}^{d\times\lvert V\rvert}$ (tokens as *columns*), the lookup is a column selection $`We_i`$. If you write it as $E \in \mathbb{R}^{\lvert V\rvert\times d}$ (tokens as *rows*, which is what `nn.Embedding` stores and what §10.5 uses), the lookup is a row selection `E[idx]`. **Same operation, transposed bookkeeping.** Check which convention a piece of code or a paper is using before you trust a shape.
 
 ### Bag of words and TF-IDF
 
-Count vector $c_i$ = frequency of term $i$ in the document. Discards order entirely.
+Count vector $`c_i`$ = frequency of term $i$ in the document. Discards order entirely.
 
 ▸ $$\mathrm{tf\text{-}idf}(t,d) = \underbrace{\mathrm{tf}(t,d)}_{\text{count, often } \log(1+f)}\times\underbrace{\log\frac{N}{1+\mathrm{df}(t)}}_{\text{inverse document frequency}}$$
 
@@ -145,7 +145,7 @@ So a document mentioning "Beltrami" three times scores $3 \times 8.5 = 25.5$ on 
 
 **BM25** (the actual retrieval standard, still competitive in 2026):
 ▸ $$\mathrm{BM25}(q,d)=\sum_{t\in q}\mathrm{IDF}(t)\cdot\frac{f(t,d)\cdot(k_1+1)}{f(t,d)+k_1\left(1-b+b\frac{|d|}{\overline{|d|}}\right)}$$
-with $k_1\approx1.2$ (term-frequency saturation) and $b\approx0.75$ (length normalization). The saturation is the improvement over TF-IDF: the 20th occurrence of a word says almost nothing more than the 10th. **BM25 beats many dense retrievers on out-of-domain and rare-entity queries and should always be in your baseline** (Ch. 18).
+with $`k_1\approx1.2`$ (term-frequency saturation) and $b\approx0.75$ (length normalization). The saturation is the improvement over TF-IDF: the 20th occurrence of a word says almost nothing more than the 10th. **BM25 beats many dense retrievers on out-of-domain and rare-entity queries and should always be in your baseline** (Ch. 18).
 
 #### Unpacking BM25
 
@@ -153,19 +153,19 @@ This formula looks forbidding and is actually three simple corrections bolted on
 
 $$\mathrm{BM25}(q,d) = \sum_{t \in q} \mathrm{IDF}(t)\cdot(\text{something about how often } t \text{ appears in } d)$$
 
-*"For each term $t$ in the query $q$, take how rare that term is, multiply by how much this document delivers on it, and add up over all query terms."* The $\sum_{t\in q}$ is a loop over query words; $t \in q$ reads *"t is in q"*. That's the whole skeleton.
+*"For each term $t$ in the query $q$, take how rare that term is, multiply by how much this document delivers on it, and add up over all query terms."* The $`\sum_{t\in q}`$ is a loop over query words; $t \in q$ reads *"t is in q"*. That's the whole skeleton.
 
 Now the pieces inside:
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $f(t,d)$ | "f of t, d" | Raw count of term $t$ in document $d$ |
-| $k_1$ | "k-one" | **Saturation knob.** How fast extra occurrences stop mattering |
+| $`k_1`$ | "k-one" | **Saturation knob.** How fast extra occurrences stop mattering |
 | $b$ | "b" | **Length-normalization knob**, between 0 and 1 |
 | $\lvert d\rvert$ | "length of d" | Number of words in this document |
 | $\overline{\lvert d\rvert}$ | "d-bar" | The **average** document length in the corpus |
 
-**Correction 1 — saturation.** Set $b=0$ for a moment to kill length normalization, and the fraction becomes $\frac{f(k_1+1)}{f + k_1}$. Watch what it does with $k_1 = 1.2$:
+**Correction 1 — saturation.** Set $b=0$ for a moment to kill length normalization, and the fraction becomes $`\frac{f(k_1+1)}{f + k_1}`$. Watch what it does with $`k_1 = 1.2`$:
 
 | $f$ (occurrences) | $\frac{f\cdot 2.2}{f + 1.2}$ | Marginal gain over previous row |
 |---|---|---|
@@ -176,9 +176,9 @@ Now the pieces inside:
 | 100 | 2.17 | $+0.002$ per occurrence |
 | $\infty$ | 2.20 | nothing |
 
-▸ **The count is squeezed into a bounded range — no matter how many times a word appears, the contribution can never exceed $k_1+1 = 2.2$.** Plain TF-IDF is linear in the count, so a spam page repeating "insurance" ten thousand times outranks a  article that mentions it four times. BM25 makes that attack worthless. The 20th mention scores $2.076$ against the 19th's $2.069$ — a gain of **0.3%**.
+▸ **The count is squeezed into a bounded range — no matter how many times a word appears, the contribution can never exceed $`k_1+1 = 2.2`$.** Plain TF-IDF is linear in the count, so a spam page repeating "insurance" ten thousand times outranks a  article that mentions it four times. BM25 makes that attack worthless. The 20th mention scores $2.076$ against the 19th's $2.069$ — a gain of **0.3%**.
 
-> **Analogy.** Saturation is the law of diminishing returns on evidence. Hearing one witness say the defendant was at the scene is a big update. The second witness is a decent update. The four-hundredth witness saying the same thing changes essentially nothing — and if all four hundred are the same person shouting, it should change nothing at all. $k_1$ sets how quickly you stop listening.
+> **Analogy.** Saturation is the law of diminishing returns on evidence. Hearing one witness say the defendant was at the scene is a big update. The second witness is a decent update. The four-hundredth witness saying the same thing changes essentially nothing — and if all four hundred are the same person shouting, it should change nothing at all. $`k_1`$ sets how quickly you stop listening.
 
 **Correction 2 — length normalization.** The factor $\left(1 - b + b\frac{\lvert d\rvert}{\overline{\lvert d\rvert}}\right)$ sits in the denominator, so a **larger** value makes the score **smaller**. Read it as a dial:
 
@@ -196,21 +196,21 @@ Concretely, a document of 4000 words in a corpus averaging 1000 words has $\lver
 
 ### Latent Semantic Analysis
 
-Truncated SVD of the term–document matrix: $X\approx U_k\Sigma_kV_k^\top$. Rows of $U_k\Sigma_k$ are word vectors. This is PCA on co-occurrence counts, and it is the direct ancestor of everything below.
+Truncated SVD of the term–document matrix: $`X\approx U_k\Sigma_kV_k^\top`$. Rows of $`U_k\Sigma_k`$ are word vectors. This is PCA on co-occurrence counts, and it is the direct ancestor of everything below.
 
 #### What Latent Semantic Analysis actually does
 
 **LSA** stands for **latent semantic analysis** — "latent" meaning *hidden*, the structure you did not write down but that is implied by the counts.
 
-Start with the **term–document matrix** $X$: one row per word, one column per document, and entry $X_{ij}$ = how many times word $i$ appears in document $j$ (often TF-IDF-weighted rather than raw). For a corpus of 50,000 words and 100,000 documents, $X$ is a $50{,}000 \times 100{,}000$ grid — five billion entries, of which perhaps 0.1% are non-zero.
+Start with the **term–document matrix** $X$: one row per word, one column per document, and entry $`X_{ij}`$ = how many times word $i$ appears in document $j$ (often TF-IDF-weighted rather than raw). For a corpus of 50,000 words and 100,000 documents, $X$ is a $50{,}000 \times 100{,}000$ grid — five billion entries, of which perhaps 0.1% are non-zero.
 
-The **SVD (singular value decomposition, Ch. 1 §1.1.3)** rewrites any matrix as "rotate → stretch → rotate": $X = U\Sigma V^\top$. **Truncated** means you keep only the $k$ largest stretch factors and throw the rest away — the subscript in $U_k\Sigma_kV_k^\top$ is that $k$. Eckart–Young guarantees this is the best possible rank-$k$ approximation, so nothing cleverer exists.
+The **SVD (singular value decomposition, Ch. 1 §1.1.3)** rewrites any matrix as "rotate → stretch → rotate": $X = U\Sigma V^\top$. **Truncated** means you keep only the $k$ largest stretch factors and throw the rest away — the subscript in $`U_k\Sigma_kV_k^\top`$ is that $k$. Eckart–Young guarantees this is the best possible rank-$k$ approximation, so nothing cleverer exists.
 
 ▸ **The payoff in one sentence: throwing away the small singular values forces words that behave alike to collapse onto the same few directions.** "Car" and "automobile" almost never appear in the same sentence — writers pick one and stick with it — so in the raw counts they look unrelated. But they appear alongside the *same other words*: "engine," "driver," "highway." Compressing to $k=300$ dimensions leaves no room to keep them apart, and they end up nearly on top of each other. **The compression is not a cost; it is the entire mechanism.**
 
 > **Analogy.** Photograph a crowded market from a great distance. Detail is destroyed, but *groupings* become visible: the fruit sellers are over there, the fabric stalls over here. Zoomed all the way in you see individual faces and no structure; zoomed all the way out you see one blur. There is an intermediate resolution — a value of $k$ — at which the market's organization is most legible. Choosing $k \approx 300$ is choosing that altitude.
 
-**Why "rows of $U_k\Sigma_k$ are word vectors."** $U$ has one row per *word* (the rows of $X$ were words), and $\Sigma_k$ scales each of the $k$ directions by its importance. So row $i$ of $U_k\Sigma_k$ is a $k$-number summary of word $i$'s behaviour across all documents — a **word embedding**, twenty years before anyone used that phrase.
+**Why "rows of $`U_k\Sigma_k`$ are word vectors."** $U$ has one row per *word* (the rows of $X$ were words), and $`\Sigma_k`$ scales each of the $k$ directions by its importance. So row $i$ of $`U_k\Sigma_k`$ is a $k$-number summary of word $i$'s behaviour across all documents — a **word embedding**, twenty years before anyone used that phrase.
 
 > **Where this came from.** LSA was introduced in 1990 by **Scott Deerwester, Susan Dumais, George Furnas, Thomas Landauer, and Richard Harshman**, most of them at Bellcore (the research arm spun out of the Bell System breakup), and a patent was filed in 1988. The problem they were attacking was **synonymy in search**: a user types "car" and misses every document that says "automobile." Their idea was that the low-rank structure of the co-occurrence matrix already encodes synonymy, if you simply stop insisting on representing every word separately. Landauer went further and argued LSA modelled something about human vocabulary acquisition — trained on enough text, it passed the synonym section of the TOEFL exam at roughly the level of a non-native applicant. Whether that says something about cognition or about the TOEFL was debated at the time and never fully settled.
 
@@ -248,32 +248,32 @@ $$\mathcal{L} = -\frac1T\sum_{t=1}^{T}\sum_{-m\le j\le m, j\ne0}\log p(w_{t+j}\m
 
 Two formulas, taken one at a time.
 
-**The loss.** $\mathcal{L} = -\frac1T\sum_{t=1}^{T}\sum_{-m\le j\le m,\ j\ne0}\log p(w_{t+j}\mid w_t)$ decomposes into:
+**The loss.** $`\mathcal{L} = -\frac1T\sum_{t=1}^{T}\sum_{-m\le j\le m,\ j\ne0}\log p(w_{t+j}\mid w_t)`$ decomposes into:
 
 | Piece | Read aloud | Meaning |
 |---|---|---|
 | $T$ | "T" | The number of words in the training corpus |
-| $\sum_{t=1}^{T}$ | "sum over t from 1 to T" | Slide a window along every position in the corpus |
-| $w_t$ | "w-t" | The **centre** word at position $t$ |
+| $`\sum_{t=1}^{T}`$ | "sum over t from 1 to T" | Slide a window along every position in the corpus |
+| $`w_t`$ | "w-t" | The **centre** word at position $t$ |
 | $m$ | "m" | The **window radius** — how far left and right you look |
-| $\sum_{-m \le j \le m,\ j\ne 0}$ | "sum over j, skipping zero" | Loop over the neighbours; $j\ne0$ excludes the centre word itself |
-| $w_{t+j}$ | "w t-plus-j" | A **context** word $j$ steps away |
+| $`\sum_{-m \le j \le m,\ j\ne 0}`$ | "sum over j, skipping zero" | Loop over the neighbours; $j\ne0$ excludes the centre word itself |
+| $`w_{t+j}`$ | "w t-plus-j" | A **context** word $j$ steps away |
 | $p(\cdot\mid\cdot)$ | "p of, given" | Conditional probability (Ch. 0 §0.9) |
 | $-\frac1T$ | "minus one over T" | Average, and flip the sign so that *minimizing* means *maximizing probability* |
 
 ▸ **In one sentence: walk through the corpus, and at every word, ask the model to predict its neighbours; penalize it by how surprised it is.** With $m = 5$, every position generates up to 10 training pairs, so a 10-billion-word corpus produces on the order of $10^{11}$ prediction problems. That volume is the whole reason the method works — it is an enormous number of very weak signals.
 
-**The probability.** $p(o\mid c) = \frac{\exp(u_o^\top v_c)}{\sum_{w\in V}\exp(u_w^\top v_c)}$ is a softmax (Ch. 1 §1.4). Read it as:
+**The probability.** $`p(o\mid c) = \frac{\exp(u_o^\top v_c)}{\sum_{w\in V}\exp(u_w^\top v_c)}`$ is a softmax (Ch. 1 §1.4). Read it as:
 
-- $v_c$ — the vector for word $c$ **acting as the centre**. Think of it as the question being asked.
-- $u_o$ — the vector for word $o$ **acting as context**. Think of it as an answer being advertised.
-- $u_o^\top v_c$ — their dot product: **how well does this answer match this question?** (Ch. 0 §0.8: a dot product measures alignment.)
+- $`v_c`$ — the vector for word $c$ **acting as the centre**. Think of it as the question being asked.
+- $`u_o`$ — the vector for word $o$ **acting as context**. Think of it as an answer being advertised.
+- $`u_o^\top v_c`$ — their dot product: **how well does this answer match this question?** (Ch. 0 §0.8: a dot product measures alignment.)
 - $\exp(\cdot)$ — make it positive, and exaggerate differences.
-- $\sum_{w\in V}$ — divide by the same quantity computed for **every word in the vocabulary**, so the numbers become probabilities that sum to 1.
+- $`\sum_{w\in V}`$ — divide by the same quantity computed for **every word in the vocabulary**, so the numbers become probabilities that sum to 1.
 
-**Work a two-word example.** Suppose $d=2$, and the centre word `dog` has $v_{\text{dog}} = (2, 0)$. Three candidate context words have vectors $u_{\text{bark}} = (3,0)$, $u_{\text{cat}} = (1,1)$, $u_{\text{algebra}} = (-2,0)$. Then the scores are $6$, $2$, and $-4$. Exponentiate: $403.4$, $7.39$, $0.018$. Normalize by their sum $410.8$: **0.982, 0.018, 0.00004.** The model puts nearly all its probability on `bark`. Training nudges $v_{\text{dog}}$ and $u_{\text{bark}}$ toward each other whenever they actually co-occur, and away otherwise.
+**Work a two-word example.** Suppose $d=2$, and the centre word `dog` has $`v_{\text{dog}} = (2, 0)`$. Three candidate context words have vectors $`u_{\text{bark}} = (3,0)`$, $`u_{\text{cat}} = (1,1)`$, $`u_{\text{algebra}} = (-2,0)`$. Then the scores are $6$, $2$, and $-4$. Exponentiate: $403.4$, $7.39$, $0.018$. Normalize by their sum $410.8$: **0.982, 0.018, 0.00004.** The model puts nearly all its probability on `bark`. Training nudges $`v_{\text{dog}}`$ and $`u_{\text{bark}}`$ toward each other whenever they actually co-occur, and away otherwise.
 
-▸ **Why two matrices instead of one.** If a word used the *same* vector as centre and as context, then its score against itself would be $v^\top v = \lVert v\rVert^2$ — the largest score it can possibly produce. **Every word would predict itself as its own most likely neighbour**, which is both useless and false ("dog dog dog" is not English). Two matrices break that symmetry. It is the same argument that makes transformers use separate $W_Q$ and $W_K$ (Ch. 11 §11.1) — and it is worth noticing that the two fields arrived at it independently.
+▸ **Why two matrices instead of one.** If a word used the *same* vector as centre and as context, then its score against itself would be $v^\top v = \lVert v\rVert^2$ — the largest score it can possibly produce. **Every word would predict itself as its own most likely neighbour**, which is both useless and false ("dog dog dog" is not English). Two matrices break that symmetry. It is the same argument that makes transformers use separate $`W_Q`$ and $`W_K`$ (Ch. 11 §11.1) — and it is worth noticing that the two fields arrived at it independently.
 
 **Why the denominator is fatal.** With $\lvert V\rvert = 10^6$ and $d = 300$, one softmax denominator costs $10^6 \times 300 = 3\times10^8$ multiply-adds. You need one per training pair, and there are $\sim10^{11}$ pairs. That is $3\times10^{19}$ operations for a single epoch — at the roughly $10^{9}$ useful operations per second a single 2013-era CPU core delivered, about **$3\times10^{10}$ seconds, or nine hundred years.** The next section is not an optimization; it is the difference between possible and impossible.
 
@@ -287,7 +287,7 @@ Replace the $|V|$-way softmax with $k+1$ independent binary logistic problems: "
 
 - First term: push real pairs' dot products up.
 - Second: push $k$ sampled fake pairs' dot products down. $k=5$–20 for small corpora, 2–5 for large.
-- Noise distribution: $P_n(w)\propto U(w)^{3/4}$. **The 3/4 exponent flattens the Zipf distribution** — it samples rare words more than unigram frequency would, and common words less. Purely empirical, but a robust finding.
+- Noise distribution: $`P_n(w)\propto U(w)^{3/4}`$. **The 3/4 exponent flattens the Zipf distribution** — it samples rare words more than unigram frequency would, and common words less. Purely empirical, but a robust finding.
 
 #### Unpacking negative sampling
 
@@ -305,11 +305,11 @@ $$\mathcal{L} = -\log\sigma(u_o^\top v_c) - \sum_{i=1}^{k}\mathbb{E}_{w_i\sim P_
 | Piece | Read aloud | Job |
 |---|---|---|
 | $\sigma(z)$ | "sigmoid of z" | $1/(1+e^{-z})$ — turns any score into a probability in $(0,1)$ |
-| $u_o^\top v_c$ | "u-o transpose v-c" | Score for the **real** (centre, context) pair |
+| $`u_o^\top v_c`$ | "u-o transpose v-c" | Score for the **real** (centre, context) pair |
 | $-\log\sigma(\cdot)$ | "minus log sigmoid" | Binary cross-entropy for the answer "yes, real" |
-| $w_i \sim P_n$ | "w-i drawn from P-n" | Sample a **fake** context word from the noise distribution |
-| $\mathbb{E}_{w_i\sim P_n}[\cdot]$ | "expectation over the noise" | The average over such draws — in code, just draw one and use it |
-| $\sigma(-u_{w_i}^\top v_c)$ | "sigmoid of minus the score" | Probability the pair is **fake**; note $\sigma(-z) = 1-\sigma(z)$ |
+| $`w_i \sim P_n`$ | "w-i drawn from P-n" | Sample a **fake** context word from the noise distribution |
+| $`\mathbb{E}_{w_i\sim P_n}[\cdot]`$ | "expectation over the noise" | The average over such draws — in code, just draw one and use it |
+| $`\sigma(-u_{w_i}^\top v_c)`$ | "sigmoid of minus the score" | Probability the pair is **fake**; note $\sigma(-z) = 1-\sigma(z)$ |
 | $k$ | "k" | How many fakes per real pair |
 
 **Put numbers on it.** Suppose the real pair (`dog`, `bark`) currently scores $u^\top v = 2.0$. Then $\sigma(2.0) = 0.881$, and its loss contribution is $-\log(0.881) = 0.127$ — small, because the model already believes it. Now a fake pair (`dog`, `algebra`) scores $-1.0$. Its contribution is $-\log\sigma(1.0) = -\log(0.731) = 0.313$. If instead the model had wrongly scored the fake pair at $+3.0$, its contribution would be $-\log\sigma(-3.0) = -\log(0.047) = 3.05$ — **ten times the penalty of the fake it already handles correctly, and twenty-four times the penalty of the real pair.** Gradient descent therefore spends nearly all its effort pushing apart the pairs it currently, wrongly, believes.
@@ -328,7 +328,7 @@ $$\mathcal{L} = -\log\sigma(u_o^\top v_c) - \sum_{i=1}^{k}\mathbb{E}_{w_i\sim P_
 
 ▸ **What flattening buys you:** if you sampled negatives at true frequency, "the" would be the fake context word in most comparisons, and the model would learn one thing extremely well — *that word X does not go with "the"* — while learning nothing about rare words. The $3/4$ exponent trades some realism for **coverage of the vocabulary**. The value was found by experiment; nobody has derived it, and the paper says so.
 
-**Hierarchical softmax** is the alternative: arrange $V$ as a Huffman tree, predict $\log_2|V|$ binary decisions. $O(\log|V|)$ instead of $O(|V|)$. Better for rare words; negative sampling is better for frequent words and simpler.
+**Hierarchical softmax** is the alternative: arrange $V$ as a Huffman tree, predict $`\log_2|V|`$ binary decisions. $O(\log|V|)$ instead of $O(|V|)$. Better for rare words; negative sampling is better for frequent words and simpler.
 
 **Subsampling frequent words:** discard word $w$ with probability $P(w) = 1-\sqrt{t/f(w)}$, $t\approx10^{-5}$. Removes "the", "of" from most windows, which both speeds training and improves rare-word vectors.
 
@@ -338,7 +338,7 @@ $$\mathcal{L} = -\log\sigma(u_o^\top v_c) - \sum_{i=1}^{k}\mathbb{E}_{w_i\sim P_
 
 $$p(\text{word}) = \prod_{\text{nodes on the path}} p(\text{correct turn at that node})$$
 
-A balanced tree over $\lvert V\rvert = 10^6$ words is about $\log_2(10^6) \approx 20$ levels deep. ▸ **So you evaluate 20 binary decisions instead of $10^6$ scores — a 50,000× reduction, and it is exact, not an approximation.**
+A balanced tree over $\lvert V\rvert = 10^6$ words is about $`\log_2(10^6) \approx 20`$ levels deep. ▸ **So you evaluate 20 binary decisions instead of $10^6$ scores — a 50,000× reduction, and it is exact, not an approximation.**
 
 A **Huffman tree** goes further: it gives *frequent* words short paths and rare words long ones. If "the" sits three levels down and "aardvark" thirty, then the common case — which is most of your training time — is three operations, not twenty.
 
@@ -415,22 +415,22 @@ The objective is a **weighted least squares** problem — the same shape as fitt
 
 | Piece | Read aloud | Job |
 |---|---|---|
-| $X_{ij}$ | "X-i-j" | How many times word $j$ appeared in word $i$'s context, over the whole corpus |
-| $w_i$, $\tilde w_j$ | "w-i", "w-j-tilde" | The two vectors for a word — centre role and context role, as in word2vec |
-| $b_i$, $\tilde b_j$ | "b-i", "b-j-tilde" | **Bias terms** — one scalar per word per role |
-| $\log X_{ij}$ | "log X-i-j" | The **target** being fitted |
+| $`X_{ij}`$ | "X-i-j" | How many times word $j$ appeared in word $i$'s context, over the whole corpus |
+| $`w_i`$, $`\tilde w_j`$ | "w-i", "w-j-tilde" | The two vectors for a word — centre role and context role, as in word2vec |
+| $`b_i`$, $`\tilde b_j`$ | "b-i", "b-j-tilde" | **Bias terms** — one scalar per word per role |
+| $`\log X_{ij}`$ | "log X-i-j" | The **target** being fitted |
 | $(\cdots)^2$ | "squared" | Squared error: penalize being off in either direction |
-| $f(X_{ij})$ | "f of X-i-j" | **How much this pair's error should count** |
+| $`f(X_{ij})`$ | "f of X-i-j" | **How much this pair's error should count** |
 
 So the core of it is: *"make the dot product of two word vectors, plus two bias terms, equal the log of how often they co-occur."*
 
-▸ **Why fit $\log X_{ij}$ and not $X_{ij}$?** Because a dot product is unbounded in both directions while counts are non-negative and Zipf-distributed — "the/of" might co-occur $10^7$ times and "aardvark/theorem" once. Fitting raw counts, the objective would care $10^7$ times more about the first pair. Taking logs collapses a range spanning $1$ to $10^7$ into a range spanning $0$ to $16.1$, which a bounded dot product can actually cover. **And there is a deeper reason: subtracting logs gives ratios, and it is the *ratios* of co-occurrence probabilities that carry meaning** — the point developed under the analogy property below.
+▸ **Why fit $`\log X_{ij}`$ and not $`X_{ij}`$?** Because a dot product is unbounded in both directions while counts are non-negative and Zipf-distributed — "the/of" might co-occur $10^7$ times and "aardvark/theorem" once. Fitting raw counts, the objective would care $10^7$ times more about the first pair. Taking logs collapses a range spanning $1$ to $10^7$ into a range spanning $0$ to $16.1$, which a bounded dot product can actually cover. **And there is a deeper reason: subtracting logs gives ratios, and it is the *ratios* of co-occurrence probabilities that carry meaning** — the point developed under the analogy property below.
 
-**The biases are doing real work.** Some words are common in every context; that is a property of the word, not of the pair. The bias $b_i$ absorbs that per-word baseline so the dot product $w_i^\top\tilde w_j$ can be spent on the *interaction*. Without them, every vector would have to encode its own frequency, wasting dimensions. (This is the same reason a linear regression has an intercept.)
+**The biases are doing real work.** Some words are common in every context; that is a property of the word, not of the pair. The bias $`b_i`$ absorbs that per-word baseline so the dot product $`w_i^\top\tilde w_j`$ can be spent on the *interaction*. Without them, every vector would have to encode its own frequency, wasting dimensions. (This is the same reason a linear regression has an intercept.)
 
-**The weighting function, with numbers.** $f(x) = \min\!\left(1, (x/x_{\max})^{0.75}\right)$ with $x_{\max}$ typically 100:
+**The weighting function, with numbers.** $`f(x) = \min\!\left(1, (x/x_{\max})^{0.75}\right)`$ with $`x_{\max}`$ typically 100:
 
-| $X_{ij}$ | $(X_{ij}/100)^{0.75}$ | $f$ | Effect |
+| $`X_{ij}`$ | $`(X_{ij}/100)^{0.75}`$ | $f$ | Effect |
 |---|---|---|---|
 | 1 | $0.032$ | $0.032$ | Counted at 3% weight — a single co-occurrence is mostly noise |
 | 10 | $0.178$ | $0.178$ | 18% weight |
@@ -448,7 +448,7 @@ So the core of it is: *"make the dot product of two word vectors, plus two bias 
 
 $$\mathrm{vec}(\text{king}) - \mathrm{vec}(\text{man}) + \mathrm{vec}(\text{woman}) \approx \mathrm{vec}(\text{queen})$$
 
-**Why it works:** if $u_w^\top v_c\approx\mathrm{PMI}$, then differences of vectors correspond to *ratios* of co-occurrence probabilities, and a relation like gender is a roughly constant ratio-shift across pairs.
+**Why it works:** if $`u_w^\top v_c\approx\mathrm{PMI}`$, then differences of vectors correspond to *ratios* of co-occurrence probabilities, and a relation like gender is a roughly constant ratio-shift across pairs.
 
 ▸ **The caveats you should state if asked:** standard evaluations *exclude the three input words* from the answer candidates, and without that exclusion the nearest neighbour is very often "king" itself. Analogy accuracy is also heavily driven by the offsets of the most frequent word pairs. The property is real but weaker than the famous demo suggests.
 
@@ -466,7 +466,7 @@ $$(\mathrm{vec}(a) - \mathrm{vec}(b))^\top v_c \;\approx\; \log\frac{p(c\mid a)}
 
 ▸ **So the analogy vector is asking: "which context words are more likely near $a$ than near $b$, and by how much?"** For king-minus-man, the answer is words about thrones, reigns, and crowns — and that same ratio-shift is roughly what separates "queen" from "woman." The relation lives in ratios of co-occurrence probabilities, and vector subtraction is exactly how you compute a log-ratio. GloVe's paper builds its entire objective backwards from this observation.
 
-**Now be honest about the caveats, with the mechanics spelled out.** The standard evaluation computes $\arg\max_{x}\ \cos(x,\ \mathrm{vec}(\text{king}) - \mathrm{vec}(\text{man}) + \mathrm{vec}(\text{woman}))$ **over a candidate set with king, man, and woman removed**. Without the removal, the top hit is usually "king" — for a mechanical reason: the result vector is a small perturbation of $\mathrm{vec}(\text{king})$, and small perturbations of a vector are closest to that vector. **The demo works partly because the answer you would have given is deleted from the multiple-choice options.**
+**Now be honest about the caveats, with the mechanics spelled out.** The standard evaluation computes $`\arg\max_{x}\ \cos(x,\ \mathrm{vec}(\text{king}) - \mathrm{vec}(\text{man}) + \mathrm{vec}(\text{woman}))`$ **over a candidate set with king, man, and woman removed**. Without the removal, the top hit is usually "king" — for a mechanical reason: the result vector is a small perturbation of $\mathrm{vec}(\text{king})$, and small perturbations of a vector are closest to that vector. **The demo works partly because the answer you would have given is deleted from the multiple-choice options.**
 
 ▸ This is a  useful lesson beyond embeddings: **when a benchmark excludes the trivial answer, ask how much of the reported performance is the exclusion doing.** The analogy property is real — the arrows do exist, and they are not artefacts — but "king − man + woman = queen" as a slogan overstates it substantially.
 
@@ -725,7 +725,7 @@ $\mathcal{N}(0, 0.02^2)$ reads *"draw each number independently from a normal di
 
 ### Weight tying
 
-▸ Set the output projection $W_{\text{out}} = E^\top$. Saves $|V|d$ parameters (for $|V|=128$k, $d=4096$: **524M parameters**), and consistently improves perplexity in small/medium models by regularizing both matrices toward a shared space.
+▸ Set the output projection $`W_{\text{out}} = E^\top`$. Saves $|V|d$ parameters (for $|V|=128$k, $d=4096$: **524M parameters**), and consistently improves perplexity in small/medium models by regularizing both matrices toward a shared space.
 
 Argument: the input embedding maps token→vector, the output maps vector→token-logit. If the representation space is consistent, these should be transposes. Note some large models *untie* them, since at scale the extra capacity is worth more than the regularization.
 
@@ -736,11 +736,11 @@ A language model has **two** places where tokens meet vectors, at opposite ends 
 | Where | Direction | Shape |
 |---|---|---|
 | Input embedding $E$ | token ID → vector | $\lvert V\rvert \times d$ |
-| Output projection $W_{\text{out}}$ | vector → one logit per token | $d \times \lvert V\rvert$ |
+| Output projection $`W_{\text{out}}`$ | vector → one logit per token | $d \times \lvert V\rvert$ |
 
-**Weight tying says: use the same numbers for both.** Setting $W_{\text{out}} = E^\top$ means the output layer is the input table, transposed. Since transposing is free (Ch. 0 §0.6), you store one matrix and use it twice.
+**Weight tying says: use the same numbers for both.** Setting $`W_{\text{out}} = E^\top`$ means the output layer is the input table, transposed. Since transposing is free (Ch. 0 §0.6), you store one matrix and use it twice.
 
-**Why it is not merely a memory hack.** Look at what the output layer computes: the logit for token $i$ is $E_i^\top h$ — the dot product of token $i$'s embedding row with the final hidden state $h$. ▸ **So predicting the next token becomes "find the token whose embedding points most nearly the same way as my current hidden state."** Prediction is reduced to a nearest-neighbour search in the very space the input layer defined, which forces both ends of the network to agree on what each direction means. Untied, the model can maintain two unrelated vocabularies for the same tokens and nothing stops the two from drifting apart.
+**Why it is not merely a memory hack.** Look at what the output layer computes: the logit for token $i$ is $`E_i^\top h`$ — the dot product of token $i$'s embedding row with the final hidden state $h$. ▸ **So predicting the next token becomes "find the token whose embedding points most nearly the same way as my current hidden state."** Prediction is reduced to a nearest-neighbour search in the very space the input layer defined, which forces both ends of the network to agree on what each direction means. Untied, the model can maintain two unrelated vocabularies for the same tokens and nothing stops the two from drifting apart.
 
 > **Analogy.** Tying is insisting that the dictionary you read with and the dictionary you write with are the same book. You save shelf space, certainly — but the real benefit is that a word cannot come to mean one thing when you read it and another when you write it.
 
@@ -769,9 +769,9 @@ $|V|\times d$ becomes $|V|\times e$ then $e\times d$ with $e\ll d$. Decouples vo
 
 ### The scaling detail
 
-The original Transformer multiplies embeddings by $\sqrt{d_{\text{model}}}$ before adding positional encodings. Reason: embeddings initialized with variance $1/d$ have norm $\approx1$, while sinusoidal positional encodings have entries of magnitude $\approx1$ and norm $\approx\sqrt{d}$. Without the scaling the positional signal would drown the token signal.
+The original Transformer multiplies embeddings by $`\sqrt{d_{\text{model}}}`$ before adding positional encodings. Reason: embeddings initialized with variance $1/d$ have norm $\approx1$, while sinusoidal positional encodings have entries of magnitude $\approx1$ and norm $\approx\sqrt{d}$. Without the scaling the positional signal would drown the token signal.
 
-#### Why the $\sqrt{d_{\text{model}}}$ factor is there
+#### Why the $`\sqrt{d_{\text{model}}}`$ factor is there
 
 This is a one-line detail in the original paper that people either skip or misremember, and the argument is entirely about **matching magnitudes before adding two things together.**
 
@@ -784,7 +784,7 @@ Follow the lengths (Ch. 0 §0.6: $\lVert\cdot\rVert$ is the length of a vector).
 
 ▸ **Add those two and the token identity is a 4% perturbation of a vector that is 96% position.** The model would know exactly where every token is and almost nothing about what it is. Multiplying the embedding by $\sqrt{d} = 22.6$ puts both signals at length $\approx 22.6$, and the sum  carries both.
 
-> **Analogy.** You are mixing two audio tracks — a voice recorded at conversational volume and a click track recorded at full scale. Summing them raw gives you a click track with a faint voice underneath. The fix is not clever engineering; it is turning the voice up before you sum. $\sqrt{d_{\text{model}}}$ is the gain knob.
+> **Analogy.** You are mixing two audio tracks — a voice recorded at conversational volume and a click track recorded at full scale. Summing them raw gives you a click track with a faint voice underneath. The fix is not clever engineering; it is turning the voice up before you sum. $`\sqrt{d_{\text{model}}}`$ is the gain knob.
 
 **Two things worth knowing beyond the derivation.** First, the factor depends on the initialization convention: if embeddings are initialized at $\mathcal{N}(0, 1)$ instead of $\mathcal{N}(0,1/d)$, they already have length $\sqrt d$ and the multiplier is wrong. Implementations differ on this and it is a classic source of silent reproduction failures. Second, ▸ **the whole issue mostly evaporates in modern models**, which use learned or rotary positional encodings (Ch. 12) rather than fixed sinusoids, and which put a normalization layer immediately after the embedding — and a normalization layer's job is precisely to erase whatever scale you handed it. The factor survives in codebases largely as inheritance.
 
@@ -954,7 +954,7 @@ A query then:
 
 ### IVF + Product Quantization (compression-based)
 
-**IVF:** k-means the corpus into $n_{\text{list}}$ cells; search only the $n_{\text{probe}}$ nearest cells.
+**IVF:** k-means the corpus into $`n_{\text{list}}`$ cells; search only the $`n_{\text{probe}}`$ nearest cells.
 
 **PQ:** split each $d$-dim vector into $m$ sub-vectors, k-means each sub-space into 256 centroids, store $m$ bytes per vector.
 ▸ Compression: $d\times4$ bytes → $m$ bytes. For $d=768$, $m=96$: $3072\to96$ bytes, a **32× reduction**. Distances are computed by table lookup and summation, which is extremely fast.
@@ -965,19 +965,19 @@ A query then:
 
 These are two independent ideas that ship together because they solve different halves of the problem: **IVF reduces how many vectors you look at; PQ reduces how much each vector costs to store and compare.**
 
-**IVF — inverted file index.** The name is borrowed from text search, where an "inverted index" maps each word to the documents containing it. Here, k-means clustering (Ch. 24) partitions the corpus into $n_{\text{list}}$ cells, each with a centroid. At query time you compare the query to the $n_{\text{list}}$ **centroids only**, then search exhaustively inside the $n_{\text{probe}}$ nearest cells.
+**IVF — inverted file index.** The name is borrowed from text search, where an "inverted index" maps each word to the documents containing it. Here, k-means clustering (Ch. 24) partitions the corpus into $`n_{\text{list}}`$ cells, each with a centroid. At query time you compare the query to the $`n_{\text{list}}`$ **centroids only**, then search exhaustively inside the $`n_{\text{probe}}`$ nearest cells.
 
-Numbers, for $N = 10^8$ vectors and $n_{\text{list}} = 65{,}536$:
+Numbers, for $N = 10^8$ vectors and $`n_{\text{list}} = 65{,}536`$:
 
 | Step | Comparisons |
 |---|---|
 | Query vs. centroids | $65{,}536$ |
-| Vectors inside $n_{\text{probe}}=32$ cells | $32 \times \frac{10^8}{65{,}536} \approx 48{,}800$ |
+| Vectors inside $`n_{\text{probe}}=32`$ cells | $32 \times \frac{10^8}{65{,}536} \approx 48{,}800$ |
 | **Total** | $\approx 114{,}000$ instead of $10^8$ |
 
-▸ **A 900× reduction in vectors examined.** And the failure mode is visible in the arithmetic: if the true nearest neighbour sits in cell number 33, you never see it. That is the approximation, and $n_{\text{probe}}$ is the dial that trades recall against latency — exactly parallel to `efSearch` in HNSW.
+▸ **A 900× reduction in vectors examined.** And the failure mode is visible in the arithmetic: if the true nearest neighbour sits in cell number 33, you never see it. That is the approximation, and $`n_{\text{probe}}`$ is the dial that trades recall against latency — exactly parallel to `efSearch` in HNSW.
 
-> **Analogy.** Finding a book in a library. You do not walk every shelf; you go to the right section, then the right few shelves. If the book has been mis-shelved into the neighbouring section, you will not find it. Raising $n_{\text{probe}}$ is checking the adjacent sections too.
+> **Analogy.** Finding a book in a library. You do not walk every shelf; you go to the right section, then the right few shelves. If the book has been mis-shelved into the neighbouring section, you will not find it. Raising $`n_{\text{probe}}`$ is checking the adjacent sections too.
 
 **PQ — product quantization.** "Quantization" means replacing a continuous value with the nearest entry from a small fixed set. "Product" refers to a Cartesian product: the vector is chopped into $m$ chunks and each chunk is quantized independently, so the effective codebook is the product of $m$ small codebooks.
 

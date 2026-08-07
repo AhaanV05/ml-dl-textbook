@@ -21,7 +21,7 @@ Skim once now; each entry is unpacked properly where it first appears.
 | $\bar y$ | "y-bar" | Shorthand for $\partial\mathcal{L}/\partial y$; the gradient arriving at $y$ |
 | $\mathbb{1}[\,\cdot\,]$ | "indicator" | 1 if the condition holds, 0 if not — an `if` written as a symbol |
 | $\mathrm{diag}(v)$ | "diag of v" | A matrix with $v$ down the diagonal and zeros everywhere else |
-| $n_{\text{in}},\ n_{\text{out}}$ | "fan-in, fan-out" | How many numbers flow into / out of a layer |
+| $`n_{\text{in}},\ n_{\text{out}}`$ | "fan-in, fan-out" | How many numbers flow into / out of a layer |
 | $\mathrm{Var}(X)$ | "variance of X" | Average squared distance from the mean — the spread |
 | $\Phi(z),\ \phi(z)$ | "big phi, little phi" | The Gaussian **CDF** (area to the left) and **PDF** (the bell curve itself) |
 | $\mathcal{U}[-a,a]$ | "uniform on minus a to a" | Every value in that interval equally likely |
@@ -113,7 +113,7 @@ The two-layer linear network **is** the single row vector $(7,\ -3)$. Its "hidde
 - The required width can be exponential in the input dimension.
 - It gives no reason to prefer depth.
 
-**The depth results are more informative.** Telgarsky (2016): there are functions computable by a network of depth $O(k^2)$ and width $O(1)$ that require width $\Omega(2^k)$ at depth $O(k)$. Depth buys **exponential** expressivity for certain compositional functions. A ReLU network with $L$ layers of width $d$ can carve input space into $O((d/n_{\text{in}})^{(L-1)n_{\text{in}}}d^{n_{\text{in}}})$ linear regions — exponential in depth, polynomial in width.
+**The depth results are more informative.** Telgarsky (2016): there are functions computable by a network of depth $O(k^2)$ and width $O(1)$ that require width $\Omega(2^k)$ at depth $O(k)$. Depth buys **exponential** expressivity for certain compositional functions. A ReLU network with $L$ layers of width $d$ can carve input space into $`O((d/n_{\text{in}})^{(L-1)n_{\text{in}}}d^{n_{\text{in}}})`$ linear regions — exponential in depth, polynomial in width.
 
 ▸ **The honest summary:** depth is efficient for functions that are *themselves* compositional — which real-world data (edges → textures → parts → objects; atoms → functional groups → scaffolds → molecules) tends to be. It's a match between architecture and the structure of reality, not a universal advantage.
 
@@ -142,7 +142,7 @@ Decode the theorem clause by clause, because every clause is load-bearing.
 
 ▸ **"There are functions a deep-and-thin network computes easily that a shallower network can only match by becoming exponentially fat."** Put $k = 20$: a deep network of constant width versus a shallower one needing width $2^{20} \approx 10^6$. That is not a constant-factor inconvenience; it is the difference between a laptop and an impossibility. **Depth is not a convenience — for some functions it is exponentially cheaper than width.**
 
-**The linear-regions count, decoded.** A ReLU network is piecewise linear (we saw why above). The formula $O((d/n_{\text{in}})^{(L-1)n_{\text{in}}}d^{n_{\text{in}}})$ counts how many separate linear pieces it can carve input space into. Ignore the exact exponents and read the *shape* of the expression: **$L$ (depth) appears in the exponent; $d$ (width) appears in the base.** Adding a layer multiplies the number of regions; adding a neuron merely increases it polynomially. Concretely, with $n_{\text{in}} = 2$ and width $d = 10$: going from 3 layers to 4 raises the region count by roughly a factor of $(d/n_{\text{in}})^{2} = 25$, whereas adding one neuron to a layer changes it by a few percent. **Depth compounds; width accumulates.**
+**The linear-regions count, decoded.** A ReLU network is piecewise linear (we saw why above). The formula $`O((d/n_{\text{in}})^{(L-1)n_{\text{in}}}d^{n_{\text{in}}})`$ counts how many separate linear pieces it can carve input space into. Ignore the exact exponents and read the *shape* of the expression: **$L$ (depth) appears in the exponent; $d$ (width) appears in the base.** Adding a layer multiplies the number of regions; adding a neuron merely increases it polynomially. Concretely, with $`n_{\text{in}} = 2`$ and width $d = 10$: going from 3 layers to 4 raises the region count by roughly a factor of $`(d/n_{\text{in}})^{2} = 25`$, whereas adding one neuron to a layer changes it by a few percent. **Depth compounds; width accumulates.**
 
 > **Where this came from.** **George Cybenko** proved the sigmoidal case in 1989, at the University of Illinois, using a functional-analysis argument (the Hahn–Banach theorem and properties of measures) rather than any constructive recipe — which is why the proof yields no algorithm. **Kurt Hornik**, an econometrician in Vienna, together with Maxwell Stinchcombe and Halbert White, proved a more general version essentially simultaneously, and Hornik's 1991 paper established the sharp condition: what matters is not that $\sigma$ is sigmoid-shaped but that it is **not a polynomial**. There is a persistent confusion worth clearing up: the **Kolmogorov–Arnold representation theorem** (Andrey Kolmogorov, 1957, answering a version of Hilbert's thirteenth problem) also says any continuous multivariate function can be written using only single-variable functions and addition — and it is *not* the universal approximation theorem. Kolmogorov's inner functions are wildly non-smooth and are not learned from data; the two results are often conflated in casual retellings. The  striking historical point is that a theorem the field cites constantly as its foundation was proved for a network architecture — one hidden layer — that essentially nobody uses.
 
@@ -155,7 +155,7 @@ Decode the theorem clause by clause, because every clause is load-bearing.
 | Example | Why it qualifies |
 |---|---|
 | Telgarsky's construction: computable at depth $O(k^2)$ and width $O(1)$, but needing width $\Omega(2^k)$ at depth $O(k)$ | A **proved exponential separation.** At $k=20$ the shallow network needs width $2^{20}\approx10^6$ to match a constant-width deep one |
-| Linear-region counting: at $n_{\text{in}}=2$, width $10$, one extra layer multiplies the region count by about $(d/n_{\text{in}})^{n_{\text{in}}} = 25$; one extra neuron changes it by a few percent | **Depth is in the exponent, width is in the base.** Depth compounds; width accumulates |
+| Linear-region counting: at $`n_{\text{in}}=2`$, width $10$, one extra layer multiplies the region count by about $`(d/n_{\text{in}})^{n_{\text{in}}} = 25`$; one extra neuron changes it by a few percent | **Depth is in the exponent, width is in the base.** Depth compounds; width accumulates |
 | A 50-layer ResNet beating a 50-layer plain network at identical parameter count | Depth was already present in the plain net and unusable. The residual path made the same depth trainable |
 | Edges $\to$ textures $\to$ object parts $\to$ objects across layers of a vision model | Each layer's features are functions of the *previous layer's features*, which is only possible because a nonlinearity sits between them |
 
@@ -163,8 +163,8 @@ Decode the theorem clause by clause, because every clause is load-bearing.
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| A 50-layer network with no activation functions: $W_{50}\cdots W_2W_1x$ | A product of matrices is a matrix. Fifty $1024\times1024$ layers ($52$M parameters) collapse to **one** $1024\times1024$ map ($1$M parameters' worth of behaviour) | A single linear layer wearing fifty hats |
-| The same stack with one width-8 layer in the middle | Worse than collapse: $\mathrm{rank}(W_{50}\cdots W_1) \le 8$. The bottleneck caps the whole network's rank regardless of the other 49 layers | A rank-8 linear map. **This is what breaks when you narrow one layer in a linear stack** |
+| A 50-layer network with no activation functions: $`W_{50}\cdots W_2W_1x`$ | A product of matrices is a matrix. Fifty $1024\times1024$ layers ($52$M parameters) collapse to **one** $1024\times1024$ map ($1$M parameters' worth of behaviour) | A single linear layer wearing fifty hats |
+| The same stack with one width-8 layer in the middle | Worse than collapse: $`\mathrm{rank}(W_{50}\cdots W_1) \le 8`$. The bottleneck caps the whole network's rank regardless of the other 49 layers | A rank-8 linear map. **This is what breaks when you narrow one layer in a linear stack** |
 | 50 layers of $f(z) = z^2$ | A polynomial of a polynomial is a polynomial. The degree grows, but the *class* stays polynomial — which is exactly why the universal approximation theorem excludes polynomials by name | A high-degree polynomial regressor |
 | "The universal approximation theorem proves deep networks work" | It is a theorem about networks with **one hidden layer**, and it is an existence proof. Width can scale like $\epsilon^{-d}$: at $d=10$, $\epsilon=0.1$, that is $10^{10}$ hidden units | An existence result about shallow networks, silent on depth and on training |
 | "A deeper model has more parameters, so it's more expressive" | Depth and parameter count are separate dials. Halve every width and double the depth and you have fewer parameters and more compositions | Two axes being conflated |
@@ -204,9 +204,9 @@ Three pieces:
 
 - **$:=$ means "is defined as"** (Chapter 0 §0.11). This is not a fact to verify; it is a name being given to a quantity.
 - **$\partial\mathcal{L}/\partial z^{(\ell)}$** answers: *"if I nudged this layer's pre-activation up by a hair, how much would the final loss move?"* One number per unit in the layer.
-- **$\in \mathbb{R}^{n_\ell}$** is the shape declaration: a list of $n_\ell$ numbers, one per neuron in layer $\ell$. Same shape as $z^{(\ell)}$ itself, per the shape rule from Chapter 0 §0.7.
+- **$`\in \mathbb{R}^{n_\ell}`$** is the shape declaration: a list of $`n_\ell`$ numbers, one per neuron in layer $\ell$. Same shape as $z^{(\ell)}$ itself, per the shape rule from Chapter 0 §0.7.
 
-> **Analogy.** $\delta^{(\ell)}_j$ is **how much blame unit $j$ of layer $\ell$ is carrying.** Positive means "you pushed the answer too high — come down." Negative means "you were too timid." Zero means "you are not responsible for anything that happened, do not change." The whole of backpropagation is the bookkeeping of passing blame from the output backwards, layer by layer, and the fact that this can be done in one sweep instead of one sweep *per parameter* is the reason training a billion-parameter model is possible at all.
+> **Analogy.** $`\delta^{(\ell)}_j`$ is **how much blame unit $j$ of layer $\ell$ is carrying.** Positive means "you pushed the answer too high — come down." Negative means "you were too timid." Zero means "you are not responsible for anything that happened, do not change." The whole of backpropagation is the bookkeeping of passing blame from the output backwards, layer by layer, and the fact that this can be done in one sweep instead of one sweep *per parameter* is the reason training a billion-parameter model is possible at all.
 
 ▸ **Why $\delta$ is defined on $z$ and not on $h$ or on $W$.** $z^{(\ell)}$ sits at the exact pinch point of the computation: everything before it (the weights, the bias, the previous layer) feeds *into* it, and everything after it (the activation, all later layers, the loss) flows *out* of it. Once you know how much the loss cares about $z^{(\ell)}$, the weight gradient and the bias gradient both fall out in one line each, and the gradient for the layer below falls out in one more. **Choosing the right intermediate quantity to propagate is the entire design of the algorithm.** Pick $h$ instead and you carry an extra $\sigma'$ around forever; pick $W$ and you have nothing to hand backwards.
 
@@ -241,12 +241,12 @@ In English, and in the order the computation happens:
 
 | Factor | Reads as |
 |---|---|
-| $\partial\mathcal{L}/\partial z^{(\ell+1)}_k = \delta^{(\ell+1)}_k$ | "how much the loss cares about unit $k$ upstairs" |
-| $\partial z^{(\ell+1)}_k/\partial h^{(\ell)}_j = W^{(\ell+1)}_{kj}$ | "how strongly unit $j$ down here feeds unit $k$ up there" |
-| $\partial h^{(\ell)}_j/\partial z^{(\ell)}_j = \sigma'(z^{(\ell)}_j)$ | "how much of a nudge unit $j$'s own gate passes through" |
-| $\sum_k$ | "add up over every upstairs unit that $j$ feeds" |
+| $`\partial\mathcal{L}/\partial z^{(\ell+1)}_k = \delta^{(\ell+1)}_k`$ | "how much the loss cares about unit $k$ upstairs" |
+| $`\partial z^{(\ell+1)}_k/\partial h^{(\ell)}_j = W^{(\ell+1)}_{kj}`$ | "how strongly unit $j$ down here feeds unit $k$ up there" |
+| $`\partial h^{(\ell)}_j/\partial z^{(\ell)}_j = \sigma'(z^{(\ell)}_j)`$ | "how much of a nudge unit $j$'s own gate passes through" |
+| $`\sum_k`$ | "add up over every upstairs unit that $j$ feeds" |
 
-The $\sum_k$ appears because unit $j$ sends its output to *every* unit in the next layer, so its total responsibility is the sum of its responsibilities along each path. **Multiple paths add.** That single fact is why residual connections work (§6.2, VJP table) and why recurrent networks accumulate gradients over time.
+The $`\sum_k`$ appears because unit $j$ sends its output to *every* unit in the next layer, so its total responsibility is the sum of its responsibilities along each path. **Multiple paths add.** That single fact is why residual connections work (§6.2, VJP table) and why recurrent networks accumulate gradients over time.
 
 > **Analogy.** A leaking roof. Water arriving in the ground-floor kitchen ($\delta^{(L)}$, the loss) came through the first-floor ceiling, which was fed by several separate cracks upstairs. To apportion blame among the cracks you (a) route the water back up through the pipes that carried it — that is $W^\top$ — and (b) discount any crack that was sealed at the time, because a sealed crack cannot have contributed no matter how big it looks — that is $\odot\,\sigma'$. Sum over all the paths water could have taken, and each crack gets its share in one pass through the building.
 
@@ -260,9 +260,9 @@ The $\sum_k$ appears because unit $j$ sends its output to *every* unit in the ne
 
 ▸ **The second unit receives a gradient of exactly zero.** Its pre-activation was $-1$, its ReLU was shut, it contributed nothing to the prediction — so it receives no blame and its incoming weights do not move on this example. This is the mechanism, in miniature, behind both **sparsity** (most units are off for any given input, which is fine and useful) and the **dying ReLU** problem (§6.5) (a unit that is off for *every* input never moves again).
 
-**Sanity-check by hand, which is worth doing once in your life.** The network computes $\hat y = 2\max(0, x_1{+}x_2) + 5\max(0,x_1{-}x_2) + 1$. At $x = (1,2)$ the first branch is active and the second is not, so locally $\hat y = 2(x_1 + x_2) + 1$ and $\partial\hat y/\partial z^{(1)}_1 = 2$. With $\partial\mathcal{L}/\partial\hat y = 4$, the chain rule gives $4 \times 2 = 8$ — matching $\delta^{(1)}_1 = 8$ exactly. ✓
+**Sanity-check by hand, which is worth doing once in your life.** The network computes $`\hat y = 2\max(0, x_1{+}x_2) + 5\max(0,x_1{-}x_2) + 1`$. At $x = (1,2)$ the first branch is active and the second is not, so locally $`\hat y = 2(x_1 + x_2) + 1`$ and $`\partial\hat y/\partial z^{(1)}_1 = 2`$. With $\partial\mathcal{L}/\partial\hat y = 4$, the chain rule gives $4 \times 2 = 8$ — matching $`\delta^{(1)}_1 = 8`$ exactly. ✓
 
-**Parameter gradients.** Since $z^{(\ell)}_j = \sum_i W^{(\ell)}_{ji}h^{(\ell-1)}_i + b^{(\ell)}_j$:
+**Parameter gradients.** Since $`z^{(\ell)}_j = \sum_i W^{(\ell)}_{ji}h^{(\ell-1)}_i + b^{(\ell)}_j`$:
 
 $$\frac{\partial\mathcal{L}}{\partial W^{(\ell)}_{ji}} = \delta^{(\ell)}_j h^{(\ell-1)}_i,\qquad \frac{\partial\mathcal{L}}{\partial b^{(\ell)}_j} = \delta^{(\ell)}_j$$
 
@@ -272,13 +272,13 @@ That's the entirety of backpropagation. Three boxed equations.
 
 #### Why the weight gradient is an outer product
 
-$\nabla_{W^{(\ell)}}\mathcal{L} = \delta^{(\ell)}h^{(\ell-1)\top}$ is an **outer product** (Chapter 0 §0.8): a column vector times a row vector, producing a whole matrix. Entry by entry it says
+$`\nabla_{W^{(\ell)}}\mathcal{L} = \delta^{(\ell)}h^{(\ell-1)\top}`$ is an **outer product** (Chapter 0 §0.8): a column vector times a row vector, producing a whole matrix. Entry by entry it says
 
 $$\frac{\partial\mathcal{L}}{\partial W^{(\ell)}_{ji}} = \underbrace{\delta^{(\ell)}_j}_{\text{how wrong output } j \text{ was}} \times \underbrace{h^{(\ell-1)}_i}_{\text{how active input } i \text{ was}}$$
 
 ▸ **Blame is assigned in proportion to participation.** If input $i$ was silent, that connection did nothing, so it gets no correction — regardless of how wrong the output was. If input $i$ was loud *and* output $j$ was badly wrong, that connection gets a large correction. This is the entire learning rule of a neural network, and you can state it in a sentence with no symbols in it.
 
-**Check the shapes, always.** $\delta^{(\ell)}$ is $n_\ell \times 1$; $h^{(\ell-1)\top}$ is $1 \times n_{\ell-1}$; the product is $n_\ell \times n_{\ell-1}$ — exactly the shape of $W^{(\ell)}$. ✓ (If it weren't, you'd have a bug, and this check finds it in two seconds.)
+**Check the shapes, always.** $\delta^{(\ell)}$ is $`n_\ell \times 1`$; $h^{(\ell-1)\top}$ is $`1 \times n_{\ell-1}`$; the product is $`n_\ell \times n_{\ell-1}`$ — exactly the shape of $W^{(\ell)}$. ✓ (If it weren't, you'd have a bug, and this check finds it in two seconds.)
 
 **And with numbers,** from the running example: $\delta^{(1)} = (8,0)$, $h^{(0)} = x = (1,2)$, so
 
@@ -286,13 +286,13 @@ $$\nabla_{W^{(1)}}\mathcal{L} = \begin{pmatrix}8\\0\end{pmatrix}\begin{pmatrix}1
 
 The bottom row is all zeros — the dead unit's weights do not move. The top row is $(8, 16)$: the second weight gets twice the update of the first, because its input was twice as large. **Twice the participation, twice the blame.**
 
-**Why the bias gradient is just $\delta$.** The bias adds directly to $z$ with a coefficient of exactly 1 ($\partial z_j/\partial b_j = 1$), so the sensitivity passes through unchanged. Equivalently: a bias is a weight attached to an input that is permanently equal to 1, and the outer-product rule with $h_i = 1$ gives $\delta_j \times 1 = \delta_j$. Same rule, no exception.
+**Why the bias gradient is just $\delta$.** The bias adds directly to $z$ with a coefficient of exactly 1 ($`\partial z_j/\partial b_j = 1`$), so the sensitivity passes through unchanged. Equivalently: a bias is a weight attached to an input that is permanently equal to 1, and the outer-product rule with $`h_i = 1`$ gives $`\delta_j \times 1 = \delta_j`$. Same rule, no exception.
 
 > **Where this came from.** Chapter 1 tells the story of backpropagation's four independent inventions (Linnainmaa 1970, Werbos 1974, and the 1986 Rumelhart–Hinton–Williams paper that made it famous). Worth adding here is the **pre-history in aerospace**, which most machine-learning accounts skip entirely: the same reverse accumulation of derivatives through a chain of stages was developed in optimal-control theory before neural networks were a going concern. **Henry J. Kelley** published a gradient method for optimal flight paths in 1960, **Arthur Bryson** developed multistage gradient methods around the same period, and **Stuart Dreyfus** gave a clean chain-rule derivation in 1962. Their "layers" were successive time-steps of a rocket trajectory rather than layers of a network, and their "loss" was fuel or miss-distance — but the recursion is the same recursion. **The reason it kept being reinvented is that it is not really an algorithm about learning; it is an algorithm about the chain rule, and the chain rule is everywhere.**
 
 ### The batched version
 
-With a batch of $B$ examples, $H^{(\ell)}\in\mathbb{R}^{n_\ell\times B}$, $\Delta^{(\ell)}\in\mathbb{R}^{n_\ell\times B}$:
+With a batch of $B$ examples, $`H^{(\ell)}\in\mathbb{R}^{n_\ell\times B}`$, $`\Delta^{(\ell)}\in\mathbb{R}^{n_\ell\times B}`$:
 
 $$\Delta^{(\ell)} = \left(W^{(\ell+1)\top}\Delta^{(\ell+1)}\right)\odot\sigma'(Z^{(\ell)}),\qquad \nabla_{W^{(\ell)}}\mathcal{L} = \frac1B\Delta^{(\ell)}H^{(\ell-1)\top}$$
 
@@ -302,30 +302,30 @@ The outer product becomes a matmul, summing over the batch. Note the $1/B$: **yo
 
 Nothing new happens here — the mathematics is identical, and only the bookkeeping changes. But the bookkeeping is where the speed comes from, so it deserves reading properly.
 
-- **Capital letters mean "a whole batch's worth."** $H^{(\ell)} \in \mathbb{R}^{n_\ell \times B}$ is a grid: **one column per example**, each column being that example's activation vector. $\Delta^{(\ell)}$ is the same for the error signals. Lower-case $h$ and $\delta$ were single columns; capital $H$ and $\Delta$ are $B$ of them side by side.
+- **Capital letters mean "a whole batch's worth."** $`H^{(\ell)} \in \mathbb{R}^{n_\ell \times B}`$ is a grid: **one column per example**, each column being that example's activation vector. $\Delta^{(\ell)}$ is the same for the error signals. Lower-case $h$ and $\delta$ were single columns; capital $H$ and $\Delta$ are $B$ of them side by side.
 - **The recursion line is unchanged**, character for character, except the letters got taller. That is the point: the same rule applied to $B$ examples at once is one big matrix multiply instead of $B$ small ones, and a GPU is roughly two orders of magnitude more efficient at the former.
-- **$\Delta^{(\ell)}H^{(\ell-1)\top}$ is a matmul that has a sum hiding inside it.** For a single example the weight gradient was an outer product $\delta h^\top$. For $B$ examples you want the sum of $B$ such outer products — and $(n_\ell \times B)(B \times n_{\ell-1})$ *is* that sum, because matrix multiplication sums over the shared inner index. The batch dimension is contracted away, which is exactly what you want: the result is one $n_\ell \times n_{\ell-1}$ gradient, not $B$ of them.
+- **$\Delta^{(\ell)}H^{(\ell-1)\top}$ is a matmul that has a sum hiding inside it.** For a single example the weight gradient was an outer product $\delta h^\top$. For $B$ examples you want the sum of $B$ such outer products — and $`(n_\ell \times B)(B \times n_{\ell-1})`$ *is* that sum, because matrix multiplication sums over the shared inner index. The batch dimension is contracted away, which is exactly what you want: the result is one $`n_\ell \times n_{\ell-1}`$ gradient, not $B$ of them.
 
 ▸ **The $1/B$ is doing more work than it looks like.** With a mean rather than a sum, the *magnitude* of the gradient is roughly independent of batch size, so a learning rate tuned at $B = 32$ is in the right ballpark at $B = 256$. What is **not** independent is the *noise*: averaging $B$ independent estimates cuts their standard deviation by $\sqrt B$ (the same $1/\sqrt n$ law as everywhere else in statistics). Put numbers on it: going from $B = 32$ to $B = 512$ is a 16× increase in compute per step, and buys exactly $\sqrt{16} = 4\times$ less gradient noise. **Doubling the batch buys only $\sqrt2$ less noise — which is the whole reason large-batch training has diminishing returns**, and the origin of the "square-root scaling" rule of thumb for learning rates (Ch. 4).
 
 ### Computational cost
 
-Forward through layer $\ell$: $O(n_\ell n_{\ell-1}B)$ FLOPs (× 2 for multiply-add).
+Forward through layer $\ell$: $`O(n_\ell n_{\ell-1}B)`$ FLOPs (× 2 for multiply-add).
 Backward: **two** matmuls of the same size ($\delta$ propagation and weight gradient).
 
 ▸ **Backward ≈ 2× forward.** Total training step ≈ 3× a forward pass. This is where the ubiquitous $C \approx 6ND$ FLOP formula comes from (Ch. 21): 2 FLOPs per parameter per token forward, 4 backward, 6 total.
 
-**Memory** is the real constraint: you must store every $h^{(\ell)}$ (or $z^{(\ell)}$) from the forward pass to compute the backward pass. Activation memory $\approx B\sum_\ell n_\ell$ — which for a transformer at long sequence length dwarfs the parameters. Gradient checkpointing (Ch. 21) trades recompute for memory.
+**Memory** is the real constraint: you must store every $h^{(\ell)}$ (or $z^{(\ell)}$) from the forward pass to compute the backward pass. Activation memory $`\approx B\sum_\ell n_\ell`$ — which for a transformer at long sequence length dwarfs the parameters. Gradient checkpointing (Ch. 21) trades recompute for memory.
 
 #### Where "backward ≈ 2× forward" and the $6ND$ rule come from
 
-**The counting argument, in full.** A single weight $W_{ji}$ participates in exactly three multiply-accumulate operations per example:
+**The counting argument, in full.** A single weight $`W_{ji}`$ participates in exactly three multiply-accumulate operations per example:
 
 | Pass | Operation | Cost |
 |---|---|---|
-| Forward | $z_j \mathrel{+}= W_{ji}h_i$ | 1 multiply-add |
-| Backward, signal | $\delta^{(\ell-1)}_i \mathrel{+}= W_{ji}\delta^{(\ell)}_j$ | 1 multiply-add |
-| Backward, weight | $\nabla W_{ji} \mathrel{+}= \delta^{(\ell)}_j h^{(\ell-1)}_i$ | 1 multiply-add |
+| Forward | $`z_j \mathrel{+}= W_{ji}h_i`$ | 1 multiply-add |
+| Backward, signal | $`\delta^{(\ell-1)}_i \mathrel{+}= W_{ji}\delta^{(\ell)}_j`$ | 1 multiply-add |
+| Backward, weight | $`\nabla W_{ji} \mathrel{+}= \delta^{(\ell)}_j h^{(\ell-1)}_i`$ | 1 multiply-add |
 
 ▸ **One forward, two backward — hence backward $\approx 2\times$ forward, and a full training step $\approx 3\times$ a forward pass.** The backward pass costs double because it has *two jobs*: compute the gradient for this layer's weights, and hand a gradient to the layer below. Inference only ever does the first row of that table, which is why serving a model is roughly three times cheaper per token than training it.
 
@@ -339,7 +339,7 @@ $$C \approx 6 \times (7\times10^9) \times (2\times10^{12}) = 8.4\times10^{22}\ \
 
 A modern accelerator delivers on the order of $10^{15}$ FLOP/s on paper, and real training runs achieve roughly 40% of that, so call it $4\times10^{14}$ FLOP/s in practice. Then $8.4\times10^{22}/4\times10^{14} \approx 2.1\times10^8$ seconds — about **6.7 years on a single GPU, or roughly 2.4 days on 1024 of them.** That arithmetic, done on the back of an envelope before anything is launched, is how training runs are actually budgeted.
 
-**Why memory, not compute, is what actually stops you.** The parameters of a model are a fixed cost. The *activations* are not: you must keep every $h^{(\ell)}$ alive from the moment it is computed in the forward pass until the backward pass consumes it, because the weight gradient $\delta^{(\ell)}h^{(\ell-1)\top}$ needs the input that produced it. Activation memory scales as $B\sum_\ell n_\ell$ — **linear in batch size and linear in depth** — so it grows in exactly the two directions you want to push.
+**Why memory, not compute, is what actually stops you.** The parameters of a model are a fixed cost. The *activations* are not: you must keep every $h^{(\ell)}$ alive from the moment it is computed in the forward pass until the backward pass consumes it, because the weight gradient $\delta^{(\ell)}h^{(\ell-1)\top}$ needs the input that produced it. Activation memory scales as $`B\sum_\ell n_\ell`$ — **linear in batch size and linear in depth** — so it grows in exactly the two directions you want to push.
 
 > **Analogy.** Backpropagation is a hiker who must retrace their steps and can only do so by dropping a breadcrumb at every stop. Compute is the walking; memory is the bread. **Gradient checkpointing** is the strategy of dropping breadcrumbs only every tenth stop and re-walking the short stretches between them on the way back: roughly $\sqrt{L}$ times less bread for about one extra forward pass of walking. It is one of the very few places in systems engineering where a clean $\sqrt{\cdot}$ trade-off is available, and it is why models far larger than a GPU's memory can be trained on it at all.
 
@@ -355,8 +355,8 @@ Some VJP rules to have memorized:
 | Forward | VJP |
 |---|---|
 | $y=Wx$ | $\bar W = \bar yx^\top$, $\bar x = W^\top\bar y$ |
-| $y=x_1+x_2$ | $\bar x_1=\bar x_2=\bar y$ (gradient **copies**) |
-| $y=x_1\odot x_2$ | $\bar x_1 = \bar y\odot x_2$ |
+| $`y=x_1+x_2`$ | $`\bar x_1=\bar x_2=\bar y`$ (gradient **copies**) |
+| $`y=x_1\odot x_2`$ | $`\bar x_1 = \bar y\odot x_2`$ |
 | $y=\sigma(x)$ | $\bar x = \bar y\odot\sigma'(x)$ |
 | $y=\mathrm{softmax}(x)$ | $\bar x = y\odot(\bar y - \langle\bar y,y\rangle)$ |
 | $y = x/\|x\|$ | $\bar x = (\bar y - y\langle y,\bar y\rangle)/\|x\|$ |
@@ -378,10 +378,10 @@ Now the table itself, row by row, said in words:
 | Forward | What its VJP is really saying |
 |---|---|
 | $y = Wx$ | "Weights get blame proportional to participation; inputs get blame routed back through the same wires" (§6.2) |
-| $y = x_1 + x_2$ | **Addition copies the gradient.** Both branches receive the *full* incoming gradient, undiminished |
-| $y = x_1\odot x_2$ | **Multiplication swaps.** Each factor's gradient is the incoming gradient times *the other* factor — if $x_2$ was zero, $x_1$ gets nothing |
+| $`y = x_1 + x_2`$ | **Addition copies the gradient.** Both branches receive the *full* incoming gradient, undiminished |
+| $`y = x_1\odot x_2`$ | **Multiplication swaps.** Each factor's gradient is the incoming gradient times *the other* factor — if $`x_2`$ was zero, $`x_1`$ gets nothing |
 | $y = \sigma(x)$ | "Scale the incoming gradient by the local slope of the gate" |
-| $y = \mathrm{softmax}(x)$ | "Subtract off the weighted average, then scale by the probabilities" — the subtraction is what enforces $\sum_j \bar x_j = 0$ |
+| $y = \mathrm{softmax}(x)$ | "Subtract off the weighted average, then scale by the probabilities" — the subtraction is what enforces $`\sum_j \bar x_j = 0`$ |
 | $y = x/\|x\|$ | "Keep only the part of the gradient perpendicular to $y$" — changing a unit vector's length is not a legal move, so that component is deleted |
 
 **Why "$+$ copies" is the most consequential line in the table.** Consider a residual block, $y = x + F(x)$. The addition rule says the gradient at $x$ is the sum of two contributions: one that went through $F$ (and got multiplied by whatever $F$'s Jacobian is, possibly shrinking it) and **one that came straight through the $+$, completely untouched.** So even if $F$ annihilates the gradient entirely, $x$ still receives $\bar y$ at full strength.
@@ -390,7 +390,7 @@ Now the table itself, row by row, said in words:
 
 > **Analogy for the tape.** Reverse-mode AD is a delivery driver reconstructing their route. On the way out, they note every turn on a pad (the forward pass builds the DAG). To work out how a delay at the depot propagated to each stop, they read the pad **backwards**, and at each junction split the delay among the roads that fed it. Two facts make this work: the pad must be kept (memory cost — this is exactly the activation memory above), and each junction needs only a local rule for splitting (the VJP), never a map of the whole city.
 
-**The "summing contributions when a node has multiple consumers" clause** is the same fact as the $\sum_k$ in the recursion. If a value is used in three places, three separate gradients come back to it and they **add**. Frameworks implement this by zero-initializing a gradient buffer per node and accumulating into it — which, incidentally, is why you have to call something like `zero_grad()` between steps: the accumulation is the mechanism, and it does not know where one step ends and the next begins.
+**The "summing contributions when a node has multiple consumers" clause** is the same fact as the $`\sum_k`$ in the recursion. If a value is used in three places, three separate gradients come back to it and they **add**. Frameworks implement this by zero-initializing a gradient buffer per node and accumulating into it — which, incidentally, is why you have to call something like `zero_grad()` between steps: the accumulation is the mechanism, and it does not know where one step ends and the next begins.
 
 ---
 
@@ -412,11 +412,11 @@ $$0.25^{10} = 9.5\times10^{-7}$$
 
 #### Unpacking the product that ruins everything
 
-**First the notation.** $D^{(\ell)} = \mathrm{diag}(\sigma'(z^{(\ell)}))$ is a square matrix with the activation slopes down its diagonal and zeros elsewhere. Multiplying by a diagonal matrix *is* elementwise multiplication — $\mathrm{diag}(v)\,u = v\odot u$ — so this is the same $\odot\sigma'$ from the recursion, rewritten as a matrix so that the whole backward pass becomes one clean product of matrices. The $\prod_{\ell=2}^{L}$ is a `for` loop that multiplies rather than adds (Chapter 0 §0.3).
+**First the notation.** $D^{(\ell)} = \mathrm{diag}(\sigma'(z^{(\ell)}))$ is a square matrix with the activation slopes down its diagonal and zeros elsewhere. Multiplying by a diagonal matrix *is* elementwise multiplication — $\mathrm{diag}(v)\,u = v\odot u$ — so this is the same $\odot\sigma'$ from the recursion, rewritten as a matrix so that the whole backward pass becomes one clean product of matrices. The $`\prod_{\ell=2}^{L}`$ is a `for` loop that multiplies rather than adds (Chapter 0 §0.3).
 
 ▸ **Read the unrolled formula as a single sentence:** *"the gradient that reaches layer 1 is the gradient at the loss, pushed through $L-1$ matrix multiplications in a row."* Nothing else happens to it. Its fate is entirely determined by what a chain of $L-1$ matrices does to a vector.
 
-**Why products of matrices behave like products of numbers.** From Chapter 1 §1.1.4, the most a matrix can stretch any vector is its largest singular value, $\|A\|_2$. Chain $L$ of them and the total stretch is at most the product $\prod_\ell \|A_\ell\|_2$. If each contributes a typical factor $\gamma$, the whole chain contributes about $\gamma^{L}$. **Depth turns a per-layer factor into an exponent, and exponents are unforgiving.**
+**Why products of matrices behave like products of numbers.** From Chapter 1 §1.1.4, the most a matrix can stretch any vector is its largest singular value, $`\|A\|_2`$. Chain $L$ of them and the total stretch is at most the product $`\prod_\ell \|A_\ell\|_2`$. If each contributes a typical factor $\gamma$, the whole chain contributes about $\gamma^{L}$. **Depth turns a per-layer factor into an exponent, and exponents are unforgiving.**
 
 > **Analogy.** A rumour passed down a line of 50 people. If each person exaggerates by 20% ($\gamma = 1.2$), the story arrives 9,100 times bigger than it started. If each person softens it by 20% ($\gamma = 0.8$), it arrives at $1.4\times10^{-5}$ of its original size — which is to say, it arrives as silence. **Nobody in the chain did anything unreasonable.** No single person distorted the story much at all. The catastrophe is entirely in the length of the line. This is why "each layer is only slightly off" is not a defence.
 
@@ -448,13 +448,13 @@ Choose the initial weight distribution so that **the variance of activations is 
 
 ### Forward pass analysis
 
-Let $z_j = \sum_{i=1}^{n_{\text{in}}}W_{ji}h_i$ with $W_{ji}$ i.i.d. mean-0 variance $\sigma_W^2$, independent of $h$, and $h_i$ i.i.d. with variance $\sigma_h^2$ and mean 0.
+Let $`z_j = \sum_{i=1}^{n_{\text{in}}}W_{ji}h_i`$ with $`W_{ji}`$ i.i.d. mean-0 variance $`\sigma_W^2`$, independent of $h$, and $`h_i`$ i.i.d. with variance $`\sigma_h^2`$ and mean 0.
 
 $$\mathrm{Var}(z_j) = \sum_{i=1}^{n_{\text{in}}}\mathrm{Var}(W_{ji}h_i) = n_{\text{in}}\,\sigma_W^2\,\sigma_h^2$$
 
-(Using $\mathrm{Var}(XY)=\mathbb{E}[X^2]\mathbb{E}[Y^2]-\mathbb{E}[X]^2\mathbb{E}[Y]^2 = \sigma_W^2\sigma_h^2$ for independent zero-mean $X,Y$.)
+(Using $`\mathrm{Var}(XY)=\mathbb{E}[X^2]\mathbb{E}[Y^2]-\mathbb{E}[X]^2\mathbb{E}[Y]^2 = \sigma_W^2\sigma_h^2`$ for independent zero-mean $X,Y$.)
 
-▸ To preserve variance ($\mathrm{Var}(z)=\sigma_h^2$) we need $\boxed{\sigma_W^2 = 1/n_{\text{in}}}$.
+▸ To preserve variance ($`\mathrm{Var}(z)=\sigma_h^2`$) we need $`\boxed{\sigma_W^2 = 1/n_{\text{in}}}`$.
 
 #### Unpacking the variance calculation
 
@@ -464,20 +464,20 @@ $$\mathrm{Var}(z_j) = \sum_{i=1}^{n_{\text{in}}}\mathrm{Var}(W_{ji}h_i) = n_{\te
 
 | Assumption | What it means | Why it's needed |
 |---|---|---|
-| $W_{ji}$ **i.i.d.** | Independent and identically distributed — every weight drawn separately from the same distribution | Lets you treat the sum as a sum of independent terms |
+| $`W_{ji}`$ **i.i.d.** | Independent and identically distributed — every weight drawn separately from the same distribution | Lets you treat the sum as a sum of independent terms |
 | **mean 0** | The weights are symmetric about zero | Kills the cross-terms; without it the mean would also drift layer to layer |
 | **independent of $h$** | Weights aren't correlated with the data they multiply | True at initialization by construction; **false after training starts**, which is why this is an *initialization* theory |
-| $h_i$ **mean 0, variance $\sigma_h^2$** | The incoming activations are centred and of known spread | This is what the previous layer is supposed to guarantee — the argument is inductive |
+| $`h_i`$ **mean 0, variance $`\sigma_h^2`$** | The incoming activations are centred and of known spread | This is what the previous layer is supposed to guarantee — the argument is inductive |
 
 **Now the two-line derivation, slowly.**
 
-*Step 1 — variance of a sum of independent things adds.* $\mathrm{Var}(A + B) = \mathrm{Var}(A) + \mathrm{Var}(B)$ when $A$ and $B$ are independent. So summing $n_{\text{in}}$ independent products gives $n_{\text{in}}$ times the variance of one of them. **This is the same "random things accumulate like $\sqrt{n}$, not $n$" law as the standard error** (Chapter 1 §1.3.1) — the terms partially cancel, so the *variance* grows like $n$ and the *magnitude* like $\sqrt n$.
+*Step 1 — variance of a sum of independent things adds.* $\mathrm{Var}(A + B) = \mathrm{Var}(A) + \mathrm{Var}(B)$ when $A$ and $B$ are independent. So summing $`n_{\text{in}}`$ independent products gives $`n_{\text{in}}`$ times the variance of one of them. **This is the same "random things accumulate like $\sqrt{n}$, not $n$" law as the standard error** (Chapter 1 §1.3.1) — the terms partially cancel, so the *variance* grows like $n$ and the *magnitude* like $\sqrt n$.
 
-*Step 2 — variance of a product of independent zero-mean things multiplies.* $\mathrm{Var}(XY) = \sigma_X^2\sigma_Y^2$. Put together: $\mathrm{Var}(z_j) = n_{\text{in}}\sigma_W^2\sigma_h^2$.
+*Step 2 — variance of a product of independent zero-mean things multiplies.* $`\mathrm{Var}(XY) = \sigma_X^2\sigma_Y^2`$. Put together: $`\mathrm{Var}(z_j) = n_{\text{in}}\sigma_W^2\sigma_h^2`$.
 
-*Step 3 — demand that nothing changes.* Set $\mathrm{Var}(z) = \sigma_h^2$, cancel $\sigma_h^2$ from both sides, and $n_{\text{in}}\sigma_W^2 = 1$, so $\sigma_W^2 = 1/n_{\text{in}}$. **That is the whole result.**
+*Step 3 — demand that nothing changes.* Set $`\mathrm{Var}(z) = \sigma_h^2`$, cancel $`\sigma_h^2`$ from both sides, and $`n_{\text{in}}\sigma_W^2 = 1`$, so $`\sigma_W^2 = 1/n_{\text{in}}`$. **That is the whole result.**
 
-> **Analogy.** You are pouring water through a funnel that has $n_{\text{in}}$ inlet pipes feeding one outlet. If each pipe carries a random amount, the outlet carries the sum — and more pipes means a bigger, more variable flow. To keep the outlet flow the same regardless of how many pipes feed it, you must narrow each pipe in proportion. $\sigma_W^2 = 1/n_{\text{in}}$ is exactly "narrow each pipe by the number of pipes." A layer with 1024 inputs needs weights $\sqrt{1024/64} = 4\times$ smaller than a layer with 64 inputs, or its output will be four times as loud.
+> **Analogy.** You are pouring water through a funnel that has $`n_{\text{in}}`$ inlet pipes feeding one outlet. If each pipe carries a random amount, the outlet carries the sum — and more pipes means a bigger, more variable flow. To keep the outlet flow the same regardless of how many pipes feed it, you must narrow each pipe in proportion. $`\sigma_W^2 = 1/n_{\text{in}}`$ is exactly "narrow each pipe by the number of pipes." A layer with 1024 inputs needs weights $\sqrt{1024/64} = 4\times$ smaller than a layer with 64 inputs, or its output will be four times as loud.
 
 ▸ **The single most useful sentence in this section:** **initialization is not about picking small numbers, it is about picking numbers whose size depends on the layer's width.** A constant standard deviation like $0.01$ for every layer — which was common practice into the early 2010s — is right for exactly one width and wrong, exponentially, for all the others.
 
@@ -489,27 +489,27 @@ $\delta^{(\ell)} = W^{(\ell+1)\top}\delta^{(\ell+1)}\odot\sigma'$. The same argu
 
 ### Xavier/Glorot: compromise
 
-Can't satisfy both unless $n_{\text{in}}=n_{\text{out}}$. Take the harmonic-mean-flavoured compromise:
+Can't satisfy both unless $`n_{\text{in}}=n_{\text{out}}`$. Take the harmonic-mean-flavoured compromise:
 
 ▸ $$\sigma_W^2 = \frac{2}{n_{\text{in}}+n_{\text{out}}}$$
 
-Uniform version: $W\sim\mathcal{U}\left[-\sqrt{\frac{6}{n_{\text{in}}+n_{\text{out}}}},\ \sqrt{\frac{6}{n_{\text{in}}+n_{\text{out}}}}\right]$ (because $\mathrm{Var}(\mathcal{U}[-a,a])=a^2/3$).
+Uniform version: $`W\sim\mathcal{U}\left[-\sqrt{\frac{6}{n_{\text{in}}+n_{\text{out}}}},\ \sqrt{\frac{6}{n_{\text{in}}+n_{\text{out}}}}\right]`$ (because $\mathrm{Var}(\mathcal{U}[-a,a])=a^2/3$).
 
 **Assumes $\sigma'\approx1$ near zero** — true for tanh, false for ReLU.
 
 #### Xavier, decoded — why you can't have both, and what the compromise is
 
-**The conflict, stated plainly.** The forward analysis wants $\sigma_W^2 = 1/n_{\text{in}}$ so activations keep their size going up. The backward analysis wants $\sigma_W^2 = 1/n_{\text{out}}$ so gradients keep their size coming down. **These are the same requirement viewed from opposite ends of the same matrix**, and a matrix that isn't square cannot satisfy both. A layer mapping 784 inputs to 128 outputs would need $\sigma_W^2$ to be simultaneously $1/784$ and $1/128$ — a factor of six apart.
+**The conflict, stated plainly.** The forward analysis wants $`\sigma_W^2 = 1/n_{\text{in}}`$ so activations keep their size going up. The backward analysis wants $`\sigma_W^2 = 1/n_{\text{out}}`$ so gradients keep their size coming down. **These are the same requirement viewed from opposite ends of the same matrix**, and a matrix that isn't square cannot satisfy both. A layer mapping 784 inputs to 128 outputs would need $`\sigma_W^2`$ to be simultaneously $1/784$ and $1/128$ — a factor of six apart.
 
 **Reading the compromise.** Rewrite it as
 
 $$\sigma_W^2 = \frac{2}{n_{\text{in}} + n_{\text{out}}} = \frac{1}{\ \tfrac12(n_{\text{in}} + n_{\text{out}})\ } = \frac{1}{\bar n}$$
 
-▸ So Xavier is *"use $1/n$, where $n$ is the average of the two fan sizes."* For $784 \to 128$: $\bar n = 456$, giving $\sigma_W^2 = 0.00219$ and $\sigma_W = 0.047$. Compare the forward-optimal $\sigma_W = \sqrt{1/784} = 0.036$ and the backward-optimal $\sqrt{1/128} = 0.088$. **The compromise sits between them, so activations shrink a little and gradients shrink a little, rather than one of them being perfect and the other badly wrong.**
+▸ So Xavier is *"use $1/n$, where $n$ is the average of the two fan sizes."* For $784 \to 128$: $\bar n = 456$, giving $`\sigma_W^2 = 0.00219`$ and $`\sigma_W = 0.047`$. Compare the forward-optimal $`\sigma_W = \sqrt{1/784} = 0.036`$ and the backward-optimal $\sqrt{1/128} = 0.088$. **The compromise sits between them, so activations shrink a little and gradients shrink a little, rather than one of them being perfect and the other badly wrong.**
 
 > **Analogy.** Two people sharing a thermostat, one who wants 18°C and one who wants 24°C. Nobody is happy at 21°C, but nobody is miserable either — and, crucially, the *product* of the two dissatisfactions over 50 layers stays bounded. Splitting the difference is not elegance; it is damage control, and it is the correct move.
 
-**The uniform version, decoded.** A uniform distribution on $[-a, a]$ has variance $a^2/3$ (a standard fact — the spread of a flat distribution). Setting $a^2/3 = 2/(n_{\text{in}}+n_{\text{out}})$ and solving gives $a = \sqrt{6/(n_{\text{in}}+n_{\text{out}})}$. **The mysterious 6 is nothing but $2 \times 3$: a 2 from the compromise and a 3 from the geometry of a flat distribution.** Uniform and Gaussian initialization with matched variance behave almost identically in practice; the choice is a matter of taste and of what the framework defaults to.
+**The uniform version, decoded.** A uniform distribution on $[-a, a]$ has variance $a^2/3$ (a standard fact — the spread of a flat distribution). Setting $`a^2/3 = 2/(n_{\text{in}}+n_{\text{out}})`$ and solving gives $`a = \sqrt{6/(n_{\text{in}}+n_{\text{out}})}`$. **The mysterious 6 is nothing but $2 \times 3$: a 2 from the compromise and a 3 from the geometry of a flat distribution.** Uniform and Gaussian initialization with matched variance behave almost identically in practice; the choice is a matter of taste and of what the framework defaults to.
 
 **The assumption that kills it.** The whole derivation quietly used $\sigma' \approx 1$, i.e. *"the activation function does not change the variance."* Near zero, $\tanh(z) \approx z$, so this is fine for tanh — which is what Glorot and Bengio were using. For ReLU it is badly false: ReLU deletes half its input outright. That single mismatch is what the next section repairs, and it is worth exactly one factor of $\sqrt2$ — which, compounded thirty times, is the difference between a network that trains and one that does not.
 
@@ -526,7 +526,7 @@ $$\boxed{\ \sigma_W^2 = \frac{2}{n_{\text{in}}}\ }\qquad W\sim\mathcal{N}\left(0
 
 **The empirical check that made this famous:** He et al. showed a 30-layer plain ReLU network with Xavier init **does not converge at all**, while the same network with He init trains fine. The difference is a factor of $\sqrt2$ per layer: $(1/\sqrt2)^{30} = 3\times10^{-5}$ — the activations die out by layer 30. **One factor of two, compounded 30 times, is the difference between working and not working.**
 
-**Numbers.** Width 1024, He init: $\sigma_W = \sqrt{2/1024} = 0.0442$. A typical weight is $\pm0.044$. Your AdamW step of $3\times10^{-4}$ is thus $0.7\%$ of a typical weight per step. Useful calibration.
+**Numbers.** Width 1024, He init: $`\sigma_W = \sqrt{2/1024} = 0.0442`$. A typical weight is $\pm0.044$. Your AdamW step of $3\times10^{-4}$ is thus $0.7\%$ of a typical weight per step. Useful calibration.
 
 #### He initialization, decoded — one factor of two, thirty times over
 
@@ -534,7 +534,7 @@ $$\boxed{\ \sigma_W^2 = \frac{2}{n_{\text{in}}}\ }\qquad W\sim\mathcal{N}\left(0
 
 Why the half: $\mathbb{1}(z>0)$ is the indicator — 1 where $z$ is positive, 0 where it isn't (Chapter 0 §0.6). If $z$ is symmetric about zero, then exactly half of its probability mass sits on each side, and the two sides contribute equally to $\mathbb{E}[z^2]$ because squaring erases the sign. ReLU keeps one side and discards the other. **So it keeps exactly half the squared magnitude.** Not approximately half — exactly, for any symmetric distribution.
 
-▸ **The correction is therefore to double the variance:** $\sigma_W^2 = 2/n_{\text{in}}$. In standard deviation terms, $\sqrt2 \approx 1.414$ — the weights are 41% larger than Xavier would make them. **That is the entire content of He initialization: multiply by the square root of two.**
+▸ **The correction is therefore to double the variance:** $`\sigma_W^2 = 2/n_{\text{in}}`$. In standard deviation terms, $\sqrt2 \approx 1.414$ — the weights are 41% larger than Xavier would make them. **That is the entire content of He initialization: multiply by the square root of two.**
 
 > **Analogy.** You are told to fill a bucket, but half of what you pour goes straight through a hole in the bottom. You pour twice as fast. Nothing subtle is happening; the only insight is *noticing the hole*. Xavier's derivation was correct for tanh, which has no hole; it was applied to ReLU, which does; and the field ran with a systematically 41%-too-small initialization for several years.
 
@@ -549,17 +549,17 @@ Why the half: $\mathbb{1}(z>0)$ is the indicator — 1 where $z$ is positive, 0 
 
 ▸ **He et al. showed a 30-layer plain ReLU network with Xavier init simply fails, while the same network with He init trains.** No architectural change, no hyperparameter search, no new optimizer — **a single multiplication by $\sqrt2$ at step zero.** This is the cleanest demonstration in the book of the chapter's central lesson: in a deep network, a per-layer factor becomes an exponent, and there is no such thing as a small per-layer error.
 
-**Reading the calibration numbers.** With width 1024 and He init, $\sigma_W = \sqrt{2/1024} = 0.0442$, so a typical weight is about $\pm 0.044$. An AdamW step of $3\times10^{-4}$ moves a weight by roughly $3\times10^{-4}/0.0442 = 0.68\%$ of its own size. **This is a  useful number to carry around:** it means a weight needs on the order of a hundred steps to change appreciably, and thousands to be substantially rewritten. When you see a training curve move sharply in the first ten steps, that is not the weights changing — it is the *output layer* and the biases finding the right offsets, which they can do quickly because the loss is very sensitive to them.
+**Reading the calibration numbers.** With width 1024 and He init, $`\sigma_W = \sqrt{2/1024} = 0.0442`$, so a typical weight is about $\pm 0.044$. An AdamW step of $3\times10^{-4}$ moves a weight by roughly $3\times10^{-4}/0.0442 = 0.68\%$ of its own size. **This is a  useful number to carry around:** it means a weight needs on the order of a hundred steps to change appreciably, and thousands to be substantially rewritten. When you see a training curve move sharply in the first ten steps, that is not the weights changing — it is the *output layer* and the biases finding the right offsets, which they can do quickly because the loss is very sensitive to them.
 
 > **Where this came from.** **Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun** at Microsoft Research Asia published *Delving Deep into Rectifiers* in 2015. The paper's headline contribution was actually **PReLU** — the ReLU with a learnable negative slope — and the initialization scheme was the supporting analysis needed to make their deep rectifier networks trainable at all. It is the initialization that became universal; PReLU is rarely used today. The same paper reported the first result surpassing human-level top-5 accuracy on the ImageNet classification benchmark. The same four authors then published **ResNet** later that same year, which won the ImageNet competition and became one of the most-cited papers in the history of computer science. **Two of the three standard answers to "how do you train a deep network" — proper initialization and residual connections — came from one team in one year.**
 
 ### Other schemes you'll encounter
 
-| Scheme | $\sigma_W^2$ | Use |
+| Scheme | $`\sigma_W^2`$ | Use |
 |---|---|---|
-| LeCun | $1/n_{\text{in}}$ | SELU, self-normalizing nets |
-| Xavier | $2/(n_{\text{in}}+n_{\text{out}})$ | tanh, sigmoid |
-| He | $2/n_{\text{in}}$ | ReLU family |
+| LeCun | $`1/n_{\text{in}}`$ | SELU, self-normalizing nets |
+| Xavier | $`2/(n_{\text{in}}+n_{\text{out}})`$ | tanh, sigmoid |
+| He | $`2/n_{\text{in}}`$ | ReLU family |
 | Orthogonal | $Q$ from QR of Gaussian, scaled by gain | RNNs; preserves norm *exactly*, not just in expectation |
 | **Zero-init on residual branch** | last layer of each block $=0$ | **critical** — see below |
 
@@ -567,7 +567,7 @@ Why the half: $\mathbb{1}(z>0)$ is the indicator — 1 where $z$ is positive, 0 
 
 ### Scaling by depth
 
-For residual networks, the variance grows *additively* with depth: $\mathrm{Var}(h^{(L)}) = \mathrm{Var}(h^{(0)}) + \sum_\ell\mathrm{Var}(F_\ell)$, so it grows like $L$. Common fixes: scale residual branch outputs by $1/\sqrt{L}$ (used in GPT-2's init: final projections scaled by $1/\sqrt{2L}$), or use zero-init as above.
+For residual networks, the variance grows *additively* with depth: $`\mathrm{Var}(h^{(L)}) = \mathrm{Var}(h^{(0)}) + \sum_\ell\mathrm{Var}(F_\ell)`$, so it grows like $L$. Common fixes: scale residual branch outputs by $1/\sqrt{L}$ (used in GPT-2's init: final projections scaled by $1/\sqrt{2L}$), or use zero-init as above.
 
 #### The initialization table and zero-init, decoded
 
@@ -575,18 +575,18 @@ For residual networks, the variance grows *additively* with depth: $\mathrm{Var}
 
 | Scheme | The assumption behind it |
 |---|---|
-| LeCun, $1/n_{\text{in}}$ | "The activation preserves variance." Correct for SELU by construction; SELU's constants were chosen so this is exactly true |
-| Xavier, $2/(n_{\text{in}}{+}n_{\text{out}})$ | "The activation is roughly linear near zero, and I want to balance the forward and backward requirements." tanh, sigmoid |
-| He, $2/n_{\text{in}}$ | "The activation halves the variance." ReLU and its relatives |
+| LeCun, $`1/n_{\text{in}}`$ | "The activation preserves variance." Correct for SELU by construction; SELU's constants were chosen so this is exactly true |
+| Xavier, $`2/(n_{\text{in}}{+}n_{\text{out}})`$ | "The activation is roughly linear near zero, and I want to balance the forward and backward requirements." tanh, sigmoid |
+| He, $`2/n_{\text{in}}`$ | "The activation halves the variance." ReLU and its relatives |
 | Orthogonal | "Forget variance in expectation — make the map *exactly* norm-preserving." Every singular value is 1, so $\gamma = 1$ on the nose |
 
 **Orthogonal initialization, explained.** Draw a random Gaussian matrix, run QR decomposition on it (factoring it as an orthogonal $Q$ times an upper-triangular $R$), and keep $Q$. From Chapter 1 §1.1.2, an orthogonal matrix is a **pure rotation**: it never changes any vector's length. So instead of "the variance is preserved *on average*," you get "the norm is preserved *exactly, for every input*." This matters most in RNNs, where the *same* matrix is applied at every timestep, so any deviation from 1 compounds not over $L$ layers but over $T$ timesteps — and $T$ can be thousands.
 
-**Zero-init on the residual branch, decoded.** A residual block computes $x_{\ell+1} = x_\ell + F(x_\ell)$. Set the **final** projection inside $F$ to exactly zero and $F$ outputs zero, so $x_{\ell+1} = x_\ell$: **the block is the identity function.** Note that only the last layer of the block is zeroed — the layers before it are initialized normally, so they still receive meaningful gradients (the weight gradient depends on the *input* to a layer, not its output).
+**Zero-init on the residual branch, decoded.** A residual block computes $`x_{\ell+1} = x_\ell + F(x_\ell)`$. Set the **final** projection inside $F$ to exactly zero and $F$ outputs zero, so $`x_{\ell+1} = x_\ell`$: **the block is the identity function.** Note that only the last layer of the block is zeroed — the layers before it are initialized normally, so they still receive meaningful gradients (the weight gradient depends on the *input* to a layer, not its output).
 
 ▸ **Why this is such a good idea.** At step 0 a 100-layer network is behaving exactly like a 0-layer network — a well-conditioned, shallow, trivially trainable function. As training proceeds, each block's final projection moves away from zero and the network *grows its own depth*, adding capacity only where the gradient asks for it. **You are not training a deep network from scratch; you are training a shallow one and letting it become deep.** This removes the need for learning-rate warmup in some settings, and it is the single most important initialization trick in modern generative architectures.
 
-**Reading "the variance grows additively with depth."** Because a residual block *adds* rather than replaces, the variances add: $\mathrm{Var}(h^{(L)}) = \mathrm{Var}(h^{(0)}) + \sum_\ell \mathrm{Var}(F_\ell)$. If each branch contributes the same variance, the total grows like $L$ — so the *standard deviation* grows like $\sqrt L$. For $L = 48$ (GPT-2 scale), that is a factor of $\sqrt{48} \approx 6.9$ between the first layer's residual stream and the last. Scaling each branch's output by $1/\sqrt{L}$ cancels it exactly: $L$ branches each contributing $1/L$ of a variance sums back to 1. **The $1/\sqrt{2L}$ in GPT-2's initialization is this, with the 2 accounting for the fact that each transformer layer has two residual branches — attention and the feed-forward network — not one.**
+**Reading "the variance grows additively with depth."** Because a residual block *adds* rather than replaces, the variances add: $`\mathrm{Var}(h^{(L)}) = \mathrm{Var}(h^{(0)}) + \sum_\ell \mathrm{Var}(F_\ell)`$. If each branch contributes the same variance, the total grows like $L$ — so the *standard deviation* grows like $\sqrt L$. For $L = 48$ (GPT-2 scale), that is a factor of $\sqrt{48} \approx 6.9$ between the first layer's residual stream and the last. Scaling each branch's output by $1/\sqrt{L}$ cancels it exactly: $L$ branches each contributing $1/L$ of a variance sums back to 1. **The $1/\sqrt{2L}$ in GPT-2's initialization is this, with the 2 accounting for the fact that each transformer layer has two residual branches — attention and the feed-forward network — not one.**
 
 > **Analogy.** Exploding variance in a residual network is a snowball rolling downhill: nothing is *wrong* at any point, each layer adds only a modest amount, but the total keeps accumulating because nothing ever subtracts. Dividing each contribution by $\sqrt L$ is agreeing in advance how many layers will contribute and rationing each one's share.
 
@@ -675,7 +675,7 @@ $$\mathbb{E}[z\cdot m] = z\cdot\mathbb{P}(m=1) = z\,\Phi(z) = \mathrm{GELU}(z)$$
 
 $$\mathrm{SwiGLU}(x) = \big(\mathrm{SiLU}(W_1x)\big)\odot(W_2x),\quad \text{then } W_3(\cdot)$$
 
-Three matrices instead of two, so to keep parameter count fixed you shrink the hidden dim by $2/3$: $d_{\text{ff}} = \frac{8}{3}d_{\text{model}}$ instead of $4d_{\text{model}}$. **Consistently ~1% better perplexity at matched params.** Used in LLaMA, PaLM, Mixtral. Noam Shazeer's paper famously concludes with "we attribute their success to divine benevolence" — which is honest, since nobody has a clean theory for why gating helps.
+Three matrices instead of two, so to keep parameter count fixed you shrink the hidden dim by $2/3$: $`d_{\text{ff}} = \frac{8}{3}d_{\text{model}}`$ instead of $`4d_{\text{model}}`$. **Consistently ~1% better perplexity at matched params.** Used in LLaMA, PaLM, Mixtral. Noam Shazeer's paper famously concludes with "we attribute their success to divine benevolence" — which is honest, since nobody has a clean theory for why gating helps.
 
 #### SwiGLU, decoded
 
@@ -683,15 +683,15 @@ Three matrices instead of two, so to keep parameter count fixed you shrink the h
 
 $$\underbrace{\mathrm{SiLU}(W_1x)}_{\text{the gate}} \ \odot\ \underbrace{(W_2x)}_{\text{the content}} \qquad\text{then}\qquad W_3(\cdot)$$
 
-The same input $x$ is sent through **two different matrices at once**. One result is passed through a nonlinearity and used as a **gate** — a per-channel multiplier saying how much gets through. The other is left linear and carries the **content**. The $\odot$ multiplies them entry by entry, and $W_3$ projects the result back down to the model width.
+The same input $x$ is sent through **two different matrices at once**. One result is passed through a nonlinearity and used as a **gate** — a per-channel multiplier saying how much gets through. The other is left linear and carries the **content**. The $\odot$ multiplies them entry by entry, and $`W_3`$ projects the result back down to the model width.
 
 > **Analogy.** A standard feed-forward layer is a single pipe with a valve at the end: the same signal decides both *what* flows and *how much*. A gated layer splits the job — one circuit measures the signal and sets the valve, a separate circuit carries the payload. **Separating "what to say" from "whether to say it" is the whole idea**, and it is the same idea as an LSTM's forget gate and as attention's softmax weights. Gating is arguably the most reused structural motif in deep learning.
 
-**Where the $\tfrac83$ comes from — the arithmetic in full.** A standard transformer feed-forward block has two matrices, $d \to 4d$ and $4d \to d$, for $2 \times 4d^2 = 8d^2$ parameters. SwiGLU needs three: $d \to d_{\text{ff}}$ twice, and $d_{\text{ff}} \to d$ once, for $3\,d\,d_{\text{ff}}$ parameters. Setting them equal:
+**Where the $\tfrac83$ comes from — the arithmetic in full.** A standard transformer feed-forward block has two matrices, $d \to 4d$ and $4d \to d$, for $2 \times 4d^2 = 8d^2$ parameters. SwiGLU needs three: $`d \to d_{\text{ff}}`$ twice, and $`d_{\text{ff}} \to d`$ once, for $`3\,d\,d_{\text{ff}}`$ parameters. Setting them equal:
 
 $$3\,d\,d_{\text{ff}} = 8d^2 \quad\Rightarrow\quad d_{\text{ff}} = \tfrac83 d \approx 2.67\,d$$
 
-▸ **So SwiGLU is not "more parameters," it is "the same parameters spent differently"** — three narrower matrices instead of two wider ones. That is what makes the comparison fair, and it is why the reported ~1% perplexity gain is meaningful rather than a restatement of "bigger model does better." Concretely, at $d = 4096$: the classic block uses $d_{\text{ff}} = 16384$; SwiGLU uses $d_{\text{ff}} = 10923$ (usually rounded to a multiple of 256 for hardware reasons — this is why you see values like 11008 in real configurations, a number that otherwise looks arbitrary).
+▸ **So SwiGLU is not "more parameters," it is "the same parameters spent differently"** — three narrower matrices instead of two wider ones. That is what makes the comparison fair, and it is why the reported ~1% perplexity gain is meaningful rather than a restatement of "bigger model does better." Concretely, at $d = 4096$: the classic block uses $`d_{\text{ff}} = 16384`$; SwiGLU uses $`d_{\text{ff}} = 10923`$ (usually rounded to a multiple of 256 for hardware reasons — this is why you see values like 11008 in real configurations, a number that otherwise looks arbitrary).
 
 **On the "divine benevolence" line.** It is worth reading it as what it is: a researcher declining to invent a post-hoc story for an empirical result. The paper is short and consists largely of a table of variants and their scores; the honest finding is *"these work, we ran the experiments, we do not know why."* **In a field where every architectural choice arrives with a confident-sounding justification attached, that is a more useful posture than it first appears** — and one worth imitating when reporting your own results.
 
@@ -732,8 +732,8 @@ The diagnostics that find 90% of bugs, in order:
 2. **Check initial loss.** For $K$-way classification it should be $\log K$. If a D3PM starts at CE $\ne \log K$ at high $t$, your logits are miscalibrated at init or your loss is wrong.
 3. **Activation statistics per layer.** Mean should be ~0 (or ~0.5·std for ReLU), std should be ~constant across depth. If std shrinks 10× per layer, your init is wrong.
 4. **Gradient norms per layer.** Should be within ~1 order of magnitude of each other. A 4-order-of-magnitude spread means vanishing gradients.
-5. **Update-to-weight ratio** $\frac{\|\eta\Delta\theta_\ell\|}{\|\theta_\ell\|}$. Target $\approx10^{-3}$. Above $10^{-2}$: LR too high. Below $10^{-4}$: that layer is frozen.
-6. **Gradient check** (for custom ops): $\frac{\mathcal{L}(\theta+\epsilon e_i)-\mathcal{L}(\theta-\epsilon e_i)}{2\epsilon}$ vs analytic, $\epsilon=10^{-4}$ in **float64**. Relative error should be $<10^{-6}$.
+5. **Update-to-weight ratio** $`\frac{\|\eta\Delta\theta_\ell\|}{\|\theta_\ell\|}`$. Target $\approx10^{-3}$. Above $10^{-2}$: LR too high. Below $10^{-4}$: that layer is frozen.
+6. **Gradient check** (for custom ops): $`\frac{\mathcal{L}(\theta+\epsilon e_i)-\mathcal{L}(\theta-\epsilon e_i)}{2\epsilon}`$ vs analytic, $\epsilon=10^{-4}$ in **float64**. Relative error should be $<10^{-6}$.
 
 #### Why each diagnostic works
 
@@ -756,9 +756,9 @@ These six are ordered by how much information they give per minute spent, and ea
 
 **4. Gradient norms per layer.** This is §6.3 turned into a measurement. The gradient reaching layer 1 is $\gamma^{L}$ times what left the loss. A spread of four orders of magnitude across layers corresponds to $\gamma$ meaningfully away from 1, so the early layers are effectively frozen while the late ones train. **One order of magnitude of spread is normal; four is a diagnosis.**
 
-**5. Update-to-weight ratio.** $\|\eta\Delta\theta_\ell\|/\|\theta_\ell\|$ answers *"what fraction of its own size does this layer move per step?"* The target $\approx 10^{-3}$ says a weight changes by about $0.1\%$ per step, so it takes on the order of a thousand steps to be substantially rewritten — which matches the calibration computed in §6.4. Reading the extremes: above $10^{-2}$ a layer is rewriting itself every hundred steps and will oscillate rather than converge; below $10^{-4}$ it would need a hundred thousand steps to change at all, which for most runs means it is frozen. ▸ **This is a better learning-rate diagnostic than the loss curve, because it is per-layer.** A loss curve tells you the average is wrong; this tells you *which layer*.
+**5. Update-to-weight ratio.** $`\|\eta\Delta\theta_\ell\|/\|\theta_\ell\|`$ answers *"what fraction of its own size does this layer move per step?"* The target $\approx 10^{-3}$ says a weight changes by about $0.1\%$ per step, so it takes on the order of a thousand steps to be substantially rewritten — which matches the calibration computed in §6.4. Reading the extremes: above $10^{-2}$ a layer is rewriting itself every hundred steps and will oscillate rather than converge; below $10^{-4}$ it would need a hundred thousand steps to change at all, which for most runs means it is frozen. ▸ **This is a better learning-rate diagnostic than the loss curve, because it is per-layer.** A loss curve tells you the average is wrong; this tells you *which layer*.
 
-**6. Gradient check, and why float64 is not optional.** The expression $\frac{\mathcal{L}(\theta+\epsilon e_i) - \mathcal{L}(\theta - \epsilon e_i)}{2\epsilon}$ is the **central difference**: nudge one parameter up, nudge it down, and take the slope between. ($e_i$ is the vector that is 1 in position $i$ and 0 everywhere else — "nudge only this one parameter.") It approximates the true derivative with error proportional to $\epsilon^2$.
+**6. Gradient check, and why float64 is not optional.** The expression $`\frac{\mathcal{L}(\theta+\epsilon e_i) - \mathcal{L}(\theta - \epsilon e_i)}{2\epsilon}`$ is the **central difference**: nudge one parameter up, nudge it down, and take the slope between. ($`e_i`$ is the vector that is 1 in position $i$ and 0 everywhere else — "nudge only this one parameter.") It approximates the true derivative with error proportional to $\epsilon^2$.
 
 There are two competing error sources, and this is the whole reason for the float64 requirement:
 

@@ -3,7 +3,7 @@
 > **Prerequisites:** Ch. 1 (§1.3), Ch. 2 (§2.3).
 > **Why this chapter is placed here:** resampling is how you attach an error bar to any number you compute. It is also the diagnostic manual for reading a training curve, and §3.6 is the single most transferable section in Part I.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\mathrm{Var}$, or $\sim$ are unfamiliar — or if you have never had a hat ($\hat\theta$), a star ($\theta^*$), and a bar ($\bar\theta$) distinguished from one another — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\mathrm{Var}$, or $\sim$ are unfamiliar — or if you have never had a hat ($\hat\theta$), a star ($`\theta^*`$), and a bar ($\bar\theta$) distinguished from one another — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
@@ -12,22 +12,22 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
 | $\hat\theta$ | "theta-hat" | **An estimate.** Any number you computed from data: an accuracy, a loss, an AUC |
-| $s(X_1,\dots,X_n)$ | "s of X-one through X-n" | The **recipe** that turns a dataset into that number |
-| $\hat\theta^{*(b)}$ | "theta-hat star, b" | The same recipe re-run on the $b$-th **resampled** dataset. The star means "from a resample" |
+| $`s(X_1,\dots,X_n)`$ | "s of X-one through X-n" | The **recipe** that turns a dataset into that number |
+| $`\hat\theta^{*(b)}`$ | "theta-hat star, b" | The same recipe re-run on the $b$-th **resampled** dataset. The star means "from a resample" |
 | $B$ | "B" | How many resamples you draw. 1,000 for a standard error, 10,000 for an interval |
 | $\widehat{\mathrm{SE}}$ | "SE-hat" | Estimated **standard error** — how much $\hat\theta$ would wobble on fresh data |
-| $F$, $\hat F_n$ | "F", "F-hat-n" | The true distribution; the **empirical** one made of your $n$ points, each weighted $1/n$ |
+| $F$, $`\hat F_n`$ | "F", "F-hat-n" | The true distribution; the **empirical** one made of your $n$ points, each weighted $1/n$ |
 | $\alpha$ | "alpha" | The **miss rate** you accept. A 95% interval means $\alpha = 0.05$ |
-| $z_{1-\alpha/2}$ | "z, one minus alpha over two" | A normal quantile. $z_{0.975} = 1.96$, the number behind every "±2 SE" |
+| $`z_{1-\alpha/2}`$ | "z, one minus alpha over two" | A normal quantile. $`z_{0.975} = 1.96`$, the number behind every "±2 SE" |
 | $\Phi$, $\Phi^{-1}$ | "Phi", "Phi inverse" | Normal CDF and its inverse — they convert z-scores ↔ probabilities |
-| $q_\alpha$ | "q sub alpha" | The $\alpha$-quantile of the bootstrap distribution |
-| $\hat\theta_{(i)}$ | "theta-hat, paren i" | The estimate with observation $i$ **deleted**. Parenthesised index = "left out" |
-| $\bar{\hat\theta}_{(\cdot)}$ | "theta-hat-bar, paren dot" | The average of all those leave-one-out estimates. The dot means "over every $i$" |
-| $\rho$, $\rho_k$ | "rho" | Correlation; $\rho_k$ is the correlation between values $k$ steps apart |
-| $\widehat{\mathrm{CV}}_k$ | "CV-hat-k" | The $k$-fold cross-validation estimate of error |
+| $`q_\alpha`$ | "q sub alpha" | The $\alpha$-quantile of the bootstrap distribution |
+| $`\hat\theta_{(i)}`$ | "theta-hat, paren i" | The estimate with observation $i$ **deleted**. Parenthesised index = "left out" |
+| $`\bar{\hat\theta}_{(\cdot)}`$ | "theta-hat-bar, paren dot" | The average of all those leave-one-out estimates. The dot means "over every $i$" |
+| $\rho$, $`\rho_k`$ | "rho" | Correlation; $`\rho_k`$ is the correlation between values $k$ steps apart |
+| $`\widehat{\mathrm{CV}}_k`$ | "CV-hat-k" | The $k$-fold cross-validation estimate of error |
 | $\#\{\,\cdot\,\}$ | "the number of" | A count of how many items satisfy the condition inside |
-| $H_n$ | "the n-th harmonic number" | $1 + \tfrac12 + \tfrac13 + \dots + \tfrac1n \approx \ln n + 0.577$ |
-| $n_{\text{eff}}$ | "n effective" | How many **independent** observations your correlated ones are actually worth |
+| $`H_n`$ | "the n-th harmonic number" | $1 + \tfrac12 + \tfrac13 + \dots + \tfrac1n \approx \ln n + 0.577$ |
+| $`n_{\text{eff}}`$ | "n effective" | How many **independent** observations your correlated ones are actually worth |
 | $\gamma$ | "gamma" | The decay rate of an exponential moving average |
 | $\mathrm{Var}(X\mid t)$ | "variance of X given t" | The variance **once $t$ is known.** The bar means "given," never "divide" |
 | $\lceil x\rceil,\ \lfloor x\rfloor$ | "ceiling of x", "floor of x" | Round up; round down |
@@ -35,7 +35,7 @@ Skim this once now; refer back as needed. Each entry is unpacked properly where 
 
 Two warnings before you start.
 
-- **The star $^*$ means something different here than in Chapter 2.** In Chapter 2, $R^*$ and $\theta^*$ meant *optimal*. In this chapter, $\hat\theta^{*(b)}$ and $x^*_i$ mean *resampled* — a quantity computed on a synthetic dataset rather than the real one. Same glyph, different job. Context is the only guide, and in this chapter the star always sits next to a resample.
+- **The star $`^*`$ means something different here than in Chapter 2.** In Chapter 2, $`R^*`$ and $`\theta^*`$ meant *optimal*. In this chapter, $`\hat\theta^{*(b)}`$ and $`x^*_i`$ mean *resampled* — a quantity computed on a synthetic dataset rather than the real one. Same glyph, different job. Context is the only guide, and in this chapter the star always sits next to a resample.
 - **Three kinds of "spread" appear and get confused constantly.** The **standard deviation** $\hat\sigma$ describes how much individual *data points* differ from each other. The **standard error** $\widehat{\mathrm{SE}}$ describes how much your *estimate* would differ across repeat experiments — it is smaller by a factor of $\sqrt n$. The **confidence interval** is the standard error dressed up with a coverage claim. Reporting an SD where you meant an SE is the single most common numerical error in empirical machine learning papers.
 
 ### Full forms for this chapter's abbreviations
@@ -77,13 +77,13 @@ You want to know how reliable a restaurant is, but you can only eat there once. 
 
 ### The formal problem
 
-You have an estimator $\hat\theta = s(X_1,\dots,X_n)$ (a test accuracy, a correlation, a model's loss). You want its sampling distribution — its standard error, a confidence interval, a $p$-value. Classical statistics gives you these in closed form for simple estimators (sample mean) and gives you nothing for complicated ones (median of a cross-validated AUC of a gradient-boosted model). Resampling gives you all of them, at the cost of compute.
+You have an estimator $`\hat\theta = s(X_1,\dots,X_n)`$ (a test accuracy, a correlation, a model's loss). You want its sampling distribution — its standard error, a confidence interval, a $p$-value. Classical statistics gives you these in closed form for simple estimators (sample mean) and gives you nothing for complicated ones (median of a cross-validated AUC of a gradient-boosted model). Resampling gives you all of them, at the cost of compute.
 
 #### What a "sampling distribution" is, and why it is the whole game
 
 Four words in that paragraph do all the work. Take them in order.
 
-**Estimator.** $\hat\theta = s(X_1,\dots,X_n)$ reads *"theta-hat equals s of X-one through X-n."* The hat means **computed from data** (Chapter 0 §0.6); $s$ is any recipe at all. Your test accuracy is an estimator. So is your validation loss, your correlation coefficient, your F1 score, your FID. **Anything you compute from a finite dataset and then quote in a table is an estimator**, and everything in this chapter applies to it.
+**Estimator.** $`\hat\theta = s(X_1,\dots,X_n)`$ reads *"theta-hat equals s of X-one through X-n."* The hat means **computed from data** (Chapter 0 §0.6); $s$ is any recipe at all. Your test accuracy is an estimator. So is your validation loss, your correlation coefficient, your F1 score, your FID. **Anything you compute from a finite dataset and then quote in a table is an estimator**, and everything in this chapter applies to it.
 
 **Sampling distribution.** This is the concept people skip, and it is the one that matters. Imagine you could collect your dataset again — same size, same source, fresh draw — and recompute $\hat\theta$. You'd get a slightly different number. Do it a thousand times and you'd have a thousand numbers with a spread and a centre. **That histogram is the sampling distribution.** It is not a distribution over data points; it is a distribution over *the answer you would have reported*.
 
@@ -117,7 +117,7 @@ Four words in that paragraph do all the work. Take them in order.
 |---|---|---|
 | Your model's **parameter count**, 7.2 B | Not computed from data; recount it and you get 7.2 B again | A property of the architecture — exact |
 | **Training loss on the exact batch you just optimized** | The "sample" was chosen *because* the model does well on it | A fitting diagnostic, not an estimate of anything |
-| The number of layers, the learning rate, $\beta_2 = 0.999$ | You chose them; they were not drawn | Hyperparameters — constants |
+| The number of layers, the learning rate, $`\beta_2 = 0.999`$ | You chose them; they were not drawn | Hyperparameters — constants |
 | The **population** accuracy $\theta$ itself | It has one fixed value; it does not wobble | The thing being estimated, forever unobserved |
 | Accuracy on the **whole finite universe** you care about (e.g. all 50,000 SKUs in your catalogue, evaluated on all 50,000) | You measured every unit; there is no sampling step | A census — the answer, not an estimate |
 
@@ -133,11 +133,11 @@ Four words in that paragraph do all the work. Take them in order.
 
 ### Mechanism
 
-▸ **Nonparametric bootstrap.** Given data $X = (x_1,\dots,x_n)$:
-> 1. Draw $x^{*}_1,\dots,x^{*}_n$ **with replacement** from $X$. This is one bootstrap sample.
-> 2. Compute $\hat\theta^{*(b)} = s(x^*_1,\dots,x^*_n)$.
+▸ **Nonparametric bootstrap.** Given data $`X = (x_1,\dots,x_n)`$:
+> 1. Draw $`x^{*}_1,\dots,x^{*}_n`$ **with replacement** from $X$. This is one bootstrap sample.
+> 2. Compute $`\hat\theta^{*(b)} = s(x^*_1,\dots,x^*_n)`$.
 > 3. Repeat for $b=1,\dots,B$ (typically $B$ = 1,000 for SEs, 10,000 for CIs).
-> 4. The empirical distribution of $\{\hat\theta^{*(b)}\}$ approximates the sampling distribution of $\hat\theta$.
+> 4. The empirical distribution of $`\{\hat\theta^{*(b)}\}`$ approximates the sampling distribution of $\hat\theta$.
 
 $$\widehat{\mathrm{SE}}_{\text{boot}} = \sqrt{\frac{1}{B-1}\sum_{b=1}^B\left(\hat\theta^{*(b)} - \bar{\hat\theta^*}\right)^2}$$
 
@@ -157,10 +157,10 @@ Compute the mean of each resample and you get a spread of values: $1.46$ here, m
 
 | Symbol | Read aloud | What it is |
 |---|---|---|
-| $x^*_1,\dots,x^*_n$ | "x-star one through x-star n" | One resampled dataset. Same size $n$ as the original — this matters |
+| $`x^*_1,\dots,x^*_n`$ | "x-star one through x-star n" | One resampled dataset. Same size $n$ as the original — this matters |
 | $b$ | "b" | Which resample you're on, $1$ to $B$ |
-| $\hat\theta^{*(b)}$ | "theta-hat star, b" | Your statistic recomputed on resample $b$ |
-| $\bar{\hat\theta^*}$ | "theta-hat-star bar" | The average across all $B$ resamples |
+| $`\hat\theta^{*(b)}`$ | "theta-hat star, b" | Your statistic recomputed on resample $b$ |
+| $`\bar{\hat\theta^*}`$ | "theta-hat-star bar" | The average across all $B$ resamples |
 | $B - 1$ | — | Bessel's correction, the same $n-1$ you use for a sample variance |
 
 ▸ **Why the resample must be the same size $n$ as the original.** The standard error depends on $n$ — it shrinks like $1/\sqrt n$. Resample 50 points instead of 100 and you will measure the wobble of a 50-point experiment, which is $\sqrt2$ times too large. **You are simulating *your* experiment, so the simulated experiment must have your experiment's size.**
@@ -191,7 +191,7 @@ Start from the same five validation losses: $X = [0.9,\ 1.4,\ 1.1,\ 2.0,\ 1.6]$,
 | Shuffling $X$ and recomputing | Sampling *without* replacement returns the same multiset; the mean is $1.40$ every single time, spread exactly $0$ | A permutation of the data — the engine of §3.5, not of §3.2 |
 | Drawing 3 of the 5 points | Measures the wobble of a 3-point experiment, which is $\sqrt{5/3}\approx 1.29\times$ too wide | Subsampling (the $m$-out-of-$n$ bootstrap — a real method, but it needs a correction factor) |
 | Drawing 500 points from the 5 | Simulates an experiment 100× larger than yours; standard error comes out $\sqrt{100}=10\times$ too small | A fantasy about a dataset you do not have |
-| Adding Gaussian noise to each $x_i$ | Invents variability that was never in the data | A smoothed bootstrap (legitimate, but a *different* method with a bandwidth to choose) |
+| Adding Gaussian noise to each $`x_i`$ | Invents variability that was never in the data | A smoothed bootstrap (legitimate, but a *different* method with a bandwidth to choose) |
 | Bootstrapping the 5 **timesteps** of one molecule and calling it a molecule-level error bar | Resamples the wrong unit — the units you resample define the population you generalize to | A within-molecule error bar. See §3.6 |
 
 ▸ **The boundary:** a bootstrap resample must have **the same size $n$** and be drawn **with replacement** from **the same unit of randomness** as the original experiment. Get the size wrong and your error bar is scaled by $\sqrt{n/m}$; get the unit wrong and your error bar answers a question nobody asked.
@@ -202,7 +202,7 @@ Start from the same five validation losses: $X = [0.9,\ 1.4,\ 1.1,\ 2.0,\ 1.6]$,
 
 ### Why it works
 
-The bootstrap replaces the unknown true distribution $F$ with the empirical distribution $\hat F_n$ (mass $1/n$ on each observed point). The **plug-in principle**: whatever functional of $F$ you wanted, compute it on $\hat F_n$ instead. Since $\hat F_n \to F$ (Glivenko–Cantelli, uniformly), and the functional is smooth, the bootstrap distribution converges to the true sampling distribution.
+The bootstrap replaces the unknown true distribution $F$ with the empirical distribution $`\hat F_n`$ (mass $1/n$ on each observed point). The **plug-in principle**: whatever functional of $F$ you wanted, compute it on $`\hat F_n`$ instead. Since $`\hat F_n \to F`$ (Glivenko–Cantelli, uniformly), and the functional is smooth, the bootstrap distribution converges to the true sampling distribution.
 
 **Sanity check with the mean.** If $s$ = sample mean, the bootstrap SE is
 $$\widehat{\mathrm{SE}} = \sqrt{\frac{1}{n^2}\sum_i (x_i-\bar x)^2} = \frac{\hat\sigma}{\sqrt n}$$
@@ -210,21 +210,21 @@ which reproduces the textbook formula exactly. Good — a method that gets easy 
 
 #### The plug-in principle, decoded
 
-**What $\hat F_n$ is, concretely.** $F$ is the true distribution — the lake. $\hat F_n$ is the **empirical distribution**: a distribution that puts probability exactly $1/n$ on each point you observed, and zero everywhere else. With the five losses $[0.9, 1.4, 1.1, 2.0, 1.6]$, $\hat F_n$ is a distribution over those five numbers and nothing else, each with probability $0.2$. **It is your dataset, reinterpreted as a probability distribution.** Once you see that, "drawing with replacement from your data" and "sampling from $\hat F_n$" are revealed to be the same sentence.
+**What $`\hat F_n`$ is, concretely.** $F$ is the true distribution — the lake. $`\hat F_n`$ is the **empirical distribution**: a distribution that puts probability exactly $1/n$ on each point you observed, and zero everywhere else. With the five losses $[0.9, 1.4, 1.1, 2.0, 1.6]$, $`\hat F_n`$ is a distribution over those five numbers and nothing else, each with probability $0.2$. **It is your dataset, reinterpreted as a probability distribution.** Once you see that, "drawing with replacement from your data" and "sampling from $`\hat F_n`$" are revealed to be the same sentence.
 
-**The plug-in principle in one line.** Whatever you wanted to know about $F$ — its mean, its median, the distribution of some complicated statistic computed from it — **compute the same thing about $\hat F_n$ instead, and call that your estimate.** No new mathematics is required, because $\hat F_n$ is a completely known distribution you can sample from as often as you like.
+**The plug-in principle in one line.** Whatever you wanted to know about $F$ — its mean, its median, the distribution of some complicated statistic computed from it — **compute the same thing about $`\hat F_n`$ instead, and call that your estimate.** No new mathematics is required, because $`\hat F_n`$ is a completely known distribution you can sample from as often as you like.
 
 ▸ **This is why the bootstrap works on things nobody can analyse.** You never needed a formula for how your statistic behaves — you only needed a distribution you could *draw from*. Analysis is replaced by simulation, and simulation does not care whether your statistic is a mean or a median-of-cross-validated-AUC.
 
-**Why $\hat F_n \to F$ — the Glivenko–Cantelli theorem.** As $n$ grows, the empirical distribution converges to the true one, and — this is the strong part — it converges **uniformly**, meaning the *worst* discrepancy anywhere on the whole curve goes to zero, not merely the discrepancy at any single point. That uniformity is exactly what you need, because your statistic might depend on any part of the distribution.
+**Why $`\hat F_n \to F`$ — the Glivenko–Cantelli theorem.** As $n$ grows, the empirical distribution converges to the true one, and — this is the strong part — it converges **uniformly**, meaning the *worst* discrepancy anywhere on the whole curve goes to zero, not merely the discrepancy at any single point. That uniformity is exactly what you need, because your statistic might depend on any part of the distribution.
 
 > **Analogy.** Take a photograph of a crowd. With 10 people photographed, the picture is a poor guide to the crowd's height distribution. With 10,000, it is an excellent one — and not just for the average height, but for the tallest decile, the median, the spread, everything at once. **Glivenko–Cantelli is the promise that the photograph eventually resembles the crowd in every respect simultaneously.** The bootstrap then measures the crowd by measuring the photograph.
 
-**Reading the sanity check.** The text verifies the bootstrap against the one case where the true answer is known. For the sample mean, the exact bootstrap standard error works out to $\sqrt{\frac{1}{n^2}\sum_i(x_i-\bar x)^2}$. Pull the $\frac{1}{n^2}$ out as $\frac1n$ outside the square root and you have $\frac1n\sqrt{\sum_i(x_i-\bar x)^2} = \frac{1}{\sqrt n}\sqrt{\frac1n\sum_i(x_i-\bar x)^2} = \frac{\hat\sigma}{\sqrt n}$. **The textbook formula, recovered exactly, with no assumption of normality anywhere in the derivation.**
+**Reading the sanity check.** The text verifies the bootstrap against the one case where the true answer is known. For the sample mean, the exact bootstrap standard error works out to $`\sqrt{\frac{1}{n^2}\sum_i(x_i-\bar x)^2}`$. Pull the $\frac{1}{n^2}$ out as $\frac1n$ outside the square root and you have $`\frac1n\sqrt{\sum_i(x_i-\bar x)^2} = \frac{1}{\sqrt n}\sqrt{\frac1n\sum_i(x_i-\bar x)^2} = \frac{\hat\sigma}{\sqrt n}`$. **The textbook formula, recovered exactly, with no assumption of normality anywhere in the derivation.**
 
 ▸ **This kind of check deserves a name and a habit.** Before trusting a general method on a hard problem, run it on the one problem where you already know the answer. If it disagrees, you have found a bug in the method or in your implementation, cheaply. If it agrees, you have earned a little trust. **A method that gets the easy case wrong is not a method with a small flaw; it is a method you do not understand.**
 
-**One caveat the plug-in principle carries.** $\hat F_n$ can only ever contain values you observed. If the real distribution has a long tail and your $n$ points missed it, no amount of resampling invents it — **the bootstrap cannot tell you about a region of the distribution you failed to sample.** This is the honest limitation behind every failure case in the next section.
+**One caveat the plug-in principle carries.** $`\hat F_n`$ can only ever contain values you observed. If the real distribution has a long tail and your $n$ points missed it, no amount of resampling invents it — **the bootstrap cannot tell you about a region of the distribution you failed to sample.** This is the honest limitation behind every failure case in the next section.
 
 > **Where this came from.** The theorem underwriting all of this was proved twice in 1933, by **Valery Glivenko** and **Francesco Cantelli**, publishing in the same Italian actuarial journal in the same year. It is sometimes called the **fundamental theorem of statistics** — a grand title for the modest-sounding claim that if you look at enough of something, what you have seen resembles what is there. Modest or not, it is the licence for every empirical measurement anyone has ever made.
 
@@ -235,13 +235,13 @@ $$\left(1-\frac1n\right)^n \xrightarrow{n\to\infty} e^{-1} = 0.368$$
 
 ▸ So **63.2% of unique points appear** in each bootstrap sample, and 36.8% are held out. Those held-out points form a natural test set ("out-of-bag"), which is:
 - how random forests get free validation error without a holdout set (Ch. 14),
-- the origin of the **.632 estimator**: $\widehat{\mathrm{Err}}_{.632} = 0.368\,\overline{\mathrm{err}}_{\text{train}} + 0.632\,\widehat{\mathrm{Err}}_{\text{OOB}}$, which corrects OOB's pessimism.
+- the origin of the **.632 estimator**: $`\widehat{\mathrm{Err}}_{.632} = 0.368\,\overline{\mathrm{err}}_{\text{train}} + 0.632\,\widehat{\mathrm{Err}}_{\text{OOB}}`$, which corrects OOB's pessimism.
 
 #### Where 0.632 comes from, and why it's free validation
 
-**Derive it in three lines.** You draw $n$ times with replacement from $n$ points. Focus on one particular point, say $x_7$.
+**Derive it in three lines.** You draw $n$ times with replacement from $n$ points. Focus on one particular point, say $`x_7`$.
 
-1. On a single draw, the chance you *miss* $x_7$ is $1 - \frac1n$ (you had $n$ choices and only one of them was $x_7$).
+1. On a single draw, the chance you *miss* $`x_7`$ is $1 - \frac1n$ (you had $n$ choices and only one of them was $`x_7`$).
 2. The $n$ draws are independent, so the chance you miss it **every time** is $\left(1-\frac1n\right)^n$.
 3. As $n$ grows this converges to $e^{-1} = 0.3679$.
 
@@ -293,12 +293,12 @@ $$\widehat{\mathrm{Err}}_{.632} = 0.368\,\overline{\mathrm{err}}_{\text{train}} 
 
 ### Confidence intervals, in increasing order of correctness
 
-1. **Normal:** $\hat\theta \pm z_{1-\alpha/2}\widehat{\mathrm{SE}}_{\text{boot}}$. Requires approximate normality.
-2. **Percentile:** take the $\alpha/2$ and $1-\alpha/2$ quantiles of $\{\hat\theta^{*(b)}\}$. Transformation-respecting but biased if $\hat\theta$ is biased.
-3. **Basic / pivotal:** $[2\hat\theta - q_{1-\alpha/2},\ 2\hat\theta - q_{\alpha/2}]$. Reflects the bootstrap distribution — correct when the *shape* is right but the location is shifted.
+1. **Normal:** $`\hat\theta \pm z_{1-\alpha/2}\widehat{\mathrm{SE}}_{\text{boot}}`$. Requires approximate normality.
+2. **Percentile:** take the $\alpha/2$ and $1-\alpha/2$ quantiles of $`\{\hat\theta^{*(b)}\}`$. Transformation-respecting but biased if $\hat\theta$ is biased.
+3. **Basic / pivotal:** $`[2\hat\theta - q_{1-\alpha/2},\ 2\hat\theta - q_{\alpha/2}]`$. Reflects the bootstrap distribution — correct when the *shape* is right but the location is shifted.
 4. **BCa (bias-corrected and accelerated):** adjusts the percentile levels using
 $$\alpha_1 = \Phi\!\left(\hat z_0 + \frac{\hat z_0 + z_{\alpha/2}}{1 - \hat a(\hat z_0 + z_{\alpha/2})}\right)$$
-with $\hat z_0 = \Phi^{-1}\!\left(\frac{\#\{\hat\theta^{*(b)} < \hat\theta\}}{B}\right)$ (bias correction) and $\hat a$ from the jackknife skewness. **Second-order accurate** ($O(1/n)$ coverage error vs $O(1/\sqrt n)$ for percentile). Use this if you're publishing.
+with $`\hat z_0 = \Phi^{-1}\!\left(\frac{\#\{\hat\theta^{*(b)} < \hat\theta\}}{B}\right)`$ (bias correction) and $\hat a$ from the jackknife skewness. **Second-order accurate** ($O(1/n)$ coverage error vs $O(1/\sqrt n)$ for percentile). Use this if you're publishing.
 
 #### The four intervals, decoded
 
@@ -307,23 +307,23 @@ with $\hat z_0 = \Phi^{-1}\!\left(\frac{\#\{\hat\theta^{*(b)} < \hat\theta\}}{B}
 **The shared notation:**
 
 - $\alpha$ — the miss rate. A 95% interval has $\alpha = 0.05$, so $\alpha/2 = 0.025$ in each tail.
-- $z_{1-\alpha/2}$ — the standard normal quantile. $z_{0.975} = 1.96$. **This is the 1.96 in "±1.96 standard errors."**
+- $`z_{1-\alpha/2}`$ — the standard normal quantile. $`z_{0.975} = 1.96`$. **This is the 1.96 in "±1.96 standard errors."**
 - $\Phi$ — the normal CDF: feed it a z-score, get back a probability. $\Phi(1.96) = 0.975$.
 - $\Phi^{-1}$ — its inverse: feed it a probability, get back a z-score. $\Phi^{-1}(0.975) = 1.96$.
-- $q_\alpha$ — the $\alpha$-quantile of your $B$ bootstrap values: sort them, take the one $\alpha$ of the way along.
-- $\#\{\hat\theta^{*(b)} < \hat\theta\}$ — read *"the number of bootstrap replicates that came out below the original estimate."*
+- $`q_\alpha`$ — the $\alpha$-quantile of your $B$ bootstrap values: sort them, take the one $\alpha$ of the way along.
+- $`\#\{\hat\theta^{*(b)} < \hat\theta\}`$ — read *"the number of bootstrap replicates that came out below the original estimate."*
 
 **Method 1 — Normal.** $\hat\theta \pm 1.96\,\widehat{\mathrm{SE}}$. You used the bootstrap only to get the *width*, then assumed the shape is a bell curve. With $\hat\theta = 1.524$ and $\widehat{\mathrm{SE}} = 0.153$: $[1.224,\ 1.824]$. Fast, familiar, and wrong whenever the sampling distribution is skewed — which for ratios, correlations, and anything bounded, it is.
 
 **Method 2 — Percentile.** Sort your 10,000 bootstrap values and read off the 250th and the 9,750th. **No normality assumed at all**, and it has a lovely property: it is *transformation-respecting*. If you build an interval for $\theta$ and then take logs of the endpoints, you get exactly the interval you'd have built for $\log\theta$ directly. Intervals built the normal way do not have this property, and it matters because the log/logit scale is usually where symmetry lives.
 
-**Method 3 — Basic / pivotal.** $[2\hat\theta - q_{1-\alpha/2},\ 2\hat\theta - q_{\alpha/2}]$. **Note the reversal**: the *upper* bootstrap quantile forms the *lower* endpoint. That looks like an error and is not.
+**Method 3 — Basic / pivotal.** $`[2\hat\theta - q_{1-\alpha/2},\ 2\hat\theta - q_{\alpha/2}]`$. **Note the reversal**: the *upper* bootstrap quantile forms the *lower* endpoint. That looks like an error and is not.
 
 > **Analogy for the reversal.** A rifle whose sights are misaligned puts most shots 4 cm right of the bullseye. To find the bullseye given a shot, you move **left**. The bootstrap distribution shows you where estimates land *relative to a known centre* (your $\hat\theta$); the pivotal interval flips that displacement around to say where the truth might be relative to your estimate. **Percentile assumes the bootstrap distribution has the truth's shape; pivotal assumes it has the truth's *error* shape, mirrored.** They differ exactly when the distribution is asymmetric, which is exactly when it matters.
 
 **Method 4 — BCa.** Two corrections stacked on the percentile method.
 
-- **Bias correction $\hat z_0$.** Count how many bootstrap replicates fell below your original estimate. If the answer is exactly half, $\Phi^{-1}(0.5) = 0$ and no correction is applied. If only 40% fell below, $\hat z_0 = \Phi^{-1}(0.40) = -0.253$, and the interval shifts to compensate for a systematically off-centre estimator. **It is a measurement of your estimator's bias, taken from the bootstrap itself.**
+- **Bias correction $`\hat z_0`$.** Count how many bootstrap replicates fell below your original estimate. If the answer is exactly half, $\Phi^{-1}(0.5) = 0$ and no correction is applied. If only 40% fell below, $`\hat z_0 = \Phi^{-1}(0.40) = -0.253`$, and the interval shifts to compensate for a systematically off-centre estimator. **It is a measurement of your estimator's bias, taken from the bootstrap itself.**
 - **Acceleration $\hat a$.** Computed from the jackknife (§3.3), it measures how fast the standard error *changes with* the value of $\theta$. Many estimators are noisier at large values than at small ones — a proportion near 0.5 has more variance than one near 0.02 — so a symmetric interval is wrong even after centring. $\hat a$ makes the two tails different widths.
 
 ▸ **"Second-order accurate" means the coverage error shrinks like $O(1/n)$ instead of $O(1/\sqrt n)$.** With $n = 100$: percentile intervals are off by roughly $1/\sqrt{100} = 10\%$ — a nominal 95% interval delivering maybe 88%. BCa is off by roughly $1/100 = 1\%$, delivering about 94%. **A tenfold improvement in honesty for a modest amount of extra arithmetic**, which is why the text's advice is unambiguous: if the number is going in a paper, use BCa.
@@ -363,7 +363,7 @@ Take a concrete result: a 95% bootstrap interval for validation cross-entropy of
 
 ### When the bootstrap fails
 
-- **Extremes.** Bootstrapping $\max(X_i)$ is inconsistent — the max of a resample is one of finitely many observed values, so the bootstrap distribution is atomic and never converges to the continuous true one. *Anything that depends on the maximum or minimum of your data is bootstrap-hostile.* **This includes "best validation loss."** Keep that in mind for §3.6.
+- **Extremes.** Bootstrapping $`\max(X_i)`$ is inconsistent — the max of a resample is one of finitely many observed values, so the bootstrap distribution is atomic and never converges to the continuous true one. *Anything that depends on the maximum or minimum of your data is bootstrap-hostile.* **This includes "best validation loss."** Keep that in mind for §3.6.
 - **Dependent data.** i.i.d. resampling destroys autocorrelation. Use **block bootstrap** (resample contiguous blocks of length $\ell \sim n^{1/3}$) for time series — or for training curves.
 - **Very small $n$** ($<20$) or heavy tails without finite variance.
 - **Parameters on a boundary** (e.g. variance component at 0).
@@ -398,16 +398,16 @@ Your `best.pt` checkpoint is selected by taking a **minimum over epochs**. That 
 | Failure | Tell | Fix |
 |---|---|---|
 | **Dependent data** | Successive points are correlated (time series, training epochs) | **Block bootstrap**: resample contiguous blocks of length $\ell\sim n^{1/3}$ so within-block correlation is preserved |
-| **Very small $n$** ($<20$) | $\hat F_n$ is too coarse to be a fair miniature of $F$ | Parametric bootstrap, or an exact test, or collect more data |
+| **Very small $n$** ($<20$) | $`\hat F_n`$ is too coarse to be a fair miniature of $F$ | Parametric bootstrap, or an exact test, or collect more data |
 | **Boundary parameters** | The truth sits at the edge of the allowed range (a variance of exactly 0) | Constrained or parametric methods |
 
-**Why dependence breaks it, in one sentence.** I.i.d. resampling shuffles your points into a random order, which **destroys** the autocorrelation that was carrying information — the resamples look far more random than reality, so you underestimate the true uncertainty. Training curves are strongly autocorrelated ($\rho_1 \approx 0.7$ routinely, per §3.7), so **if you ever bootstrap a training curve, use blocks.**
+**Why dependence breaks it, in one sentence.** I.i.d. resampling shuffles your points into a random order, which **destroys** the autocorrelation that was carrying information — the resamples look far more random than reality, so you underestimate the true uncertainty. Training curves are strongly autocorrelated ($`\rho_1 \approx 0.7`$ routinely, per §3.7), so **if you ever bootstrap a training curve, use blocks.**
 
 > **Where this came from.** The general conditions under which the bootstrap is and is not consistent were worked out by **Peter Bickel and David Freedman** in 1981, two years after Efron's paper — and the maximum is the canonical counterexample, the one that appears in every subsequent textbook. **The failure modes were mapped almost immediately, which is a mark of a healthy idea:** the interesting thing about the bootstrap was never that it always works, but that it works so broadly and fails in ways you can name.
 
 ### Variants worth knowing
 
-- **Parametric bootstrap:** fit a model $F_{\hat\eta}$, simulate from it. Lower variance if the model is right, badly wrong if it isn't.
+- **Parametric bootstrap:** fit a model $`F_{\hat\eta}`$, simulate from it. Lower variance if the model is right, badly wrong if it isn't.
 - **Bayesian bootstrap:** instead of multinomial counts, draw Dirichlet$(1,\dots,1)$ weights. Smoother; equivalent to a noninformative Bayesian posterior over $F$.
 - **Wild bootstrap:** for regression with heteroskedastic errors, resample residuals multiplied by random signs.
 
@@ -415,13 +415,13 @@ Your `best.pt` checkpoint is selected by taking a **minimum over epochs**. That 
 
 ## 3.3 The jackknife
 
-**Mechanism:** leave one observation out at a time. $\hat\theta_{(i)} = s(x_1,\dots,x_{i-1},x_{i+1},\dots,x_n)$.
+**Mechanism:** leave one observation out at a time. $`\hat\theta_{(i)} = s(x_1,\dots,x_{i-1},x_{i+1},\dots,x_n)`$.
 
 ▸ $$\widehat{\mathrm{Bias}}_{\text{jack}} = (n-1)\left(\bar{\hat\theta}_{(\cdot)} - \hat\theta\right),\qquad \widehat{\mathrm{SE}}_{\text{jack}} = \sqrt{\frac{n-1}{n}\sum_{i}\left(\hat\theta_{(i)} - \bar{\hat\theta}_{(\cdot)}\right)^2}$$
 
 Note the unusual $(n-1)/n$ **multiplier** rather than $1/(n(n-1))$ — because deleting one point out of $n$ perturbs $\hat\theta$ by only $O(1/n)$, so you must inflate the observed spread.
 
-**Relationship to the bootstrap:** the jackknife is a *linear approximation* to the bootstrap (it estimates the influence function $\mathrm{IF}(x_i) \approx (n-1)(\bar{\hat\theta}_{(\cdot)}-\hat\theta_{(i)})$). It's cheaper ($n$ refits vs $B$) but fails for non-smooth statistics — famously, it fails for the median.
+**Relationship to the bootstrap:** the jackknife is a *linear approximation* to the bootstrap (it estimates the influence function $`\mathrm{IF}(x_i) \approx (n-1)(\bar{\hat\theta}_{(\cdot)}-\hat\theta_{(i)})`$). It's cheaper ($n$ refits vs $B$) but fails for non-smooth statistics — famously, it fails for the median.
 
 **Where it survives in ML:** the "acceleration" constant $\hat a$ in BCa; influence functions for data attribution and for identifying mislabeled training points.
 
@@ -429,11 +429,11 @@ Note the unusual $(n-1)/n$ **multiplier** rather than $1/(n(n-1))$ — because d
 
 **The mechanism, in words.** Delete observation 1, recompute your statistic. Put it back, delete observation 2, recompute. Carry on through all $n$. You now have $n$ estimates, each built from $n-1$ points, and their spread tells you how sensitive your answer is to any single data point.
 
-**The notation trips people up, so:** $\hat\theta_{(i)}$ — with the index **in parentheses** — means "the estimate computed with point $i$ **left out**." Compare $\hat\theta_i$ (no parentheses), which would mean "the $i$-th component of $\theta$." **Parentheses mean deletion.** And $\bar{\hat\theta}_{(\cdot)}$ — bar on top, dot in the parentheses — means "average all $n$ of those deletion estimates"; the dot is a placeholder reading *"over every index."*
+**The notation trips people up, so:** $`\hat\theta_{(i)}`$ — with the index **in parentheses** — means "the estimate computed with point $i$ **left out**." Compare $`\hat\theta_i`$ (no parentheses), which would mean "the $i$-th component of $\theta$." **Parentheses mean deletion.** And $`\bar{\hat\theta}_{(\cdot)}`$ — bar on top, dot in the parentheses — means "average all $n$ of those deletion estimates"; the dot is a placeholder reading *"over every index."*
 
 **Work it with five numbers.** Data $[2, 4, 6, 8, 10]$, statistic = the mean, so $\hat\theta = 6$.
 
-| Left out | Remaining | $\hat\theta_{(i)}$ |
+| Left out | Remaining | $`\hat\theta_{(i)}`$ |
 |---|---|---|
 | 2 | 4,6,8,10 | 7.0 |
 | 4 | 2,6,8,10 | 6.5 |
@@ -441,11 +441,11 @@ Note the unusual $(n-1)/n$ **multiplier** rather than $1/(n(n-1))$ — because d
 | 8 | 2,4,6,10 | 5.5 |
 | 10 | 2,4,6,8 | 5.0 |
 
-$\bar{\hat\theta}_{(\cdot)} = 6.0$. Now the two formulas:
+$`\bar{\hat\theta}_{(\cdot)} = 6.0`$. Now the two formulas:
 
-**Bias estimate.** $(n-1)(\bar{\hat\theta}_{(\cdot)} - \hat\theta) = 4(6.0 - 6.0) = 0$. Correct — the sample mean is unbiased, and the jackknife knows it.
+**Bias estimate.** $`(n-1)(\bar{\hat\theta}_{(\cdot)} - \hat\theta) = 4(6.0 - 6.0) = 0`$. Correct — the sample mean is unbiased, and the jackknife knows it.
 
-**Standard error.** $\sqrt{\frac{n-1}{n}\sum_i(\hat\theta_{(i)} - 6)^2} = \sqrt{\frac45(1 + 0.25 + 0 + 0.25 + 1)} = \sqrt{\frac45(2.5)} = \sqrt{2} = 1.414$.
+**Standard error.** $`\sqrt{\frac{n-1}{n}\sum_i(\hat\theta_{(i)} - 6)^2} = \sqrt{\frac45(1 + 0.25 + 0 + 0.25 + 1)} = \sqrt{\frac45(2.5)} = \sqrt{2} = 1.414`$.
 
 Check against the textbook answer: $\hat\sigma/\sqrt n$ with $\hat\sigma = \sqrt{10} = 3.162$ gives $3.162/\sqrt5 = 1.414$. ✓ **Exact agreement**, same sanity check the bootstrap passed in §3.2.
 
@@ -453,7 +453,7 @@ Check against the textbook answer: $\hat\sigma/\sqrt n$ with $\hat\sigma = \sqrt
 
 > **Analogy.** To measure how much a bridge sways in a storm, you cannot summon a storm — so you push it gently by hand and measure the millimetre of deflection, then scale that up by a known factor. The $(n-1)/n$ multiplier is that scaling. **The jackknife nudges; the bootstrap actually shakes the bridge.**
 
-**"A linear approximation to the bootstrap," explained.** The **influence function** $\mathrm{IF}(x_i)$ measures how much your answer moves per unit of weight placed on point $i$ — the derivative of your statistic with respect to that observation's presence. The jackknife estimates that derivative by finite differences: *remove the point, see how far the answer moved.* It then assumes the statistic behaves **linearly** in the data, and adds up the individual influences.
+**"A linear approximation to the bootstrap," explained.** The **influence function** $`\mathrm{IF}(x_i)`$ measures how much your answer moves per unit of weight placed on point $i$ — the derivative of your statistic with respect to that observation's presence. The jackknife estimates that derivative by finite differences: *remove the point, see how far the answer moved.* It then assumes the statistic behaves **linearly** in the data, and adds up the individual influences.
 
 ▸ **That linearity assumption is the whole story of when it works and when it doesn't.** The bootstrap makes large, simultaneous perturbations (many points duplicated, many dropped) and needs no linearity. The jackknife makes one tiny perturbation at a time and extrapolates. **A statistic with a kink — a median, a maximum, a rank — has a derivative that does not describe its behaviour, and the extrapolation fails.**
 
@@ -482,7 +482,7 @@ $$\widehat{\mathrm{CV}}_k = \frac1k\sum_{j=1}^k \hat R^{(j)}$$
 
 #### Reading the cross-validation table
 
-**The mechanism, without symbols.** Cut your data into $k$ equal piles. Set pile 1 aside, train on the other $k-1$, and measure the error on pile 1. Put it back; set pile 2 aside; repeat. After $k$ rounds every point has been predicted exactly once by a model that never saw it. Average the $k$ error measurements. **That average is $\widehat{\mathrm{CV}}_k$**, and $\hat R^{(j)}$ is the error on fold $j$ — the superscript in parentheses means "fold number," not a power.
+**The mechanism, without symbols.** Cut your data into $k$ equal piles. Set pile 1 aside, train on the other $k-1$, and measure the error on pile 1. Put it back; set pile 2 aside; repeat. After $k$ rounds every point has been predicted exactly once by a model that never saw it. Average the $k$ error measurements. **That average is $`\widehat{\mathrm{CV}}_k`$**, and $\hat R^{(j)}$ is the error on fold $j$ — the superscript in parentheses means "fold number," not a power.
 
 **Why bias and variance move in opposite directions as $k$ grows** — this is the entire content of the table, and it has two separate causes.
 
@@ -617,24 +617,24 @@ The $+1$ in numerator and denominator is not a fudge — it makes the test **exa
 
 **Assumption:** exchangeability under the null. Shuffle only what the null says is exchangeable. For grouped data, permute *within* groups.
 
-**Where you should use it:** "is model A actually better than model B on my test set?" Compute per-example loss differences $d_i = \ell_A(i) - \ell_B(i)$, then permute the *signs* of $d_i$ (sign-flip test). This is the correct test and almost nobody in ML runs it.
+**Where you should use it:** "is model A actually better than model B on my test set?" Compute per-example loss differences $`d_i = \ell_A(i) - \ell_B(i)`$, then permute the *signs* of $`d_i`$ (sign-flip test). This is the correct test and almost nobody in ML runs it.
 
 #### Permutation tests, decoded
 
 **The idea is the most intuitive in all of statistics, and needs no distributions at all.** You measured an effect. To decide whether it is real, you **deliberately destroy** the thing that could have caused it, remeasure, and repeat many times. If your real effect looks like the destroyed ones, you have nothing. If it stands outside them, you have something.
 
-**The procedure, concretely, on the model-comparison example.** You have 1,000 test molecules. For each, model A's loss and model B's loss. Compute $d_i = \ell_A(i) - \ell_B(i)$ — a per-example difference. Suppose the mean difference is $\bar d = -0.032$ (A better by 0.032). Now:
+**The procedure, concretely, on the model-comparison example.** You have 1,000 test molecules. For each, model A's loss and model B's loss. Compute $`d_i = \ell_A(i) - \ell_B(i)`$ — a per-example difference. Suppose the mean difference is $\bar d = -0.032$ (A better by 0.032). Now:
 
-1. Flip a fair coin for each of the 1,000 differences. Heads, keep $d_i$; tails, negate it. **Under the null hypothesis that the two models are equally good, the sign of each difference is arbitrary**, so a sign-flipped dataset is just as plausible as the real one.
+1. Flip a fair coin for each of the 1,000 differences. Heads, keep $`d_i`$; tails, negate it. **Under the null hypothesis that the two models are equally good, the sign of each difference is arbitrary**, so a sign-flipped dataset is just as plausible as the real one.
 2. Recompute the mean. Get, say, $+0.004$.
 3. Repeat $B = 10{,}000$ times. You now have 10,000 mean differences from a world where the models are identical.
 4. Ask: how many of those 10,000 are as extreme as $-0.032$? If the answer is 3, your $p$-value is about $4/10001 = 0.0004$ and the difference is real. If the answer is 4,200, it isn't.
 
 **Every symbol in the $p$-value formula:**
 
-- $T_{\text{obs}}$ — the statistic you actually measured.
-- $T^{(b)}_{\text{perm}}$ — the statistic on the $b$-th shuffled dataset.
-- $\#\{b : T^{(b)}_{\text{perm}} \ge T_{\text{obs}}\}$ — read *"the number of $b$ for which the shuffled statistic was at least as extreme as the observed one."*
+- $`T_{\text{obs}}`$ — the statistic you actually measured.
+- $`T^{(b)}_{\text{perm}}`$ — the statistic on the $b$-th shuffled dataset.
+- $`\#\{b : T^{(b)}_{\text{perm}} \ge T_{\text{obs}}\}`$ — read *"the number of $b$ for which the shuffled statistic was at least as extreme as the observed one."*
 - $B$ — how many shuffles.
 
 ▸ **Why the $+1$ top and bottom is not a fudge.** Without it, a statistic that beat all $B$ shuffles would get $p = 0/B = 0$ — a claim of *literal impossibility* from a finite simulation, which is nonsense. The $+1$ says: **include the observed arrangement itself in the reference set**, because under the null it is one of the equally likely arrangements. That makes the test **exact** — its false-positive rate is  at most $\alpha$, for any finite $B$, with no approximation. **The smallest $p$-value you can ever report is $1/(B+1)$**, which is an honest statement about the resolution of your simulation. With $B = 10{,}000$ that floor is $10^{-4}$; if you need to claim smaller, run more permutations.
@@ -646,7 +646,7 @@ The $+1$ in numerator and denominator is not a fudge — it makes the test **exa
 - **Grouped data.** Ten measurements per patient: shuffling labels across patients breaks the patient structure and produces a null that is far too optimistic. **Permute within groups**, or permute whole groups.
 - **Time series.** Shuffling destroys the autocorrelation, again making the null too tight. Use block permutations, for the same reason §3.2 recommends the block bootstrap.
 
-**Why the sign-flip test is the right one for model comparison, and why it is so rarely run.** The standard alternative is a two-sample test comparing model A's losses against model B's losses — which throws away the **pairing**. Both models saw the *same* molecules, and molecule difficulty varies enormously (some are hard for everyone). The paired difference $d_i$ cancels that shared difficulty out entirely.
+**Why the sign-flip test is the right one for model comparison, and why it is so rarely run.** The standard alternative is a two-sample test comparing model A's losses against model B's losses — which throws away the **pairing**. Both models saw the *same* molecules, and molecule difficulty varies enormously (some are hard for everyone). The paired difference $`d_i`$ cancels that shared difficulty out entirely.
 
 ▸ **Numbers: if per-molecule loss has SD 0.5 but the *difference* between models has SD 0.05, the paired test is ten times more sensitive on identical data.** A comparison that unpaired analysis calls insignificant, paired analysis resolves cleanly. **It costs nothing but the discipline of logging per-example losses instead of only their averages** — and that single logging habit is what separates a test you can run from a test you can't.
 
@@ -718,7 +718,7 @@ Before the arithmetic, make sure the five lines in that box mean something to yo
 
 ### Noise source 1: molecule sampling
 
-You measure 1,024 of 15,864. If the per-molecule CE has standard deviation $\sigma_{\text{mol}}$ (for molecular CE this is typically 0.3–0.8 nats; call it 0.5):
+You measure 1,024 of 15,864. If the per-molecule CE has standard deviation $`\sigma_{\text{mol}}`$ (for molecular CE this is typically 0.3–0.8 nats; call it 0.5):
 
 $$\mathrm{SE}_{\text{mol}} = \frac{\sigma_{\text{mol}}}{\sqrt{1024}} \cdot \underbrace{\sqrt{1 - \tfrac{1024}{15864}}}_{\text{finite-population correction} = 0.967} = \frac{0.5}{32}\times 0.967 = \mathbf{0.0151}$$
 
@@ -726,7 +726,7 @@ Already comparable to the 0.032 improvement being chased. But this is **not the 
 
 #### Unpacking the first standard error
 
-**The base formula is the $\sigma/\sqrt n$ from Chapter 1 §1.3.1**, applied to molecules: measure 1,024 of them, and the average has a standard error of $\sigma_{\text{mol}}/\sqrt{1024} = 0.5/32 = 0.0156$. The $\sqrt{1024} = 32$ is worth noticing on its own — **a thousand samples buys you a factor of thirty-two, not a factor of a thousand.**
+**The base formula is the $\sigma/\sqrt n$ from Chapter 1 §1.3.1**, applied to molecules: measure 1,024 of them, and the average has a standard error of $`\sigma_{\text{mol}}/\sqrt{1024} = 0.5/32 = 0.0156`$. The $\sqrt{1024} = 32$ is worth noticing on its own — **a thousand samples buys you a factor of thirty-two, not a factor of a thousand.**
 
 **The new piece is the finite-population correction.** Read $\sqrt{1 - \frac{n}{N}}$ as: *"the fraction of the population you have* not *measured, square-rooted."*
 
@@ -740,7 +740,7 @@ Already comparable to the 0.032 improvement being chased. But this is **not the 
 
 **How much would it help to evaluate the full pool?** Setting $n = N$ removes noise source 1 entirely, saving $0.0151$ nats. Hold that number: it is why §3.6's fix list ranks "evaluate on the full val set" *sixth*, not first. **Removing 0.015 of noise from a total of 0.153 is not where the leverage is** — and identifying which noise term dominates *before* optimizing is the entire method being demonstrated here.
 
-**On the $\sigma_{\text{mol}} = 0.5$ estimate.** It is a stated assumption, not a measurement, and the text is explicit about that. **You could measure it in one line** — take the per-molecule losses you already computed and call `.std()` on them. If you are ever in this situation, do that instead of assuming; the whole point of §3.7 is that you should already be logging the per-example values that make it possible.
+**On the $`\sigma_{\text{mol}} = 0.5`$ estimate.** It is a stated assumption, not a measurement, and the text is explicit about that. **You could measure it in one line** — take the per-molecule losses you already computed and call `.std()` on them. If you are ever in this situation, do that instead of assuming; the whole point of §3.7 is that you should already be logging the per-example values that make it possible.
 
 ### Noise source 2: timestep sampling — this is the killer
 
@@ -750,7 +750,7 @@ Apply the law of total variance (Ch. 1 §1.3.2):
 
 ▸ $$\mathrm{Var}(\widehat{\mathrm{CE}}) = \underbrace{\frac{\mathbb{E}_t[\mathrm{Var}(\text{CE}\mid t)]}{1024}}_{\text{molecule noise}} + \underbrace{\frac{\mathrm{Var}_t\big(\mathbb{E}[\text{CE}\mid t]\big)}{16}}_{\text{timestep noise}}$$
 
-The second term divides by **16**, not 1024. And $\mathrm{Var}_t(\mathbb{E}[\text{CE}\mid t])$ is *large* — in a discrete diffusion model, CE at $t\approx0$ (nearly clean input) might be 0.2 nats, and at $t\approx T$ (fully corrupted) it approaches $\log K$. If the conditional mean CE ranges over roughly $[0.3, 2.4]$, a rough uniform-range estimate gives $\sigma_t \approx (2.4-0.3)/\sqrt{12} = 0.61$.
+The second term divides by **16**, not 1024. And $`\mathrm{Var}_t(\mathbb{E}[\text{CE}\mid t])`$ is *large* — in a discrete diffusion model, CE at $t\approx0$ (nearly clean input) might be 0.2 nats, and at $t\approx T$ (fully corrupted) it approaches $\log K$. If the conditional mean CE ranges over roughly $[0.3, 2.4]$, a rough uniform-range estimate gives $`\sigma_t \approx (2.4-0.3)/\sqrt{12} = 0.61`$.
 
 $$\mathrm{SE}_{t} = \frac{0.61}{\sqrt{16}} = \mathbf{0.152}$$
 
@@ -758,7 +758,7 @@ $$\mathrm{SE}_{t} = \frac{0.61}{\sqrt{16}} = \mathbf{0.152}$$
 
 **The measurement noise is roughly 5× larger than the improvement you're trying to detect.**
 
-Even if my $\sigma_t$ estimate is off by 3×, you'd still have $\mathrm{SE} \approx 0.05 > 0.032$. The conclusion is robust to the assumption.
+Even if my $`\sigma_t`$ estimate is off by 3×, you'd still have $\mathrm{SE} \approx 0.05 > 0.032$. The conclusion is robust to the assumption.
 
 #### The law of total variance, decoded — this is the section's engine
 
@@ -767,9 +767,9 @@ Even if my $\sigma_t$ estimate is off by 3×, you'd still have $\mathrm{SE} \app
 **Read the pieces:**
 
 - $\mathrm{Var}(\text{CE}\mid t)$ — read *"the variance of cross-entropy **given** $t$."* The bar means "given," never "divide" (Chapter 0, Trap 5). This is: **fix the noise level, then ask how much molecules differ from each other.**
-- $\mathbb{E}_t[\mathrm{Var}(\text{CE}\mid t)]$ — average that within-$t$ variance over the $t$ values you might draw. **Noise *within* groups.**
+- $`\mathbb{E}_t[\mathrm{Var}(\text{CE}\mid t)]`$ — average that within-$t$ variance over the $t$ values you might draw. **Noise *within* groups.**
 - $\mathbb{E}[\text{CE}\mid t]$ — the *mean* cross-entropy at noise level $t$. A number for each $t$.
-- $\mathrm{Var}_t(\mathbb{E}[\text{CE}\mid t])$ — how much those group means differ from each other. **Noise *between* groups.**
+- $`\mathrm{Var}_t(\mathbb{E}[\text{CE}\mid t])`$ — how much those group means differ from each other. **Noise *between* groups.**
 
 ▸ **And now the crucial part, which is not the formula but the divisors.** The first term is divided by **1,024** — one draw per molecule. The second is divided by **16** — one draw per batch. **You drew $t$ sixty-four times less often than you drew molecules, and variance divides by the number of draws.** That single asymmetry is the whole diagnosis.
 
@@ -779,7 +779,7 @@ Even if my $\sigma_t$ estimate is off by 3×, you'd still have $\mathrm{SE} \app
 
 *The within-$t$ term:* $\frac{0.5^2}{1024} = \frac{0.25}{1024} = 2.4\times10^{-4}$. Square root: $0.0156$.
 
-*The between-$t$ term.* Where does $\sigma_t \approx 0.61$ come from? The mean CE ranges over roughly $[0.3, 2.4]$ across noise levels — near-clean inputs are easy (0.3 nats), near-destroyed inputs approach the entropy of a uniform guess. For a quantity spread roughly uniformly over a range $[a,b]$, the standard deviation is $(b-a)/\sqrt{12}$, so $(2.4-0.3)/3.464 = 0.61$. Then:
+*The between-$t$ term.* Where does $`\sigma_t \approx 0.61`$ come from? The mean CE ranges over roughly $[0.3, 2.4]$ across noise levels — near-clean inputs are easy (0.3 nats), near-destroyed inputs approach the entropy of a uniform guess. For a quantity spread roughly uniformly over a range $[a,b]$, the standard deviation is $(b-a)/\sqrt{12}$, so $(2.4-0.3)/3.464 = 0.61$. Then:
 $$\frac{0.61^2}{16} = \frac{0.372}{16} = 0.0233 \quad\Rightarrow\quad \sqrt{0.0233} = \mathbf{0.152}$$
 
 *Combining.* Variances add, standard errors don't: $\sqrt{0.0156^2 + 0.152^2} = \sqrt{0.000243 + 0.0231} = \sqrt{0.0233} = \mathbf{0.153}$.
@@ -788,7 +788,7 @@ $$\frac{0.61^2}{16} = \frac{0.372}{16} = 0.0233 \quad\Rightarrow\quad \sqrt{0.02
 
 **The ratio, stated plainly.** $0.153$ of measurement noise against a $0.032$ improvement. **The ruler's tick marks are five times wider than the thing being measured.** No amount of staring at the number 1.524 recovers information the measurement never collected.
 
-**On robustness.** The text notes that even a 3× error in $\sigma_t$ leaves $\mathrm{SE}\approx 0.05 > 0.032$. That is the right way to close an estimate built on assumptions: **don't defend the number, show that the conclusion survives the number being wrong.** A conclusion that needs $\sigma_t$ to be exactly 0.61 would be worthless; one that survives $\sigma_t$ anywhere from 0.2 to 1.8 is a finding.
+**On robustness.** The text notes that even a 3× error in $`\sigma_t`$ leaves $\mathrm{SE}\approx 0.05 > 0.032$. That is the right way to close an estimate built on assumptions: **don't defend the number, show that the conclusion survives the number being wrong.** A conclusion that needs $`\sigma_t`$ to be exactly 0.61 would be worthless; one that survives $`\sigma_t`$ anywhere from 0.2 to 1.8 is a finding.
 
 > **A note on the name.** The law of total variance is sometimes taught as **"Eve's law,"** a mnemonic for its shape: **E**xpectation of the **V**ariance, plus **V**ariance of the **E**xpectation. Its partner, the law of total expectation ($\mathbb{E}[X] = \mathbb{E}[\mathbb{E}[X\mid Y]]$), is then "Adam's law." Silly names,  effective at making the structure stick — you can reconstruct the formula from the mnemonic alone, which is more than most people can do from the derivation.
 
@@ -885,7 +885,7 @@ The product telescopes. **A 13-epoch gap after a record at epoch 22 happens 63% 
 
 More generally, the expected number of records in $n$ epochs is the harmonic number:
 $$\mathbb{E}[\#\text{records}] = H_n = \sum_{k=1}^n \frac1k \approx \ln n + 0.5772$$
-For $n=43$: $H_{43} \approx 4.34$. **You should expect about 4 "best" records in 43 epochs even from a model that is not improving at all.** Records get rarer as $1/n$; that's arithmetic, not optimizer behaviour.
+For $n=43$: $`H_{43} \approx 4.34`$. **You should expect about 4 "best" records in 43 epochs even from a model that is not improving at all.** Records get rarer as $1/n$; that's arithmetic, not optimizer behaviour.
 
 ### The part that *is* evidence: the cluster
 
@@ -905,7 +905,7 @@ The right question isn't "did the record move?" It's "did the *trend* move?" Fit
 
 $$\text{CE}_e = \alpha + \beta e + \varepsilon_e$$
 
-With $\sigma_\varepsilon = 0.15$ and $E = 43$ epochs, the standard error of the slope is
+With $`\sigma_\varepsilon = 0.15`$ and $E = 43$ epochs, the standard error of the slope is
 $$\mathrm{SE}(\hat\beta) = \frac{\sigma_\varepsilon}{\sqrt{\sum_e (e-\bar e)^2}} = \frac{0.15}{\sqrt{E(E^2-1)/12}} = \frac{0.15}{\sqrt{43\cdot1848/12}} = \frac{0.15}{81.4} = 0.0018\ \text{nats/epoch}$$
 
 ▸ So a **regression on the whole curve can detect a true drift of 0.004 nats/epoch at 2σ**, while a single-epoch record comparison needs a jump of ~0.3 nats. The trend line is roughly **80× more statistically powerful** than the min-tracker, using exactly the same data you already logged.
@@ -914,7 +914,7 @@ This is the single most important practical takeaway in the chapter: **stop read
 
 ### Fixes, ranked by leverage
 
-1. ▸ **Fix the validation $t$ values across epochs.** Use a fixed stratified grid — e.g. for 16 batches, assign $t_j = \lfloor T(j-0.5)/16 \rfloor$ for $j=1..16$, or use fixed antithetic pairs. This is **common random numbers**, and it kills noise source 2 entirely for *epoch-to-epoch comparisons*: the between-$t$ variance becomes a constant offset shared by every epoch rather than fresh noise.
+1. ▸ **Fix the validation $t$ values across epochs.** Use a fixed stratified grid — e.g. for 16 batches, assign $`t_j = \lfloor T(j-0.5)/16 \rfloor`$ for $j=1..16$, or use fixed antithetic pairs. This is **common random numbers**, and it kills noise source 2 entirely for *epoch-to-epoch comparisons*: the between-$t$ variance becomes a constant offset shared by every epoch rather than fresh noise.
 
    Formally, for the difference between epochs, $\mathrm{Var}(\hat A - \hat B) = \mathrm{Var}(\hat A)+\mathrm{Var}(\hat B) - 2\mathrm{Cov}(\hat A,\hat B)$. With shared $t$ and shared molecules, $\mathrm{Cov}$ is nearly as large as the variances, and the difference variance collapses by an order of magnitude. **This costs zero extra compute.**
 
@@ -940,7 +940,7 @@ Your text correctly says AdamW has no knowledge of `best`. Chapter 5 does the me
 
 - Steps per epoch: $\lceil 145{,}515/64\rceil = \mathbf{2{,}274}$.
 - The "quiet" 13 epochs = $13\times2274 = \mathbf{29{,}562}$ parameter updates.
-- AdamW's second-moment memory horizon is $\frac{1}{1-\beta_2} = 1{,}000$ steps $= \mathbf{0.44}$ epochs.
+- AdamW's second-moment memory horizon is $`\frac{1}{1-\beta_2} = 1{,}000`$ steps $= \mathbf{0.44}$ epochs.
 
 ▸ The optimizer's entire memory of the loss landscape is **shorter than half an epoch**. It could not represent a 13-epoch dry spell even if it wanted to. And with a constant LR and no scheduler, there is nothing in the update rule that is a function of epoch index at all. The clustering is a property of *your measurement process*, not of the optimizer.
 
@@ -954,11 +954,11 @@ $$\mathrm{MCSE} = \frac{\hat\sigma}{\sqrt{n_{\text{eff}}}}$$
 
 For correlated draws (e.g. MCMC, or successive training epochs), the **effective sample size** is
 ▸ $$n_{\text{eff}} = \frac{n}{1 + 2\sum_{k=1}^{\infty}\rho_k}$$
-where $\rho_k$ is the lag-$k$ autocorrelation. Training curves have $\rho_1 \approx 0.7$ routinely, which alone gives $n_{\text{eff}} \approx n/6$.
+where $`\rho_k`$ is the lag-$k$ autocorrelation. Training curves have $`\rho_1 \approx 0.7`$ routinely, which alone gives $`n_{\text{eff}} \approx n/6`$.
 
 **The rule:** a number without an error bar is not a measurement, it's an anecdote.
 
-#### Monte Carlo standard error and $n_{\text{eff}}$, decoded
+#### Monte Carlo standard error and $`n_{\text{eff}}`$, decoded
 
 **MCSE** stands for **Monte Carlo standard error** — "Monte Carlo" being the general name for any method that answers a question by random sampling (see the *Did you know?* below for where that name comes from). It is the ordinary $\hat\sigma/\sqrt n$ of §1.3.1 wearing a different hat: **the part of your uncertainty that exists only because you sampled instead of enumerating.**
 
@@ -967,19 +967,19 @@ where $\rho_k$ is the lag-$k$ autocorrelation. Training curves have $\rho_1 \app
 | Symbol | Read aloud | What it is |
 |---|---|---|
 | $\hat\sigma$ | "sigma-hat" | The standard deviation of your $n$ individual draws |
-| $n_{\text{eff}}$ | "n effective" | How many *independent* draws your $n$ correlated draws are worth |
-| $\rho_k$ | "rho-k" | The correlation between a draw and the draw $k$ steps later |
-| $\sum_{k=1}^{\infty}\rho_k$ | "sum over k of rho-k" | Total memory in the sequence, added up across all lags |
+| $`n_{\text{eff}}`$ | "n effective" | How many *independent* draws your $n$ correlated draws are worth |
+| $`\rho_k`$ | "rho-k" | The correlation between a draw and the draw $k$ steps later |
+| $`\sum_{k=1}^{\infty}\rho_k`$ | "sum over k of rho-k" | Total memory in the sequence, added up across all lags |
 
-**Why correlation costs you sample size — with numbers.** Suppose you log validation loss every epoch and the lag-1 autocorrelation is $\rho_1 = 0.7$, with each further lag decaying by the same factor ($\rho_k = 0.7^k$, the standard AR(1) shape). Then
+**Why correlation costs you sample size — with numbers.** Suppose you log validation loss every epoch and the lag-1 autocorrelation is $`\rho_1 = 0.7`$, with each further lag decaying by the same factor ($`\rho_k = 0.7^k`$, the standard AR(1) shape). Then
 
 $$1 + 2\sum_{k\ge1} 0.7^k = 1 + 2\cdot\frac{0.7}{1-0.7} = 1 + 4.67 = 5.67$$
 
-so $n_{\text{eff}} \approx n/5.67$. **Forty-three logged epochs are worth about 7.6 independent measurements.** Your error bar is $\sqrt{5.67} = 2.4$ times wider than the naive $\hat\sigma/\sqrt{43}$ would suggest.
+so $`n_{\text{eff}} \approx n/5.67`$. **Forty-three logged epochs are worth about 7.6 independent measurements.** Your error bar is $\sqrt{5.67} = 2.4$ times wider than the naive $\hat\sigma/\sqrt{43}$ would suggest.
 
-> **Analogy.** You want to know the average temperature of a city, so you take 3,600 readings — one per second for an hour. You do not have 3,600 independent measurements of anything; the temperature barely moved. You have roughly *one* measurement, taken very carefully. **Correlated samples are repetitions, not replications**, and $n_{\text{eff}}$ is the arithmetic that converts one into the other.
+> **Analogy.** You want to know the average temperature of a city, so you take 3,600 readings — one per second for an hour. You do not have 3,600 independent measurements of anything; the temperature barely moved. You have roughly *one* measurement, taken very carefully. **Correlated samples are repetitions, not replications**, and $`n_{\text{eff}}`$ is the arithmetic that converts one into the other.
 
-▸ **The failure mode this prevents is quoting a confidently tiny error bar on a highly autocorrelated sequence.** Reinforcement-learning return curves, MCMC chains, and epoch-by-epoch training metrics are all strongly autocorrelated. Divide by $\sqrt n$ when you should have divided by $\sqrt{n_{\text{eff}}}$ and your interval is too narrow by a factor of $\sqrt{1+2\sum\rho_k}$ — commonly 2× to 3×, which is the difference between "significant" and "nothing here."
+▸ **The failure mode this prevents is quoting a confidently tiny error bar on a highly autocorrelated sequence.** Reinforcement-learning return curves, MCMC chains, and epoch-by-epoch training metrics are all strongly autocorrelated. Divide by $\sqrt n$ when you should have divided by $`\sqrt{n_{\text{eff}}}`$ and your interval is too narrow by a factor of $`\sqrt{1+2\sum\rho_k}`$ — commonly 2× to 3×, which is the difference between "significant" and "nothing here."
 
 #### Examples and non-examples: what needs an MCSE
 
@@ -1025,7 +1025,7 @@ so $n_{\text{eff}} \approx n/5.67$. **Forty-three logged epochs are worth about 
 
 - **The "winner's curse" was discovered by petroleum engineers, not statisticians.** Capen, Clapp, and Campbell, working at Atlantic Richfield, published it in 1971 in the *Journal of Petroleum Technology* after noticing that companies winning offshore oil-lease auctions were systematically overpaying. The mechanism they described — the winner is whoever's estimation error was most favourable — is exactly what selects your `best.pt`.
 
-- **A million random draws contain only about fourteen record-breaking values.** The expected number of running records in $n$ draws is the harmonic number $H_n \approx \ln n + 0.577$. For $n = 10^6$ that is $14.4$. Records become vanishingly rare *purely because $n$ grows*, which is why a long stretch without a new best tells you almost nothing about whether anything has changed.
+- **A million random draws contain only about fourteen record-breaking values.** The expected number of running records in $n$ draws is the harmonic number $`H_n \approx \ln n + 0.577`$. For $n = 10^6$ that is $14.4$. Records become vanishingly rare *purely because $n$ grows*, which is why a long stretch without a new best tells you almost nothing about whether anything has changed.
 
 - **Kaggle's private leaderboard exists because of the arithmetic in §3.6.** Teams see their score on one slice of the test data and are ranked, at the end, on a slice they never saw. Without that split, the winner would be whichever team's overfitting to the public slice was luckiest — and the "leaderboard shakeup," where the public top-ten collapses on the private split, is selection bias made visible in public.
 
@@ -1055,7 +1055,7 @@ The real test of understanding is conversational: could you explain each of thes
 8. **Explain a permutation test to someone who has never heard of a null distribution.** (The word "shuffle" should do most of the work.)
 9. **Why is the loss written in your `best.pt` filename systematically too good?** How much too good, roughly, and how would you compute that number?
 10. **Why is a 13-epoch stretch without a new best exactly what you should expect from a model that has stopped improving *and* from one that never was?**
-11. **Why does correlation between successive measurements cost you sample size?** What is $n_{\text{eff}}$ in one sentence?
+11. **Why does correlation between successive measurements cost you sample size?** What is $`n_{\text{eff}}`$ in one sentence?
 12. **What single logging change would let you run the right statistical test on your next model comparison?** (Answer: log per-example losses, not just their average.)
 13. **What is the one-sentence rule that connects nested cross-validation, held-out test sets, out-of-bag validation, and the winner's curse?**
 
