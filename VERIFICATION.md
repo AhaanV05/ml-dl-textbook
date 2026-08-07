@@ -4,6 +4,63 @@ A page-by-page audit of the mathematics, worked numbers, examples, and analogies
 
 ---
 
+## 0. The beginner-layer edition — what changed and what didn't
+
+This book was subsequently extended with an explanatory layer aimed at readers without the assumed background. Two commitments govern that work:
+
+**Nothing was removed, reworded, or reordered.** Every sentence, equation, table, and derivation of the original text stands exactly as audited below. The additions are strictly insertions *between* existing blocks. Any line number or claim verified in this document remains verifiable.
+
+**What was added:**
+
+| Addition | Where |
+|---|---|
+| **[Chapter 00 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** | New file: symbol decoder, the six habits for reading a formula, the four ways to multiply, the overloading traps, and a full-forms glossary of every abbreviation used 3+ times in the book |
+| **Symbol tables** | Top of each chapter, decoding that chapter's notation |
+| **Plain-English unpacking** | After dense formulas — every symbol named, an analogy, a worked example with concrete numbers |
+| **Origin stories** (`> **Where this came from.**`) | Near major concepts |
+| **`## Did you know?`** | End of each chapter, before Check for Understanding |
+| **`### Can you explain these out loud?`** | End of each chapter, after Check for Understanding |
+
+### Rendering defects found and corrected
+
+The audit below covered mathematical correctness but not **Markdown rendering**. A repo-wide scan found four table rows where a raw `|` inside `$...$` was being parsed as a column separator, splitting the cell and destroying the math:
+
+| File | Row | Problem | Fix |
+|---|---|---|---|
+| §1.1.4 | $\ell_1$ norm | `\sum` followed by a bare-pipe absolute value split the cell | `\sum_i \lvert x_i \rvert` |
+| §1.1.4 | $\ell_\infty$ norm | `\max_i` followed by a bare-pipe absolute value split the cell | `\max_i \lvert x_i \rvert` |
+| §10.4 | vocabulary trade-off header | bare-pipe cardinality of $V$ split the cell | `\lvert V \rvert` |
+| §10.4 | embedding parameter count | bare-pipe cardinality inside $2\cdot\lvert V\rvert\cdot d$ split the cell | `2\lvert V \rvert d` |
+
+These were  defects: the affected tables did not render as tables at all in any standards-compliant Markdown renderer. **Rule for future edits:** inside a Markdown table cell, never use a bare `|` within math. Use `\lvert`/`\rvert` for absolute value or cardinality, and `\mid` for conditional probability.
+
+> **A note on this very table.** The first draft of the rows above reproduced the bug it documents — the offending expressions were quoted literally, in backticks, and the bare `|` characters split these cells too. Inline code spans do **not** protect a pipe inside a Markdown table; only `\|` or avoiding the character does. The rows are now written descriptively for that reason. It is a fair illustration of how easily this defect slips through: it survived being written *by* the person fixing it, *in the document explaining it*.
+
+### A new finding in the *original* text — Ch. 8 architecture lineage table
+
+The beginner-layer pass surfaced one substantive issue that the original audit did not catch, in the §8.6 architecture comparison table.
+
+**The problem.** The `GoogLeNet/Inception` row pairs three things that come from different members of the Inception family:
+
+| Column | Value in table | Which model it actually belongs to |
+|---|---|---|
+| Year | 2014 | Inception-v1 (GoogLeNet) ✓ |
+| Params | 6.8M | Inception-v1 ✓ |
+| Key idea | $n\times n \to n\times1,\ 1\times n$ factorization | **Inception-v3** (2015) |
+| Top-1 | 74.8% | **A later variant** — v1's commonly-reported single-crop top-1 is in the high 60s |
+
+**Why it was not corrected.** The additive-only rule governs this edition: no original sentence, table, or figure is altered. The row has instead been annotated immediately below the table, explaining which figure belongs to which variant.
+
+**Does it damage the argument?** No. The table's purpose is to show that parameter count and accuracy are decoupled, and 6.8M against VGG-16's 138M is a 20× gap under either accuracy figure. The claim built on the row — "GoogLeNet is competitive with VGG-16 using roughly twenty times fewer parameters" — survives intact.
+
+**The general hazard, now stated in the text.** "Inception" names four architectures spanning 2014–2016, and lineage tables across the literature routinely blur them. The chapter now tells the reader to ask *which version* whenever an Inception number is quoted — and notes the irony that the ConvNeXt lesson appearing directly beneath the table ("architecture comparisons at unequal training recipes are worthless") retroactively undercuts most cross-era readings of the table itself.
+
+### Standing accuracy requirement for the added material
+
+The historical claims added to each chapter are held to the same bar as the mathematics: named individuals, approximate dates, and institutions only where well attested. Where an anecdote is disputed or likely apocryphal — the von Neumann "nobody knows what entropy really is" story is the prominent example — the text says so rather than presenting it as settled fact. Stories that could not be confirmed were omitted rather than hedged into vagueness.
+
+---
+
 ## 1. Method
 
 Three passes:
@@ -205,10 +262,10 @@ Places where the honest answer is uncertain, and the book says so rather than pr
 1. **Currency.** Content reflects the field as of mid-2026. Chapters 13–18 and 32 are the fastest-moving; treat specific model names, benchmark numbers, and "current best" claims as dated even where the underlying mathematics is not.
 2. **Empirical constants are load-bearing but soft.** Values like $d_{\text{ff}}=4d$, $\alpha=0.1$ for label smoothing, $\lambda\approx0.01$ for the D3PM auxiliary term, $\tau\approx0.1$ for contrastive learning, and $\epsilon=0.2$ for PPO are conventions with empirical support, not derived quantities. They are marked as such but are worth re-checking against current practice.
 3. **Benchmark numbers** (ImageNet top-1, perplexities) are drawn from the original papers under their own training recipes. Chapter 8 §8.3's ConvNeXt discussion explains why cross-paper comparisons at unequal recipes are unreliable — that warning applies to this book's own tables.
-4. **Proof rigour.** Derivations are complete at the level of a working practitioner, not a measure theorist. Regularity conditions (interchange of limits and integrals, differentiability almost everywhere, existence of moments) are generally assumed rather than verified. Where a result genuinely depends on a condition that is often violated — Gauss–Markov's homoskedasticity, conformal prediction's exchangeability, the deadly triad — the condition is stated explicitly.
+4. **Proof rigour.** Derivations are complete at the level of a working practitioner, not a measure theorist. Regularity conditions (interchange of limits and integrals, differentiability almost everywhere, existence of moments) are generally assumed rather than verified. Where a result  depends on a condition that is often violated — Gauss–Markov's homoskedasticity, conformal prediction's exchangeability, the deadly triad — the condition is stated explicitly.
 5. **The NTK and PAC-Bayes sections** present the results and their implications but not the full proofs, which are long. This is flagged in the text.
 6. **Coverage gaps.** Time-series forecasting, causal inference, recommender systems, federated learning, differential privacy, and ML systems/MLOps are touched on only where they intersect other chapters. They are real fields and are not covered here.
-7. **Single-author verification.** Every check in this document was performed by the same process that produced the text. That is a genuine limitation: an error in understanding produces a matching error in verification. The numerical checks in §2 are the strongest evidence here, because arithmetic run in Python is independent of the reasoning that produced the claim. **Treat the derivations as re-derivable, and re-derive them — that is what §34's cover-the-answer instruction is for.**
+7. **Single-author verification.** Every check in this document was performed by the same process that produced the text. That is a  limitation: an error in understanding produces a matching error in verification. The numerical checks in §2 are the strongest evidence here, because arithmetic run in Python is independent of the reasoning that produced the claim. **Treat the derivations as re-derivable, and re-derive them — that is what §34's cover-the-answer instruction is for.**
 
 ---
 

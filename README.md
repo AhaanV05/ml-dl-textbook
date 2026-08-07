@@ -18,6 +18,22 @@ It is written to be **re-read**. Chapters are self-contained, cross-referenced, 
 
 Everything else is built from the ground up, including the parts that introductory courses skip.
 
+> ### Don't have that background? Start at Chapter 0.
+>
+> **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** removes the prerequisites above. It is a decoder ring, not a course: it explains every symbol used in these thirty-five chapters ($\in$, $\sum$, $\prod$, $\mathbb{E}$, $\nabla$, $\partial$, $A^\top$, $\odot$, $\sim$, $\mid$, $\propto$ …), the six habits that make any formula readable, the four different ways to multiply and why they're constantly confused, the traps where one symbol means four different things — and a **full-forms glossary of every abbreviation in this book**, all 160+ of them.
+>
+> It takes about twenty minutes and it is the difference between reading this book and bouncing off it.
+
+### What this edition adds for beginners
+
+Every chapter now carries an explanatory layer on top of the original text — nothing was removed or reworded:
+
+- **A symbol table** at the top of each chapter, decoding the notation it introduces.
+- **Plain-English unpacking** after the dense formulas — every symbol named, an analogy, and a worked example with real numbers, so you learn what the algebra *means* rather than how to recognize it.
+- **Origin stories** — who invented each idea, what problem they were actually trying to solve, and how often the answer was "something else entirely."
+- **"Did you know?"** at the end of each chapter — the etymology, accidents, and rejected papers behind the machinery.
+- **"Can you explain these out loud?"** — a conversational self-test, because the real proof of understanding is being able to explain a concept to another person without notation.
+
 ---
 
 ## Structure of every section
@@ -33,6 +49,12 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 ---
 
 ## The complete table of contents
+
+### Part 0 — Prerequisites
+
+| # | Chapter | Contents |
+|---|---|---|
+| 00 | **[How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** | Notation as compressed English; the six habits for reading any formula; sets and spaces; the big operators ($\sum$, $\prod$, $\int$) as loops; Greek letters and the overloading traps; hats, bars, tildes and transposes; the adjoint (bar) convention used for backpropagation; calculus notation; **the four ways to multiply and why they're confused**; probability notation; big-O; a worked decoding of the Gaussian density; **a full-forms glossary of every abbreviation in this book**. |
 
 ### Part I — Foundations
 
@@ -123,6 +145,8 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 ## Reading paths
 
+**Path 0 — Absolute beginner.** Read **[Chapter 00](00-notation-and-math-primer.md)** end to end before anything else. Then Chapter 01, slowly, doing the "Can you explain these out loud?" test at the end before moving on. Do not skip ahead — every later chapter reuses Chapter 01's vocabulary.
+
 **Path A — Full curriculum (12–16 weeks).** 01 → 34 in order. This is the correct path.
 
 **Path B — Interview preparation (3–4 weeks).** 02, 03, 05, 06, 07, 11, 12, 13, 15, 16, 19, 20, 23, 26, 27, 30, 31, 32, 34.
@@ -135,7 +159,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 **Path F — Frontier phenomena first.** 30 → 31 → 32, back-filling from the prerequisite lines at the top of each.
 
-**Daily maintenance.** Each chapter ends with a **Check for Understanding** — a single compressed sentence. Reading those 34 sentences takes ten minutes and is a genuine refresher. The **▸** equations are the second layer of that same idea.
+**Daily maintenance.** Each chapter ends with a **Check for Understanding** — a single compressed sentence. Reading those 34 sentences takes ten minutes and is a  refresher. The **▸** equations are the second layer of that same idea.
 
 ---
 
@@ -164,6 +188,8 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 Vectors are columns. $\nabla_\theta\mathcal{L}$ has the same shape as $\theta$.
 
+> **If any symbol in that table is unfamiliar**, [Chapter 00](00-notation-and-math-primer.md) explains all of them, plus the ones this table assumes you already know. It also flags the  traps — $\sigma$ means a standard deviation, a singular value, the sigmoid function, *and* a generic activation, depending entirely on context; $\bar y$ in this book usually means $\partial\mathcal{L}/\partial y$ rather than an average; and the vertical bar in $p(x\mid y)$ means "given," not division.
+
 ---
 
 ## Case Study A — the book's running numerical example
@@ -186,7 +212,7 @@ Derived facts referenced later:
 
 ▸ AdamW with $\beta_2=0.999$ has a memory horizon of $1/(1-\beta_2) = 1{,}000$ steps $= 0.44$ epochs. **The optimizer's entire memory is shorter than half an epoch**, so it cannot encode a multi-epoch plateau even in principle.
 
-▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}$ under the same null — *that* is the evidence of genuine improvement.
+▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}$ under the same null — *that* is the evidence of  improvement.
 
 The full analysis is Chapter 3 §3.6. The pattern generalizes to any noisy metric tracked by its running minimum.
 
@@ -196,4 +222,6 @@ The full analysis is Chapter 3 §3.6. The pattern generalizes to any noisy metri
 
 Read a section, close it, and re-derive the boxed equation on paper. If you can't, you recognized it rather than learned it — and recognition is the failure mode that feels exactly like understanding.
 
-Start at [Chapter 01](01-mathematical-foundations.md).
+**The second test, which is harder:** close the book and explain the idea out loud, in plain English, to someone who doesn't know it. Notation is compressed thought, and you have only decompressed it when you can say it in sentences. Each chapter ends with a **Can you explain these out loud?** list for exactly this. If your explanation comes out as a formula, you have not finished learning it.
+
+Start at [Chapter 00](00-notation-and-math-primer.md) if the notation is new to you, or [Chapter 01](01-mathematical-foundations.md) if it isn't.
