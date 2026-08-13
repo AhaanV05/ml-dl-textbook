@@ -2,7 +2,7 @@
 
 > **Prerequisites:** Ch. 10, 11, 12.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, or $A^\top$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, or $`A^\top`$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
@@ -10,22 +10,22 @@ Skim once; each is unpacked properly where it first appears. This chapter has le
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $`x_{1:T}`$ | "x one through T" | The **whole sequence** of $T$ tokens |
-| $`x_{<t}`$ | "x less than t" | Everything **before** position $t$ — the prefix, the context so far |
+| $`x_{1:T}`$ | "x one through T" | The **whole sequence** of $`T`$ tokens |
+| $`x_{<t}`$ | "x less than t" | Everything **before** position $`t`$ — the prefix, the context so far |
 | $`p_\theta(x_t \mid x_{<t})`$ | "p theta of x-t given x-before-t" | The probability the model assigns to the next token, **having seen** the prefix |
 | $`\prod_{t=1}^{T}`$ | "product from t equals 1 to T" | **Multiply** over every position — a `for` loop that multiplies (§0.3) |
-| $\mathcal{L}$ | "script L" | The **loss** — here, the average negative log-probability of the true next token |
-| $N,\ L,\ d,\ T$ | — | **P**arameter count, **l**ayer count, model **width**, context **length** |
+| $`\mathcal{L}`$ | "script L" | The **loss** — here, the average negative log-probability of the true next token |
+| $`N,\ L,\ d,\ T`$ | — | **P**arameter count, **l**ayer count, model **width**, context **length** |
 | $`\arg\max_x`$ | "arg max over x" | The **input** that achieves the maximum, not the maximum itself (§0.3) |
-| $\tau$ | "tau" | **Temperature** — how flat or peaked the sampling distribution is |
-| $\propto$ | "is proportional to" | Equal up to a normalizing constant we don't care about |
-| $\mathrm{PPL}$ | "perplexity" | $e^{\text{loss}}$ — the **effective branching factor** |
-| $\mathcal{M}$ | "script M" | The **set of masked positions** in BERT-style training |
+| $`\tau`$ | "tau" | **Temperature** — how flat or peaked the sampling distribution is |
+| $`\propto`$ | "is proportional to" | Equal up to a normalizing constant we don't care about |
+| $`\mathrm{PPL}`$ | "perplexity" | $`e^{\text{loss}}`$ — the **effective branching factor** |
+| $`\mathcal{M}`$ | "script M" | The **set of masked positions** in BERT-style training |
 | $`x_{\setminus\mathcal{M}}`$ | "x not M" | Every token **except** the masked ones |
-| $\lvert y\rvert^{\alpha}$ | "length of y, to the alpha" | Sequence length raised to a power — beam search's **length normalization** |
-| $`p_{\min}`$ | "p min" | Min-$p$'s relative cutoff |
-| $H$ | "H" | **Entropy** — the model's average surprise (§1.4) |
-| $\mathcal{N}(0, 0.02^2)$ | "normal, mean 0, sd 0.02" | The **initialization** distribution for weights |
+| $`\lvert y\rvert^{\alpha}`$ | "length of y, to the alpha" | Sequence length raised to a power — beam search's **length normalization** |
+| $`p_{\min}`$ | "p min" | Min-$`p`$'s relative cutoff |
+| $`H`$ | "H" | **Entropy** — the model's average surprise (§1.4) |
+| $`\mathcal{N}(0, 0.02^2)`$ | "normal, mean 0, sd 0.02" | The **initialization** distribution for weights |
 
 **Full forms for the abbreviations in this chapter.** Say each aloud once.
 
@@ -98,13 +98,13 @@ $$p_\theta(x_{1:T}) = \prod_{t=1}^{T}p_\theta(x_t\mid x_{<t})$$
 | $`p_\theta(x_{1:T})`$ | "p theta of x-one-through-T" | How likely the model thinks **this entire document** is |
 | $`\prod_{t=1}^{T}`$ | "product from t = 1 to T" | Multiply the following, once per position |
 | $`p_\theta(x_t \mid x_{<t})`$ | "…of x-t **given** everything before it" | How likely **the next token** is, having read the prefix |
-| $\mid$ | "given" | Conditional probability (§0.9, Trap 5) — **not** division, not absolute value |
+| $`\mid`$ | "given" | Conditional probability (§0.9, Trap 5) — **not** division, not absolute value |
 
 ▸ **In one sentence: the probability of a whole document equals the probability of its first word, times the probability of its second word given the first, times the probability of its third given the first two, and so on to the end.**
 
 > **Analogy.** The chance of a particular hand of cards being dealt equals the chance of the first card, times the chance of the second *given* the first has left the deck, times the chance of the third given the first two. Nothing is being approximated — you are simply choosing to count the outcome one card at a time instead of all at once. **The word "exactly, with no approximation" in the text above is doing real work**, and §13.1's first bullet is why it matters.
 
-**Numbers, with $T=3$.** The sentence "the cat sat," with the model's assigned probabilities:
+**Numbers, with $`T=3`$.** The sentence "the cat sat," with the model's assigned probabilities:
 
 $$p(\text{"the cat sat"}) = \underbrace{p(\text{the})}_{0.05}\times\underbrace{p(\text{cat}\mid\text{the})}_{0.01}\times\underbrace{p(\text{sat}\mid\text{the cat})}_{0.10} = 5\times10^{-5}$$
 
@@ -112,13 +112,13 @@ $$p(\text{"the cat sat"}) = \underbrace{p(\text{the})}_{0.05}\times\underbrace{p
 
 $$\mathcal{L} = -\frac{1}{T}\sum_{t=1}^{T}\log p_\theta(x_t\mid x_{<t})$$
 
-Read it right to left. Take the probability the model gave the token that *actually* came next. Take its log. Add up over all positions. Divide by $T$ to average. Negate, so that lower is better.
+Read it right to left. Take the probability the model gave the token that *actually* came next. Take its log. Add up over all positions. Divide by $`T`$ to average. Negate, so that lower is better.
 
-**Why the log?** Two reasons, both from §0.3. Products of thousands of numbers below 1 underflow to zero in any float format — $0.1^{500}$ is not representable. And $\log$ turns products into sums: $\log\prod = \sum\log$. **So minimizing $\mathcal{L}$ is exactly maximizing the probability of the training corpus** — it is the same objective, made numerically survivable.
+**Why the log?** Two reasons, both from §0.3. Products of thousands of numbers below 1 underflow to zero in any float format — $`0.1^{500}`$ is not representable. And $`\log`$ turns products into sums: $`\log\prod = \sum\log`$. **So minimizing $`\mathcal{L}`$ is exactly maximizing the probability of the training corpus** — it is the same objective, made numerically survivable.
 
-**Numbers again.** Our three tokens: $-\tfrac13(\log 0.05 + \log 0.01 + \log 0.10) = -\tfrac13(-3.00 - 4.61 - 2.30) = 3.30$ nats. Perplexity $= e^{3.30} = 27$ — "as confused as if choosing uniformly among 27 options at each step." A good model on English prose sits nearer 10–20; a random model over a 50,000-token vocabulary sits at 50,000.
+**Numbers again.** Our three tokens: $`-\tfrac13(\log 0.05 + \log 0.01 + \log 0.10) = -\tfrac13(-3.00 - 4.61 - 2.30) = 3.30`$ nats. Perplexity $`= e^{3.30} = 27`$ — "as confused as if choosing uniformly among 27 options at each step." A good model on English prose sits nearer 10–20; a random model over a 50,000-token vocabulary sits at 50,000.
 
-▸ **Why the negative sign, said properly.** $\log$ of a probability is always negative (probabilities are at most 1). Negating makes the loss positive, and it turns "make the probability large" into "make this number small," which is what gradient descent expects. **A loss of 0 would mean the model assigned probability exactly 1 to every token it saw** — perfect prediction, which is only possible if the text is deterministic.
+▸ **Why the negative sign, said properly.** $`\log`$ of a probability is always negative (probabilities are at most 1). Negating makes the loss positive, and it turns "make the probability large" into "make this number small," which is what gradient descent expects. **A loss of 0 would mean the model assigned probability exactly 1 to every token it saw** — perfect prediction, which is only possible if the text is deterministic.
 
 > **Where this came from.** The idea of modelling language by the statistics of what follows what is older than computing hardware capable of doing it. **Claude Shannon**, in *A Mathematical Theory of Communication* (1948), estimated the statistics of English from books and used them to **generate text** — sampling letters, then letter-pairs, then words, then word-pairs, and showing that each step produced output that looked more like English than the last. It was a demonstration of an information-theoretic point, not an attempt to build anything, and he did the sampling by hand with a book, flipping to random pages to find the next occurrence of a phrase.
 >
@@ -126,10 +126,10 @@ Read it right to left. Take the probability the model gave the token that *actua
 
 **Why this is such a good objective:**
 
-1. **Exact likelihood.** No bound, no adversary, no partition function. Compare VAEs (a bound), GANs (no likelihood at all), EBMs (intractable $Z$) — Ch. 19.
-2. **Dense supervision.** One forward pass over $T$ tokens yields $T$ prediction targets (thanks to causal masking, Ch. 11 §11.4).
+1. **Exact likelihood.** No bound, no adversary, no partition function. Compare VAEs (a bound), GANs (no likelihood at all), EBMs (intractable $`Z`$) — Ch. 19.
+2. **Dense supervision.** One forward pass over $`T`$ tokens yields $`T`$ prediction targets (thanks to causal masking, Ch. 11 §11.4).
 3. **Self-supervised.** The labels are the data.
-4. **Task-universal.** Any task expressible as text — translation, QA, summarization, code, reasoning — is a conditional distribution $p(\text{answer}\mid\text{question})$, which the model already represents.
+4. **Task-universal.** Any task expressible as text — translation, QA, summarization, code, reasoning — is a conditional distribution $`p(\text{answer}\mid\text{question})`$, which the model already represents.
 
 #### The four advantages, decoded
 
@@ -142,7 +142,7 @@ These four bullets are the entire case for why this architecture won, so they ar
 | Autoregressive LM | The **exact** number | — |
 | VAE | A **lower bound** (the ELBO — evidence lower bound) | You never know how loose the bound is |
 | GAN | **Nothing** — no likelihood at all | You cannot even measure whether the model improved |
-| Energy-based | A number divided by an **intractable** constant $Z$ | The constant requires summing over all possible outputs |
+| Energy-based | A number divided by an **intractable** constant $`Z`$ | The constant requires summing over all possible outputs |
 
 > **Analogy.** A shop that prints the actual price on the tag, versus one that guarantees "no more than £50," versus one that will only tell you whether *this* item costs more than *that* one. The first is far easier to do business with, and the difference compounds through everything you build on top.
 
@@ -152,7 +152,7 @@ These four bullets are the entire case for why this architecture won, so they ar
 
 **3. "Self-supervised. The labels are the data."** There is no annotation step. Nobody labels anything. The correct answer to "what comes next" is *already sitting there in the text*, which is why the training set can be trillions of tokens scraped from the internet rather than the millions of hand-labelled examples that classical supervised learning is limited to.
 
-**4. "Task-universal."** Translation is $p(\text{French}\mid\text{English})$. Summarization is $p(\text{summary}\mid\text{article})$. Question answering is $p(\text{answer}\mid\text{question})$. **Every one of these is already a conditional next-token distribution**, which the model represents by construction — so no new head, no new loss, no new training run is needed to attempt any of them.
+**4. "Task-universal."** Translation is $`p(\text{French}\mid\text{English})`$. Summarization is $`p(\text{summary}\mid\text{article})`$. Question answering is $`p(\text{answer}\mid\text{question})`$. **Every one of these is already a conditional next-token distribution**, which the model represents by construction — so no new head, no new loss, no new training run is needed to attempt any of them.
 
 ▸ **Why "just predicting the next token" is not a limitation:** predicting the token after a long argument requires having tracked the argument. Predicting the last word of a murder mystery's reveal requires having solved it. The objective is shallow; the competence required to minimize it is not.
 
@@ -182,7 +182,7 @@ Consider the token the model must predict at the end of each of these:
 
 | Example | Why it qualifies |
 |---|---|
-| GPT predicting token $t$ from tokens $1..t-1$ behind a causal mask | The factorization $`p(x) = \prod_t p(x_t \mid x_{<t})`$ is exact, and no term peeks forward |
+| GPT predicting token $`t`$ from tokens $`1..t-1`$ behind a causal mask | The factorization $`p(x) = \prod_t p(x_t \mid x_{<t})`$ is exact, and no term peeks forward |
 | A bigram model $`p(x_t \mid x_{t-1})`$ trained by counting | Same left-to-right factorization, with the conditioning set truncated to one token |
 | WaveNet over raw audio samples, PixelCNN over pixels | Nothing in the objective is about language; it is about ordering the variables and conditioning on the prefix |
 | Next-token prediction on Python source | Same loss, same mask, different corpus |
@@ -192,7 +192,7 @@ Consider the token the model must predict at the end of each of these:
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| BERT's masked language modelling | Position $t$ is predicted using tokens on **both** sides. The per-position terms do not multiply into a valid joint distribution over the sequence | A denoising objective. It builds representations, not a generative model of $p(x)$ (§13.6) |
+| BERT's masked language modelling | Position $`t`$ is predicted using tokens on **both** sides. The per-position terms do not multiply into a valid joint distribution over the sequence | A denoising objective. It builds representations, not a generative model of $`p(x)`$ (§13.6) |
 | T5 span corruption | Predicts deleted spans conditioned on the whole corrupted document, including what came after | A sequence-to-sequence denoising objective |
 | A diffusion language model | Refines every position at once across denoising steps; there is no left-to-right order at all | Non-autoregressive generation (Ch. 21) |
 | "The model wrote a paragraph" | One forward pass emits **one** distribution over the vocabulary. The paragraph comes from a `for` loop that calls the model 200 times, feeding each sampled token back in | A sampling loop wrapped around an autoregressive model |
@@ -206,7 +206,7 @@ Consider the token the model must predict at the end of each of these:
 
 ## 13.2 The architectural lineage
 
-| Model | Year | $N$ | $L$ | $d$ | $T$ | The change that mattered |
+| Model | Year | $`N`$ | $`L`$ | $`d`$ | $`T`$ | The change that mattered |
 |---|---|---|---|---|---|---|
 | GPT-1 | 2018 | 117M | 12 | 768 | 512 | generative pretraining + discriminative fine-tuning |
 | GPT-2 | 2019 | 1.5B | 48 | 1600 | 1024 | **pre-LN**; scale; zero-shot task transfer |
@@ -224,12 +224,12 @@ The four numeric columns are the entire specification of a transformer, so learn
 
 | Column | Read aloud | What it controls |
 |---|---|---|
-| $N$ | "N" | **Total parameter count** — how many numbers the model has learned |
-| $L$ | "L" | **Layers** — how many times the block is stacked; roughly, depth of reasoning per token |
-| $d$ | "d" | **Width** of the residual stream — how many numbers describe each token at each layer |
-| $T$ | "T" | **Context length** — how many tokens it can see at once |
+| $`N`$ | "N" | **Total parameter count** — how many numbers the model has learned |
+| $`L`$ | "L" | **Layers** — how many times the block is stacked; roughly, depth of reasoning per token |
+| $`d`$ | "d" | **Width** of the residual stream — how many numbers describe each token at each layer |
+| $`T`$ | "T" | **Context length** — how many tokens it can see at once |
 
-▸ **A rough check you can do in your head: $N \approx 12\,L\,d^2$ for a standard transformer.** (Each layer holds roughly $4d^2$ of attention weights and $8d^2$ of feed-forward weights.) Try it on GPT-3: $12\times96\times12288^2 = 1.74\times10^{11}$ — **174B against the stated 175B.** The estimate is that good because the architecture really is just that block, repeated.
+▸ **A rough check you can do in your head: $`N \approx 12\,L\,d^2`$ for a standard transformer.** (Each layer holds roughly $`4d^2`$ of attention weights and $`8d^2`$ of feed-forward weights.) Try it on GPT-3: $`12\times96\times12288^2 = 1.74\times10^{11}`$ — **174B against the stated 175B.** The estimate is that good because the architecture really is just that block, repeated.
 
 **Now feel the scale changes**, because the numbers do not read as dramatic on a page:
 
@@ -239,7 +239,7 @@ The four numeric columns are the entire specification of a transformer, so learn
 | GPT-2 → GPT-3 | 1.5B → 175B (**117×**) | 1024 → 2048 (2×) |
 | GPT-3 → LLaMA-3 | context 2048 → 128k (**62×**) | — |
 
-> **Analogy for the width column.** $d$ is the width of a conveyor belt running the length of the factory, and every layer is a station that reads things off the belt and adds things back onto it. GPT-3's belt is 12,288 lanes wide. Ch. 32's superposition results are about how many distinct items can share those lanes without colliding — and §1.1.5 already told you the answer is far more than 12,288.
+> **Analogy for the width column.** $`d`$ is the width of a conveyor belt running the length of the factory, and every layer is a station that reads things off the belt and adds things back onto it. GPT-3's belt is 12,288 lanes wide. Ch. 32's superposition results are about how many distinct items can share those lanes without colliding — and §1.1.5 already told you the answer is far more than 12,288.
 
 **Reading the "change that mattered" column as a story.** Each row is one lesson the field learned:
 
@@ -263,12 +263,12 @@ Worth being able to recite, so worth understanding rather than memorizing. Each 
 | **Pre-norm** | Normalize *before* the block, not after | The residual path stays clean, so gradients reach layer 1 — this is what made 48+ layers trainable (Ch. 7) |
 | **RMSNorm** | Root Mean Square Normalization: divide by the root-mean-square, **skip the mean subtraction** | Same benefit as LayerNorm, one fewer pass over the data, measurably faster |
 | **SwiGLU** | A gated feed-forward network | Empirically a point or two better than plain ReLU at equal parameters |
-| $`d_{\text{ff}} = \tfrac83 d`$ | The hidden width of the FFN | SwiGLU uses **three** weight matrices instead of two, so $\tfrac83$ keeps the parameter count matched to a conventional $4d$ FFN. **The odd fraction is a fair-comparison correction, not a magic number.** |
+| $`d_{\text{ff}} = \tfrac83 d`$ | The hidden width of the FFN | SwiGLU uses **three** weight matrices instead of two, so $`\tfrac83`$ keeps the parameter count matched to a conventional $`4d`$ FFN. **The odd fraction is a fair-comparison correction, not a magic number.** |
 | **RoPE** | Rotary position embedding (Ch. 12) | Relative position, KV-cache compatible, extensible |
 | **GQA** | Grouped-Query Attention (Ch. 12) | 8× smaller KV cache at near-MHA quality |
-| **No biases** | Drop the $+b$ everywhere | They contribute almost nothing and cost memory traffic and stability |
+| **No biases** | Drop the $`+b`$ everywhere | They contribute almost nothing and cost memory traffic and stability |
 | **No dropout** | None during pretraining | Dropout fights overfitting; on a trillion-token corpus seen roughly once, **there is nothing to overfit** |
-| **Weight tying** | Share the input embedding and the output projection | Saves $V\times d$ parameters — at $V=128$k and $d=8192$ that is over a billion |
+| **Weight tying** | Share the input embedding and the output projection | Saves $`V\times d`$ parameters — at $`V=128`$k and $`d=8192`$ that is over a billion |
 | **AdamW + cosine/WSD** | The optimizer and schedule (Ch. 5) | Decoupled weight decay; a schedule that anneals to a small final learning rate |
 | **bf16 + fp32 master** | Compute in 16-bit, keep the authoritative copy in 32-bit | Half the memory traffic, without losing small updates to rounding (Ch. 14) |
 
@@ -301,8 +301,8 @@ cheese =>              ← model completes "fromage"
 The best-supported mechanistic explanation (Olsson et al., 2022; expanded in Ch. 32):
 
 An **induction head** implements the rule *"find where this token appeared before, and copy what followed it."* It requires two heads composing across layers:
-1. A **previous-token head** in layer $\ell$ writes information about token $t-1$ into position $t$'s residual stream.
-2. An **induction head** in layer $\ell' > \ell$ uses the current token as a query to match against that written information, locating earlier occurrences, and copies the token that followed.
+1. A **previous-token head** in layer $`\ell`$ writes information about token $`t-1`$ into position $`t`$'s residual stream.
+2. An **induction head** in layer $`\ell' > \ell`$ uses the current token as a query to match against that written information, locating earlier occurrences, and copies the token that followed.
 
 **Minimum two attention layers.** One-layer attention-only transformers cannot form induction heads and cannot do in-context learning.
 
@@ -310,7 +310,7 @@ An **induction head** implements the rule *"find where this token appeared befor
 
 State the strangeness precisely, because it is easy to under-appreciate.
 
-**Learning, as defined everywhere else in this book, means changing the weights.** You compute a gradient, you take a step, $\theta$ becomes a different vector. In-context learning involves **none of that**. The weights are frozen. The model is in inference mode. Nothing is being optimized. And yet showing it three translated words makes it translate a fourth.
+**Learning, as defined everywhere else in this book, means changing the weights.** You compute a gradient, you take a step, $`\theta`$ becomes a different vector. In-context learning involves **none of that**. The weights are frozen. The model is in inference mode. Nothing is being optimized. And yet showing it three translated words makes it translate a fourth.
 
 ▸ **So whatever is happening is happening entirely in the activations** — in the residual stream, within a single forward pass, and it is discarded the moment the sequence ends. The model has, somehow, learned *an algorithm for adapting* rather than merely a set of answers, and that algorithm runs as a side effect of computing next-token probabilities.
 
@@ -324,9 +324,9 @@ The mechanism is two heads working in sequence, and it is worth walking through 
 
 **The rule being implemented:** *"Find where this token appeared before, and copy whatever came after it."* Formally, given a sequence containing `…A B … A`, predict `B`.
 
-**Step 1 — the previous-token head (layer $\ell$).** A head whose attention pattern is trivial: every position attends to the position immediately before it. It copies information about token $t-1$ into position $t$'s residual stream. **After this layer, position $t$'s vector says, in effect, "I am `B`, and the thing before me was `A`."**
+**Step 1 — the previous-token head (layer $`\ell`$).** A head whose attention pattern is trivial: every position attends to the position immediately before it. It copies information about token $`t-1`$ into position $`t`$'s residual stream. **After this layer, position $`t`$'s vector says, in effect, "I am `B`, and the thing before me was `A`."**
 
-**Step 2 — the induction head (layer $\ell' > \ell$).** The current token is `A` again. This head forms a query meaning *"find positions whose predecessor was `A`."* Thanks to step 1, exactly those positions have that information written into them. The head matches, attends there, and copies out **what that position's token was** — namely `B`.
+**Step 2 — the induction head (layer $`\ell' > \ell`$).** The current token is `A` again. This head forms a query meaning *"find positions whose predecessor was `A`."* Thanks to step 1, exactly those positions have that information written into them. The head matches, attends there, and copies out **what that position's token was** — namely `B`.
 
 ▸ **The two steps must be in different layers, and that is the whole content of "minimum two attention layers."** Step 2's query depends on information that step 1 wrote. A single layer's heads all read the *same* residual stream and write in parallel; none can read another's output. **The circuit needs a layer boundary to exist in, the way a two-stage pipeline needs a register between the stages.**
 
@@ -436,35 +436,35 @@ The model gives you $`p(x_t\mid x_{<t})`$. Turning it into text is a separate, c
 
 **Greedy:** $`x_t=\arg\max p`$. Fast; repetitive and dull; **not** the highest-probability *sequence* (a locally-best token can foreclose a better continuation).
 
-**Beam search:** keep $k$ partial sequences, expand all, retain the top $k$ by cumulative log-probability.
-- Needs **length normalization**: $\frac{1}{|y|^\alpha}\sum\log p$, $\alpha\approx0.6$–1.0. Without it, shorter sequences always win because every added token multiplies by a probability $<1$.
+**Beam search:** keep $`k`$ partial sequences, expand all, retain the top $`k`$ by cumulative log-probability.
+- Needs **length normalization**: $`\frac{1}{|y|^\alpha}\sum\log p`$, $`\alpha\approx0.6`$–1.0. Without it, shorter sequences always win because every added token multiplies by a probability $`<1`$.
 #### Greedy and beam search, decoded
 
-**Greedy**, first. $`x_t = \arg\max p`$ reads *"pick the single most likely next token, every time."* Remember §0.3: $\arg\max$ returns the **token**, not the probability.
+**Greedy**, first. $`x_t = \arg\max p`$ reads *"pick the single most likely next token, every time."* Remember §0.3: $`\arg\max`$ returns the **token**, not the probability.
 
 ▸ **The subtle and important part is "not the highest-probability *sequence*."** Greedy is locally optimal and globally not. Work a two-step example:
 
-| First token | $p$ | Best second token given it | $p$ | Sequence total |
+| First token | $`p`$ | Best second token given it | $`p`$ | Sequence total |
 |---|---|---|---|---|
-| "The" | **0.6** | "end" | 0.10 | $0.6\times0.10 = 0.06$ |
-| "A" | 0.4 | "remarkable" | 0.50 | $0.4\times0.50 = \mathbf{0.20}$ |
+| "The" | **0.6** | "end" | 0.10 | $`0.6\times0.10 = 0.06`$ |
+| "A" | 0.4 | "remarkable" | 0.50 | $`0.4\times0.50 = \mathbf{0.20}`$ |
 
 Greedy takes "The" because 0.6 > 0.4, and ends up on a path worth 0.06. The path through "A" was worth **more than three times as much**. *A locally-best token can foreclose a better continuation* — and by the time you find out, you cannot go back, because generation is one-way.
 
 > **Analogy.** Driving by always taking the widest road at each junction. Perfectly sensible at every individual junction, and it will still route you into a cul-de-sac, because the widest road at junction 3 was the one that fed the motorway you needed at junction 2.
 
-**Beam search** is the fix: keep $k$ candidate sequences alive instead of 1, extend all of them, keep the best $k$ by total log-probability, repeat. With $k = 4$ you are hedging across four futures at every step.
+**Beam search** is the fix: keep $`k`$ candidate sequences alive instead of 1, extend all of them, keep the best $`k`$ by total log-probability, repeat. With $`k = 4`$ you are hedging across four futures at every step.
 
-**Why length normalization is not optional.** Sequence probability is a **product** of numbers less than 1, so it can only shrink. In log space, $\log p$ of a whole sequence is a sum of negatives:
+**Why length normalization is not optional.** Sequence probability is a **product** of numbers less than 1, so it can only shrink. In log space, $`\log p`$ of a whole sequence is a sum of negatives:
 
-| Sequence length | Typical $\log p$ per token | Total |
+| Sequence length | Typical $`\log p`$ per token | Total |
 |---|---|---|
-| 5 tokens | $-2$ | $-10$ |
-| 30 tokens | $-2$ | $-60$ |
+| 5 tokens | $`-2`$ | $`-10`$ |
+| 30 tokens | $`-2`$ | $`-60`$ |
 
 The 30-token sequence is not worse — it is **longer**, and every additional token subtracts more. Without correction, beam search will always prefer the shortest thing it can say, which in practice means outputs that stop almost immediately.
 
-The fix $\frac{1}{\lvert y\rvert^{\alpha}}\sum\log p$ divides by length raised to a power. Read $\lvert y\rvert$ as "the number of tokens in $y$." $\alpha = 1$ divides by length exactly, giving average log-probability per token; $\alpha = 0$ turns the correction off. **The tuned value of $\alpha \approx 0.6$–1.0 tells you that dividing by full length slightly over-corrects and starts favouring rambling** — the fractional exponent is an empirical compromise between two failure modes.
+The fix $`\frac{1}{\lvert y\rvert^{\alpha}}\sum\log p`$ divides by length raised to a power. Read $`\lvert y\rvert`$ as "the number of tokens in $`y`$." $`\alpha = 1`$ divides by length exactly, giving average log-probability per token; $`\alpha = 0`$ turns the correction off. **The tuned value of $`\alpha \approx 0.6`$–1.0 tells you that dividing by full length slightly over-corrects and starts favouring rambling** — the fractional exponent is an empirical compromise between two failure modes.
 
 - ▸ **Beam search is right for translation and summarization, and wrong for open-ended generation.** In open-ended text, higher sequence probability correlates with *worse* human-judged quality past a point — the "likelihood trap." The highest-probability continuation of most prompts is degenerate repetition.
 
@@ -482,67 +482,67 @@ This is the most counterintuitive claim in the chapter: **searching harder for t
 
 ### Stochastic
 
-**Temperature:** $`p_i\propto \exp(z_i/\tau)`$. $\tau<1$ sharpens, $\tau>1$ flattens, $\tau\to0$ is greedy.
-▸ Note $\tau$ acts on **logits**, so it is not a linear reweighting of probabilities: $`p_i^{(\tau)} \propto p_i^{1/\tau}`$.
+**Temperature:** $`p_i\propto \exp(z_i/\tau)`$. $`\tau<1`$ sharpens, $`\tau>1`$ flattens, $`\tau\to0`$ is greedy.
+▸ Note $`\tau`$ acts on **logits**, so it is not a linear reweighting of probabilities: $`p_i^{(\tau)} \propto p_i^{1/\tau}`$.
 
-**Top-$k$:** sample from the $k$ most probable tokens. Problem: $k$ is fixed, but the appropriate number of plausible tokens varies enormously by context (after "the capital of France is" there is one; after "she opened the door and saw" there are thousands).
+**Top-$`k`$:** sample from the $`k`$ most probable tokens. Problem: $`k`$ is fixed, but the appropriate number of plausible tokens varies enormously by context (after "the capital of France is" there is one; after "she opened the door and saw" there are thousands).
 
-**Top-$p$ / nucleus (Holtzman et al.):** sample from the smallest set $S$ with $`\sum_{i\in S}p_i\ge p`$. ▸ **Adaptive to the distribution's entropy** — this is precisely the fix for top-$k$'s flaw, and it is the reason nucleus sampling became the default. Typical $p=0.9$–0.95.
+**Top-$`p`$ / nucleus (Holtzman et al.):** sample from the smallest set $`S`$ with $`\sum_{i\in S}p_i\ge p`$. ▸ **Adaptive to the distribution's entropy** — this is precisely the fix for top-$`k`$'s flaw, and it is the reason nucleus sampling became the default. Typical $`p=0.9`$–0.95.
 
-**Min-$p$:** keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$. A relative threshold; more robust at high temperature.
+**Min-$`p`$:** keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$. A relative threshold; more robust at high temperature.
 
-**Typical sampling:** keep tokens whose surprisal $`-\log p_i`$ is close to the distribution's entropy $H$ — an information-theoretic criterion motivated by the observation that natural human text has locally near-uniform information density.
+**Typical sampling:** keep tokens whose surprisal $`-\log p_i`$ is close to the distribution's entropy $`H`$ — an information-theoretic criterion motivated by the observation that natural human text has locally near-uniform information density.
 
 **Contrastive decoding / search:** penalize tokens that a smaller "amateur" model also finds likely, or penalize similarity to already-generated context. Reduces degeneration without sacrificing coherence.
 
 #### Temperature, decoded
 
-$`p_i \propto \exp(z_i/\tau)`$. The $`z_i`$ are **logits** — the raw scores the final layer produces, before softmax. $\tau$ divides them before exponentiating.
+$`p_i \propto \exp(z_i/\tau)`$. The $`z_i`$ are **logits** — the raw scores the final layer produces, before softmax. $`\tau`$ divides them before exponentiating.
 
-▸ **The crucial and frequently-missed point is the one the book flags: $\tau$ acts on the logits, so $`p_i^{(\tau)} \propto p_i^{1/\tau}`$ — it raises probabilities to a power, it does not scale them.** Powers reshape a distribution in a way multiplication cannot.
+▸ **The crucial and frequently-missed point is the one the book flags: $`\tau`$ acts on the logits, so $`p_i^{(\tau)} \propto p_i^{1/\tau}`$ — it raises probabilities to a power, it does not scale them.** Powers reshape a distribution in a way multiplication cannot.
 
-**Put numbers in.** Three tokens with probabilities $0.6, 0.3, 0.1$:
+**Put numbers in.** Three tokens with probabilities $`0.6, 0.3, 0.1`$:
 
-| $\tau$ | Computation | Resulting distribution |
+| $`\tau`$ | Computation | Resulting distribution |
 |---|---|---|
-| $2.0$ | $p^{0.5}$: $0.775, 0.548, 0.316$ → normalize | $0.47,\ 0.34,\ 0.19$ — **flattened** |
-| $1.0$ | unchanged | $0.60,\ 0.30,\ 0.10$ |
-| $0.5$ | $p^{2}$: $0.36, 0.09, 0.01$ → normalize | $0.78,\ 0.20,\ 0.02$ — **sharpened** |
-| $\to 0$ | $p^{\infty}$ | $1,\ 0,\ 0$ — **greedy** |
+| $`2.0`$ | $`p^{0.5}`$: $`0.775, 0.548, 0.316`$ → normalize | $`0.47,\ 0.34,\ 0.19`$ — **flattened** |
+| $`1.0`$ | unchanged | $`0.60,\ 0.30,\ 0.10`$ |
+| $`0.5`$ | $`p^{2}`$: $`0.36, 0.09, 0.01`$ → normalize | $`0.78,\ 0.20,\ 0.02`$ — **sharpened** |
+| $`\to 0`$ | $`p^{\infty}`$ | $`1,\ 0,\ 0`$ — **greedy** |
 
-Notice what happens to the third token. It started at one-sixth of the leader's probability ($0.1$ against $0.6$). At $\tau = 2$ it is up to $0.19$, about 40% of the leader. At $\tau = 0.5$ it is at $0.02$ against $0.78$ — **one thirty-sixth**. Low temperature does not merely favour the leader; it **annihilates the tail**, and the tail is where both the creativity and the mistakes live.
+Notice what happens to the third token. It started at one-sixth of the leader's probability ($`0.1`$ against $`0.6`$). At $`\tau = 2`$ it is up to $`0.19`$, about 40% of the leader. At $`\tau = 0.5`$ it is at $`0.02`$ against $`0.78`$ — **one thirty-sixth**. Low temperature does not merely favour the leader; it **annihilates the tail**, and the tail is where both the creativity and the mistakes live.
 
-> **Analogy — and it is the literal origin.** This is the Boltzmann distribution from 19th-century thermodynamics, where $\tau$ is *actual temperature* (see Ch. 1's Did-you-know). Hot gas: molecules everywhere, high-energy states occupied, disorder. Cold gas: everything settles into the lowest-energy state. "Turning up the temperature to make the model more creative" is applying a physics equation with its original meaning nearly intact.
+> **Analogy — and it is the literal origin.** This is the Boltzmann distribution from 19th-century thermodynamics, where $`\tau`$ is *actual temperature* (see Ch. 1's Did-you-know). Hot gas: molecules everywhere, high-energy states occupied, disorder. Cold gas: everything settles into the lowest-energy state. "Turning up the temperature to make the model more creative" is applying a physics equation with its original meaning nearly intact.
 
-#### Top-$k$, top-$p$, and min-$p$, decoded
+#### Top-$`k`$, top-$`p`$, and min-$`p`$, decoded
 
 All three answer the same question — **which tokens are even allowed to be sampled?** — and they differ only in how they draw the line. This is called *truncation*, and it exists because the tail of a 128,000-token vocabulary contains a great deal of garbage whose probabilities are individually tiny but collectively not.
 
-▸ **Do that arithmetic once, because it explains why truncation is mandatory.** Suppose 100,000 implausible tokens each carry probability $10^{-6}$. Individually negligible — one in a million. Together: $100{,}000\times10^{-6} = 0.1$, **a tenth of the total mass**. Generate 200 tokens and you will sample from that tail about **20 times**. And a single absurd token is not a local blemish: the model then conditions on its own mistake, and everything after it is a continuation of nonsense. **Truncation is not about polish. It is about not stepping off the path.**
+▸ **Do that arithmetic once, because it explains why truncation is mandatory.** Suppose 100,000 implausible tokens each carry probability $`10^{-6}`$. Individually negligible — one in a million. Together: $`100{,}000\times10^{-6} = 0.1`$, **a tenth of the total mass**. Generate 200 tokens and you will sample from that tail about **20 times**. And a single absurd token is not a local blemish: the model then conditions on its own mistake, and everything after it is a continuation of nonsense. **Truncation is not about polish. It is about not stepping off the path.**
 
-**Top-$k$**: keep the $k$ best, renormalize, sample. Simple, and its flaw is that $k$ is a constant while the right answer is not:
+**Top-$`k`$**: keep the $`k`$ best, renormalize, sample. Simple, and its flaw is that $`k`$ is a constant while the right answer is not:
 
 | Context | Number of  plausible next tokens |
 |---|---|
 | "the capital of France is" | **1** |
 | "she opened the door and saw" | **thousands** |
 
-With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$ in the second case, you have amputated a  open distribution down to 50 options and lost most of the available variety.
+With $`k = 50`$, the first case admits 49 wrong answers into the pool. With $`k=50`$ in the second case, you have amputated a  open distribution down to 50 options and lost most of the available variety.
 
-**Top-$p$ / nucleus**: keep adding tokens, most-probable first, until their probabilities **sum to $p$**. Then sample from that set.
+**Top-$`p`$ / nucleus**: keep adding tokens, most-probable first, until their probabilities **sum to $`p`$**. Then sample from that set.
 
-| Context | Sorted probabilities | Set at $p = 0.9$ |
+| Context | Sorted probabilities | Set at $`p = 0.9`$ |
 |---|---|---|
-| "capital of France is" | $0.95, 0.01, \dots$ | **1 token** (0.95 already ≥ 0.9) |
-| "she opened the door and saw" | $0.03, 0.02, 0.02, \dots$ | **hundreds of tokens** |
+| "capital of France is" | $`0.95, 0.01, \dots`$ | **1 token** (0.95 already ≥ 0.9) |
+| "she opened the door and saw" | $`0.03, 0.02, 0.02, \dots`$ | **hundreds of tokens** |
 
-▸ **Same parameter, wildly different set sizes — that is the whole point.** The set is small when the model is confident and large when it isn't, because the *size of the set is determined by the distribution* rather than fixed in advance. This is exactly the fix for top-$k$'s flaw, and it is why nucleus sampling became the default.
+▸ **Same parameter, wildly different set sizes — that is the whole point.** The set is small when the model is confident and large when it isn't, because the *size of the set is determined by the distribution* rather than fixed in advance. This is exactly the fix for top-$`k`$'s flaw, and it is why nucleus sampling became the default.
 
-> **Analogy.** Top-$k$ is "always interview the top 5 candidates." Top-$p$ is "interview candidates until you have covered 90% of the qualified pool" — which is 1 person when there's an obvious hire and 40 when the field is even.
+> **Analogy.** Top-$`k`$ is "always interview the top 5 candidates." Top-$`p`$ is "interview candidates until you have covered 90% of the qualified pool" — which is 1 person when there's an obvious hire and 40 when the field is even.
 
-**Min-$p$**: keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$ — a threshold **relative to the leader** rather than an absolute mass. With $`p_{\min}=0.1`$ and a top token at $0.5$, everything above $0.05$ survives; with a top token at $0.02$ (a flat distribution), everything above $0.002$ survives. It adapts the same way top-$p$ does, and it degrades more gracefully at high temperature, where flattening can otherwise let top-$p$'s cumulative sum sweep in a long tail of near-equal junk.
+**Min-$`p`$**: keep tokens with $`p_i \ge p_{\min}\cdot\max_j p_j`$ — a threshold **relative to the leader** rather than an absolute mass. With $`p_{\min}=0.1`$ and a top token at $`0.5`$, everything above $`0.05`$ survives; with a top token at $`0.02`$ (a flat distribution), everything above $`0.002`$ survives. It adapts the same way top-$`p`$ does, and it degrades more gracefully at high temperature, where flattening can otherwise let top-$`p`$'s cumulative sum sweep in a long tail of near-equal junk.
 
-**Typical sampling**, decoded. **Surprisal** is $`-\log p_i`$ — how startled you are by a token, in nats. **Entropy** $H$ is the *average* surprisal (§1.4). Typical sampling keeps tokens whose surprisal is close to $H$ — that is, it **discards tokens that are too predictable as well as tokens that are too surprising.**
+**Typical sampling**, decoded. **Surprisal** is $`-\log p_i`$ — how startled you are by a token, in nats. **Entropy** $`H`$ is the *average* surprisal (§1.4). Typical sampling keeps tokens whose surprisal is close to $`H`$ — that is, it **discards tokens that are too predictable as well as tokens that are too surprising.**
 
 > **Analogy.** Conversation. Say only the obvious and you are boring; say only the bizarre and you are incoherent. Fluent speech runs at a roughly steady rate of new information — that is the "uniform information density" observation from psycholinguistics, and typical sampling is its direct implementation.
 
@@ -554,7 +554,7 @@ With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$
 
 | Example | Why it qualifies |
 |---|---|
-| Greedy decoding, same weights, same batch composition, same kernel build, same GPU, run twice | Identical logits every step, and $\arg\max$ of identical logits is identical |
+| Greedy decoding, same weights, same batch composition, same kernel build, same GPU, run twice | Identical logits every step, and $`\arg\max`$ of identical logits is identical |
 | Sampling with a fixed pseudo-random seed and everything else held constant | The RNG replays the same draws in the same order |
 | Constrained decoding to a grammar that admits exactly one continuation | Only one token is legal, so the scores cannot matter |
 | A cached response returned from a key–value store | Not generation at all, which is precisely why it reproduces perfectly |
@@ -565,21 +565,21 @@ With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$
 |---|---|---|
 | `temperature=0` on a hosted API | The *selection rule* is deterministic. The *logits* are not: they depend on which other requests shared your batch, the tensor-parallel degree, the kernel version and the GPU model | Deterministic selection from non-reproducible scores |
 | `temperature=0` on a Mixture-of-Experts model | Routing and expert capacity depend on the whole batch. A different neighbouring request changes which experts your tokens reach, and so changes your logits | Batch-dependent computation |
-| Same seed, same prompt, different batch size | Floating-point addition is not associative: $(a+b)+c \ne a+(b+c)$ in general. Reducing a sum in a different order changes the last bits | Identical mathematics, different rounding |
-| "Two logits differ by $10^{-7}$, so the output is the same" | $\arg\max$ has no tolerance. When the top two tokens are near-tied a last-bit difference flips the choice — and once one token differs, everything after it is a different sequence | A chaotic system with a discrete trigger |
+| Same seed, same prompt, different batch size | Floating-point addition is not associative: $`(a+b)+c \ne a+(b+c)`$ in general. Reducing a sum in a different order changes the last bits | Identical mathematics, different rounding |
+| "Two logits differ by $`10^{-7}`$, so the output is the same" | $`\arg\max`$ has no tolerance. When the top two tokens are near-tied a last-bit difference flips the choice — and once one token differs, everything after it is a different sequence | A chaotic system with a discrete trigger |
 | `temperature=0` meaning "the model is certain" | Temperature is applied to the logits *after* the model has finished thinking. It changes what you sample from, not what the model believes | A decoding setting mistaken for a model property |
 
 ▸ **The boundary:** determinism needs **two** things — a deterministic selection rule *and* bit-identical logits to select from. `temperature=0` buys you the first only, and in a shared serving environment you almost never get the second for free.
 
-> **Common misconception.** *"Set temperature to 0 and you get the same output every time."* You get the same output every time *the logits come out the same*, and in production they routinely do not. Continuous batching (Ch. 17) means your request is computed alongside whatever else arrived in that millisecond; matrix reductions sum in whatever order the kernel picked for that batch shape; an MoE router's decisions depend on the other sequences present. Any of these perturbs a logit in the seventh decimal place — harmless, until two candidate tokens are near-tied, at which point $\arg\max$ amplifies $10^{-7}$ into a completely different paragraph. The belief is tempting because it is **locally true and easily checked**: run it twice on your laptop at batch size 1 and you get identical text, which feels like proof. It is proof about your laptop. The practical consequence is that "temperature 0" is a variance-reduction setting rather than a reproducibility guarantee, and evaluation harnesses that assume otherwise will report run-to-run noise as a difference between models.
+> **Common misconception.** *"Set temperature to 0 and you get the same output every time."* You get the same output every time *the logits come out the same*, and in production they routinely do not. Continuous batching (Ch. 17) means your request is computed alongside whatever else arrived in that millisecond; matrix reductions sum in whatever order the kernel picked for that batch shape; an MoE router's decisions depend on the other sequences present. Any of these perturbs a logit in the seventh decimal place — harmless, until two candidate tokens are near-tied, at which point $`\arg\max`$ amplifies $`10^{-7}`$ into a completely different paragraph. The belief is tempting because it is **locally true and easily checked**: run it twice on your laptop at batch size 1 and you get identical text, which feels like proof. It is proof about your laptop. The practical consequence is that "temperature 0" is a variance-reduction setting rather than a reproducibility guarantee, and evaluation harnesses that assume otherwise will report run-to-run noise as a difference between models.
 
-> **Common misconception.** *"Beam search finds better text than sampling, so use it whenever quality matters."* Beam search finds **higher-probability** text, and past a point higher probability is *worse* text for open-ended generation — that is the likelihood trap above. Widening the beam, which by every intuition about search ought to help, reliably makes open-ended output blander and more repetitive; the effect is documented well enough to have a name, the *beam search curse*. There is a second, quieter failure: beams share prefixes, so asking for $k = 8$ candidate story openings usually returns eight near-identical strings rather than eight ideas. The belief is tempting because beam search  **is** the right answer for translation, grammatical error correction and speech-recognition rescoring — and those were the tasks it was built for and evaluated on for two decades. The field's decoding intuitions were formed on problems where the input pins down the output. **Search when the answer is determined by the input; sample when the output is  open.**
+> **Common misconception.** *"Beam search finds better text than sampling, so use it whenever quality matters."* Beam search finds **higher-probability** text, and past a point higher probability is *worse* text for open-ended generation — that is the likelihood trap above. Widening the beam, which by every intuition about search ought to help, reliably makes open-ended output blander and more repetitive; the effect is documented well enough to have a name, the *beam search curse*. There is a second, quieter failure: beams share prefixes, so asking for $`k = 8`$ candidate story openings usually returns eight near-identical strings rather than eight ideas. The belief is tempting because beam search  **is** the right answer for translation, grammatical error correction and speech-recognition rescoring — and those were the tasks it was built for and evaluated on for two decades. The field's decoding intuitions were formed on problems where the input pins down the output. **Search when the answer is determined by the input; sample when the output is  open.**
 
 ### Repetition control
 
-- **Repetition penalty:** divide the logit of already-seen tokens by $r\approx1.1$.
-- **Frequency / presence penalty** (OpenAI-style): subtract $\alpha\cdot\text{count}$ or a flat $\beta$ for any prior appearance.
-- **No-repeat n-gram blocking:** hard ban on repeating any $n$-gram. Effective but can block legitimate repetition (names, code).
+- **Repetition penalty:** divide the logit of already-seen tokens by $`r\approx1.1`$.
+- **Frequency / presence penalty** (OpenAI-style): subtract $`\alpha\cdot\text{count}`$ or a flat $`\beta`$ for any prior appearance.
+- **No-repeat n-gram blocking:** hard ban on repeating any $`n`$-gram. Effective but can block legitimate repetition (names, code).
 
 ### Constrained decoding
 
@@ -589,13 +589,13 @@ With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$
 
 | Penalty | Mechanism | Behaviour |
 |---|---|---|
-| **Repetition penalty** | Divide the logit of any already-seen token by $r\approx1.1$ | **Multiplicative on the logit.** ⚠ Note the asymmetry: dividing a *negative* logit by 1.1 makes it *less* negative, i.e. more likely — so implementations must special-case the sign |
-| **Frequency penalty** | Subtract $\alpha\times(\text{times used so far})$ | **Escalates.** The fifth use is penalized five times as hard as the first |
-| **Presence penalty** | Subtract a flat $\beta$ for any prior appearance | **Binary.** Used once or used fifty times, same penalty |
+| **Repetition penalty** | Divide the logit of any already-seen token by $`r\approx1.1`$ | **Multiplicative on the logit.** ⚠ Note the asymmetry: dividing a *negative* logit by 1.1 makes it *less* negative, i.e. more likely — so implementations must special-case the sign |
+| **Frequency penalty** | Subtract $`\alpha\times(\text{times used so far})`$ | **Escalates.** The fifth use is penalized five times as hard as the first |
+| **Presence penalty** | Subtract a flat $`\beta`$ for any prior appearance | **Binary.** Used once or used fifty times, same penalty |
 
 ▸ **Frequency penalty discourages overuse; presence penalty encourages topic change.** They are different instruments and setting them from the same slider is a common misconfiguration.
 
-**No-repeat $n$-gram blocking** is the blunt one: maintain a set of every $n$-token sequence produced so far and set the logit of any token that would complete a repeat to $-\infty$. It is absolute — the repeat becomes impossible rather than unlikely.
+**No-repeat $`n`$-gram blocking** is the blunt one: maintain a set of every $`n`$-token sequence produced so far and set the logit of any token that would complete a repeat to $`-\infty`$. It is absolute — the repeat becomes impossible rather than unlikely.
 
 > **Analogy.** A word game where you may not say any three-word phrase twice. It reliably stops you droning, and it also stops you saying "on the other hand" a second time when you legitimately needed to. That is the failure mode named in the text: names, code identifiers, chemical formulae, and legal boilerplate are *supposed* to repeat.
 
@@ -603,7 +603,7 @@ With $k = 50$, the first case admits 49 wrong answers into the pool. With $k=50$
 
 1. Compile the grammar (a JSON schema, a regular expression, a full grammar) into an **automaton** — a state machine that knows, from any point, which characters may legally come next.
 2. At each generation step, look at the automaton's current state and compute the set of tokens that could continue a valid string.
-3. Set every other logit to $-\infty$, so softmax gives them probability exactly zero.
+3. Set every other logit to $`-\infty`$, so softmax gives them probability exactly zero.
 4. Sample from what remains, and advance the automaton.
 
 ▸ **The guarantee this provides is categorically different from prompting.** "Please respond in valid JSON" makes malformed output *unlikely*; masking makes it **impossible** — there is no sequence of sampling outcomes that produces an unclosed brace, because the token was never on the menu. **When you need a contract rather than a tendency, you change the sampler, not the prompt.** The cost is real but modest: you must maintain the automaton and map grammar symbols onto the tokenizer's vocabulary, which is fiddly precisely because tokens do not respect character boundaries (Ch. 10).
@@ -618,11 +618,11 @@ Mask logits to enforce a grammar (JSON schema, regex, a CFG). Implemented by com
 
 | Task | Setting |
 |---|---|
-| Factual QA, code, math | greedy or $\tau\approx0.1$ |
+| Factual QA, code, math | greedy or $`\tau\approx0.1`$ |
 | Translation, summarization | beam 4–5 with length norm |
-| Creative writing | $\tau=0.8$–1.0, top-$p$ 0.9–0.95 |
+| Creative writing | $`\tau=0.8`$–1.0, top-$`p`$ 0.9–0.95 |
 | Structured output | greedy + grammar constraint |
-| Self-consistency / majority vote | $\tau\approx0.7$, many samples, then vote (Ch. 16) |
+| Self-consistency / majority vote | $`\tau\approx0.7`$, many samples, then vote (Ch. 16) |
 
 #### Reading the choosing table
 
@@ -636,7 +636,7 @@ Every row follows from one question: **is there a right answer, or a space of ac
 | Structured output | Yes, and it must **parse** | Greedy plus a hard grammar constraint |
 | Self-consistency | Yes, but the *path* to it varies | Sample many warm paths, then vote on the destination |
 
-▸ **The last row is the subtle one and worth understanding.** Self-consistency (Ch. 16) samples the same maths problem 40 times at $\tau\approx0.7$ and takes the majority answer. Why deliberately introduce randomness into a task with one right answer? Because **the reasoning path is where the variety belongs.** Different chains of thought reach the same correct answer by different routes, while errors are idiosyncratic and scatter. So the correct answer accumulates votes and the mistakes do not. **Temperature is being used to explore the space of derivations, not the space of answers** — and then the vote collapses it back down.
+▸ **The last row is the subtle one and worth understanding.** Self-consistency (Ch. 16) samples the same maths problem 40 times at $`\tau\approx0.7`$ and takes the majority answer. Why deliberately introduce randomness into a task with one right answer? Because **the reasoning path is where the variety belongs.** Different chains of thought reach the same correct answer by different routes, while errors are idiosyncratic and scatter. So the correct answer accumulates votes and the mistakes do not. **Temperature is being used to explore the space of derivations, not the space of answers** — and then the vote collapses it back down.
 
 > **Analogy.** Asking forty people to independently work out a sum. Their arithmetic slips are all different; their correct answers are all the same. The mode of the answers is far more reliable than any single person, and the *disagreement* itself tells you how hard the problem was.
 
@@ -652,11 +652,11 @@ Interpretation: the effective branching factor — the model is as uncertain as 
 
 #### Reading perplexity in plain English
 
-The formula is **the loss from §13.1, exponentiated**. That is the entire relationship: $\mathrm{PPL} = e^{\mathcal{L}}$.
+The formula is **the loss from §13.1, exponentiated**. That is the entire relationship: $`\mathrm{PPL} = e^{\mathcal{L}}`$.
 
-So why bother? Because a loss of 2.3 is not an interpretable number, and $e^{2.3} = 10$ is. **"Effective branching factor" means: the model is exactly as uncertain as a fair die with PPL faces.**
+So why bother? Because a loss of 2.3 is not an interpretable number, and $`e^{2.3} = 10`$ is. **"Effective branching factor" means: the model is exactly as uncertain as a fair die with PPL faces.**
 
-**Check the intuition against a case you can verify.** Suppose the model has no idea, and spreads probability uniformly over a vocabulary of $K$ tokens. Then $p = 1/K$ at every step, so
+**Check the intuition against a case you can verify.** Suppose the model has no idea, and spreads probability uniformly over a vocabulary of $`K`$ tokens. Then $`p = 1/K`$ at every step, so
 
 $$\mathcal{L} = -\log(1/K) = \log K, \qquad \mathrm{PPL} = e^{\log K} = K$$
 
@@ -664,16 +664,16 @@ $$\mathcal{L} = -\log(1/K) = \log K, \qquad \mathrm{PPL} = e^{\log K} = K$$
 
 | Perplexity | Reading |
 |---|---|
-| $1$ | Perfect. Assigns probability 1 to the true token every time |
-| $10$–$20$ | A strong modern model on ordinary English prose |
-| $50{,}000$ | Knows nothing; uniform over a 50k vocabulary |
+| $`1`$ | Perfect. Assigns probability 1 to the true token every time |
+| $`10`$–$`20`$ | A strong modern model on ordinary English prose |
+| $`50{,}000`$ | Knows nothing; uniform over a 50k vocabulary |
 
 > **Analogy.** A game of Twenty Questions. A perplexity of 16 means that at each word, the model is in the position of someone who has narrowed it to 16 equally-plausible candidates — four yes/no questions from certainty. A perplexity of 50,000 means they have not started.
 
-▸ **The unit matters and the book uses nats.** $\log$ here is natural log, so the loss is in **nats**; exponentiating with $e$ recovers a count. If you use $`\log_2`$ the loss is in **bits** and you exponentiate with 2. The perplexity is the same number either way — $`e^{\ln K} = 2^{\log_2 K} = K`$ — but mixing the two is a classic and embarrassing error, and it is why a loss figure without a stated base is not a figure.
+▸ **The unit matters and the book uses nats.** $`\log`$ here is natural log, so the loss is in **nats**; exponentiating with $`e`$ recovers a count. If you use $`\log_2`$ the loss is in **bits** and you exponentiate with 2. The perplexity is the same number either way — $`e^{\ln K} = 2^{\log_2 K} = K`$ — but mixing the two is a classic and embarrassing error, and it is why a loss figure without a stated base is not a figure.
 
 ▸ **Pitfalls that make cross-model perplexity comparisons meaningless unless controlled:**
-1. **Tokenizer-dependent.** Fewer, larger tokens ⇒ each carries more information ⇒ higher per-token perplexity, for an identical model. **Compare bits-per-byte or bits-per-character instead:** $\mathrm{BPB} = \frac{\text{total nats}}{\ln 2 \cdot \text{total bytes}}$.
+1. **Tokenizer-dependent.** Fewer, larger tokens ⇒ each carries more information ⇒ higher per-token perplexity, for an identical model. **Compare bits-per-byte or bits-per-character instead:** $`\mathrm{BPB} = \frac{\text{total nats}}{\ln 2 \cdot \text{total bytes}}`$.
 2. **Data-dependent.** Perplexity on Wikipedia is not perplexity on code.
 3. **Contamination.** If the eval text was in pretraining, perplexity is meaningless.
 4. **Weakly correlated with usefulness after post-training.** RLHF typically *raises* perplexity while improving human preference scores.
@@ -686,8 +686,8 @@ Two models read the same sentence. Model A's tokenizer splits it into **10 token
 
 | | Tokens | Total nats | Loss per token | Perplexity |
 |---|---|---|---|---|
-| Model A (big tokens) | 10 | 30 | $3.0$ | $20.1$ |
-| Model B (small tokens) | 20 | 30 | $1.5$ | $4.5$ |
+| Model A (big tokens) | 10 | 30 | $`3.0`$ | $`20.1`$ |
+| Model B (small tokens) | 20 | 30 | $`1.5`$ | $`4.5`$ |
 
 **Model B looks four times better and the two models are identical.** All that changed is how the same total surprise was divided up. Larger tokens each carry more information, so each is harder to predict, so per-token perplexity is higher — **for an identical model.**
 
@@ -697,9 +697,9 @@ Two models read the same sentence. Model A's tokenizer splits it into **10 token
 
 $$\mathrm{BPB} = \frac{\text{total nats}}{\ln 2 \cdot \text{total bytes}}$$
 
-- **Total nats** — the sum of $-\log p$ over the whole text. Tokenizer-independent, since it's the total probability of the same string.
+- **Total nats** — the sum of $`-\log p`$ over the whole text. Tokenizer-independent, since it's the total probability of the same string.
 - **Total bytes** — the length of the raw text in bytes. Also tokenizer-independent.
-- $\ln 2 \approx 0.693$ — converts nats to bits, since $1$ bit $= \ln 2$ nats.
+- $`\ln 2 \approx 0.693`$ — converts nats to bits, since $`1`$ bit $`= \ln 2`$ nats.
 
 ▸ **Both numerator and denominator are properties of the text and the model's distribution over it, not of the tokenizer.** So BPB compares two models fairly no matter how they chop up words — and it is directly comparable to Shannon's 1951 estimate of about 1 bit per character for English, which makes it interpretable in absolute terms rather than only relative ones.
 
@@ -727,7 +727,7 @@ $$\mathrm{BPB} = \frac{\text{total nats}}{\ln 2 \cdot \text{total bytes}}$$
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
 | "Model A reports perplexity 5.2, model B reports 18" from two different papers | Almost certainly different tokenizers **and** different eval corpora | Two unrelated numbers printed in the same font |
-| A 32k-vocab model scoring lower per-token perplexity than a 128k-vocab one | Smaller tokens split the same total surprise across more predictions, so per-token loss falls. The 10-versus-20-token worked example above shows a factor of $4.5$ from tokenization alone | An artifact of how the text was chopped up |
+| A 32k-vocab model scoring lower per-token perplexity than a 128k-vocab one | Smaller tokens split the same total surprise across more predictions, so per-token loss falls. The 10-versus-20-token worked example above shows a factor of $`4.5`$ from tokenization alone | An artifact of how the text was chopped up |
 | Perplexity on Wikipedia versus perplexity on Python | Different distributions; a model tuned toward one looks worse on the other regardless of quality | A statement about the eval set |
 | A spectacular perplexity on a public benchmark | If the text was in pretraining you are measuring recall of memorized strings, and the number can be arbitrarily good while meaning nothing | Contamination |
 | "Perplexity went up after RLHF, so we broke the model" | Post-training deliberately moves the model **off** the internet-text distribution that perplexity measures | Two metrics pointing at two different objectives |
@@ -768,7 +768,7 @@ The book lists these as bare acronyms. Here is what they are, because you cannot
 
 **Contamination.** Benchmarks are published on the web. Pretraining scrapes the web. So the answers may be in the training data, and the model may be recalling rather than reasoning. The three detection methods named:
 
-- **$n$-gram overlap** — search the training corpus for verbatim spans of the test set.
+- **$`n`$-gram overlap** — search the training corpus for verbatim spans of the test set.
 - **Canary strings** — benchmark authors embed a unique random string in the files, so anyone can grep their corpus for it. An honour system, and one that only works if the corpus is inspectable.
 - **Perturbed variants** — rewrite the question so the answer is unchanged but the surface form is not. **A model that memorized drops sharply; a model that understood does not.** This is the strongest of the three, because it needs no access to the training data at all.
 
@@ -784,7 +784,7 @@ The book lists these as bare acronyms. Here is what they are, because you cannot
 
 The right posture: **treat any single benchmark number as a noisy, gameable proxy**, and demand error bars (Ch. 3) and multiple independent evaluations.
 
-▸ **Why the error-bar demand is not pedantry.** A benchmark of 1,000 items scored at 85% has a standard error of about $\sqrt{0.85\times0.15/1000} \approx 1.1$ **percentage points** (§1.3.1) — so a two-standard-error interval is roughly ±2.3 points before you account for prompt sensitivity, seed variation, or judge noise. **A headline "84.1 vs 82.9" is, quite straightforwardly, a tie.** A large fraction of published model comparisons are differences of this size reported as results.
+▸ **Why the error-bar demand is not pedantry.** A benchmark of 1,000 items scored at 85% has a standard error of about $`\sqrt{0.85\times0.15/1000} \approx 1.1`$ **percentage points** (§1.3.1) — so a two-standard-error interval is roughly ±2.3 points before you account for prompt sensitivity, seed variation, or judge noise. **A headline "84.1 vs 82.9" is, quite straightforwardly, a tie.** A large fraction of published model comparisons are differences of this size reported as results.
 
 ---
 
@@ -805,8 +805,8 @@ $$\mathcal{L} = -\sum_{i\in\mathcal{M}}\log p(x_i\mid x_{\setminus\mathcal{M}})$
 
 | Piece | Read aloud | Meaning |
 |---|---|---|
-| $\mathcal{M}$ | "script M" | The **set of positions we chose to mask** — about 15% of them |
-| $i \in \mathcal{M}$ | "i in M" | Sum only over the masked positions (§0.2) |
+| $`\mathcal{M}`$ | "script M" | The **set of positions we chose to mask** — about 15% of them |
+| $`i \in \mathcal{M}`$ | "i in M" | Sum only over the masked positions (§0.2) |
 | $`x_{\setminus\mathcal{M}}`$ | "x, set-minus M" | **All the other tokens** — the visible ones. The backslash means "excluding" |
 | $`p(x_i \mid x_{\setminus\mathcal{M}})`$ | "…given everything unmasked" | Recover the hidden token from **both** sides of it |
 
@@ -847,7 +847,7 @@ Feed a 4096-token document into each model:
 Each fixes something specific about BERT, and ELECTRA's fix is the interesting one.
 
 - **RoBERTa** — *Robustly optimized BERT approach.* Same architecture, better training: more data, longer, and **no NSP** (Next Sentence Prediction, BERT's second objective of predicting whether two segments were adjacent — which turned out to contribute little). **Dynamic masking** re-chooses which tokens to mask each time a document is seen, rather than fixing the choice once in preprocessing. The headline result was that BERT had been **undertrained**, which is the same lesson Chinchilla delivered to the other side of the family three years later.
-- **ELECTRA** — a  different objective. A small generator model replaces some tokens with plausible alternatives; the main model then classifies **every position** as original-or-replaced. ▸ **Because the judgement is made at all $T$ positions rather than 15%, the sample-efficiency gap with autoregressive training closes.** It is the same insight as the 6× arithmetic above, applied from the encoder side. (The name is a backronym: *Efficiently Learning an Encoder that Classifies Token Replacements Accurately.*)
+- **ELECTRA** — a  different objective. A small generator model replaces some tokens with plausible alternatives; the main model then classifies **every position** as original-or-replaced. ▸ **Because the judgement is made at all $`T`$ positions rather than 15%, the sample-efficiency gap with autoregressive training closes.** It is the same insight as the 6× arithmetic above, applied from the encoder side. (The name is a backronym: *Efficiently Learning an Encoder that Classifies Token Replacements Accurately.*)
 - **DeBERTa** — *disentangled attention*: represent content and position as **separate vectors** and compute attention from both, rather than summing them into one. This is the "second microphone" fix from Ch. 12 §12.2, arrived at independently on the encoder side.
 - **ModernBERT** — a contemporary re-training of the encoder recipe with the architectural improvements the decoder side accumulated (RoPE, longer context, better data), demonstrating that most of BERT's apparent obsolescence was a lack of maintenance rather than a limit of the design.
 
@@ -955,8 +955,8 @@ Every row of this table traces to **one** decision: *which tokens is each positi
 2. **Tokenizer** — train it on your actual data distribution; check compression rate.
 3. **Packing** — concatenate documents to fill the context, separated by EOS, with block-diagonal attention masks so documents can't attend across boundaries. Wasting 40% of every batch on padding is a common and expensive mistake.
 4. **Architecture** — the recipe in §13.2.
-5. **Init** — $\mathcal{N}(0,0.02^2)$, with residual projections scaled by $1/\sqrt{2L}$.
-6. **Optimizer** — AdamW, $\beta=(0.9,0.95)$, $\lambda=0.1$, grad clip 1.0, warmup then cosine or WSD.
+5. **Init** — $`\mathcal{N}(0,0.02^2)`$, with residual projections scaled by $`1/\sqrt{2L}`$.
+6. **Optimizer** — AdamW, $`\beta=(0.9,0.95)`$, $`\lambda=0.1`$, grad clip 1.0, warmup then cosine or WSD.
 7. **Batch size** — scale up during training (small batches early are more sample-efficient; large batches later are more compute-efficient).
 8. **Precision** — bf16 with fp32 master weights (Ch. 14).
 9. **Monitor** — loss, grad norm, LR, the fraction of tokens contributing, MFU, and per-domain validation loss.
@@ -972,9 +972,9 @@ Three of these carry more content than their one-line form suggests.
 
 > **Analogy.** Filling a shipping container efficiently by removing the boxes and pouring everything in loose. You have solved the empty-space problem and created a sorting problem. The block-diagonal mask is the dividers.
 
-**Item 5 — why residual projections are scaled by $1/\sqrt{2L}$.** Every layer adds its output onto the residual stream. Add $L$ independent contributions of variance $\sigma^2$ each and the total variance is $L\sigma^2$ — so the stream's magnitude **grows like $\sqrt{L}$** with depth. At $L=96$ that is a factor of about 10 accumulating from top to bottom, purely from stacking.
+**Item 5 — why residual projections are scaled by $`1/\sqrt{2L}`$.** Every layer adds its output onto the residual stream. Add $`L`$ independent contributions of variance $`\sigma^2`$ each and the total variance is $`L\sigma^2`$ — so the stream's magnitude **grows like $`\sqrt{L}`$** with depth. At $`L=96`$ that is a factor of about 10 accumulating from top to bottom, purely from stacking.
 
-Scale each layer's output projection by $1/\sqrt{2L}$ at initialization (the 2 is because a transformer block writes to the stream twice: once from attention, once from the feed-forward network) and the contributions shrink at exactly the rate the count grows. **The residual stream then starts at roughly unit scale no matter how deep the model is.** This is the same $\sqrt{n}$ law as §1.3.1 and §1.1.5 — random things accumulate like $\sqrt{n}$, not $n$, because they partially cancel.
+Scale each layer's output projection by $`1/\sqrt{2L}`$ at initialization (the 2 is because a transformer block writes to the stream twice: once from attention, once from the feed-forward network) and the contributions shrink at exactly the rate the count grows. **The residual stream then starts at roughly unit scale no matter how deep the model is.** This is the same $`\sqrt{n}`$ law as §1.3.1 and §1.1.5 — random things accumulate like $`\sqrt{n}`$, not $`n`$, because they partially cancel.
 
 **Item 7 — why batch size should grow during training.** Early on, the gradient signal is enormous compared with the noise: almost any batch points roughly downhill, so a small batch is fine and you get many more updates per unit of compute. Late in training, the model is near a minimum and the true gradient is small — now the batch noise dominates, and you need a large batch to average it away and see the real direction.
 
@@ -1002,7 +1002,7 @@ Scale each layer's output projection by $1/\sqrt{2L}$ at initialization (the 2 i
 
 - **In-context learning appears in a narrow window during training, and you can see it happen.** Induction heads form in that same window, visible as a small bump in an otherwise smooth loss curve. Ablate the heads and the capability disappears. It is one of the few clean causal links from a specific circuit to a specific behaviour.
 
-- **Temperature is literally temperature.** $`p_i \propto \exp(z_i/\tau)`$ is the Boltzmann distribution from 1868 statistical mechanics, where $\tau$ is the temperature of a gas. Turning up an LLM's temperature to make it more creative applies a 19th-century physics equation with its original meaning nearly intact: more heat, more disorder.
+- **Temperature is literally temperature.** $`p_i \propto \exp(z_i/\tau)`$ is the Boltzmann distribution from 1868 statistical mechanics, where $`\tau`$ is the temperature of a gas. Turning up an LLM's temperature to make it more creative applies a 19th-century physics equation with its original meaning nearly intact: more heat, more disorder.
 
 - **Perplexity was invented at IBM to describe how hard a speech-recognition task was**, in Frederick Jelinek's group in the 1970s. That group is also the source of the field's most-repeated anecdote, about performance improving each time a linguist was fired — the exact wording is disputed and has been retold in several forms, but the underlying methodological argument was real, and the statistical side won it decisively.
 
@@ -1029,7 +1029,7 @@ The test of understanding is conversational: could you explain each of these to 
 7. **Why does randomizing the labels in a few-shot prompt barely hurt, and what does that tell you the examples are for?**
 8. **Why is greedy decoding not the same as finding the most likely sentence?** Give the two-step example.
 9. **Why is beam search right for translation and wrong for storytelling?**
-10. **What does top-$p$ fix about top-$k$?** Say it in terms of how many plausible next words there are after "the capital of France is" versus "she opened the door and saw."
+10. **What does top-$`p`$ fix about top-$`k`$?** Say it in terms of how many plausible next words there are after "the capital of France is" versus "she opened the door and saw."
 11. **Why can two identical-quality models have perplexities that differ by 4×?** What do you measure instead?
 12. **Why does RLHF make perplexity worse while making the model better?**
 13. **Why would you sample a maths problem forty times at temperature 0.7 when there is exactly one right answer?**

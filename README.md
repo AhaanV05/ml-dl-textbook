@@ -13,14 +13,14 @@ It is written to be **re-read**. Chapters are self-contained, cross-referenced, 
 ### Assumed background
 
 - Multivariable calculus and linear algebra.
-- Comfort reading $\sum$, $\mathbb{E}$, $\nabla$, and matrix notation.
+- Comfort reading $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, and matrix notation.
 - Some prior exposure to ML (an introductory course, or having built models).
 
 Everything else is built from the ground up, including the parts that introductory courses skip.
 
 > ### Don't have that background? Start at Chapter 0.
 >
-> **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** removes the prerequisites above. It is a decoder ring, not a course: it explains every symbol used in these thirty-five chapters ($\in$, $\sum$, $\prod$, $\mathbb{E}$, $\nabla$, $\partial$, $A^\top$, $\odot$, $\sim$, $\mid$, $\propto$ …), the six habits that make any formula readable, the four different ways to multiply and why they're constantly confused, the traps where one symbol means four different things — and a **full-forms glossary of every abbreviation in this book**, all 160+ of them.
+> **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** removes the prerequisites above. It is a decoder ring, not a course: it explains every symbol used in these thirty-five chapters ($`\in`$, $`\sum`$, $`\prod`$, $`\mathbb{E}`$, $`\nabla`$, $`\partial`$, $`A^\top`$, $`\odot`$, $`\sim`$, $`\mid`$, $`\propto`$ …), the six habits that make any formula readable, the four different ways to multiply and why they're constantly confused, the traps where one symbol means four different things — and a **full-forms glossary of every abbreviation in this book**, all 160+ of them.
 >
 > It takes about twenty minutes and it is the difference between reading this book and bouncing off it.
 
@@ -54,7 +54,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 | # | Chapter | Contents |
 |---|---|---|
-| 00 | **[How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** | Notation as compressed English; the six habits for reading any formula; sets and spaces; the big operators ($\sum$, $\prod$, $\int$) as loops; Greek letters and the overloading traps; hats, bars, tildes and transposes; the adjoint (bar) convention used for backpropagation; calculus notation; **the four ways to multiply and why they're confused**; probability notation; big-O; a worked decoding of the Gaussian density; **a full-forms glossary of every abbreviation in this book**. |
+| 00 | **[How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** | Notation as compressed English; the six habits for reading any formula; sets and spaces; the big operators ($`\sum`$, $`\prod`$, $`\int`$) as loops; Greek letters and the overloading traps; hats, bars, tildes and transposes; the adjoint (bar) convention used for backpropagation; calculus notation; **the four ways to multiply and why they're confused**; probability notation; big-O; a worked decoding of the Gaussian density; **a full-forms glossary of every abbreviation in this book**. |
 
 ### Part I — Foundations
 
@@ -87,9 +87,9 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | 10 | **[Tokenization, Embeddings & Vectorization](10-tokenization-embeddings-vectorization.md)** | One-hot → count vectors → TF-IDF → word2vec (skip-gram with negative sampling, derived) → GloVe → contextual embeddings; BPE, WordPiece, Unigram/SentencePiece with the algorithms; vocabulary size trade-offs; embedding matrices, tying, and factorization; sentence embeddings and vector databases; ANN search (HNSW, IVF-PQ). |
 | 11 | **[Attention & the Transformer](11-attention-and-transformers.md)** | Attention from first principles; the $`\sqrt{d_k}`$ derivation; self- vs cross-attention; multi-head and what heads specialize in; causal masking; the full encoder and decoder block; pre-LN vs post-LN; the FFN as key–value memory; residual stream as a communication channel; complete FLOP and parameter accounting; Mixture-of-Experts. |
 | 12 | **[Positional Information & Long Context](12-positional-encoding-long-context.md)** | Why permutation equivariance forces the issue; sinusoidal, learned, relative (T5, Shaw); **RoPE derived in full**; ALiBi; NoPE; context extension (PI, NTK-aware, YaRN); efficient attention: sparse, Longformer, Linformer, Performer; **FlashAttention's tiling and online softmax**; MQA/GQA/MLA; state-space models (S4, Mamba) and linear attention. |
-| 13 | **[GPT: Autoregressive Language Modelling](13-gpt-autoregressive-language-models.md)** | The next-token objective and why it is enough; the GPT-1→2→3→4 architectural lineage; in-context learning and induction heads; decoding strategies (greedy, beam, top-$k$, nucleus, min-$p$, temperature, contrastive, typical); repetition and degeneration; perplexity and its pitfalls; BERT/T5 contrast and the encoder–decoder-vs-decoder-only question. |
+| 13 | **[GPT: Autoregressive Language Modelling](13-gpt-autoregressive-language-models.md)** | The next-token objective and why it is enough; the GPT-1→2→3→4 architectural lineage; in-context learning and induction heads; decoding strategies (greedy, beam, top-$`k`$, nucleus, min-$`p`$, temperature, contrastive, typical); repetition and degeneration; perplexity and its pitfalls; BERT/T5 contrast and the encoder–decoder-vs-decoder-only question. |
 | 14 | **[Training LLMs at Scale](14-training-llms-at-scale.md)** | Data: sourcing, dedup (MinHash/SimHash), filtering, curriculum, contamination; the training stack; fp16/bf16/fp8 and loss scaling; data/tensor/pipeline/sequence parallelism; ZeRO stages; gradient checkpointing arithmetic; the memory budget formula; loss spikes and instabilities (z-loss, QK-norm); throughput accounting (MFU). |
-| 15 | **[Scaling Laws & Emergence](15-scaling-laws-and-emergence.md)** | Kaplan power laws; **Chinchilla derived**, the compute-optimal $N \propto C^{0.5}$, $D\propto C^{0.5}$ result; inference-aware scaling; data-constrained scaling; $\mu$P and hyperparameter transfer derived; emergence and the metric-discontinuity critique; test-time compute scaling. |
+| 15 | **[Scaling Laws & Emergence](15-scaling-laws-and-emergence.md)** | Kaplan power laws; **Chinchilla derived**, the compute-optimal $`N \propto C^{0.5}`$, $`D\propto C^{0.5}`$ result; inference-aware scaling; data-constrained scaling; $`\mu`$P and hyperparameter transfer derived; emergence and the metric-discontinuity critique; test-time compute scaling. |
 | 16 | **[Post-Training: SFT, RLHF, DPO, Reasoning](16-post-training-rlhf-dpo-reasoning.md)** | Instruction tuning; the Bradley–Terry reward model derived; PPO for language with the KL penalty; **DPO derived from the RLHF optimum in full**; IPO/KTO/ORPO/SimPO; GRPO and RLVR; process vs outcome supervision; constitutional AI and RLAIF; reasoning models, chain-of-thought, self-consistency; reward hacking and length bias. |
 | 17 | **[Efficient Inference & Compression](17-efficient-inference-and-compression.md)** | The KV-cache memory formula; prefill vs decode and arithmetic intensity; continuous batching, PagedAttention; speculative and Medusa decoding with the acceptance-rate math; quantization (PTQ, GPTQ, AWQ, SmoothQuant, QAT, straight-through estimator); pruning (magnitude, structured, SparseGPT); knowledge distillation derived; LoRA/QLoRA/DoRA and the rank-choice argument; model merging (task arithmetic, TIES, SLERP). |
 | 18 | **[Retrieval, RAG, Tools & Agents](18-retrieval-rag-agents.md)** | Sparse vs dense retrieval; BM25 derived; bi-encoders vs cross-encoders; contrastive retriever training; chunking; hybrid search and reciprocal rank fusion; rerankers; RAG failure modes and evaluation; long-context vs retrieval; tool use and function calling; ReAct, planning, memory; multi-agent patterns; agent evaluation. |
@@ -99,7 +99,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | # | Chapter | Contents |
 |---|---|---|
 | 19 | **[Generative Models: The Taxonomy](19-generative-models-taxonomy.md)** | The trilemma (quality / diversity / speed); autoregressive models; **VAEs with the full ELBO, reparameterization, and posterior collapse**; VQ-VAE and straight-through; **GANs with the optimal discriminator and JS-divergence result derived**; mode collapse; WGAN and the Kantorovich–Rubinstein duality; normalizing flows and the change-of-variables formula; energy-based models and contrastive divergence; evaluation (FID, IS, precision/recall, and their failure modes). |
-| 20 | **[Diffusion Models](20-diffusion-models.md)** | The forward process and its closed form; the exact posterior derived; the variational bound term by term; why $\epsilon$-prediction; $v$-prediction and SNR weighting; **the score-matching connection**; the SDE/probability-flow-ODE view; DDIM and deterministic sampling; noise schedules (linear, cosine, shifted); classifier and classifier-free guidance derived; latent diffusion; consistency and distillation models; flow matching and rectified flow. |
+| 20 | **[Diffusion Models](20-diffusion-models.md)** | The forward process and its closed form; the exact posterior derived; the variational bound term by term; why $`\epsilon`$-prediction; $`v`$-prediction and SNR weighting; **the score-matching connection**; the SDE/probability-flow-ODE view; DDIM and deterministic sampling; noise schedules (linear, cosine, shifted); classifier and classifier-free guidance derived; latent diffusion; consistency and distillation models; flow matching and rectified flow. |
 | 21 | **[Discrete Diffusion & Conditional Generation](21-discrete-diffusion-and-conditioning.md)** | Categorical forward processes; **D3PM transition matrices $`Q_t`$, cumulative $`\bar Q_t`$, exact posterior, and the full loss including the auxiliary $`x_0`$ term**; uniform, absorbing, and structured kernels; SEDD and the concrete score; MDLM; conditioning mechanisms compared (concatenation, cross-attention, FiLM, **AdaLN-Zero**); the DiT architecture block by block; discrete guidance; conditioning collapse diagnostics. |
 
 ### Part VI — Classical Machine Learning
@@ -115,7 +115,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 | # | Chapter | Contents |
 |---|---|---|
-| 26 | **[Reinforcement Learning Foundations](26-rl-foundations.md)** | MDPs and the Markov property; return, discounting, and why $\gamma$ exists; **the Bellman expectation and optimality equations derived**; policy evaluation, policy iteration, value iteration; **the contraction-mapping convergence proof**; Monte Carlo vs TD; TD($\lambda$) and eligibility traces; SARSA vs Q-learning (on- vs off-policy); importance sampling; the deadly triad; exploration (ε-greedy, UCB, Thompson, and the bandit regret bounds). |
+| 26 | **[Reinforcement Learning Foundations](26-rl-foundations.md)** | MDPs and the Markov property; return, discounting, and why $`\gamma`$ exists; **the Bellman expectation and optimality equations derived**; policy evaluation, policy iteration, value iteration; **the contraction-mapping convergence proof**; Monte Carlo vs TD; TD($`\lambda`$) and eligibility traces; SARSA vs Q-learning (on- vs off-policy); importance sampling; the deadly triad; exploration (ε-greedy, UCB, Thompson, and the bandit regret bounds). |
 | 27 | **[Deep Reinforcement Learning](27-deep-reinforcement-learning.md)** | DQN and every stabilizing trick; Double, Dueling, PER, n-step, distributional (C51/QR-DQN), NoisyNet, Rainbow; **the policy gradient theorem derived**; REINFORCE, baselines, and the variance argument; actor–critic; **GAE derived**; TRPO's natural gradient and KL trust region; **PPO's clipped surrogate**; DDPG, TD3, and **SAC with the max-entropy objective**; model-based RL (Dyna, MuZero, Dreamer); offline RL (BCQ, CQL, IQL, Decision Transformer); multi-agent RL; the sim-to-real and reward-specification problems. |
 
 ### Part VIII — Modalities & Structure
@@ -130,7 +130,7 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 | # | Chapter | Contents |
 |---|---|---|
 | 30 | **[Double Descent, Grokking & the NTK](30-double-descent-grokking-ntk.md)** | Model-wise, epoch-wise, and sample-wise double descent; **the minimum-norm interpolation analysis and the pole at the interpolation threshold**; effective vs raw parameter count; benign overfitting; the neural tangent kernel derived and its lazy-training regime; feature learning vs kernel regime; **grokking: the delayed-generalization phenomenon, the weight-norm mechanism, and progress measures**; the role of weight decay and representation formation. |
-| 31 | **[Neural Collapse, Implicit Bias & Lottery Tickets](31-neural-collapse-implicit-bias-lottery-tickets.md)** | **Neural collapse NC1–NC4 and the simplex ETF geometry derived**; the unconstrained-features model; **the implicit bias of gradient descent toward the max-margin solution**, with the $O(1/\log t)$ rate; Adam's different bias; flat minima, sharpness measures, and their reparameterization problem; the SDE temperature argument; **the Lottery Ticket Hypothesis, iterative magnitude pruning, rewinding, transfer, and the strong LTH**; linear mode connectivity and permutation symmetry. |
+| 31 | **[Neural Collapse, Implicit Bias & Lottery Tickets](31-neural-collapse-implicit-bias-lottery-tickets.md)** | **Neural collapse NC1–NC4 and the simplex ETF geometry derived**; the unconstrained-features model; **the implicit bias of gradient descent toward the max-margin solution**, with the $`O(1/\log t)`$ rate; Adam's different bias; flat minima, sharpness measures, and their reparameterization problem; the SDE temperature argument; **the Lottery Ticket Hypothesis, iterative magnitude pruning, rewinding, transfer, and the strong LTH**; linear mode connectivity and permutation symmetry. |
 | 32 | **[Mechanistic Interpretability & Superposition](32-mechanistic-interpretability-superposition.md)** | Features, circuits, and the linear representation hypothesis; **superposition, the toy model, and the sparsity/importance phase diagram**; polysemanticity; **sparse autoencoders, the $`\ell_1`$ objective, dead features, and JumpReLU/TopK variants**; the residual stream as a bandwidth-limited channel; QK and OV circuits; induction heads and in-context learning; activation patching, path patching, and causal scrubbing; probing and its confounds; steering vectors; what interpretability has and has not established. |
 | 33 | **[Calibration, Uncertainty & Robustness](33-calibration-uncertainty-robustness.md)** | Proper scoring rules; ECE and its estimator bias; temperature scaling, Platt, isotonic; aleatoric vs epistemic uncertainty; deep ensembles, MC dropout, SWAG, Laplace approximation; conformal prediction with the coverage guarantee derived; OOD detection (MSP, energy, Mahalanobis, ODIN); distribution shift taxonomy; adversarial examples, PGD, adversarial training, certified defences; spurious correlations and group robustness (IRM, GroupDRO). |
 
@@ -167,28 +167,28 @@ Equations that must be memorized are marked **▸**. If you are skimming, read o
 
 | Symbol | Meaning |
 |---|---|
-| $x, y$ | input, label |
-| $\theta, w$ | parameters |
+| $`x, y`$ | input, label |
+| $`\theta, w`$ | parameters |
 | $`f_\theta`$ | the model |
-| $\mathcal{L}, \hat{\mathcal{L}}$ | population loss, empirical loss |
-| $\eta, \alpha$ | learning rate |
-| $`g_t`$ | gradient at step $t$ |
-| $n$ | training set size |
+| $`\mathcal{L}, \hat{\mathcal{L}}`$ | population loss, empirical loss |
+| $`\eta, \alpha`$ | learning rate |
+| $`g_t`$ | gradient at step $`t`$ |
+| $`n`$ | training set size |
 | $`d, d_{\text{model}}`$ | input / hidden dimension |
-| $N$ or $p$ | parameter count |
-| $D$ | number of training tokens (Ch. 15) |
-| $B$ | batch size |
-| $L$ | number of layers |
-| $T$ | sequence length (Part IV) or horizon (Part VII) or diffusion steps (Part V) — disambiguated per chapter |
-| $H(\cdot)$, $\mathrm{KL}(\cdot\|\cdot)$ | entropy, KL divergence |
-| $\odot$ | elementwise product |
+| $`N`$ or $`p`$ | parameter count |
+| $`D`$ | number of training tokens (Ch. 15) |
+| $`B`$ | batch size |
+| $`L`$ | number of layers |
+| $`T`$ | sequence length (Part IV) or horizon (Part VII) or diffusion steps (Part V) — disambiguated per chapter |
+| $`H(\cdot)`$, $`\mathrm{KL}(\cdot\|\cdot)`$ | entropy, KL divergence |
+| $`\odot`$ | elementwise product |
 | $`\lambda_{\max}(H)`$ | top Hessian eigenvalue ("sharpness") |
-| $\gamma$ | discount factor (Part VII) |
+| $`\gamma`$ | discount factor (Part VII) |
 | $`\beta_t, \alpha_t, \bar\alpha_t`$ | diffusion schedule quantities |
 
-Vectors are columns. $`\nabla_\theta\mathcal{L}`$ has the same shape as $\theta$.
+Vectors are columns. $`\nabla_\theta\mathcal{L}`$ has the same shape as $`\theta`$.
 
-> **If any symbol in that table is unfamiliar**, [Chapter 00](00-notation-and-math-primer.md) explains all of them, plus the ones this table assumes you already know. It also flags the  traps — $\sigma$ means a standard deviation, a singular value, the sigmoid function, *and* a generic activation, depending entirely on context; $\bar y$ in this book usually means $\partial\mathcal{L}/\partial y$ rather than an average; and the vertical bar in $p(x\mid y)$ means "given," not division.
+> **If any symbol in that table is unfamiliar**, [Chapter 00](00-notation-and-math-primer.md) explains all of them, plus the ones this table assumes you already know. It also flags the  traps — $`\sigma`$ means a standard deviation, a singular value, the sigmoid function, *and* a generic activation, depending entirely on context; $`\bar y`$ in this book usually means $`\partial\mathcal{L}/\partial y`$ rather than an average; and the vertical bar in $`p(x\mid y)`$ means "given," not division.
 
 ---
 
@@ -210,9 +210,9 @@ Derived facts referenced later:
 
 ▸ A 13-epoch gap with no new best equals **29,562 parameter updates** — the model changed enormously; only the record stood still.
 
-▸ AdamW with $`\beta_2=0.999`$ has a memory horizon of $`1/(1-\beta_2) = 1{,}000`$ steps $= 0.44$ epochs. **The optimizer's entire memory is shorter than half an epoch**, so it cannot encode a multi-epoch plateau even in principle.
+▸ AdamW with $`\beta_2=0.999`$ has a memory horizon of $`1/(1-\beta_2) = 1{,}000`$ steps $`= 0.44`$ epochs. **The optimizer's entire memory is shorter than half an epoch**, so it cannot encode a multi-epoch plateau even in principle.
 
-▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $`\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629`$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}$ under the same null — *that* is the evidence of  improvement.
+▸ Under a flat-performance null, the probability of no new record across epochs 23–35 is exactly $`\prod_{k=23}^{35}(1-1/k) = 22/35 = 0.629`$. **The dry spell is the single most likely outcome and carries no information.** Back-to-back records at 36 and 37 have probability $`\frac{1}{36}\cdot\frac{1}{37} = 7.5\times10^{-4}`$ under the same null — *that* is the evidence of  improvement.
 
 The full analysis is Chapter 3 §3.6. The pattern generalizes to any noisy metric tracked by its running minimum.
 

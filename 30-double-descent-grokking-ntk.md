@@ -3,7 +3,7 @@
 > **Prerequisites:** Ch. 2, Ch. 4, Ch. 22 (§22.2 ridge/SVD).
 > **This is where the textbook story of machine learning breaks and the modern one begins.**
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, or $A^\top$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, or $`A^\top`$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
@@ -11,33 +11,33 @@ Skim this once now; every entry is unpacked properly where it first appears.
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $n$ | "n" | How many **training examples** you have |
-| $p$ | "p" | How many **parameters** (or features) the model has |
-| $p = n$ | "p equals n" | The **interpolation threshold** — exactly as many knobs as data points |
-| $X$ | "the design matrix" | The data laid out as a grid: one row per example, one column per feature |
-| $\hat\beta$ | "beta-hat" | The fitted coefficients. The hat means "estimated" (§0.6) |
-| $X^+$ | "X-plus" / "X-dagger" | The **pseudo-inverse** — the closest thing to an inverse a non-square matrix has |
-| $`\sigma_j`$ | "sigma-j" | A **singular value** of $X$ (§1.1.3) — here, *not* a standard deviation |
-| $\lambda$ | "lambda" | Ridge regularization strength, or an eigenvalue. Both appear; context decides |
-| $\Theta(x,x')$ | "the neural tangent kernel of x and x-prime" | How much training on example $x'$ moves the prediction at $x$ |
-| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | How the network's output at $x$ responds to each parameter, **measured at initialization** |
-| $\phi(x)$ | "phi of x" | The feature map — here it equals the gradient above, and it never changes |
+| $`n`$ | "n" | How many **training examples** you have |
+| $`p`$ | "p" | How many **parameters** (or features) the model has |
+| $`p = n`$ | "p equals n" | The **interpolation threshold** — exactly as many knobs as data points |
+| $`X`$ | "the design matrix" | The data laid out as a grid: one row per example, one column per feature |
+| $`\hat\beta`$ | "beta-hat" | The fitted coefficients. The hat means "estimated" (§0.6) |
+| $`X^+`$ | "X-plus" / "X-dagger" | The **pseudo-inverse** — the closest thing to an inverse a non-square matrix has |
+| $`\sigma_j`$ | "sigma-j" | A **singular value** of $`X`$ (§1.1.3) — here, *not* a standard deviation |
+| $`\lambda`$ | "lambda" | Ridge regularization strength, or an eigenvalue. Both appear; context decides |
+| $`\Theta(x,x')`$ | "the neural tangent kernel of x and x-prime" | How much training on example $`x'`$ moves the prediction at $`x`$ |
+| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | How the network's output at $`x`$ responds to each parameter, **measured at initialization** |
+| $`\phi(x)`$ | "phi of x" | The feature map — here it equals the gradient above, and it never changes |
 | $`\theta_0`$ | "theta-nought" | The parameters at initialization, before any training |
-| $\dfrac{df(x)}{dt}$ | "d f by d t" | **Gradient flow** — gradient descent with infinitesimally small steps, so time is continuous |
-| $e^{-\eta\Theta t}$ | "e to the minus eta Theta t" | Exponential decay of the error, one rate per kernel eigendirection |
-| $a\circ b = (a+b)\bmod 97$ | "a plus b, mod 97" | Add, then keep only the remainder after dividing by 97 |
+| $`\dfrac{df(x)}{dt}`$ | "d f by d t" | **Gradient flow** — gradient descent with infinitesimally small steps, so time is continuous |
+| $`e^{-\eta\Theta t}`$ | "e to the minus eta Theta t" | Exponential decay of the error, one rate per kernel eigendirection |
+| $`a\circ b = (a+b)\bmod 97`$ | "a plus b, mod 97" | Add, then keep only the remainder after dividing by 97 |
 | $`\omega_k`$ | "omega-k" | A **frequency** the network discovers in its embeddings |
 
 ### ⚠ The one notation trap in this chapter
 
-**$\Theta$ means two completely unrelated things here, and they appear within a page of each other.**
+**$`\Theta`$ means two completely unrelated things here, and they appear within a page of each other.**
 
 | Written | Means | How to tell |
 |---|---|---|
-| $\Theta(x,x')$, $\Theta$ | The **neural tangent kernel** | Takes arguments that are *data points*, or stands alone as a matrix |
-| $\Theta(1)$, $\Theta(\cdot)$ | **Big-Theta** asymptotic notation: "grows exactly like" (§0.10) | Appears in a table of *rates*, next to $O(\cdot)$ |
+| $`\Theta(x,x')`$, $`\Theta`$ | The **neural tangent kernel** | Takes arguments that are *data points*, or stands alone as a matrix |
+| $`\Theta(1)`$, $`\Theta(\cdot)`$ | **Big-Theta** asymptotic notation: "grows exactly like" (§0.10) | Appears in a table of *rates*, next to $`O(\cdot)`$ |
 
-▸ In the lazy-versus-rich table below, the row "Weight movement: $O(1/\sqrt{\text{width}})$ versus $\Theta(1)$" uses the **asymptotic** sense — it means "shrinks with width" versus "stays a constant." Nothing to do with the kernel. This collision is unfortunate and universal in the literature; there is no way to read around it except to know it is there.
+▸ In the lazy-versus-rich table below, the row "Weight movement: $`O(1/\sqrt{\text{width}})`$ versus $`\Theta(1)`$" uses the **asymptotic** sense — it means "shrinks with width" versus "stays a constant." Nothing to do with the kernel. This collision is unfortunate and universal in the literature; there is no way to read around it except to know it is there.
 
 ### Full forms of every abbreviation in this chapter
 
@@ -53,7 +53,7 @@ Skim this once now; every entry is unpacked properly where it first appears.
 | LR | Learning Rate |
 | EMC | Effective Model Complexity |
 | DFT | **D**iscrete **F**ourier **T**ransform (in Chapter 29 the same letters meant density functional theory) |
-| $\mu$P | **m**aximal **u**pdate **P**arameterization |
+| $`\mu`$P | **m**aximal **u**pdate **P**arameterization |
 | MLP | Multi-Layer Perceptron |
 | ReLU | Rectified Linear Unit |
 | PNAS | Proceedings of the National Academy of Sciences (where several of these results were published) |
@@ -92,22 +92,22 @@ error │      ╭─╮  ← the interpolation peak (n ≈ p)
 First, the vocabulary that the rest of the chapter assumes.
 
 - **Interpolate** — hit every training point *exactly*. Training error is literally zero, not small. In classical statistics this was a synonym for "you have ruined the model."
-- **Overparameterized** — more parameters $p$ than training examples $n$. Modern language models sit at $p/n$ ratios that would have been considered absurd in 1995.
+- **Overparameterized** — more parameters $`p`$ than training examples $`n`$. Modern language models sit at $`p/n`$ ratios that would have been considered absurd in 1995.
 - **The interpolation threshold** — the capacity at which the model becomes *just barely* able to interpolate. Not before, not comfortably after. **This exact point is where everything goes wrong.**
 
 ▸ **The unifying statement: the peak occurs wherever the model is exactly stretched to its limit, and all three variants are different ways of walking past that point.**
 
 | Variant | What you vary | What you hold fixed | The move that crosses the threshold |
 |---|---|---|---|
-| **Model-wise** | model size $p$ | data $n$, epochs | Grow the model until $p \approx n$ |
+| **Model-wise** | model size $`p`$ | data $`n`$, epochs | Grow the model until $`p \approx n`$ |
 | **Epoch-wise** | training time | model size, data | Train longer — **effective** capacity grows during training |
-| **Sample-wise** | data $n$ | model size $p$ | *Add* data until $n \approx p$ |
+| **Sample-wise** | data $`n`$ | model size $`p`$ | *Add* data until $`n \approx p`$ |
 
-**Epoch-wise, unpacked.** A model's *usable* capacity is not fixed at the start; it grows as training explores more of parameter space. Early in training a large network behaves like a small one — Chapter 30's spectral bias says it fits smooth structure first — so it effectively creeps rightward along the same $x$-axis as it trains. **When it passes through "just barely able to fit the training set," test error rises, then falls again as it moves comfortably past.**
+**Epoch-wise, unpacked.** A model's *usable* capacity is not fixed at the start; it grows as training explores more of parameter space. Early in training a large network behaves like a small one — Chapter 30's spectral bias says it fits smooth structure first — so it effectively creeps rightward along the same $`x`$-axis as it trains. **When it passes through "just barely able to fit the training set," test error rises, then falls again as it moves comfortably past.**
 
 ▸ **This is why "early stopping is always right" is false**, and it is not a small correction. The standard practice of stopping at the first upturn in validation error would, on such a run, stop you precisely at the worst point and never let you reach the better solution beyond it.
 
-**Sample-wise, unpacked — the  disturbing one.** Fix the model at $p = 10{,}000$ parameters. You have $n = 500$ examples and the model is comfortably overparameterized ($p/n = 20$). You collect more data. At $n = 10{,}000$ you are at the threshold, and **your test error is worse than it was with 500 examples.** Push on to $n = 50{,}000$ and it improves again.
+**Sample-wise, unpacked — the  disturbing one.** Fix the model at $`p = 10{,}000`$ parameters. You have $`n = 500`$ examples and the model is comfortably overparameterized ($`p/n = 20`$). You collect more data. At $`n = 10{,}000`$ you are at the threshold, and **your test error is worse than it was with 500 examples.** Push on to $`n = 50{,}000`$ and it improves again.
 
 > **Analogy for all three.** A bookshelf and a pile of books. With few books they sit loosely — you can arrange them however you like. With **exactly** as many books as the shelf holds, they are jammed in edge to edge, every one under pressure, and the whole row is one nudge from buckling. With far more shelf than books, everything relaxes again. **The trouble is not too many books or too few — it is the precise ratio at which the system has no slack.**
 
@@ -122,10 +122,10 @@ A rise-then-fall in a test-error curve has several possible causes, and only one
 | Case | What was varied | The signature |
 |---|---|---|
 | ResNet-18 on CIFAR-10, width from 1 to 64 channels, label noise 15% | Model size | Test error peaks where the model first reaches zero *training* error, then falls below the earlier minimum |
-| Ridgeless linear regression, $p$ swept from $0.1n$ to $10n$ | Feature count | A pole at $p=n$ predicted exactly by Marchenko–Pastur |
-| A fixed transformer trained for $10^6$ steps with no weight decay | Training time | Test loss rises around the epoch where training loss first hits zero, then falls again |
-| A fixed model, $n$ swept upward past $p$ | Dataset size | **More data, worse test error**, then better again |
-| Random-feature regression with $p$ random features | Feature count | The cleanest lab version — reproducible in twenty lines of NumPy |
+| Ridgeless linear regression, $`p`$ swept from $`0.1n`$ to $`10n`$ | Feature count | A pole at $`p=n`$ predicted exactly by Marchenko–Pastur |
+| A fixed transformer trained for $`10^6`$ steps with no weight decay | Training time | Test loss rises around the epoch where training loss first hits zero, then falls again |
+| A fixed model, $`n`$ swept upward past $`p`$ | Dataset size | **More data, worse test error**, then better again |
+| Random-feature regression with $`p`$ random features | Feature count | The cleanest lab version — reproducible in twenty lines of NumPy |
 
 **❌ Near-misses — bumps that are not double descent**
 
@@ -133,9 +133,9 @@ A rise-then-fall in a test-error curve has several possible causes, and only one
 |---|---|---|
 | Test error rises while training error also rises | Double descent's peak sits at or past the point of **zero training error** | An optimization failure — learning rate too high, or a bad initialization |
 | Validation error rises then falls over 3 epochs | The peak is a property of capacity, not of a warmup schedule | A learning-rate warmup or schedule artifact |
-| Test error wobbles by $\pm0.3\%$ across model sizes | The peak is a large, systematic, reproducible spike | Evaluation noise. Ch. 3: check your error bars before believing a shape |
+| Test error wobbles by $`\pm0.3\%`$ across model sizes | The peak is a large, systematic, reproducible spike | Evaluation noise. Ch. 3: check your error bars before believing a shape |
 | Test error rises as you add parameters, and never comes back down | The second descent is the defining half of the phenomenon | Ordinary overfitting, usually with too little data or no regularization |
-| Test error rises when you add a new data source | Nothing to do with $n$ versus $p$ | Distribution shift — the new data is not from the same distribution |
+| Test error rises when you add a new data source | Nothing to do with $`n`$ versus $`p`$ | Distribution shift — the new data is not from the same distribution |
 | A bump that vanishes when you turn up weight decay | With optimal ridge the curve is monotone by construction | **Under-regularization** — and this is the first hypothesis you should test |
 
 ▸ **The boundary:** double descent is the peak that occurs **exactly where the model becomes just barely able to interpolate the training data**, and it is followed by a descent to a *lower* error than the classical optimum. No zero training error, no interpolation threshold, no double descent. Anything without the second descent is just overfitting with extra steps.
@@ -148,17 +148,17 @@ A rise-then-fall in a test-error curve has several possible causes, and only one
 
 ### Why the peak exists — the linear analysis
 
-Consider minimum-$`\ell_2`$-norm interpolation ("ridgeless regression"): with $n$ samples and $p$ features,
+Consider minimum-$`\ell_2`$-norm interpolation ("ridgeless regression"): with $`n`$ samples and $`p`$ features,
 
 $$\hat\beta = X^+y = X^\top(XX^\top)^{-1}y \quad (p>n)$$
 
-The estimator's variance involves $(X^\top X)^{-1}$ or its pseudo-inverse, whose scale is set by the **smallest nonzero singular value** of $X$.
+The estimator's variance involves $`(X^\top X)^{-1}`$ or its pseudo-inverse, whose scale is set by the **smallest nonzero singular value** of $`X`$.
 
-▸ **At $p=n$, $X$ is square and generically nearly singular** — by random-matrix theory (the Marchenko–Pastur law), the smallest singular value of an $n\times n$ random matrix concentrates near **zero**. So $\|\hat\beta\|\to\infty$ and the variance blows up. **That is the pole, and it is a property of the linear algebra, not of neural networks.**
+▸ **At $`p=n`$, $`X`$ is square and generically nearly singular** — by random-matrix theory (the Marchenko–Pastur law), the smallest singular value of an $`n\times n`$ random matrix concentrates near **zero**. So $`\|\hat\beta\|\to\infty`$ and the variance blows up. **That is the pole, and it is a property of the linear algebra, not of neural networks.**
 
-- $p<n$: the system is overdetermined, $X^\top X$ is well-conditioned, ordinary least squares behaves classically.
-- $p=n$: exactly determined, no slack, the fit is forced through every point by a nearly-singular inverse.
-- $p>n$: **underdetermined — infinitely many exact solutions exist, and we get to pick.** The minimum-norm choice is smooth, and as $p$ grows the solution space grows so the minimum-norm element gets *smaller* in norm. Variance falls.
+- $`p<n`$: the system is overdetermined, $`X^\top X`$ is well-conditioned, ordinary least squares behaves classically.
+- $`p=n`$: exactly determined, no slack, the fit is forced through every point by a nearly-singular inverse.
+- $`p>n`$: **underdetermined — infinitely many exact solutions exist, and we get to pick.** The minimum-norm choice is smooth, and as $`p`$ grows the solution space grows so the minimum-norm element gets *smaller* in norm. Variance falls.
 
 ▸ **The key conceptual shift: in the overparameterized regime, what matters is not "how many solutions fit the data" but "which one the optimizer picks."** Capacity stops being the controlling variable and *implicit bias* takes over (Ch. 31).
 
@@ -166,62 +166,62 @@ The estimator's variance involves $(X^\top X)^{-1}$ or its pseudo-inverse, whose
 
 This is the load-bearing derivation of the chapter and it uses nothing beyond Chapter 1. Take it slowly.
 
-**What "ridgeless regression" means.** Ordinary ridge regression minimizes $\|y - X\beta\|^2 + \lambda\|\beta\|^2$: fit the data, and don't let the coefficients get large. **Ridgeless** means $\lambda = 0$ — the second term is switched off entirely. No regularization at all. Remember this: **double descent is a story about what happens when you remove the safety rail.**
+**What "ridgeless regression" means.** Ordinary ridge regression minimizes $`\|y - X\beta\|^2 + \lambda\|\beta\|^2`$: fit the data, and don't let the coefficients get large. **Ridgeless** means $`\lambda = 0`$ — the second term is switched off entirely. No regularization at all. Remember this: **double descent is a story about what happens when you remove the safety rail.**
 
-**Reading the formula.** $\hat\beta = X^+y = X^\top(XX^\top)^{-1}y$
+**Reading the formula.** $`\hat\beta = X^+y = X^\top(XX^\top)^{-1}y`$
 
 | Piece | Read aloud | Shape | Job |
 |---|---|---|---|
-| $X$ | "the design matrix" | $n\times p$ | Your data: $n$ examples, $p$ features |
-| $y$ | "y" | $n$ | The targets |
-| $X^+$ | "X pseudo-inverse" | $p\times n$ | The best stand-in for $X^{-1}$ when $X$ isn't square |
-| $XX^\top$ | "X X transpose" | $n\times n$ | Note the shape: it is $n\times n$, **not** $p\times p$ — this form is the one that works when $p>n$ |
+| $`X`$ | "the design matrix" | $`n\times p`$ | Your data: $`n`$ examples, $`p`$ features |
+| $`y`$ | "y" | $`n`$ | The targets |
+| $`X^+`$ | "X pseudo-inverse" | $`p\times n`$ | The best stand-in for $`X^{-1}`$ when $`X`$ isn't square |
+| $`XX^\top`$ | "X X transpose" | $`n\times n`$ | Note the shape: it is $`n\times n`$, **not** $`p\times p`$ — this form is the one that works when $`p>n`$ |
 
-**The pseudo-inverse, in one sentence.** A square, well-behaved matrix has an inverse that undoes it. A non-square one does not, so $X^+$ does the next best thing: **among all $\beta$ that fit the data exactly, it returns the one with the smallest $`\|\beta\|_2`$.** That choice — "smallest norm" — is not a neutral technical default. It is the entire reason overparameterization works, and it is the ancestor of every implicit-bias result in Chapter 31.
+**The pseudo-inverse, in one sentence.** A square, well-behaved matrix has an inverse that undoes it. A non-square one does not, so $`X^+`$ does the next best thing: **among all $`\beta`$ that fit the data exactly, it returns the one with the smallest $`\|\beta\|_2`$.** That choice — "smallest norm" — is not a neutral technical default. It is the entire reason overparameterization works, and it is the ancestor of every implicit-bias result in Chapter 31.
 
-**A two-parameter example you can do in your head.** One data point: $x = (1,1)$, $y = 2$. Fit $`\beta_1 x_1 + \beta_2 x_2 = 2`$. There are **infinitely many** exact solutions — every point on the line $`\beta_1 + \beta_2 = 2`$:
+**A two-parameter example you can do in your head.** One data point: $`x = (1,1)`$, $`y = 2`$. Fit $`\beta_1 x_1 + \beta_2 x_2 = 2`$. There are **infinitely many** exact solutions — every point on the line $`\beta_1 + \beta_2 = 2`$:
 
-| Solution $\beta$ | Fits the data? | $`\|\beta\|_2`$ |
+| Solution $`\beta`$ | Fits the data? | $`\|\beta\|_2`$ |
 |---|---|---|
-| $(2, 0)$ | ✓ | $2.00$ |
-| $(1, 1)$ | ✓ | $1.41$ ← **minimum-norm** |
-| $(10, -8)$ | ✓ | $12.81$ |
-| $(500,-498)$ | ✓ | $705.7$ |
+| $`(2, 0)`$ | ✓ | $`2.00`$ |
+| $`(1, 1)`$ | ✓ | $`1.41`$ ← **minimum-norm** |
+| $`(10, -8)`$ | ✓ | $`12.81`$ |
+| $`(500,-498)`$ | ✓ | $`705.7`$ |
 
-▸ **Every row fits the training data perfectly, and they will behave wildly differently on a new point.** The last one is a hair-trigger: change $`x_1`$ by $0.01$ and the prediction moves by $5$. The pseudo-inverse picks row two — the placid one. **"Which of the infinitely many perfect fits do you take?" is the only question that matters here, and the answer is a property of the algorithm, not of the model class.**
+▸ **Every row fits the training data perfectly, and they will behave wildly differently on a new point.** The last one is a hair-trigger: change $`x_1`$ by $`0.01`$ and the prediction moves by $`5`$. The pseudo-inverse picks row two — the placid one. **"Which of the infinitely many perfect fits do you take?" is the only question that matters here, and the answer is a property of the algorithm, not of the model class.**
 
-**Now why the norm *shrinks* as $p$ grows.** Same setup, but with $p$ features all equal to 1 and a target of 1. The minimum-norm solution spreads the job evenly: $`\beta_j = 1/p`$ for each $j$, so
+**Now why the norm *shrinks* as $`p`$ grows.** Same setup, but with $`p`$ features all equal to 1 and a target of 1. The minimum-norm solution spreads the job evenly: $`\beta_j = 1/p`$ for each $`j`$, so
 
 $$\|\hat\beta\|_2 = \sqrt{p\cdot\left(\tfrac1p\right)^2} = \frac{1}{\sqrt p}$$
 
-| $p$ | $`\|\hat\beta\|_2`$ |
+| $`p`$ | $`\|\hat\beta\|_2`$ |
 |---|---|
-| 1 | $1.000$ |
-| 100 | $0.100$ |
-| 10,000 | $0.010$ |
+| 1 | $`1.000`$ |
+| 100 | $`0.100`$ |
+| 10,000 | $`0.010`$ |
 
 ▸ **More parameters means each one has to do less.** The solution set grows, and the smallest element of a bigger set is smaller. This is the entire right-hand branch of the double-descent curve in one line: **the descent after the peak is the minimum-norm solution getting quieter as the space of exact fits gets roomier.**
 
-**Now the peak itself, and where the singular values come in.** The variance of the estimator is governed by $`1/\sigma_{\min}^2`$ — the *smallest* singular value of $X$. Small singular value means the matrix nearly squashes some direction to nothing (§1.1.3), and inverting it means dividing by nearly nothing.
+**Now the peak itself, and where the singular values come in.** The variance of the estimator is governed by $`1/\sigma_{\min}^2`$ — the *smallest* singular value of $`X`$. Small singular value means the matrix nearly squashes some direction to nothing (§1.1.3), and inverting it means dividing by nearly nothing.
 
 > **Analogy.** A set of bathroom scales that reads to the nearest kilogram. Weigh an elephant and the reading is fine. Weigh a feather by putting it on the scales and reading the difference — you divide a rounding error by an almost-zero quantity, and the answer is nonsense. **Inverting a near-singular matrix is dividing by a feather.**
 
-**The Marchenko–Pastur law says exactly how bad it gets.** For a random $n\times p$ matrix with $\gamma = p/n$, the eigenvalues of $\frac1n X^\top X$ fall in the window $\big[(1-\sqrt\gamma)^2,\ (1+\sqrt\gamma)^2\big]$. Watch the lower edge:
+**The Marchenko–Pastur law says exactly how bad it gets.** For a random $`n\times p`$ matrix with $`\gamma = p/n`$, the eigenvalues of $`\frac1n X^\top X`$ fall in the window $`\big[(1-\sqrt\gamma)^2,\ (1+\sqrt\gamma)^2\big]`$. Watch the lower edge:
 
-| $p/n$ | Smallest eigenvalue $(1-\sqrt{p/n})^2$ | Variance blow-up $`\propto 1/\lambda_{\min}`$ |
+| $`p/n`$ | Smallest eigenvalue $`(1-\sqrt{p/n})^2`$ | Variance blow-up $`\propto 1/\lambda_{\min}`$ |
 |---|---|---|
-| $0.5$ | $0.086$ | $\times 12$ |
-| $0.9$ | $0.0026$ | $\times 380$ |
-| $0.99$ | $0.000025$ | $\times 40{,}000$ |
-| $1.0$ | $0$ | $\infty$ |
+| $`0.5`$ | $`0.086`$ | $`\times 12`$ |
+| $`0.9`$ | $`0.0026`$ | $`\times 380`$ |
+| $`0.99`$ | $`0.000025`$ | $`\times 40{,}000`$ |
+| $`1.0`$ | $`0`$ | $`\infty`$ |
 
 ▸ **That last row is the pole.** It is not an artifact of neural networks, of ReLU, of SGD, or of any modelling choice — **it is what happens to random matrices when they become square.** A square random matrix is generically almost-singular, and the entire interpolation peak is that fact, seen through a fitting procedure.
 
 **The three regimes, said out loud:**
 
-- **$p < n$ — overdetermined.** More equations than unknowns; no exact fit exists; least squares finds the best compromise. Classical statistics, well-behaved.
-- **$p = n$ — exactly determined.** Exactly one solution exists, and you are forced to take it, however violent. **No slack, no choice.**
-- **$p > n$ — underdetermined.** Infinitely many exact solutions exist. **And now you get to choose**, which changes the nature of the problem completely.
+- **$`p < n`$ — overdetermined.** More equations than unknowns; no exact fit exists; least squares finds the best compromise. Classical statistics, well-behaved.
+- **$`p = n`$ — exactly determined.** Exactly one solution exists, and you are forced to take it, however violent. **No slack, no choice.**
+- **$`p > n`$ — underdetermined.** Infinitely many exact solutions exist. **And now you get to choose**, which changes the nature of the problem completely.
 
 #### Examples and non-examples: interpolation
 
@@ -232,16 +232,16 @@ The word does a lot of work in this chapter, and it does not mean what it means 
 | Example | Training error | Why it counts |
 |---|---|---|
 | A 1-nearest-neighbour classifier | Exactly 0 | Every training point is its own nearest neighbour. The oldest interpolating method there is |
-| Minimum-norm ridgeless regression with $p>n$ | Exactly 0 | The pseudo-inverse returns an exact solution |
+| Minimum-norm ridgeless regression with $`p>n`$ | Exactly 0 | The pseudo-inverse returns an exact solution |
 | A ResNet trained to zero training loss on CIFAR-10 with **randomized labels** | Exactly 0 | Zhang et al.'s experiment: 50,000 arbitrary labels memorized perfectly |
 | A wide network trained past the point where training accuracy hits 100% | Exactly 0 | The regime every large model is trained in today |
-| A degree-$n$ polynomial through $n+1$ points | Exactly 0 | The classical textbook cautionary tale, which is also a  example |
+| A degree-$`n`$ polynomial through $`n+1`$ points | Exactly 0 | The classical textbook cautionary tale, which is also a  example |
 
 **❌ Near-misses — often called interpolation, but aren't**
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| Training loss of $0.003$ | Not zero. The distinction matters because the *gradient from the data* is what has to vanish before implicit bias takes over | A very good fit, still being pushed by the data |
+| Training loss of $`0.003`$ | Not zero. The distinction matters because the *gradient from the data* is what has to vanish before implicit bias takes over | A very good fit, still being pushed by the data |
 | 100% training **accuracy** with nonzero cross-entropy | The argmax is right everywhere and the loss still has a gradient — logits keep growing | Accuracy-interpolation, not loss-interpolation. This gap is exactly what drives margin maximization (Ch. 31) |
 | A model that memorizes 99% of the training set | One missed point means the constraint set is not the zero-loss manifold | Nearly interpolating, and the theory's guarantees are about the exact case |
 | Overfitting | Overfitting is a *statement about test error*; interpolation is a statement about **training** error | Two independent facts — benign overfitting is the case where you interpolate and generalize anyway |
@@ -251,28 +251,28 @@ The word does a lot of work in this chapter, and it does not mean what it means 
 
 > **Common misconception.** *"An interpolating model has memorized and therefore cannot generalize."* Consider 1-nearest-neighbour: it interpolates by construction, has been known since the 1950s, and is a consistent estimator under mild conditions — it does generalize. The intuition that fitting every point is fatal comes from the *polynomial* case, where the interpolant is forced to oscillate violently between points. Change the interpolant to a smooth minimum-norm one and the oscillation goes away. **What kills you is not passing through every point; it is what your model does *between* the points**, and that is decided by which interpolant your algorithm selects.
 
-**What would break — a concrete numerical demonstration of the pole.** Take $n = 100$ samples and sweep $p$. The minimum-norm solution's size behaves like this:
+**What would break — a concrete numerical demonstration of the pole.** Take $`n = 100`$ samples and sweep $`p`$. The minimum-norm solution's size behaves like this:
 
-| $p$ | Regime | Typical $\lVert\hat\beta\rVert$ | Test error |
+| $`p`$ | Regime | Typical $`\lVert\hat\beta\rVert`$ | Test error |
 |---|---|---|---|
-| $10$ | Underparameterized | small | good |
-| $95$ | Approaching the threshold | growing fast | degrading |
-| $100$ | **Exactly at it** | enormous — the matrix is near-singular | **worst point on the curve** |
-| $150$ | Just past | falling | recovering |
-| $10{,}000$ | Deeply overparameterized | smallest of all | **best point on the curve** |
+| $`10`$ | Underparameterized | small | good |
+| $`95`$ | Approaching the threshold | growing fast | degrading |
+| $`100`$ | **Exactly at it** | enormous — the matrix is near-singular | **worst point on the curve** |
+| $`150`$ | Just past | falling | recovering |
+| $`10{,}000`$ | Deeply overparameterized | smallest of all | **best point on the curve** |
 
-▸ **The failure at $p=n$ is division by a nearly-zero singular value, and nothing else.** Set $\lambda = 10^{-6}$ instead of exactly $0$ and the pole is capped: you are no longer inverting a feather, you are inverting a feather plus a microgram. **The peak is a numerical event with a statistical shadow**, which is why the tiniest amount of ridge regularization removes it.
+▸ **The failure at $`p=n`$ is division by a nearly-zero singular value, and nothing else.** Set $`\lambda = 10^{-6}`$ instead of exactly $`0`$ and the pole is capped: you are no longer inverting a feather, you are inverting a feather plus a microgram. **The peak is a numerical event with a statistical shadow**, which is why the tiniest amount of ridge regularization removes it.
 
-> **Where random matrix theory came from.** **Vladimir Marchenko and Leonid Pastur** published their law in 1967, in the Soviet Union, as a result in pure mathematics about the limiting spectrum of large random covariance matrices. The field they were working in had been founded by **Eugene Wigner** in the 1950s for an entirely different purpose: Wigner wanted to predict the spacing of energy levels in heavy atomic nuclei, which are far too complicated to solve exactly, and his radical proposal was to **replace the true Hamiltonian with a random matrix and study the statistics instead.** It worked, and it produced the semicircle law. **The mathematics that explains why your model's test error spikes at $p=n$ was invented to describe uranium nuclei**, which is a good indication of how far the pipeline from physics to machine learning still runs.
+> **Where random matrix theory came from.** **Vladimir Marchenko and Leonid Pastur** published their law in 1967, in the Soviet Union, as a result in pure mathematics about the limiting spectrum of large random covariance matrices. The field they were working in had been founded by **Eugene Wigner** in the 1950s for an entirely different purpose: Wigner wanted to predict the spacing of energy levels in heavy atomic nuclei, which are far too complicated to solve exactly, and his radical proposal was to **replace the true Hamiltonian with a random matrix and study the statistics instead.** It worked, and it produced the semicircle law. **The mathematics that explains why your model's test error spikes at $`p=n`$ was invented to describe uranium nuclei**, which is a good indication of how far the pipeline from physics to machine learning still runs.
 
 ### Effective rather than raw parameter count
 
-Raw parameter count is the wrong $x$-axis. Better measures place the peak more reliably:
+Raw parameter count is the wrong $`x`$-axis. Better measures place the peak more reliably:
 - Effective degrees of freedom $`\sum_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}`$ (Ch. 22 §22.2).
 - Weight-norm-based capacity measures.
-- Nakkiran et al.'s **effective model complexity**: the largest $n$ for which the training procedure achieves ≈0 training error.
+- Nakkiran et al.'s **effective model complexity**: the largest $`n`$ for which the training procedure achieves ≈0 training error.
 
-▸ **Explicit regularization mitigates or removes the peak.** With optimal ridge $\lambda$, the double-descent curve becomes monotone. This is important: **double descent is a phenomenon of *unregularized* interpolation.** It says less about the impossibility of classical theory than about what happens when you turn regularization off.
+▸ **Explicit regularization mitigates or removes the peak.** With optimal ridge $`\lambda`$, the double-descent curve becomes monotone. This is important: **double descent is a phenomenon of *unregularized* interpolation.** It says less about the impossibility of classical theory than about what happens when you turn regularization off.
 
 #### Why counting parameters is the wrong axis
 
@@ -286,27 +286,27 @@ Look at one term. It is a fraction between 0 and 1 that answers: *"is this direc
 
 | Situation | $`\dfrac{\sigma_j^2}{\sigma_j^2+\lambda}`$ | Reads as |
 |---|---|---|
-| $`\sigma_j^2 \gg \lambda`$ (strong direction) | $\approx 1$ | "This direction counts as one full parameter" |
-| $`\sigma_j^2 \approx \lambda`$ | $= 0.5$ | "Half a parameter" |
-| $`\sigma_j^2 \ll \lambda`$ (weak direction) | $\approx 0$ | "Regularization has switched this one off; it costs nothing" |
+| $`\sigma_j^2 \gg \lambda`$ (strong direction) | $`\approx 1`$ | "This direction counts as one full parameter" |
+| $`\sigma_j^2 \approx \lambda`$ | $`= 0.5`$ | "Half a parameter" |
+| $`\sigma_j^2 \ll \lambda`$ (weak direction) | $`\approx 0`$ | "Regularization has switched this one off; it costs nothing" |
 
-Put numbers in with $\lambda = 1$ and singular values $\sigma^2 = (100, 10, 1, 0.1, 0.01)$:
+Put numbers in with $`\lambda = 1`$ and singular values $`\sigma^2 = (100, 10, 1, 0.1, 0.01)`$:
 
 $$\frac{100}{101} + \frac{10}{11} + \frac{1}{2} + \frac{0.1}{1.1} + \frac{0.01}{1.01} = 0.99 + 0.91 + 0.50 + 0.09 + 0.01 = 2.50$$
 
-▸ **Five parameters, but only two and a half of them are switched on.** As $\lambda\to0$ every term goes to 1 and you recover the raw count; as $\lambda\to\infty$ every term goes to 0 and the model is a constant. **The regularizer is a dimmer switch on capacity, and this sum is the reading on the dial.** It is exactly the same style of quantity as stable rank in §1.1.3 and perplexity in §1.4.2 — a smooth, honest count that replaces a brittle integer one.
+▸ **Five parameters, but only two and a half of them are switched on.** As $`\lambda\to0`$ every term goes to 1 and you recover the raw count; as $`\lambda\to\infty`$ every term goes to 0 and the model is a constant. **The regularizer is a dimmer switch on capacity, and this sum is the reading on the dial.** It is exactly the same style of quantity as stable rank in §1.1.3 and perplexity in §1.4.2 — a smooth, honest count that replaces a brittle integer one.
 
-**Effective model complexity, decoded.** Nakkiran and colleagues defined it operationally rather than analytically: **EMC is the largest training-set size $n$ for which this exact training procedure still drives training error to about zero.** Note what is being measured — not the architecture, but *the architecture plus the optimizer plus the schedule plus the number of epochs, as one inseparable object.*
+**Effective model complexity, decoded.** Nakkiran and colleagues defined it operationally rather than analytically: **EMC is the largest training-set size $`n`$ for which this exact training procedure still drives training error to about zero.** Note what is being measured — not the architecture, but *the architecture plus the optimizer plus the schedule plus the number of epochs, as one inseparable object.*
 
 ▸ **That definition is the chapter's thesis in disguise.** If capacity depended only on the model, you could measure it once. Defining it by what the training procedure achieves is an admission that **the optimizer is part of the model** — the line that Chapter 31 §31.6 arrives at from the other direction.
 
-And it immediately explains epoch-wise double descent: train longer and the same architecture can fit larger training sets, so its EMC rises *during* the run. **The model walks along the $x$-axis of the double-descent plot while you watch, and crosses the peak partway through.**
+And it immediately explains epoch-wise double descent: train longer and the same architecture can fit larger training sets, so its EMC rises *during* the run. **The model walks along the $`x`$-axis of the double-descent plot while you watch, and crosses the peak partway through.**
 
-**Now the caveat, which deserves more attention than it usually gets.** With a well-chosen ridge $\lambda$, the peak *disappears* and the curve is monotone. So:
+**Now the caveat, which deserves more attention than it usually gets.** With a well-chosen ridge $`\lambda`$, the peak *disappears* and the curve is monotone. So:
 
 - Double descent is **not** evidence that classical statistics was wrong. It is evidence about a regime — unregularized exact interpolation — that classical practice never entered.
 - ▸ **The practical reading: if you observe a test-error bump as you scale a model, your first hypothesis should be under-regularization, not a deep truth about overparameterization.** Turn up weight decay and see if the bump goes away.
-- The reason the phenomenon matters anyway is that modern deep learning  does run close to the ridgeless regime — weight decay of $0.1$ is not "optimal ridge," and a great deal of what makes large models work is implicit rather than explicit regularization.
+- The reason the phenomenon matters anyway is that modern deep learning  does run close to the ridgeless regime — weight decay of $`0.1`$ is not "optimal ridge," and a great deal of what makes large models work is implicit rather than explicit regularization.
 
 ### Benign overfitting
 
@@ -318,17 +318,17 @@ The theory (Bartlett, Long, Lugosi, Tsigler) explains *when* interpolating noise
 
 **The puzzle it resolves.** Classical statistics says fitting noise is fatal: memorize the random errors in your training set and you will carry them into your predictions. Modern models fit the noise *exactly* — training loss zero, on data that certainly contains label errors — and generalize fine anyway. **Benign overfitting is the theory of when that is allowed.**
 
-**"Data covariance spectrum," decoded.** The covariance matrix $\Sigma$ of your inputs has eigenvalues $`\lambda_1 \ge \lambda_2 \ge \dots`$, each measuring how much the data varies along one direction (§1.1.2). The *spectrum* is that sorted list. The theory says the shape of the list decides everything:
+**"Data covariance spectrum," decoded.** The covariance matrix $`\Sigma`$ of your inputs has eigenvalues $`\lambda_1 \ge \lambda_2 \ge \dots`$, each measuring how much the data varies along one direction (§1.1.2). The *spectrum* is that sorted list. The theory says the shape of the list decides everything:
 
 | Direction type | Eigenvalue | What lives there |
 |---|---|---|
 | Top few | large | **Signal** — the real structure |
 | Long tail | many, each tiny | **Capacity to absorb noise** |
 
-**The mechanism, with numbers.** Suppose a training point carries a label error of $+1.0$. The interpolating model must account for that whole unit of error somewhere.
+**The mechanism, with numbers.** Suppose a training point carries a label error of $`+1.0`$. The interpolating model must account for that whole unit of error somewhere.
 
-- **Bad case — few directions available.** The error is loaded onto 3 directions, so each carries about $0.33$. A new test point that happens to have any weight in those directions receives a large, wrong contribution. Disaster.
-- **Good case — a long tail.** The error is spread across 10,000 low-variance directions, roughly $0.0001$ each. A test point overlaps each of them a little, and the contributions have random signs, so they **cancel** rather than accumulate. The noise has been buried.
+- **Bad case — few directions available.** The error is loaded onto 3 directions, so each carries about $`0.33`$. A new test point that happens to have any weight in those directions receives a large, wrong contribution. Disaster.
+- **Good case — a long tail.** The error is spread across 10,000 low-variance directions, roughly $`0.0001`$ each. A test point overlaps each of them a little, and the contributions have random signs, so they **cancel** rather than accumulate. The noise has been buried.
 
 > **Analogy.** A drop of ink. In a shot glass, it ruins the drink. In a swimming pool, it is undetectable. The ink was not removed — **it was diluted below the level at which it matters.** The long tail of the spectrum is the swimming pool.
 
@@ -355,7 +355,7 @@ A committee so large that no individual member's opinion shifts much. The commit
 First-order Taylor expansion around initialization $`\theta_0`$:
 $$f(x;\theta)\approx f(x;\theta_0) + \nabla_\theta f(x;\theta_0)^\top(\theta-\theta_0)$$
 
-**This is linear in $\theta$** with fixed features $`\phi(x)=\nabla_\theta f(x;\theta_0)`$. Define the kernel:
+**This is linear in $`\theta`$** with fixed features $`\phi(x)=\nabla_\theta f(x;\theta_0)`$. Define the kernel:
 
 ▸ $$\Theta(x,x') = \big\langle\nabla_\theta f(x;\theta_0),\ \nabla_\theta f(x';\theta_0)\big\rangle$$
 
@@ -363,7 +363,7 @@ Under gradient flow with squared loss, the *function* evolves as:
 
 ▸ $$\frac{df(x)}{dt} = -\eta\sum_i\Theta(x,x_i)\,\big(f(x_i)-y_i\big)$$
 
-▸ **The parameters have vanished. The dynamics are entirely determined by the kernel**, and they are linear ODEs with a closed-form solution: the residual decays as $e^{-\eta\Theta t}$ along each eigendirection of the kernel matrix.
+▸ **The parameters have vanished. The dynamics are entirely determined by the kernel**, and they are linear ODEs with a closed-form solution: the residual decays as $`e^{-\eta\Theta t}`$ along each eigendirection of the kernel matrix.
 
 #### The NTK derivation, decoded
 
@@ -376,16 +376,16 @@ This is the first-order Taylor approximation from calculus: *"the value here, pl
 | Piece | Read aloud | Job |
 |---|---|---|
 | $`f(x;\theta_0)`$ | "f of x at theta-nought" | The network's output **before any training**, from random weights |
-| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | A vector with **one entry per parameter**: how much output $f(x)$ moves per unit change in that parameter |
+| $`\nabla_\theta f(x;\theta_0)`$ | "grad-theta f at theta-nought" | A vector with **one entry per parameter**: how much output $`f(x)`$ moves per unit change in that parameter |
 | $`\theta - \theta_0`$ | "theta minus theta-nought" | How far training has moved the weights from where they started |
 
-▸ **Note the shape of $`\nabla_\theta f`$: it has $p$ entries, one per parameter.** For a network with $10^8$ parameters, this "feature vector" for a single input is a hundred million numbers long. It is enormous, and it is *fixed at initialization* — that combination is what the whole theory hangs on.
+▸ **Note the shape of $`\nabla_\theta f`$: it has $`p`$ entries, one per parameter.** For a network with $`10^8`$ parameters, this "feature vector" for a single input is a hundred million numbers long. It is enormous, and it is *fixed at initialization* — that combination is what the whole theory hangs on.
 
 **Move 2 — notice what kind of function this is.** Read the expansion again with $`\phi(x) \equiv \nabla_\theta f(x;\theta_0)`$ and $`w \equiv \theta-\theta_0`$:
 
 $$f(x) \approx \text{const} + \phi(x)^\top w$$
 
-**That is linear regression.** Fixed features $\phi(x)$, learned weights $w$. The network's nonlinearity has not vanished — it lives inside $\phi$, which is a wildly nonlinear function of $x$ — but the *learning problem* is now linear, and linear problems are solvable.
+**That is linear regression.** Fixed features $`\phi(x)`$, learned weights $`w`$. The network's nonlinearity has not vanished — it lives inside $`\phi`$, which is a wildly nonlinear function of $`x`$ — but the *learning problem* is now linear, and linear problems are solvable.
 
 > **Analogy.** A pipe organ. Every pipe is a fixed, complicated resonating object, and you cannot change what a pipe sounds like. All you can do is decide how far to open each stop. The music is enormously expressive; the *control problem* is just a set of sliders. **NTK theory says a very wide neural network is an organ: the pipes are cast at initialization and training only adjusts the stops.**
 
@@ -395,8 +395,8 @@ $$\Theta(x,x') = \big\langle\nabla_\theta f(x;\theta_0),\ \nabla_\theta f(x';\th
 
 A dot product of two gradient vectors — so, by §0.8, **a measure of alignment**. In words: *"do these two inputs want the same parameters changed?"*
 
-- $\Theta(x,x')$ **large** → training on $x'$ nudges the parameters in a way that also moves the prediction at $x$. The two examples reinforce each other.
-- $\Theta(x,x') \approx 0$ → they use disjoint parts of the network. Learning one teaches you nothing about the other.
+- $`\Theta(x,x')`$ **large** → training on $`x'`$ nudges the parameters in a way that also moves the prediction at $`x`$. The two examples reinforce each other.
+- $`\Theta(x,x') \approx 0`$ → they use disjoint parts of the network. Learning one teaches you nothing about the other.
 
 ▸ **This is a similarity measure the network defines for itself, from its own architecture, before it has seen a single label.** It is not cosine similarity of inputs, or of activations — it is similarity of *how they would be learned*.
 
@@ -406,16 +406,16 @@ $$\frac{df(x)}{dt} = -\eta\sum_i\Theta(x,x_i)\,\big(f(x_i)-y_i\big)$$
 
 Read it right to left, as a sentence:
 
-1. $`\big(f(x_i)-y_i\big)`$ — **"how wrong am I on training example $i$?"** The residual.
-2. $`\Theta(x,x_i)`$ — **"how much does example $i$ influence the prediction at $x$?"** The influence weight.
+1. $`\big(f(x_i)-y_i\big)`$ — **"how wrong am I on training example $`i`$?"** The residual.
+2. $`\Theta(x,x_i)`$ — **"how much does example $`i`$ influence the prediction at $`x`$?"** The influence weight.
 3. $`\sum_i`$ — add up the influence from every training example.
-4. $-\eta$ — move against the error, at the learning rate.
+4. $`-\eta`$ — move against the error, at the learning rate.
 
-**In one sentence: "my prediction at $x$ changes by the sum, over all training points, of how wrong I am there times how connected $x$ is to there."**
+**In one sentence: "my prediction at $`x`$ changes by the sum, over all training points, of how wrong I am there times how connected $`x`$ is to there."**
 
-▸ **The remarkable part is what is absent: $\theta$.** The parameters do not appear on either side. You began with a hundred-million-dimensional nonlinear optimization problem and ended with a linear differential equation in *function space*, whose only ingredient is a fixed $n\times n$ matrix. This is why the result is celebrated: **it is the only case in deep learning where the entire training trajectory has a closed-form answer**, at every time $t$, for every input.
+▸ **The remarkable part is what is absent: $`\theta`$.** The parameters do not appear on either side. You began with a hundred-million-dimensional nonlinear optimization problem and ended with a linear differential equation in *function space*, whose only ingredient is a fixed $`n\times n`$ matrix. This is why the result is celebrated: **it is the only case in deep learning where the entire training trajectory has a closed-form answer**, at every time $`t`$, for every input.
 
-**Reading $e^{-\eta\Theta t}$.** Eigendecompose the $n\times n$ kernel matrix $\Theta$ (it is symmetric and positive semi-definite, so §1.1.2 applies). Along eigendirection $j$ the residual obeys $`r_j(t) = r_j(0)\,e^{-\eta\lambda_j t}`$ — plain exponential decay, one rate per direction.
+**Reading $`e^{-\eta\Theta t}`$.** Eigendecompose the $`n\times n`$ kernel matrix $`\Theta`$ (it is symmetric and positive semi-definite, so §1.1.2 applies). Along eigendirection $`j`$ the residual obeys $`r_j(t) = r_j(0)\,e^{-\eta\lambda_j t}`$ — plain exponential decay, one rate per direction.
 
 | Eigenvalue $`\lambda_j`$ | Decay rate | Learned |
 |---|---|---|
@@ -426,33 +426,33 @@ Read it right to left, as a sentence:
 
 ### The two theorems
 
-**(1) At infinite width, $\Theta$ converges to a deterministic limit** depending only on the architecture, depth, and activation — not on the random initialization.
+**(1) At infinite width, $`\Theta`$ converges to a deterministic limit** depending only on the architecture, depth, and activation — not on the random initialization.
 
-**(2) At infinite width, $\Theta$ stays constant during training.** Each weight moves by $O(1/\sqrt{\text{width}})$, so the Jacobian doesn't change, so the kernel doesn't change.
+**(2) At infinite width, $`\Theta`$ stays constant during training.** Each weight moves by $`O(1/\sqrt{\text{width}})`$, so the Jacobian doesn't change, so the kernel doesn't change.
 
 ▸ **Therefore: an infinitely wide network trained by gradient descent is exactly kernel regression with the NTK.** A closed-form solution for a neural network's entire training trajectory. That is the result, and it is remarkable.
 
 #### The two theorems, decoded
 
-The whole edifice rests on these, and both are statements about what happens when width $\to\infty$.
+The whole edifice rests on these, and both are statements about what happens when width $`\to\infty`$.
 
-**Theorem 1 — the randomness averages away.** Initialize a network randomly and $\Theta$ is a random object; it depends on which numbers came out of the random number generator. Theorem 1 says: **as width grows, that randomness vanishes and $\Theta$ converges to a fixed, deterministic function of the architecture alone.**
+**Theorem 1 — the randomness averages away.** Initialize a network randomly and $`\Theta`$ is a random object; it depends on which numbers came out of the random number generator. Theorem 1 says: **as width grows, that randomness vanishes and $`\Theta`$ converges to a fixed, deterministic function of the architecture alone.**
 
-The mechanism is the law of large numbers. $\Theta(x,x')$ is a sum of contributions from every parameter, and a wide layer has many parameters, so the sum concentrates around its mean — the same $1/\sqrt{n}$ averaging as the standard error in §1.3.1.
+The mechanism is the law of large numbers. $`\Theta(x,x')`$ is a sum of contributions from every parameter, and a wide layer has many parameters, so the sum concentrates around its mean — the same $`1/\sqrt{n}`$ averaging as the standard error in §1.3.1.
 
 ▸ **The consequence is worth stating plainly: at infinite width, two networks initialized with different random seeds compute the *same kernel*.** The seed stops mattering. And this is testable — it is why practitioners observe that very wide networks have far less seed-to-seed variance than narrow ones.
 
-**Theorem 2 — the features never move.** Each individual weight travels only $O(1/\sqrt{\text{width}})$ during the whole of training.
+**Theorem 2 — the features never move.** Each individual weight travels only $`O(1/\sqrt{\text{width}})`$ during the whole of training.
 
 | Width | How far each weight moves |
 |---|---|
-| 100 | $\sim 0.10$ |
-| 10,000 | $\sim 0.01$ |
-| 1,000,000 | $\sim 0.001$ |
+| 100 | $`\sim 0.10`$ |
+| 10,000 | $`\sim 0.01`$ |
+| 1,000,000 | $`\sim 0.001`$ |
 
-**Why the movement shrinks.** The network's output is a sum over width-many units. To change the output by a fixed amount, you can either move a few weights a lot or move all of them a tiny bit — and gradient descent, taking the shortest path in parameter space, does the second. **Widen the network and the work gets spread more thinly.** The function changes by $\Theta(1)$; each parameter changes by nearly nothing.
+**Why the movement shrinks.** The network's output is a sum over width-many units. To change the output by a fixed amount, you can either move a few weights a lot or move all of them a tiny bit — and gradient descent, taking the shortest path in parameter space, does the second. **Widen the network and the work gets spread more thinly.** The function changes by $`\Theta(1)`$; each parameter changes by nearly nothing.
 
-And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ — which is a *function of the parameters* — barely changes either. So $\phi$ is frozen, so $\Theta$ is frozen. **That is the whole argument.**
+And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ — which is a *function of the parameters* — barely changes either. So $`\phi`$ is frozen, so $`\Theta`$ is frozen. **That is the whole argument.**
 
 > **Analogy.** A stadium crowd doing a wave. The wave travels — a large, coordinated, visible change. **No individual stood up more than once.** Add fifty thousand more people and each person's contribution to the visible effect becomes smaller still, while the wave itself is unchanged. Theorem 2 says an infinitely wide network learns like a stadium: the function moves a lot, and nobody in it moved at all.
 
@@ -464,7 +464,7 @@ And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ 
 
 | Example | Why the kernel stays roughly frozen |
 |---|---|
-| A 2-layer MLP of width 100,000, trained a few hundred steps with a small learning rate | Each weight moves $\sim 1/\sqrt{10^5} \approx 0.003$ |
+| A 2-layer MLP of width 100,000, trained a few hundred steps with a small learning rate | Each weight moves $`\sim 1/\sqrt{10^5} \approx 0.003`$ |
 | A network initialized with large weights and trained briefly | Large init means the function starts big; relatively little movement is needed |
 | The last-layer-only fine-tune of a frozen backbone | The features are *literally* frozen — this is kernel regression by construction |
 | Linear probing of a pretrained model | Same argument; the kernel is whatever the backbone gives you |
@@ -477,21 +477,21 @@ And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ 
 | A trained ResNet-50 on ImageNet | Features move enormously; the whole point of the model is that they do | The finite network beats its own NTK by several percent |
 | Any model you intend to transfer or fine-tune | Transfer requires learned features, which the NTK has none of | The theory predicts transfer is impossible; it plainly isn't |
 | A network trained with a large learning rate | Large steps leave the neighbourhood where the Taylor expansion is valid | Edge-of-stability behaviour that the linear theory does not contain |
-| "It is wide, so it is lazy" | The regime is set by **parameterization and init scale**, not width alone | A $\mu$P-parameterized network stays rich at any width |
+| "It is wide, so it is lazy" | The regime is set by **parameterization and init scale**, not width alone | A $`\mu`$P-parameterized network stays rich at any width |
 | A network trained with small initialization | Small init means the weights must move a great deal relative to their size | Rich regime — features rebuilt, theory intractable |
 
 ▸ **The boundary:** you are in the NTK regime when **the features $`\nabla_\theta f(x;\theta_0)`$ do not meaningfully change during training.** That is a measurable property, not an architectural one: compute the kernel at initialization and again at the end and look at how much it moved. The number you get is, in a real sense, how much representation learning happened.
 
 > **Common misconception.** *"The NTK shows neural networks are 'just' kernel machines."* It shows that a network *in a particular limit* is exactly a kernel machine — and that limit is one that practitioners deliberately steer away from, because networks in it cannot learn features. Finite networks beat their own NTK by several percent on ImageNet, and that gap is not a rounding error; **it is a measurement of the thing the theory is missing.** The misconception is tempting because "X is just Y" is a satisfying reduction and the mathematics really is exact. The correct sentence is narrower and more interesting: *the NTK is the correct theory of the regime in which deep learning does not work very well.*
 
-> **Common misconception.** *"Wider is always lazier, so if I want feature learning I should keep my network narrow."* Width tips the balance only under **standard parameterization**. Under $\mu$P the network stays in the feature-learning regime at any width — which is precisely why $\mu$P lets you tune hyperparameters on a small model and apply them to a large one. The lesson is not "avoid width"; it is **"width and regime are separable, and $\mu$P is how you separate them."**
+> **Common misconception.** *"Wider is always lazier, so if I want feature learning I should keep my network narrow."* Width tips the balance only under **standard parameterization**. Under $`\mu`$P the network stays in the feature-learning regime at any width — which is precisely why $`\mu`$P lets you tune hyperparameters on a small model and apply them to a large one. The lesson is not "avoid width"; it is **"width and regime are separable, and $`\mu`$P is how you separate them."**
 
 > **Where the NTK came from.** **Arthur Jacot, Franck Gabriel and Clément Hongler** at EPFL published *Neural Tangent Kernel: Convergence and Generalization in Neural Networks* at NeurIPS 2018; Jacot was a doctoral student at the time. The idea has a clear ancestor. In his 1994–1996 doctoral work at Toronto, supervised by **Geoffrey Hinton**, **Radford Neal** proved that a single-hidden-layer neural network with random weights converges, as the layer becomes infinitely wide, to a **Gaussian process** — a fully-specified, closed-form probabilistic object. That result (extended to deep networks in 2018 by Jaehoon Lee and colleagues, and known as the **NNGP**, neural network Gaussian process) describes the network *at initialization*. The NTK is the corresponding statement about the network *while training*. **Two decades separate "an infinitely wide network is a Gaussian process at birth" from "an infinitely wide network is a kernel machine for life,"** and both came out of asking what happens in a limit that no one intended to build.
 
 ### What it explains
 
-- **Why gradient descent finds a global minimum:** the loss becomes convex in the linearized model, and a positive-definite $\Theta$ guarantees convergence.
-- **The convergence rate:** the residual along eigendirection $j$ decays at rate $`\eta\lambda_j`$. ▸ **Since the NTK's large eigenvalues correspond to low-frequency, smooth functions, networks fit smooth structure first and high-frequency detail last** — the *spectral bias*. This is a , quantitative explanation of a real phenomenon, and it also explains why random labels take much longer to fit than real ones.
+- **Why gradient descent finds a global minimum:** the loss becomes convex in the linearized model, and a positive-definite $`\Theta`$ guarantees convergence.
+- **The convergence rate:** the residual along eigendirection $`j`$ decays at rate $`\eta\lambda_j`$. ▸ **Since the NTK's large eigenvalues correspond to low-frequency, smooth functions, networks fit smooth structure first and high-frequency detail last** — the *spectral bias*. This is a , quantitative explanation of a real phenomenon, and it also explains why random labels take much longer to fit than real ones.
 - **Wide networks are easier to optimize** — the linearization is more accurate.
 
 #### Spectral bias, decoded — the NTK's best prediction
@@ -511,7 +511,7 @@ And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ 
 - **A blessing.** Spectral bias is a *free regularizer*. A model that struggles to represent jagged functions will struggle to memorize noise, which is most of why early stopping works at all.
 - **A curse.** "Simplest predictive feature first" means the model latches onto whatever is easiest, and background texture is often easier than the object. Chapter 31 §31.2 develops this as **simplicity bias**, and it is the mechanism behind a large fraction of spurious-correlation failures.
 
-▸ **Why gradient descent finds a global minimum, in one line:** once the model is linear in $w$ with a positive-definite kernel, the squared loss is a **convex** bowl in $w$ — one basin, no local minima, no saddles. The famous difficulty of non-convex optimization simply evaporates in this limit. That is a satisfying explanation, and it is also a warning: **the limit removed the very thing that makes the real problem hard.**
+▸ **Why gradient descent finds a global minimum, in one line:** once the model is linear in $`w`$ with a positive-definite kernel, the squared loss is a **convex** bowl in $`w`$ — one basin, no local minima, no saddles. The famous difficulty of non-convex optimization simply evaporates in this limit. That is a satisfying explanation, and it is also a warning: **the limit removed the very thing that makes the real problem hard.**
 
 #### Examples and non-examples: spectral bias in the wild
 
@@ -519,9 +519,9 @@ And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ 
 
 | Observation | The mechanism |
 |---|---|
-| Random labels take several times as many epochs to fit than real ones | Random targets live on the smallest-$\lambda$ directions, which decay slowest |
+| Random labels take several times as many epochs to fit than real ones | Random targets live on the smallest-$`\lambda`$ directions, which decay slowest |
 | Generated images look blurry before they look sharp | Low frequencies have large kernel eigenvalues and are fitted first |
-| A network fitting a $\sin(50x)$ target needs far more steps than $\sin(x)$ | The high-frequency target sits on slow directions |
+| A network fitting a $`\sin(50x)`$ target needs far more steps than $`\sin(x)`$ | The high-frequency target sits on slow directions |
 | Early stopping works as a regularizer | Stopping early truncates the slow, high-frequency directions — which is where noise lives |
 | A model learns "grass ⇒ cow" before it learns cow anatomy | Background texture is a *smoother* function of the pixels than shape |
 
@@ -535,7 +535,7 @@ And if the parameters barely move, the gradient $`\nabla_\theta f(x;\theta_0)`$ 
 | Blurry outputs from an autoencoder trained with MSE | The pixel-wise squared error itself rewards the conditional mean | A loss-function property (Ch. 19), which the spectral story then reinforces |
 | "The model prefers simple explanations" as a general law | Spectral bias is a specific statement about the NTK's eigenspectrum, in a specific limit | Simplicity bias, a broader and less well-characterized claim (Ch. 31 §31.2) |
 
-▸ **The boundary:** spectral bias is the quantitative claim that **the residual along kernel eigendirection $j$ decays at rate $`\eta\lambda_j`$** — so what is learned first is decided by the kernel's spectrum, and nothing else. Anything that is not an ordering-in-time claim about function frequency is a different phenomenon that happens to share the word "simple."
+▸ **The boundary:** spectral bias is the quantitative claim that **the residual along kernel eigendirection $`j`$ decays at rate $`\eta\lambda_j`$** — so what is learned first is decided by the kernel's spectrum, and nothing else. Anything that is not an ordering-in-time claim about function frequency is a different phenomenon that happens to share the word "simple."
 
 > **Common misconception.** *"Spectral bias means the network can't represent high-frequency functions."* It can represent them fine; it *reaches* them slowly. Given enough steps a network fits random labels on CIFAR-10 exactly, and random labels are the most high-frequency target there is. The distinction is between **expressivity** (what is representable) and **optimization order** (what arrives when), and conflating them is one of the most common errors in reading deep learning theory. The misconception is tempting because "learns it last" and "can't learn it" produce identical observations on any training run you actually stop.
 
@@ -551,17 +551,17 @@ Whether a network is in the NTK regime depends on the **parameterization and ini
 
 | | Lazy / NTK | Rich / feature-learning |
 |---|---|---|
-| Weight movement | $O(1/\sqrt{\text{width}})$ | $\Theta(1)$ |
+| Weight movement | $`O(1/\sqrt{\text{width}})`$ | $`\Theta(1)`$ |
 | Kernel | frozen | evolves |
 | Features | fixed at init | learned |
 | Theory | closed form | hard |
 | Real networks | small-LR, large-init limit | **where the good ones live** |
 
-▸ **This is exactly the distinction $\mu$P was designed around** (Ch. 15 §15.3): standard parameterization drifts toward the lazy regime as width grows, while $\mu$P keeps the network in the feature-learning regime at any width. **That is *why* $\mu$P transfers hyperparameters — it preserves the regime.** Connecting these two chapters is a strong signal in an interview.
+▸ **This is exactly the distinction $`\mu`$P was designed around** (Ch. 15 §15.3): standard parameterization drifts toward the lazy regime as width grows, while $`\mu`$P keeps the network in the feature-learning regime at any width. **That is *why* $`\mu`$P transfers hyperparameters — it preserves the regime.** Connecting these two chapters is a strong signal in an interview.
 
 **The honest summary:** the NTK is the correct theory of a limit that real networks are deliberately kept out of. It is valuable as the only fully-solved case, as a source of quantitative predictions like spectral bias, and as the reference point against which feature learning is defined.
 
-#### Lazy versus rich, decoded — and why $\mu$P exists
+#### Lazy versus rich, decoded — and why $`\mu`$P exists
 
 **The two names are literal descriptions.**
 
@@ -581,15 +581,15 @@ Whether a network is in the NTK regime depends on the **parameterization and ini
 
 ▸ **So the initialization scale is a regularization hyperparameter**, which is not how most people think of it. It is usually treated as a numerical hygiene setting — "keep the activations from exploding" — but it also silently selects whether your network is capable of learning features at all.
 
-**Now the $\mu$P connection, which is the payoff.**
+**Now the $`\mu`$P connection, which is the payoff.**
 
 Under **standard parameterization**, the scaling of the weights and learning rates is such that as width grows the network drifts toward the lazy regime. Concretely: the optimal learning rate shifts with width, and a network wide enough starts behaving like a kernel machine. **This is a problem, because it means a hyperparameter tuned at small width is wrong at large width — and the error is not random, it is a systematic drift toward a worse regime.**
 
-**$\mu$P (maximal update parameterization)** chooses the per-layer scalings so that, in the infinite-width limit, **every layer's features still move by $\Theta(1)$.** The network stays rich at any width.
+**$`\mu`$P (maximal update parameterization)** chooses the per-layer scalings so that, in the infinite-width limit, **every layer's features still move by $`\Theta(1)`$.** The network stays rich at any width.
 
-▸ **And that is *why* $\mu$P transfers hyperparameters (Ch. 15 §15.3).** The usual explanation — "$\mu$P makes the optimal learning rate width-independent" — is true but is the symptom. The cause is that $\mu$P **preserves the regime**: a 100-million-parameter model and a 100-billion-parameter model under $\mu$P are doing the same *kind* of learning, so a setting tuned on one applies to the other. Under standard parameterization they are not, and the transfer fails for a reason no amount of careful tuning at small scale can fix.
+▸ **And that is *why* $`\mu`$P transfers hyperparameters (Ch. 15 §15.3).** The usual explanation — "$`\mu`$P makes the optimal learning rate width-independent" — is true but is the symptom. The cause is that $`\mu`$P **preserves the regime**: a 100-million-parameter model and a 100-billion-parameter model under $`\mu`$P are doing the same *kind* of learning, so a setting tuned on one applies to the other. Under standard parameterization they are not, and the transfer fails for a reason no amount of careful tuning at small scale can fix.
 
-**Connecting these two chapters correctly is worth practising as a sentence:** *"The NTK describes the lazy regime; real networks need the rich regime; standard parameterization drifts lazy as you widen; $\mu$P is the fix that keeps you rich, which is why it lets you tune small and train big."*
+**Connecting these two chapters correctly is worth practising as a sentence:** *"The NTK describes the lazy regime; real networks need the rich regime; standard parameterization drifts lazy as you widen; $`\mu`$P is the fix that keeps you rich, which is why it lets you tune small and train big."*
 
 **The honest summary, expanded.** Why study a theory of a limit we avoid?
 
@@ -599,7 +599,7 @@ Under **standard parameterization**, the scaling of the weights and learning rat
 
 > **Analogy.** The frictionless plane in mechanics. No real surface is frictionless, and the model is still the right first thing to teach — because it is exactly solvable, because it predicts a great deal correctly, and because *friction is defined as the discrepancy*. The NTK is deep learning's frictionless plane, and feature learning is its friction.
 
-> **Where "lazy training" got its name.** The term was introduced by **Lénaïc Chizat, Edouard Oyallon and Francis Bach** in *On Lazy Training in Differentiable Programming* (NeurIPS 2019). Their contribution was to show that laziness is **not a property of neural networks at all** — it is a consequence of how a differentiable model is *scaled*. Take almost any differentiable parametric model, multiply its output by a large constant, and gradient descent will barely move the parameters while the function changes a great deal: you have made it lazy, whatever it is. That reframing was clarifying, because it separated "the network is very wide" from "the network is in the kernel regime," which the early NTK literature had tended to run together. The complementary construction — a parameterization that *stays* in the feature-learning regime as width grows — came from **Greg Yang and Edward Hu's** Tensor Programs work at Microsoft Research, which produced $\mu$P and the zero-shot hyperparameter transfer result used in Chapter 15 §15.3.
+> **Where "lazy training" got its name.** The term was introduced by **Lénaïc Chizat, Edouard Oyallon and Francis Bach** in *On Lazy Training in Differentiable Programming* (NeurIPS 2019). Their contribution was to show that laziness is **not a property of neural networks at all** — it is a consequence of how a differentiable model is *scaled*. Take almost any differentiable parametric model, multiply its output by a large constant, and gradient descent will barely move the parameters while the function changes a great deal: you have made it lazy, whatever it is. That reframing was clarifying, because it separated "the network is very wide" from "the network is in the kernel regime," which the early NTK literature had tended to run together. The complementary construction — a parameterization that *stays* in the feature-learning regime as width grows — came from **Greg Yang and Edward Hu's** Tensor Programs work at Microsoft Research, which produced $`\mu`$P and the zero-shot hyperparameter transfer result used in Chapter 15 §15.3.
 
 #### Examples and non-examples: lazy versus rich, diagnosed
 
@@ -631,19 +631,19 @@ Under **standard parameterization**, the scaling of the weights and learning rat
 
 ### The phenomenon
 
-Train a small transformer on modular arithmetic (e.g. $a\circ b = (a+b)\bmod 97$) with a fraction of the pairs held out:
+Train a small transformer on modular arithmetic (e.g. $`a\circ b = (a+b)\bmod 97`$) with a fraction of the pairs held out:
 
-- **Step ~$10^3$:** training accuracy 100%. Test accuracy ~random. The model has memorized.
-- **Steps $10^3$ to $10^5$:** nothing visibly happens. Training loss is at zero; test accuracy stays flat.
-- **Step ~$10^5$:** test accuracy jumps to 100% over a short window.
+- **Step ~$`10^3`$:** training accuracy 100%. Test accuracy ~random. The model has memorized.
+- **Steps $`10^3`$ to $`10^5`$:** nothing visibly happens. Training loss is at zero; test accuracy stays flat.
+- **Step ~$`10^5`$:** test accuracy jumps to 100% over a short window.
 
 ▸ **Generalization occurs long after the training loss has been zero, with no visible signal in between.** This is a direct refutation of the intuition that training loss tracks learning.
 
 #### The grokking setup, decoded
 
-**What "modular arithmetic" actually means.** $(a+b) \bmod 97$ says: add the two numbers, divide by 97, and keep only the remainder.
+**What "modular arithmetic" actually means.** $`(a+b) \bmod 97`$ says: add the two numbers, divide by 97, and keep only the remainder.
 
-| $a$ | $b$ | $a+b$ | $(a+b)\bmod 97$ |
+| $`a`$ | $`b`$ | $`a+b`$ | $`(a+b)\bmod 97`$ |
 |---|---|---|---|
 | 3 | 5 | 8 | **8** |
 | 90 | 20 | 110 | **13** |
@@ -651,15 +651,15 @@ Train a small transformer on modular arithmetic (e.g. $a\circ b = (a+b)\bmod 97$
 
 > **Analogy.** A clock. Four hours after ten o'clock is two o'clock, not fourteen. Clock arithmetic is modular arithmetic with modulus 12 — **the number line has been bent into a circle**, and once you have seen that, the finding in strand 3 below stops being mysterious and becomes almost inevitable.
 
-**Why 97?** It is prime, which makes the arithmetic well behaved (every nonzero element has a multiplicative inverse) and rules out the shortcut structures a composite modulus would offer. It is also small enough that the full problem is $97 \times 97 = 9{,}409$ pairs — small enough to enumerate, large enough that memorizing is real work.
+**Why 97?** It is prime, which makes the arithmetic well behaved (every nonzero element has a multiplicative inverse) and rules out the shortcut structures a composite modulus would offer. It is also small enough that the full problem is $`97 \times 97 = 9{,}409`$ pairs — small enough to enumerate, large enough that memorizing is real work.
 
 **Reading the timeline properly.** The steps are on a log scale, and that matters:
 
 | Phase | Steps | Training accuracy | Test accuracy |
 |---|---|---|---|
-| Memorization | $\sim 10^3$ | **100%** | ~1% (chance is $1/97$) |
-| The plateau | $10^3 \to 10^5$ | 100% | ~1%, flat |
-| Grokking | $\sim 10^5$ | 100% | **100%**, over a short window |
+| Memorization | $`\sim 10^3`$ | **100%** | ~1% (chance is $`1/97`$) |
+| The plateau | $`10^3 \to 10^5`$ | 100% | ~1%, flat |
+| Grokking | $`\sim 10^5`$ | 100% | **100%**, over a short window |
 
 ▸ **The plateau is 100 times longer than everything that came before it.** Put that in practical terms: at the moment every dashboard says the run is finished — training loss zero, test accuracy flat for tens of thousands of steps — you would have to keep going for **a hundred times as long as you have already trained** before anything happened. No sane engineer does this. **That, and not any subtlety in the mechanism, is why the phenomenon went unnoticed for so long.**
 
@@ -673,9 +673,9 @@ The word has drifted since 2022 and is now applied to almost any late improvemen
 
 | Case | The three required ingredients |
 |---|---|
-| A 1-layer transformer on $(a+b)\bmod 97$, 30–50% of pairs held out, weight decay on | Training accuracy 100% **long before** any test improvement; a plateau spanning orders of magnitude; an abrupt jump to near-perfect test accuracy |
+| A 1-layer transformer on $`(a+b)\bmod 97`$, 30–50% of pairs held out, weight decay on | Training accuracy 100% **long before** any test improvement; a plateau spanning orders of magnitude; an abrupt jump to near-perfect test accuracy |
 | The same setup on modular multiplication, or on composition in a permutation group | Same signature; the learned circuit differs but the shape of the curve does not |
-| Sparse parity: predict the XOR of $k$ hidden bits out of $d$ | Memorization first, algorithm much later, transition sharp in accuracy and smooth in a progress measure |
+| Sparse parity: predict the XOR of $`k`$ hidden bits out of $`d`$ | Memorization first, algorithm much later, transition sharp in accuracy and smooth in a progress measure |
 
 **❌ Near-misses — late improvements that are not grokking**
 
@@ -683,7 +683,7 @@ The word has drifted since 2022 and is now applied to almost any late improvemen
 |---|---|---|
 | Test accuracy improves slowly over a long run | No plateau, no abrupt transition | Ordinary training. Learning is meant to take time |
 | A jump in test accuracy when the learning-rate schedule drops | The cause is an external event, not an internal drift | A schedule artifact — the same jump appears in the training loss |
-| Training loss is $0.02$ and falling, and test accuracy rises later | Training loss is not **zero**, so the data is still pushing | Normal fitting. Grokking requires the data's gradient to have essentially vanished |
+| Training loss is $`0.02`$ and falling, and test accuracy rises later | Training loss is not **zero**, so the data is still pushing | Normal fitting. Grokking requires the data's gradient to have essentially vanished |
 | The model improves after you add data or unfreeze layers | You changed the problem | An intervention, not a drift |
 | "Emergent abilities" appearing at a scale threshold | Different axis entirely — model size, not training time, and no plateau in a single run | The emergence debate of Ch. 15 §15.4, which grokking illuminates but is not |
 | A run with **no weight decay** that eventually generalizes | Grokking largely disappears without weight decay | Something else; find out what |
@@ -704,7 +704,7 @@ The best-supported account has several converging strands:
 
 **3. The circuit is identifiable.** For modular addition, the network learns a **discrete Fourier transform**: embeddings become $`\big(\cos(\omega_k a),\sin(\omega_k a)\big)`$ for a handful of frequencies $`\omega_k`$, attention and MLP layers compute products realizing the trigonometric identity
 $$\cos(\omega(a+b)) = \cos\omega a\cos\omega b - \sin\omega a\sin\omega b$$
-and the unembedding reads off the argmax over $c$ of $\cos(\omega(a+b-c))$. ▸ **The network implements modular addition by rotating on a circle.** Nanda et al. reverse-engineered this completely — one of the cleanest full mechanistic explanations of a trained network in existence (Ch. 32).
+and the unembedding reads off the argmax over $`c`$ of $`\cos(\omega(a+b-c))`$. ▸ **The network implements modular addition by rotating on a circle.** Nanda et al. reverse-engineered this completely — one of the cleanest full mechanistic explanations of a trained network in existence (Ch. 32).
 
 **4. Progress measures.** The generalizing circuit forms *gradually* and continuously; only the *test accuracy metric* is discontinuous. Defining a continuous progress measure — restricted loss (ablate all but the key Fourier frequencies) and excluded loss (ablate only them) — shows smooth formation throughout the plateau.
 
@@ -721,16 +721,16 @@ Both circuits achieve zero training loss. The difference is how much *machinery*
 | **Memorization** | A lookup table | one entry per training pair — thousands of independent numbers |
 | **Generalization** | An algorithm | a handful of frequencies and the weights to combine them |
 
-> **Analogy.** Two students preparing for a multiplication test. One memorizes the times table. The other learns multiplication. **Both score 100% on the practice sheet.** Only one of them can handle $23\times47$ if it wasn't on the sheet. And crucially — the memorizer's head is *fuller*. The algorithm is the smaller object.
+> **Analogy.** Two students preparing for a multiplication test. One memorizes the times table. The other learns multiplication. **Both score 100% on the practice sheet.** Only one of them can handle $`23\times47`$ if it wasn't on the sheet. And crucially — the memorizer's head is *fuller*. The algorithm is the smaller object.
 
-▸ **"Smaller weight norm" is the precise version of that.** A lookup table needs many large, independent weights, each carving out one specific input. An algorithm reuses the same small structure everywhere. **So the generalizing solution sits lower on the $\|\theta\|^2$ landscape than the memorizing one** — and that single fact is what makes the transition happen at all.
+▸ **"Smaller weight norm" is the precise version of that.** A lookup table needs many large, independent weights, each carving out one specific input. An algorithm reuses the same small structure everywhere. **So the generalizing solution sits lower on the $`\|\theta\|^2`$ landscape than the memorizing one** — and that single fact is what makes the transition happen at all.
 
 **Strand 2 — why weight decay is the engine.**
 
 Follow the forces once training loss hits zero:
 
 1. Cross-entropy loss is ~0, so $`\nabla_\theta \mathcal{L}_{\text{CE}} \approx 0`$. **The data has stopped pushing.**
-2. Weight decay contributes a gradient of $\lambda\theta$ — a constant pull toward the origin — and it **never stops**, because it does not care about the loss.
+2. Weight decay contributes a gradient of $`\lambda\theta`$ — a constant pull toward the origin — and it **never stops**, because it does not care about the loss.
 3. So the model slides along the **zero-loss manifold**: the set of all parameter settings that fit the training data perfectly. It cannot leave (the data would object) but it can move freely *within* it.
 4. It drifts downhill in norm until it reaches the smallest-norm point on that surface — **the generalizing circuit.**
 
@@ -742,11 +742,11 @@ Follow the forces once training loss hits zero:
 
 The network discovers that modular addition **is rotation**. Follow the construction:
 
-1. **Embeddings become points on a circle.** Number $a$ is mapped to $`\big(\cos(\omega_k a),\ \sin(\omega_k a)\big)`$ for a few frequencies $`\omega_k`$. That is the standard way to place an integer on a circle — the same construction as a transformer's sinusoidal position encoding (Ch. 12), arrived at independently by gradient descent.
+1. **Embeddings become points on a circle.** Number $`a`$ is mapped to $`\big(\cos(\omega_k a),\ \sin(\omega_k a)\big)`$ for a few frequencies $`\omega_k`$. That is the standard way to place an integer on a circle — the same construction as a transformer's sinusoidal position encoding (Ch. 12), arrived at independently by gradient descent.
 2. **Attention and the MLP compute products of those coordinates**, which by the trigonometric identity
 $$\cos(\omega(a+b)) = \cos\omega a\cos\omega b - \sin\omega a\sin\omega b$$
 gives you the *sum's* angle from the two inputs' angles. **Adding numbers has become adding angles.**
-3. **The unembedding scores each candidate answer $c$** by $\cos(\omega(a+b-c))$, which is maximal exactly when $a+b-c$ is a multiple of the full turn — that is, when $c \equiv a+b$.
+3. **The unembedding scores each candidate answer $`c`$** by $`\cos(\omega(a+b-c))`$, which is maximal exactly when $`a+b-c`$ is a multiple of the full turn — that is, when $`c \equiv a+b`$.
 
 ▸ **And the reason a circle is the right answer is the clock analogy from above, made literal: modular arithmetic *is* arithmetic on a circle, so a machine that represents numbers as angles gets the wraparound for free.** The network was not taught this. It was given input-output pairs and it found the geometry.
 
@@ -813,7 +813,7 @@ Line up the three phenomena and they are one sentence three times:
 
 | Phenomenon | The set of zero-error solutions | What decides which you get |
 |---|---|---|
-| **Double descent** | Empty ($p<n$), a single point ($p=n$), infinite ($p>n$) | Minimum-norm selection by the pseudo-inverse |
+| **Double descent** | Empty ($`p<n`$), a single point ($`p=n`$), infinite ($`p>n`$) | Minimum-norm selection by the pseudo-inverse |
 | **NTK** | Solvable in closed form once linearized | The kernel's eigenspectrum sets what is learned and when |
 | **Grokking** | Contains both a lookup table and an algorithm | Weight decay, drifting slowly toward the smaller-norm one |
 
@@ -845,16 +845,16 @@ The whole chapter is one reclassification. Here is the sorting exercise, because
 | Question | Why it is about the trajectory |
 |---|---|
 | "Why does my model generalize when it can fit random labels?" | Both solutions are available; something chose the good one |
-| "Why does test error peak exactly at $p=n$?" | The minimum-norm *selection rule* blows up there |
+| "Why does test error peak exactly at $`p=n`$?" | The minimum-norm *selection rule* blows up there |
 | "What does my network learn first?" | The kernel's eigenspectrum sets the order |
 | "Why did generalization appear 100,000 steps after the loss hit zero?" | A slow drift along the zero-loss surface |
-| "Why does $\mu$P let me tune small and train big?" | It preserves the *regime* of the dynamics |
+| "Why does $`\mu`$P let me tune small and train big?" | It preserves the *regime* of the dynamics |
 
 **❌ Near-misses — questions that get answered with the wrong tool**
 
 | Question asked | Wrong framing | Right framing |
 |---|---|---|
-| "My model overfits — should I shrink it?" | Capacity: reduce $p$ | Trajectory: you may be at the interpolation threshold. Try **more** capacity, or more regularization |
+| "My model overfits — should I shrink it?" | Capacity: reduce $`p`$ | Trajectory: you may be at the interpolation threshold. Try **more** capacity, or more regularization |
 | "Validation error went up — should I stop?" | Capacity: the model has run out of road | Trajectory: epoch-wise double descent means stopping here may be exactly wrong |
 | "How many parameters do I need?" | Capacity: count them | Trajectory: effective model complexity is architecture **plus optimizer plus schedule**, measured, not counted |
 | "It fit random labels, so the bound is vacuous — theory is useless" | Capacity: no bound can work | Trajectory: bounds on the *algorithm's output* rather than the *hypothesis class* are exactly what Ch. 31 pursues |
@@ -873,11 +873,11 @@ The whole chapter is one reclassification. Here is the sorting exercise, because
 
 - **The standard citation for the bias–variance dilemma is a paper about neural networks.** Geman, Bienenstock and Doursat's 1992 *Neural Networks and the Bias/Variance Dilemma* argued carefully that high-capacity networks would be defeated by variance and that strong built-in priors would be necessary. It became the canonical statement of the principle modern networks violate.
 
-- **The mathematics behind the interpolation peak was invented for atomic nuclei.** Random matrix theory began with Eugene Wigner in the 1950s, who proposed modelling the energy levels of heavy nuclei by replacing an intractable Hamiltonian with a random matrix. Marchenko and Pastur's 1967 law — the one that puts the smallest singular value at zero when $p=n$ — is a descendant.
+- **The mathematics behind the interpolation peak was invented for atomic nuclei.** Random matrix theory began with Eugene Wigner in the 1950s, who proposed modelling the energy levels of heavy nuclei by replacing an intractable Hamiltonian with a random matrix. Marchenko and Pastur's 1967 law — the one that puts the smallest singular value at zero when $`p=n`$ — is a descendant.
 
 - **The NTK's ancestor is a 1990s thesis supervised by Geoffrey Hinton.** Radford Neal showed that an infinitely wide neural network with random weights is a Gaussian process. That describes the network at birth; the NTK, twenty-odd years later, describes it for life.
 
-- **$\Theta$ means two unrelated things within one page of this chapter.** $\Theta(x,x')$ is the neural tangent kernel; $\Theta(1)$ is big-Theta asymptotic notation. The collision is universal in the literature and there is no convention that resolves it.
+- **$`\Theta`$ means two unrelated things within one page of this chapter.** $`\Theta(x,x')`$ is the neural tangent kernel; $`\Theta(1)`$ is big-Theta asymptotic notation. The collision is universal in the literature and there is no convention that resolves it.
 
 - **Networks fit randomly-shuffled labels perfectly.** Zhang et al. took CIFAR-10, replaced every label with a random one, and reached zero training error. The paper offered no method and no fix — it simply demonstrated that no capacity-based bound could explain generalization, and the field has been rebuilding since.
 
@@ -885,11 +885,11 @@ The whole chapter is one reclassification. Here is the sorting exercise, because
 
 - **Spectral bias was discovered independently twice, in the same period.** One group named it "spectral bias"; another described the identical effect as the "Frequency Principle." This book has now recorded the SVD found twice, backpropagation four times, mode connectivity twice, and this.
 
-- **You can compute the infinite-width limit exactly, on a laptop.** Because the NTK is a deterministic function of the architecture, there are libraries that evaluate an infinitely wide network's predictions in closed form. **The infinite network is often cheaper to evaluate than the finite one** — you never instantiate any weights, you just build an $n\times n$ kernel matrix.
+- **You can compute the infinite-width limit exactly, on a laptop.** Because the NTK is a deterministic function of the architecture, there are libraries that evaluate an infinitely wide network's predictions in closed form. **The infinite network is often cheaper to evaluate than the finite one** — you never instantiate any weights, you just build an $`n\times n`$ kernel matrix.
 
 - **Grokking essentially disappears if you switch off weight decay.** A phenomenon that looks like a mysterious flash of insight is driven by a regularization term. Once the training loss is zero the data has stopped pushing, and weight decay — which never stops pushing — slowly slides the model to the smaller-norm solution.
 
-- **The network solves modular arithmetic by putting numbers on a clock face.** It learns to embed each integer as $(\cos\omega a, \sin\omega a)$ and to add by composing angles, using the cosine addition formula. Nobody told it to; it reinvented the trigonometric identity from input–output pairs alone.
+- **The network solves modular arithmetic by putting numbers on a clock face.** It learns to embed each integer as $`(\cos\omega a, \sin\omega a)`$ and to add by composing angles, using the cosine addition formula. Nobody told it to; it reinvented the trigonometric identity from input–output pairs alone.
 
 - **The modular-arithmetic modulus 97 is prime for a reason.** A prime modulus makes every nonzero element invertible and removes the sub-structure a composite modulus would offer, so the only clean solution available is the actual algorithm.
 
@@ -905,7 +905,7 @@ The test of understanding is conversational: could you explain each of these to 
 
 1. **Why is the worst place to be the point where the model can *just barely* fit the data?** (Use the bendy wire, or the packed bookshelf. The answer is about slack, not about size.)
 2. **What does "minimum-norm interpolation" mean,** and why is "which of the infinitely many perfect fits do you take?" a more useful question than "how many parameters do I have?"
-3. **Why does adding more parameters make the solution *smaller*?** (One data point, $p$ features, each doing $1/p$ of the work.)
+3. **Why does adding more parameters make the solution *smaller*?** (One data point, $`p`$ features, each doing $`1/p`$ of the work.)
 4. **Explain sample-wise double descent to someone who thinks more data is always better.** Where exactly does the extra data hurt, and why does it stop hurting?
 5. **Why is "double descent disproves the bias–variance tradeoff" the wrong summary?** What single change makes the peak disappear entirely?
 6. **What is the difference between interpolating and overfitting?** Name a method from the 1950s that interpolates by construction and generalizes fine.
@@ -919,7 +919,7 @@ The test of understanding is conversational: could you explain each of these to 
 14. **What force drives grokking, and what happens if you switch it off?**
 15. **Why does the network solve modular arithmetic by putting numbers on a clock face?** Why is that the natural answer rather than a clever one?
 16. **Why is grokking the best available evidence that "emergent abilities" can be metric artifacts?** What can you check here that you cannot check on a large language model?
-17. **Explain the difference between the lazy and rich regimes,** and say what $\mu$P has to do with it, in one sentence.
+17. **Explain the difference between the lazy and rich regimes,** and say what $`\mu`$P has to do with it, in one sentence.
 
 If any of these produce a formula rather than a sentence, re-read that section — the formula is the compressed form of an idea you should be able to state in English first.
 

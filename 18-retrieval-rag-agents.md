@@ -2,7 +2,7 @@
 
 > **Prerequisites:** Ch. 10 (embeddings, BM25, ANN search), Ch. 13.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, or $A^\top$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, or $`A^\top`$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
@@ -10,18 +10,18 @@ This chapter has less mathematics than most, and more **jargon** than any. The s
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $q$ | "q" | A **query** — the thing someone asked |
-| $d^{+}$ | "d-plus" | A **positive** document: one that  answers $q$ |
-| $d^{-}$ | "d-minus" | A **negative**: one that does not |
-| $\mathrm{sim}(q,d)$ | "similarity of q and d" | A relevance score, almost always a dot product (§0.8) |
-| $\tau$ | "tau" | **Temperature** — divides the similarity scores. Small $\tau$ makes the loss sharp |
-| $`\langle E_{q_i}, E_{d_j}\rangle`$ | "inner product of E-q-i and E-d-j" | Similarity between token $i$'s vector in the query and token $j$'s in the document |
+| $`q`$ | "q" | A **query** — the thing someone asked |
+| $`d^{+}`$ | "d-plus" | A **positive** document: one that  answers $`q`$ |
+| $`d^{-}`$ | "d-minus" | A **negative**: one that does not |
+| $`\mathrm{sim}(q,d)`$ | "similarity of q and d" | A relevance score, almost always a dot product (§0.8) |
+| $`\tau`$ | "tau" | **Temperature** — divides the similarity scores. Small $`\tau`$ makes the loss sharp |
+| $`\langle E_{q_i}, E_{d_j}\rangle`$ | "inner product of E-q-i and E-d-j" | Similarity between token $`i`$'s vector in the query and token $`j`$'s in the document |
 | $`\max_{j\in d}`$ | "max over j in d" | Scan every token of the document, keep the best match (§0.3) |
-| $`\mathrm{rank}_r(d)`$ | "rank of d under retriever r" | Where retriever $r$ placed document $d$ — 1 is best |
-| $\mathcal{O}(N)$ | "big-O of N" | Cost grows in proportion to corpus size (§0.10) |
-| $`rel_i`$ | "rel-i" | The graded relevance of the document at position $i$ (0 = useless, 3 = perfect) |
+| $`\mathrm{rank}_r(d)`$ | "rank of d under retriever r" | Where retriever $`r`$ placed document $`d`$ — 1 is best |
+| $`\mathcal{O}(N)`$ | "big-O of N" | Cost grows in proportion to corpus size (§0.10) |
+| $`rel_i`$ | "rel-i" | The graded relevance of the document at position $`i`$ (0 = useless, 3 = perfect) |
 | $`\log_2(i+1)`$ | "log base two of i plus one" | The **discount**: how much less a result is worth for being further down the page |
-| $p^n$ | "p to the n" | Success probability of an $n$-step agent with per-step reliability $p$ |
+| $`p^n`$ | "p to the n" | Success probability of an $`n`$-step agent with per-step reliability $`p`$ |
 
 ### Full forms for the abbreviations in this chapter
 
@@ -90,7 +90,7 @@ Put costs on the difference:
 
 $$0.70 \times 0.95 = 0.665$$
 
-Swap in a generator that is twice as expensive and 98% faithful: $0.70\times0.98 = 0.686$, a gain of two points. Now instead improve retrieval to 85% and keep the cheap generator: $0.85\times0.95 = 0.808$, **a gain of fourteen points.**
+Swap in a generator that is twice as expensive and 98% faithful: $`0.70\times0.98 = 0.686`$, a gain of two points. Now instead improve retrieval to 85% and keep the cheap generator: $`0.85\times0.95 = 0.808`$, **a gain of fourteen points.**
 
 ▸ **The retriever's recall is a hard multiplicative ceiling, and no amount of model quality reaches over it.** If the document is not in the context, the generator's only options are to say it doesn't know or to invent something. This is why the discipline of the field is *always evaluate the stages separately* (§18.4) — and why teams routinely spend months upgrading a generator to fix a problem that lived entirely in the chunker.
 
@@ -110,11 +110,11 @@ Swap in a generator that is twice as expensive and 98% faithful: $0.70\times0.98
 
 | Looks like it | Why it isn't | What it actually is |
 |---|---|---|
-| *"How many customers churned last quarter?"* | Retrieval returns the top $k$ documents; a count requires scanning **all** of them. Top-10 of 40,000 rows gives you an answer that is confidently, quietly wrong | An aggregation — a SQL query, or a tool that runs one |
+| *"How many customers churned last quarter?"* | Retrieval returns the top $`k`$ documents; a count requires scanning **all** of them. Top-10 of 40,000 rows gives you an answer that is confidently, quietly wrong | An aggregation — a SQL query, or a tool that runs one |
 | *"Does clause 14 contradict clause 92?"* | The answer is not written down in either clause. It lives in the **relation** between two spans | Long-context reasoning over the whole document |
 | *"Write a function that reverses a linked list."* | Nothing to look up. The model is being asked for a capability, not a fact | Generation |
 | *"Which of these three vendors should we pick?"* | Retrieval can supply all three vendor pages; the judgement is not in any of them | Reasoning over retrieved evidence — retrieval is a *step*, not the answer |
-| *"Find every mention of 'indemnity' in this contract."* | Semantic search returns things that are *about* indemnity, and misses the mention that uses the word once in passing | Exhaustive keyword search — `grep`, or BM25 with no top-$k$ cutoff |
+| *"Find every mention of 'indemnity' in this contract."* | Semantic search returns things that are *about* indemnity, and misses the mention that uses the word once in passing | Exhaustive keyword search — `grep`, or BM25 with no top-$`k`$ cutoff |
 
 ▸ **The boundary:** retrieval helps exactly when the answer is **a span of text that already exists somewhere**. If the answer has to be computed, counted, compared across documents, or reasoned into existence, no retriever can find it — because it is not there to be found. The failure is silent, because a retriever always returns *something*.
 
@@ -200,30 +200,30 @@ $$\mathcal{L} = -\log\frac{\exp(\mathrm{sim}(q,d^+)/\tau)}{\exp(\mathrm{sim}(q,d
 
 $$\mathcal{L} = -\log\frac{\exp(\mathrm{sim}(q,d^+)/\tau)}{\exp(\mathrm{sim}(q,d^+)/\tau) + \sum_{d^-}\exp(\mathrm{sim}(q,d^-)/\tau)}$$
 
-**Every symbol.** $q$ is the query's embedding. $d^{+}$ is the one document that  answers it. Each $d^{-}$ is a document that does not. $\mathrm{sim}$ is the similarity — in practice a dot product between unit vectors, i.e. a cosine (§0.8). $\tau$ is the temperature. $\exp$ is $e^{(\cdot)}$, which turns any real number into a positive one.
+**Every symbol.** $`q`$ is the query's embedding. $`d^{+}`$ is the one document that  answers it. Each $`d^{-}`$ is a document that does not. $`\mathrm{sim}`$ is the similarity — in practice a dot product between unit vectors, i.e. a cosine (§0.8). $`\tau`$ is the temperature. $`\exp`$ is $`e^{(\cdot)}`$, which turns any real number into a positive one.
 
 **Now look at the shape of it.** Numerator: one term, the positive. Denominator: that same term plus every negative. So the fraction is
 
 $$\frac{\text{the right document's score}}{\text{everyone's scores}}$$
 
-▸ **That is a softmax, and this is just cross-entropy.** You are running a classification problem in which the classes are "which of these $N+1$ documents was the right one," the label is always the positive, and the "logits" are similarity scores. Every intuition you have about cross-entropy from Ch. 1 §1.4 transfers unchanged: the loss is your surprise at the truth, it is bounded below by zero, and it goes to zero exactly when the positive dominates.
+▸ **That is a softmax, and this is just cross-entropy.** You are running a classification problem in which the classes are "which of these $`N+1`$ documents was the right one," the label is always the positive, and the "logits" are similarity scores. Every intuition you have about cross-entropy from Ch. 1 §1.4 transfers unchanged: the loss is your surprise at the truth, it is bounded below by zero, and it goes to zero exactly when the positive dominates.
 
 > **Analogy.** A police line-up. The witness must pick the suspect out of a row of people. **The difficulty of the task is set entirely by who else is standing in the line.** Put the suspect next to five people of a different height, build, and hair colour, and a witness who remembers nothing at all will still pick correctly — you have learned nothing about the witness. Put them next to five people who look  similar and the identification means something. **Hard negatives are the line-up done properly**, and that is why the book says it is worth more than any architectural choice.
 
-**Now put numbers on it**, because "random negatives teach almost nothing" is a claim you should be able to verify. Take $\tau = 0.05$ and a positive scoring $\mathrm{sim} = 0.8$.
+**Now put numbers on it**, because "random negatives teach almost nothing" is a claim you should be able to verify. Take $`\tau = 0.05`$ and a positive scoring $`\mathrm{sim} = 0.8`$.
 
 **Case 1 — hard negatives**, scoring 0.7, 0.3, 0.1:
 
-| Document | $\mathrm{sim}$ | $\mathrm{sim}/\tau$ | $\exp(\cdot)$ |
+| Document | $`\mathrm{sim}`$ | $`\mathrm{sim}/\tau`$ | $`\exp(\cdot)`$ |
 |---|---|---|---|
-| $d^{+}$ | 0.80 | 16 | 8,886,000 |
+| $`d^{+}`$ | 0.80 | 16 | 8,886,000 |
 | $`d^{-}_1`$ | 0.70 | 14 | 1,203,000 |
 | $`d^{-}_2`$ | 0.30 | 6 | 403 |
 | $`d^{-}_3`$ | 0.10 | 2 | 7.4 |
 
-The positive's share is $8{,}886{,}000/10{,}089{,}000 = 0.881$, so $\mathcal{L} = -\log(0.881) = \mathbf{0.127}$. **A real loss, with a real gradient.**
+The positive's share is $`8{,}886{,}000/10{,}089{,}000 = 0.881`$, so $`\mathcal{L} = -\log(0.881) = \mathbf{0.127}`$. **A real loss, with a real gradient.**
 
-**Case 2 — swap the hardest negative for a random one** scoring 0.05. Its $\exp$ term is now $e^{1} = 2.7$ instead of 1,203,000, and the positive's share becomes $0.99995$:
+**Case 2 — swap the hardest negative for a random one** scoring 0.05. Its $`\exp`$ term is now $`e^{1} = 2.7`$ instead of 1,203,000, and the positive's share becomes $`0.99995`$:
 
 $$\mathcal{L} = -\log(0.99995) \approx \mathbf{0.00005}$$
 
@@ -231,11 +231,11 @@ $$\mathcal{L} = -\log(0.99995) \approx \mathbf{0.00005}$$
 
 **And now the caution in the book makes sense too.** The top-ranked wrong answers include documents that are wrong only because nobody labelled them right. Training on those actively teaches the model to push away correct documents — the loss function has no way to tell the difference, and it will diligently learn the mistake.
 
-**What $\tau$ does.** It is a contrast knob. Re-run Case 1 at $\tau = 1$ instead of $0.05$: the exponentials become $2.23, 2.01, 1.35, 1.11$, the positive's share drops to $0.33$, and the loss rises to $1.10$ — but the *relative* pressure on the hardest negative is now much gentler.
+**What $`\tau`$ does.** It is a contrast knob. Re-run Case 1 at $`\tau = 1`$ instead of $`0.05`$: the exponentials become $`2.23, 2.01, 1.35, 1.11`$, the positive's share drops to $`0.33`$, and the loss rises to $`1.10`$ — but the *relative* pressure on the hardest negative is now much gentler.
 
-▸ **Small $\tau$ magnifies differences and makes the loss obsess over the single closest negative; large $\tau$ flattens everything and spreads the pressure evenly.** Retrieval wants small $\tau$ (typically 0.01–0.05), because retrieval is decided at the margin — you do not care whether the right document beats a random one by a mile, you care whether it beats the *second*-best one at all.
+▸ **Small $`\tau`$ magnifies differences and makes the loss obsess over the single closest negative; large $`\tau`$ flattens everything and spreads the pressure evenly.** Retrieval wants small $`\tau`$ (typically 0.01–0.05), because retrieval is decided at the margin — you do not care whether the right document beats a random one by a mile, you care whether it beats the *second*-best one at all.
 
-**Why large batches are free negatives, arithmetically.** In a batch of $B$ query–document pairs, each query's positive is every *other* query's negative. So one batch of 1,024 gives each query 1,023 negatives at no extra encoding cost — you were going to encode those documents anyway. Batch 32 gives you 31. **The denominator of the loss is the whole game, and batch size is the cheapest way to enlarge it**, which is why retrieval papers report batch sizes the way other papers report parameter counts, and why gradient caching — recomputing encoder activations rather than storing them — exists at all.
+**Why large batches are free negatives, arithmetically.** In a batch of $`B`$ query–document pairs, each query's positive is every *other* query's negative. So one batch of 1,024 gives each query 1,023 negatives at no extra encoding cost — you were going to encode those documents anyway. Batch 32 gives you 31. **The denominator of the loss is the whole game, and batch size is the cheapest way to enlarge it**, which is why retrieval papers report batch sizes the way other papers report parameter counts, and why gradient caching — recomputing encoder activations rather than storing them — exists at all.
 
 #### Examples and non-examples: a hard negative
 
@@ -254,7 +254,7 @@ Take the query **"How long does a refund take?"** with the true positive being t
 
 | Looks like it | Why it fails | What it actually is |
 |---|---|---|
-| "The mating season of the European badger begins in spring." | Separable at initialization. Contributes a gradient of order $10^{-5}$ (worked above) | A **random** negative — filler for the denominator, not a teacher |
+| "The mating season of the European badger begins in spring." | Separable at initialization. Contributes a gradient of order $`10^{-5}`$ (worked above) | A **random** negative — filler for the denominator, not a teacher |
 | "Refunds are issued within 30 business days of receipt." (a duplicate of the positive, unlabelled) | It **is** relevant. Training pushes it away, so the model learns to demote correct answers | A **false negative** — the failure mode the book's *caution* is about |
 | A passage that shares the word "refund" 40 times but is a spam page | Hard for BM25, trivially separable for a dense encoder | A hard negative **for the wrong retriever** — hardness is model-relative |
 | A negative mined once, before training, and reused for 10 epochs | It was hard for the *initial* model. By epoch 3 the model separates it easily | A **stale** negative — this is why strong recipes re-mine periodically |
@@ -269,11 +269,11 @@ Take the query **"How long does a refund take?"** with the true positive being t
 
 Concatenate query and document, run them through a transformer **jointly**, output a relevance score.
 
-▸ Full token-level interaction ⇒ substantially more accurate. But scoring requires one forward pass **per (query, document) pair**, so it cannot search a corpus — $O(N)$ per query.
+▸ Full token-level interaction ⇒ substantially more accurate. But scoring requires one forward pass **per (query, document) pair**, so it cannot search a corpus — $`O(N)`$ per query.
 
 **The standard architecture is therefore a cascade:** BM25/dense retrieve top-100 → cross-encoder reranks to top-10 → generator sees top-5. Cheap and accurate.
 
-#### Bi-encoder versus cross-encoder, and the $\mathcal{O}(N)$ that decides everything
+#### Bi-encoder versus cross-encoder, and the $`\mathcal{O}(N)`$ that decides everything
 
 The two architectures differ in exactly one place: **when the query meets the document.**
 
@@ -287,7 +287,7 @@ The two architectures differ in exactly one place: **when the query meets the do
 
 > **Analogy.** Two ways to match job candidates to a role. A bi-encoder writes a fixed summary of each candidate ahead of time and a summary of the role, then compares summaries — fast, and you can compare against a million candidates because the summaries were written last week. A cross-encoder sits the candidate and the hiring manager in a room together for an hour. **The interview is obviously more accurate. You cannot interview a million people.**
 
-**Now the numbers, because $\mathcal{O}(N)$ is abstract until you multiply it out.** A corpus of 10 million documents, a cross-encoder taking about 5 ms per (query, document) pair on a GPU:
+**Now the numbers, because $`\mathcal{O}(N)`$ is abstract until you multiply it out.** A corpus of 10 million documents, a cross-encoder taking about 5 ms per (query, document) pair on a GPU:
 
 $$10{,}000{,}000 \times 5\ \text{ms} = 50{,}000\ \text{s} \approx 14\ \text{hours per query}$$
 
@@ -314,7 +314,7 @@ $$100 \times 5\ \text{ms} = 0.5\ \text{s}$$
 
 | Looks like it | Why it fails | What actually fixes it |
 |---|---|---|
-| The right document was never in the top 100 | The reranker only reorders the candidate list. It cannot promote what it was never shown | Fix stage 1 — hybrid search, better chunking, higher $k$ |
+| The right document was never in the top 100 | The reranker only reorders the candidate list. It cannot promote what it was never shown | Fix stage 1 — hybrid search, better chunking, higher $`k`$ |
 | The right passage was split across two chunks, each half-useless | Both halves score low; reordering low scores changes nothing | Chunking strategy, or index-small-expand |
 | The document exists but was never indexed | Not a ranking problem at all | Ingestion pipeline |
 | The generator ignores a correctly-ranked chunk | Reranking is upstream of the failure | Prompt, context length, position in context |
@@ -330,7 +330,7 @@ $$s(q,d)=\sum_{i\in q}\max_{j\in d}\ \langle E_{q_i}, E_{d_j}\rangle$$
 
 **Read it inside-out**, which is how every nested formula should be read:
 
-- $`\langle E_{q_i}, E_{d_j}\rangle`$ — the inner product (§0.8) between the vector for **query token $i$** and the vector for **document token $j$**. One number: how well those two words match.
+- $`\langle E_{q_i}, E_{d_j}\rangle`$ — the inner product (§0.8) between the vector for **query token $`i`$** and the vector for **document token $`j`$**. One number: how well those two words match.
 - $`\max_{j\in d}`$ — scan **every token in the document** and keep the best match for this one query token. *"What is the best home this word finds anywhere in the document?"*
 - $`\sum_{i\in q}`$ — do that for **every query token**, and add up the results.
 
@@ -343,7 +343,7 @@ $$s(q,d)=\sum_{i\in q}\max_{j\in d}\ \langle E_{q_i}, E_{d_j}\rangle$$
 | refund | "reimbursement" | 0.81 |
 | policy | "terms" | 0.64 |
 | delay | "processing time" | 0.55 |
-| | **Total $s(q,d)$** | **2.00** |
+| | **Total $`s(q,d)`$** | **2.00** |
 
 ▸ **Why this beats a single dot product.** A bi-encoder crushes the whole query into one vector, so "refund policy delay" becomes a single point, and a document that nails "refund" while ignoring "delay" can sit as close to that point as one that covers both. **Late interaction keeps the terms separate and demands that every one of them find a home.** It is much closer to what a person does when scanning a page.
 
@@ -375,28 +375,28 @@ $$\mathrm{RRF}(d) = \sum_{r\in\text{retrievers}}\frac{1}{k + \mathrm{rank}_r(d)}
 **Read aloud:** *"for each retriever, take one divided by sixty-plus-the-position-it-gave-this-document, and add those up across retrievers."*
 
 - $`\mathrm{rank}_r(d)`$ is an **ordinal position**, not a score: 1 for the top hit, 2 for the next, and so on.
-- $k = 60$ is a damping constant. Its job is explained below and is the only interesting thing in the formula.
+- $`k = 60`$ is a damping constant. Its job is explained below and is the only interesting thing in the formula.
 - $`\sum_{r}`$ loops over your retrievers — typically two (BM25 and dense), sometimes more.
 
-**Why ranks and not scores.** BM25 produces unbounded positive numbers whose typical range depends on the query, the corpus, and the length of the document. A dense retriever produces cosines in $[-1, 1]$. **These live on incomparable scales, and there is no correct constant to multiply one by.** Worse, the usual repair — min–max normalizing each result list — makes a document's score depend on *which other documents happened to be retrieved*, so adding one irrelevant result to the bottom of a list changes the score at the top. Ranks have none of these problems: position 3 means the same thing to every retriever, forever.
+**Why ranks and not scores.** BM25 produces unbounded positive numbers whose typical range depends on the query, the corpus, and the length of the document. A dense retriever produces cosines in $`[-1, 1]`$. **These live on incomparable scales, and there is no correct constant to multiply one by.** Worse, the usual repair — min–max normalizing each result list — makes a document's score depend on *which other documents happened to be retrieved*, so adding one irrelevant result to the bottom of a list changes the score at the top. Ranks have none of these problems: position 3 means the same thing to every retriever, forever.
 
 > **Analogy.** Two judges scoring a competition, one marking out of 10 and one marking out of 100, one generous and one severe. Averaging their raw marks is meaningless — the severe judge's 60/100 might be higher praise than the generous one's 9/10. **So you throw the numbers away and keep only the orderings**, and combine those. That is the entire idea, and it is why RRF has no weights to tune and no calibration step.
 
-**Now what $k$ actually does — this is the part worth understanding.** Compare three documents:
+**Now what $`k`$ actually does — this is the part worth understanding.** Compare three documents:
 
-| Document | BM25 rank | Dense rank | RRF score ($k=60$) | Score with $k=0$ |
+| Document | BM25 rank | Dense rank | RRF score ($`k=60`$) | Score with $`k=0`$ |
 |---|---|---|---|---|
-| X — "spiky" | **1** | 30 | $\frac{1}{61}+\frac{1}{90} = 0.0275$ | $1 + 0.033 = 1.033$ |
-| Y — "consistent" | 5 | 5 | $\frac{1}{65}+\frac{1}{65} = \mathbf{0.0308}$ | $0.2+0.2 = 0.400$ |
-| Z — "consistent" | 3 | 8 | $\frac{1}{63}+\frac{1}{68} = 0.0306$ | $0.333+0.125=0.458$ |
+| X — "spiky" | **1** | 30 | $`\frac{1}{61}+\frac{1}{90} = 0.0275`$ | $`1 + 0.033 = 1.033`$ |
+| Y — "consistent" | 5 | 5 | $`\frac{1}{65}+\frac{1}{65} = \mathbf{0.0308}`$ | $`0.2+0.2 = 0.400`$ |
+| Z — "consistent" | 3 | 8 | $`\frac{1}{63}+\frac{1}{68} = 0.0306`$ | $`0.333+0.125=0.458`$ |
 
-▸ **The two columns produce opposite winners.** With $k=0$, being rank 1 in a single list is worth more than being rank 5 in both, and document X wins easily. With $k=60$, X's first-place finish is worth $1/61 = 0.0164$ against Y's fifth-place $1/65 = 0.0154$ — **a 6% edge, not a 5× one** — so agreement across retrievers decides the outcome and Y wins.
+▸ **The two columns produce opposite winners.** With $`k=0`$, being rank 1 in a single list is worth more than being rank 5 in both, and document X wins easily. With $`k=60`$, X's first-place finish is worth $`1/61 = 0.0164`$ against Y's fifth-place $`1/65 = 0.0154`$ — **a 6% edge, not a 5× one** — so agreement across retrievers decides the outcome and Y wins.
 
-**That is the design.** $k$ compresses the top of each list so that the difference between rank 1 and rank 5 is small, while the difference between rank 5 and rank 500 remains large ($1/65 = 0.0154$ versus $1/560 = 0.0018$, about 9×). The result is a fusion rule that says: **"I trust two retrievers that agree more than one retriever that is emphatic."** Given that the two retrievers fail on disjoint inputs (§18.2), that is exactly the right prior.
+**That is the design.** $`k`$ compresses the top of each list so that the difference between rank 1 and rank 5 is small, while the difference between rank 5 and rank 500 remains large ($`1/65 = 0.0154`$ versus $`1/560 = 0.0018`$, about 9×). The result is a fusion rule that says: **"I trust two retrievers that agree more than one retriever that is emphatic."** Given that the two retrievers fail on disjoint inputs (§18.2), that is exactly the right prior.
 
 **Two more properties worth naming.** The discount never reaches zero, so a document ranked 900 by one retriever still contributes a little rather than being vetoed. And nothing in the formula refers to the number of retrievers, the corpus, or the query — **add a third retriever and it just works**, which is why RRF survives contact with production systems that grow retrievers over time.
 
-> **Where this came from.** RRF was published by **Gordon Cormack, Charles Clarke and Stefan Buettcher at the University of Waterloo in 2009**, and the paper's title says the finding out loud: reciprocal rank fusion outperformed both Condorcet-style voting fusion and the learned rank-aggregation methods that were fashionable at the time. The constant $k=60$ was not the product of an elaborate search; it worked, and the paper reports that performance is insensitive to it. **A one-line formula with one untuned constant beating trained models is the kind of result the field finds mildly embarrassing and then adopts universally** — fifteen years later it is the default fusion method in essentially every vector database and search framework.
+> **Where this came from.** RRF was published by **Gordon Cormack, Charles Clarke and Stefan Buettcher at the University of Waterloo in 2009**, and the paper's title says the finding out loud: reciprocal rank fusion outperformed both Condorcet-style voting fusion and the learned rank-aggregation methods that were fashionable at the time. The constant $`k=60`$ was not the product of an elaborate search; it worked, and the paper reports that performance is insensitive to it. **A one-line formula with one untuned constant beating trained models is the kind of result the field finds mildly embarrassing and then adopts universally** — fifteen years later it is the default fusion method in essentially every vector database and search framework.
 
 ---
 
@@ -423,7 +423,7 @@ Query → (rewrite) → retrieve (hybrid) → rerank → assemble context → ge
 
 **First, why chunk at all.** A retriever compares vectors. If a 50-page manual becomes *one* 768-dimensional vector, that vector is an average of everything the manual discusses — and an average of many things is specifically close to none of them.
 
-**This can be made exact, using Ch. 1 §1.1.5.** Suppose a chunk covers $n$ distinct topics whose embedding directions are roughly orthogonal — which, in 768 dimensions, is what unrelated directions actually are. The chunk's embedding is their average $`v = \frac{1}{n}\sum_i u_i`$, and
+**This can be made exact, using Ch. 1 §1.1.5.** Suppose a chunk covers $`n`$ distinct topics whose embedding directions are roughly orthogonal — which, in 768 dimensions, is what unrelated directions actually are. The chunk's embedding is their average $`v = \frac{1}{n}\sum_i u_i`$, and
 
 $$\lVert v\rVert = \frac{1}{\sqrt n}, \qquad \cos(v, u_i) = \frac{1/n}{1/\sqrt n} = \frac{1}{\sqrt n}$$
 
@@ -434,7 +434,7 @@ $$\lVert v\rVert = \frac{1}{\sqrt n}, \qquad \cos(v, u_i) = \frac{1/n}{1/\sqrt n
 | 12 | 0.29 |
 | 50 | 0.14 |
 
-▸ **A chunk covering twelve topics is only 0.29 similar to each of the twelve things it actually contains** — quite possibly less than a focused chunk about something merely adjacent. **This is the "large chunks retrieve imprecisely" half of the trade-off, and it is not a soft empirical tendency; it is the geometry of averaging in high dimensions.** Every topic you add to a chunk dilutes every other one by $1/\sqrt n$.
+▸ **A chunk covering twelve topics is only 0.29 similar to each of the twelve things it actually contains** — quite possibly less than a focused chunk about something merely adjacent. **This is the "large chunks retrieve imprecisely" half of the trade-off, and it is not a soft empirical tendency; it is the geometry of averaging in high dimensions.** Every topic you add to a chunk dilutes every other one by $`1/\sqrt n`$.
 
 **And the other half.** Cut small enough and each chunk is sharp but *incomplete*. A sentence lifted out of a page loses its antecedents — "it," "the above policy," "this exception" — and the embedding of a sentence about "it" encodes almost nothing, because the model has no idea what "it" is.
 
@@ -456,7 +456,7 @@ $$\lVert v\rVert = \frac{1}{\sqrt n}, \qquad \cos(v, u_i) = \frac{1/n}{1/\sqrt n
 
 | Chunk | Why it qualifies |
 |---|---|
-| One section of a policy document, under its own heading, with the heading text prepended: *"Refund Policy — Refunds are processed within 30 business days…"* | **Self-contained**: every referring expression resolves inside the chunk. One topic, so the $1/\sqrt n$ dilution is $1/\sqrt 1 = 1$ |
+| One section of a policy document, under its own heading, with the heading text prepended: *"Refund Policy — Refunds are processed within 30 business days…"* | **Self-contained**: every referring expression resolves inside the chunk. One topic, so the $`1/\sqrt n`$ dilution is $`1/\sqrt 1 = 1`$ |
 | A single function plus its docstring, from a source file | Authors already chose this boundary. It answers "how do I use `parse_date`?" completely |
 | One FAQ question with its answer | The unit of retrieval and the unit of meaning coincide |
 | One table row rendered as a sentence: *"Plan: Enterprise. Price: \$4,000/yr. Seats: unlimited."* | A raw table row loses its column names; rendering restores them |
@@ -466,7 +466,7 @@ $$\lVert v\rVert = \frac{1}{\sqrt n}, \qquad \cos(v, u_i) = \frac{1/n}{1/\sqrt n
 | Looks like it | Why it fails | What it actually is |
 |---|---|---|
 | A 512-token window cut mid-sentence: *"…and therefore the committee rejected it, citing the third clause…"* | "it" and "the third clause" have no antecedent in the chunk. The embedding encodes almost nothing | A **fixed-size** chunk — cheap, and the reason late chunking exists |
-| A whole 40-page manual as one chunk | Averages ~50 topics; cosine to each is $1/\sqrt{50} = 0.14$. Also blows the context budget when retrieved | A document, not a chunk |
+| A whole 40-page manual as one chunk | Averages ~50 topics; cosine to each is $`1/\sqrt{50} = 0.14`$. Also blows the context budget when retrieved | A document, not a chunk |
 | A chunk consisting of a page header, footer, and nav links | Every chunk in the corpus contains it, so it has near-zero IDF and near-identical embeddings — it retrieves for *everything* | Boilerplate that should be stripped at ingestion |
 | Two adjacent chunks with 90% overlap, both retrieved | Fills the context with the same sentences twice, crowding out a second source | A **deduplication** failure, not a chunking win |
 | A chunk that is one sentence: *"See section 4.2."* | Sharp, retrievable, and carries no information | Over-splitting — the pathology at the other end of the trade-off |
@@ -535,7 +535,7 @@ $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nD
 - **Answer relevance:** does it address the question?
 - **Context precision/recall:** were the retrieved chunks the right ones?
 
-**Build a golden set.** 100–500 (query, relevant-docs, reference-answer) triples from your actual domain. Everything else is guesswork. And apply Chapter 3 — report confidence intervals on these numbers, because with 200 queries the standard error on a 0.8 recall is $\sqrt{0.8\cdot0.2/200}=0.028$, so a "3-point improvement" is noise.
+**Build a golden set.** 100–500 (query, relevant-docs, reference-answer) triples from your actual domain. Everything else is guesswork. And apply Chapter 3 — report confidence intervals on these numbers, because with 200 queries the standard error on a 0.8 recall is $`\sqrt{0.8\cdot0.2/200}=0.028`$, so a "3-point improvement" is noise.
 
 #### The retrieval metrics, decoded
 
@@ -545,7 +545,7 @@ $$\text{Recall@10} = \frac{2}{3} = 0.67 \qquad\qquad \text{Precision@10} = \frac
 
 Recall asks *"of the things I should have found, what fraction did I?"* Precision asks *"of the things I returned, what fraction were worth returning?"*
 
-▸ **Recall@k is the one that matters in RAG, and precision@k is close to meaningless.** With 3 relevant documents and $k=10$, precision cannot exceed $0.30$ no matter how perfect the retriever is — the metric is capped by an arbitrary choice of $k$. Recall has no such defect, and it is the quantity the generator's ceiling is made of (§18.1). **Report recall@k; treat precision@k as a diagnostic of context bloat, not of quality.**
+▸ **Recall@k is the one that matters in RAG, and precision@k is close to meaningless.** With 3 relevant documents and $`k=10`$, precision cannot exceed $`0.30`$ no matter how perfect the retriever is — the metric is capped by an arbitrary choice of $`k`$. Recall has no such defect, and it is the quantity the generator's ceiling is made of (§18.1). **Report recall@k; treat precision@k as a diagnostic of context bloat, not of quality.**
 
 **MRR — Mean Reciprocal Rank.** Find the position of the **first** relevant document, take one over it, average across queries:
 
@@ -553,10 +553,10 @@ Recall asks *"of the things I should have found, what fraction did I?"* Precisio
 |---|---|---|
 | 1 | 1 | 1.000 |
 | 2 | 4 | 0.250 |
-| 3 | not found in top-$k$ | 0.000 |
+| 3 | not found in top-$`k`$ | 0.000 |
 | | **MRR** | **0.417** |
 
-▸ **MRR only ever looks at the first hit**, which makes it the right metric when one correct answer is enough (a lookup, a definition, a customer's order) and the wrong one when the user needs several sources synthesized. The steep $1/\mathrm{rank}$ drop — rank 2 is worth half of rank 1 — encodes the assumption that people do not scroll.
+▸ **MRR only ever looks at the first hit**, which makes it the right metric when one correct answer is enough (a lookup, a definition, a customer's order) and the wrong one when the user needs several sources synthesized. The steep $`1/\mathrm{rank}`$ drop — rank 2 is worth half of rank 1 — encodes the assumption that people do not scroll.
 
 #### Reading nDCG
 
@@ -564,9 +564,9 @@ $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nD
 
 **DCG** is **D**iscounted **C**umulative **G**ain, and the name is the formula: *gain*, *discounted*, then *cumulated*.
 
-**The numerator — gain.** $`rel_i`$ is a graded relevance judgement for the document at position $i$, usually on a small scale. The $2^{rel}-1$ transform makes the grades non-linear:
+**The numerator — gain.** $`rel_i`$ is a graded relevance judgement for the document at position $`i`$, usually on a small scale. The $`2^{rel}-1`$ transform makes the grades non-linear:
 
-| $rel$ | Meaning | Gain $2^{rel}-1$ |
+| $`rel`$ | Meaning | Gain $`2^{rel}-1`$ |
 |---|---|---|
 | 0 | irrelevant | 0 |
 | 1 | marginally useful | 1 |
@@ -577,32 +577,32 @@ $$\mathrm{DCG@k}=\sum_{i=1}^{k}\frac{2^{rel_i}-1}{\log_2(i+1)},\qquad \mathrm{nD
 
 **The denominator — discount.** $`\log_2(i+1)`$ grows slowly, so results further down are worth less, but not dramatically less:
 
-| Position $i$ | $`\log_2(i+1)`$ | Fraction of full credit |
+| Position $`i`$ | $`\log_2(i+1)`$ | Fraction of full credit |
 |---|---|---|
 | 1 | 1.00 | 100% |
 | 2 | 1.58 | 63% |
 | 5 | 2.58 | 39% |
 | 10 | 3.46 | 29% |
 
-▸ **A logarithmic discount, rather than $1/i$, is the whole design decision.** It says users are willing to scan a bit — position 10 still earns 29% credit, where $1/i$ would give it 10%. The metric is modelling a person who reads down a page, not one who clicks the first blue link and gives up.
+▸ **A logarithmic discount, rather than $`1/i`$, is the whole design decision.** It says users are willing to scan a bit — position 10 still earns 29% credit, where $`1/i`$ would give it 10%. The metric is modelling a person who reads down a page, not one who clicks the first blue link and gives up.
 
-**Now the ratio, worked end to end.** You return three documents with relevance $(3, 0, 2)$:
+**Now the ratio, worked end to end.** You return three documents with relevance $`(3, 0, 2)`$:
 
 $$\mathrm{DCG@3} = \frac{2^3-1}{\log_2 2} + \frac{2^0-1}{\log_2 3} + \frac{2^2-1}{\log_2 4} = \frac{7}{1} + \frac{0}{1.585} + \frac{3}{2} = 8.50$$
 
-The *best possible* ordering of those same three documents is $(3,2,0)$:
+The *best possible* ordering of those same three documents is $`(3,2,0)`$:
 
 $$\mathrm{IDCG@3} = \frac{7}{1} + \frac{3}{1.585} + \frac{0}{2} = 8.89 \qquad\Longrightarrow\qquad \mathrm{nDCG@3} = \frac{8.50}{8.89} = \mathbf{0.956}$$
 
-▸ **The "n" is the entire reason anyone uses this metric.** Raw DCG is unbounded and query-dependent: a query with ten perfect documents available scores far higher than one with a single mediocre document, regardless of how well you ranked either. Dividing by the ideal turns the number into **"what fraction of the achievable ordering did I achieve?"**, which lands in $[0,1]$ and is comparable across queries. **IDCG** is the **I**deal DCG — the score you would get by sorting the relevance labels perfectly.
+▸ **The "n" is the entire reason anyone uses this metric.** Raw DCG is unbounded and query-dependent: a query with ten perfect documents available scores far higher than one with a single mediocre document, regardless of how well you ranked either. Dividing by the ideal turns the number into **"what fraction of the achievable ordering did I achieve?"**, which lands in $`[0,1]`$ and is comparable across queries. **IDCG** is the **I**deal DCG — the score you would get by sorting the relevance labels perfectly.
 
 #### Unpacking the confidence-interval warning
 
 $$\text{SE} = \sqrt{\frac{p(1-p)}{n}} = \sqrt{\frac{0.8\times0.2}{200}} = \sqrt{0.0008} = 0.028$$
 
-This is the standard error of a proportion — the $\sigma/\sqrt n$ law of Ch. 1 §1.3.1 specialized to yes/no outcomes, where each query either found the document or did not.
+This is the standard error of a proportion — the $`\sigma/\sqrt n`$ law of Ch. 1 §1.3.1 specialized to yes/no outcomes, where each query either found the document or did not.
 
-**Turn it into an interval.** A 95% confidence interval is roughly $\pm 1.96\,\text{SE}$:
+**Turn it into an interval.** A 95% confidence interval is roughly $`\pm 1.96\,\text{SE}`$:
 
 $$0.80 \pm 0.055 \quad\Longrightarrow\quad [0.745,\ 0.855]$$
 
@@ -646,7 +646,7 @@ $$1.96\sqrt{\frac{2\times 0.16}{n}} < 0.03 \quad\Longrightarrow\quad n > 1{,}365
 
 > **Common misconception.** *"An LLM judge gives me a number, so I have a measurement."* An LLM judge is a model with its own biases — for longer answers, for answers in its own style, for answers that agree with what it would have said, and for whichever candidate was shown second. Those biases are systematic, not noise, so **averaging over more queries does not remove them.** The judge is useful as a *ranking* tool between two systems on the same queries, and unreliable as an absolute score. Calibrate it against a few hundred human labels before you trust its number, and re-calibrate when you change the judge model — a judge upgrade can move your entire metric with no change to your system at all.
 
-> **Common misconception.** *"My recall went from 0.80 to 0.83 on 200 queries, so the new retriever is better."* With $n = 200$ and $p = 0.8$, the standard error is 0.028 and a 3-point move is a fraction of one error bar — the arithmetic is worked above. This is the most common self-inflicted wound in applied retrieval, and the reason it is so tempting is that the number  did go up, on real queries, and you  did change something. **Correlation between "I changed the system" and "the number moved" is not evidence when the number moves that much on its own.** Re-run the *old* system on a fresh 200 queries and watch it "improve" by 3 points too.
+> **Common misconception.** *"My recall went from 0.80 to 0.83 on 200 queries, so the new retriever is better."* With $`n = 200`$ and $`p = 0.8`$, the standard error is 0.028 and a 3-point move is a fraction of one error bar — the arithmetic is worked above. This is the most common self-inflicted wound in applied retrieval, and the reason it is so tempting is that the number  did go up, on real queries, and you  did change something. **Correlation between "I changed the system" and "the number moved" is not evidence when the number moves that much on its own.** Re-run the *old* system on a fresh 200 queries and watch it "improve" by 3 points too.
 
 ### Common failure modes
 
@@ -674,7 +674,7 @@ $$1.96\sqrt{\frac{2\times 0.16}{n}} < 0.03 \quad\Longrightarrow\quad n > 1{,}365
 
 The claim is that feeding 1M tokens where 5k would do is "a 200× cost increase for a quality *decrease*." Both halves are worth checking.
 
-**The cost half.** $1{,}000{,}000 / 5{,}000 = 200$, and that is the *linear* part — the feed-forward and projection work, which scales with the number of tokens. The attention term scales with the **square** of sequence length (§0.10), so:
+**The cost half.** $`1{,}000{,}000 / 5{,}000 = 200`$, and that is the *linear* part — the feed-forward and projection work, which scales with the number of tokens. The attention term scales with the **square** of sequence length (§0.10), so:
 
 $$\left(\frac{1{,}000{,}000}{5{,}000}\right)^2 = 200^2 = 40{,}000\times$$
 
@@ -719,7 +719,7 @@ It is worth being clear that **nothing new happens in the model.** A language mo
 
 **Why "tool descriptions are prompts" is the highest-leverage sentence here.** The model selects a tool by reading its description and comparing it to the situation, which is a retrieval problem in miniature — and it fails in exactly the ways §18.2 catalogues. A description written for a colleague who can read the source (`get_data(id)` — "fetches the data") gives the model nothing to match on. A description written for a stranger (`get_order_status(order_id)` — "returns shipping status and delivery estimate for a customer's order; use when the user asks where their package is") gives it everything.
 
-**Why accuracy degrades past ~20 tools**, in one line: with $N$ tools the selection step is an $N$-way classification performed from descriptions, many of which overlap. **The fix is the same cascade as §18.2** — retrieve a handful of plausible tools by embedding similarity, then show only those to the model. Tool selection *is* retrieval, and once you see it that way the whole toolbox of this chapter applies to it.
+**Why accuracy degrades past ~20 tools**, in one line: with $`N`$ tools the selection step is an $`N`$-way classification performed from descriptions, many of which overlap. **The fix is the same cascade as §18.2** — retrieve a handful of plausible tools by embedding similarity, then show only those to the model. Tool selection *is* retrieval, and once you see it that way the whole toolbox of this chapter applies to it.
 
 **Why constrained decoding rather than asking politely.** At each step the model produces a probability distribution over the whole vocabulary. Constrained decoding masks out every token that could not legally continue a valid JSON document matching the schema, setting their probability to zero before sampling. **The output is then valid by construction — not because the model was well-behaved, but because the invalid options were removed from the ballot.** Instructions influence a distribution; masking eliminates outcomes. Only one of the two is a guarantee.
 
@@ -782,9 +782,9 @@ The word is used so loosely that it has nearly stopped discriminating. The defin
 | A model that generates a plan of 8 steps, which are then executed in order without revision | The model decided the plan, but nothing responds to what actually happened. Step 4 runs even if step 3 returned an error | **Upfront decomposition** — the "brittle, cheap" option in *The components* |
 | A `while` loop that calls the model until a regex matches | The termination condition is in the code, and the model is not choosing actions | A retry loop |
 
-▸ **The boundary:** an agent's **next action is a function of the last observation, chosen by the model at run time.** If you can draw the flowchart before the run starts, it is a pipeline; if the flowchart is only knowable afterwards, it is an agent. Everything expensive about agents — the compounding error of $p^n$, the unbounded cost, the prompt-injection surface — arrives with that one property, and none of it applies to a pipeline.
+▸ **The boundary:** an agent's **next action is a function of the last observation, chosen by the model at run time.** If you can draw the flowchart before the run starts, it is a pipeline; if the flowchart is only knowable afterwards, it is an agent. Everything expensive about agents — the compounding error of $`p^n`$, the unbounded cost, the prompt-injection surface — arrives with that one property, and none of it applies to a pipeline.
 
-> **Common misconception.** *"Agentic is a strictly better architecture than a fixed pipeline."* Model-determined control flow is a *capability* you pay for. It buys you the ability to handle inputs whose correct procedure you could not enumerate in advance; it costs you determinism, a bounded bill, reproducible evaluation, and the $p^n$ reliability collapse. A task whose steps you can write down should have its steps written down — the pipeline will be cheaper, faster, testable, and more reliable, in every case. The belief is tempting because agentic demos handle surprising inputs impressively, and pipelines fail on them visibly. **Choose the loop when the branch structure is  unknowable, and not one line of code sooner.**
+> **Common misconception.** *"Agentic is a strictly better architecture than a fixed pipeline."* Model-determined control flow is a *capability* you pay for. It buys you the ability to handle inputs whose correct procedure you could not enumerate in advance; it costs you determinism, a bounded bill, reproducible evaluation, and the $`p^n`$ reliability collapse. A task whose steps you can write down should have its steps written down — the pipeline will be cheaper, faster, testable, and more reliable, in every case. The belief is tempting because agentic demos handle surprising inputs impressively, and pipelines fail on them visibly. **Choose the loop when the branch structure is  unknowable, and not one line of code sooner.**
 
 ### ReAct
 
@@ -813,19 +813,19 @@ Supervisor/worker, debate, pipeline, blackboard.
 
 ### Why agents fail
 
-▸ **Compounding error is the fundamental issue.** With per-step reliability $p$ and $n$ steps, success is $p^n$. At $p=0.95$: 20 steps gives $0.36$. **Getting from 95% to 99% per-step reliability matters more than any other improvement**, because $0.99^{20}=0.82$.
+▸ **Compounding error is the fundamental issue.** With per-step reliability $`p`$ and $`n`$ steps, success is $`p^n`$. At $`p=0.95`$: 20 steps gives $`0.36`$. **Getting from 95% to 99% per-step reliability matters more than any other improvement**, because $`0.99^{20}=0.82`$.
 
 Other modes: context rot over long trajectories, tool-output overflow, looping without progress, over-confidence in bad observations, and **prompt injection from tool outputs** — a retrieved web page containing "ignore previous instructions" is an attack surface that does not exist in a non-agentic system.
 
-#### Reading $p^n$, the most important formula in agent design
+#### Reading $`p^n`$, the most important formula in agent design
 
 $$\mathbb{P}(\text{success}) = p^n$$
 
-**The symbols:** $p$ is the probability a single step goes correctly, $n$ is the number of steps, and the exponent is there because **every step must succeed** — one failure anywhere ends the run. Independent events multiply.
+**The symbols:** $`p`$ is the probability a single step goes correctly, $`n`$ is the number of steps, and the exponent is there because **every step must succeed** — one failure anywhere ends the run. Independent events multiply.
 
 **Now the table, which is the whole argument:**
 
-| Per-step reliability $p$ | 5 steps | 10 steps | 20 steps | 50 steps |
+| Per-step reliability $`p`$ | 5 steps | 10 steps | 20 steps | 50 steps |
 |---|---|---|---|---|
 | 0.90 | 0.59 | 0.35 | 0.12 | 0.005 |
 | 0.95 | 0.77 | 0.60 | **0.36** | 0.08 |
@@ -834,25 +834,25 @@ $$\mathbb{P}(\text{success}) = p^n$$
 
 ▸ **Read across the 20-step column: 0.12, 0.36, 0.82, 0.98.** Going from 95% to 99% per-step reliability — a four-point change that sounds like a rounding error — **more than doubles** the end-to-end success rate. Going from 90% to 99% takes a system from unusable to shippable without changing anything about what it can do, only about how often it does it.
 
-**A cleaner way to hold it: the agent's half-life.** How many steps until the run is more likely to have failed than succeeded? Solve $p^n = 0.5$:
+**A cleaner way to hold it: the agent's half-life.** How many steps until the run is more likely to have failed than succeeded? Solve $`p^n = 0.5`$:
 
 $$n = \frac{\ln 0.5}{\ln p} \approx \frac{0.693}{1-p}\quad\text{(for }p\text{ near 1)}$$
 
-| $p$ | Steps to coin-flip odds |
+| $`p`$ | Steps to coin-flip odds |
 |---|---|
 | 0.95 | 14 |
 | 0.99 | 69 |
 | 0.999 | 693 |
 
-▸ **Every additional "nine" of per-step reliability multiplies the length of task you can attempt by ten.** That is the single most useful sentence in this section. It tells you that "can this agent do a 50-step task?" is not a question about planning, memory, or architecture — it is a question about whether $p$ has enough nines. **The horizon is set by the decimal places.**
+▸ **Every additional "nine" of per-step reliability multiplies the length of task you can attempt by ten.** That is the single most useful sentence in this section. It tells you that "can this agent do a 50-step task?" is not a question about planning, memory, or architecture — it is a question about whether $`p`$ has enough nines. **The horizon is set by the decimal places.**
 
 > **Analogy.** A chain of paper clips. Each clip holds 95% of the time. A five-clip chain is fine; a fifty-clip chain falls apart with near certainty, and no amount of cleverness in *arranging* the clips helps. **You do not fix a chain by redesigning its topology; you fix it by making the links stronger.** The multi-agent-system diagram with six boxes and arrows is a rearrangement of clips.
 
-**Which is exactly why the book's assessment of multi-agent systems is so blunt.** Splitting work across agents does not reduce $n$ — it usually increases it, since every hand-off is itself a step that can go wrong, and hand-offs are unusually lossy steps because context does not survive them intact. Ten steps at 95% is 60%; the same work as six agents of three steps each is eighteen steps plus five hand-offs, and $0.95^{23} = 0.31$. **You have paid five times the cost for half the reliability**, and gained  parallelism only if the sub-tasks were actually independent.
+**Which is exactly why the book's assessment of multi-agent systems is so blunt.** Splitting work across agents does not reduce $`n`$ — it usually increases it, since every hand-off is itself a step that can go wrong, and hand-offs are unusually lossy steps because context does not survive them intact. Ten steps at 95% is 60%; the same work as six agents of three steps each is eighteen steps plus five hand-offs, and $`0.95^{23} = 0.31`$. **You have paid five times the cost for half the reliability**, and gained  parallelism only if the sub-tasks were actually independent.
 
-**And the termination cap follows from the same arithmetic.** As $n$ grows, the probability of having succeeded already falls toward zero while the cost keeps climbing linearly. **An agent that has taken forty steps on a task you expected to take five is not close to finishing; it is in a failure mode**, and the hard cap exists to convert an unbounded bill into a bounded one.
+**And the termination cap follows from the same arithmetic.** As $`n`$ grows, the probability of having succeeded already falls toward zero while the cost keeps climbing linearly. **An agent that has taken forty steps on a task you expected to take five is not close to finishing; it is in a failure mode**, and the hard cap exists to convert an unbounded bill into a bounded one.
 
-> **Common misconception.** *"$p^n$ proves long-horizon agents are impossible."* The formula assumes each step is **independent** and **unrecoverable** — that a failure at step 7 ends the run. Neither holds when a step has a *checkable* outcome. If the agent can tell that a step failed and retry it, the effective per-step reliability becomes $1 - (1-p)^k$ for $k$ attempts: at $p = 0.9$ with three tries, that is $1 - 0.001 = 0.999$, which moves you across two whole rows of the table. **The real content of $p^n$ is a statement about *unverifiable* steps** — steps whose failure is silent. Those are the ones that compound, and the engineering response is to convert unverifiable steps into verifiable ones wherever possible.
+> **Common misconception.** *"$`p^n`$ proves long-horizon agents are impossible."* The formula assumes each step is **independent** and **unrecoverable** — that a failure at step 7 ends the run. Neither holds when a step has a *checkable* outcome. If the agent can tell that a step failed and retry it, the effective per-step reliability becomes $`1 - (1-p)^k`$ for $`k`$ attempts: at $`p = 0.9`$ with three tries, that is $`1 - 0.001 = 0.999`$, which moves you across two whole rows of the table. **The real content of $`p^n`$ is a statement about *unverifiable* steps** — steps whose failure is silent. Those are the ones that compound, and the engineering response is to convert unverifiable steps into verifiable ones wherever possible.
 
 #### Examples and non-examples: a verifiable agent step
 
@@ -876,7 +876,7 @@ $$n = \frac{\ln 0.5}{\ln p} \approx \frac{0.693}{1-p}\quad\text{(for }p\text{ ne
 | The search returned 10 results | Retrieval always returns something (§18.1) | A non-empty response, mistaken for a hit |
 | The plan "looks reasonable" at step 2 | Plan quality is only observable at the end, which is why plan-and-revise beats decompose-upfront | An unfalsifiable intermediate |
 
-▸ **The boundary:** a step is verifiable when **something outside the model can say "no."** A compiler, a test runner, a type checker, an HTTP status, a schema parser, a filesystem. If the only entity that can object is the model itself, the step is unverified no matter how confidently it is reported — and it is precisely the steps in this second column that make $p^n$ bite.
+▸ **The boundary:** a step is verifiable when **something outside the model can say "no."** A compiler, a test runner, a type checker, an HTTP status, a schema parser, a filesystem. If the only entity that can object is the model itself, the step is unverified no matter how confidently it is reported — and it is precisely the steps in this second column that make $`p^n`$ bite.
 
 #### Why prompt injection is a category difference, not a harder bug
 
@@ -947,7 +947,7 @@ Task success rate is necessary but insufficient. Also measure: steps taken, cost
 
 - **A model was taught to decide *for itself* which APIs to call, without any human labelling which ones to use.** **Toolformer** (Meta AI, 2023) generated candidate API calls into its own training text, kept only the calls that measurably reduced the loss on the tokens that followed, and fine-tuned on the survivors. The supervision signal for "was this tool call useful?" was **perplexity** — the tool call earned its place if it made the rest of the sentence easier to predict.
 
-- **Each additional "nine" of per-step reliability multiplies an agent's usable horizon by roughly ten.** At $p=0.95$ an agent reaches coin-flip odds after 14 steps; at $0.99$, after 69; at $0.999$, after 693. **This single relationship explains more about which agentic products ship than any fact about model architecture** — the difference between a demo and a system is usually two decimal places.
+- **Each additional "nine" of per-step reliability multiplies an agent's usable horizon by roughly ten.** At $`p=0.95`$ an agent reaches coin-flip odds after 14 steps; at $`0.99`$, after 69; at $`0.999`$, after 693. **This single relationship explains more about which agentic products ship than any fact about model architecture** — the difference between a demo and a system is usually two decimal places.
 
 ---
 

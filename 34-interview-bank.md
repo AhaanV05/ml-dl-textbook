@@ -3,7 +3,7 @@
 > **How to use this:** cover the answer, attempt it out loud, then compare. An answer you can *recognize* is not an answer you can *give*. Questions marked **★** are the ones that most reliably separate strong candidates; §34.11 collects them.
 > Section references point to where the full treatment lives.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, or $A^\top$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, or $`A^\top`$ are unfamiliar, read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### How to actually use this bank as a beginner
 
@@ -26,25 +26,25 @@ This chapter draws on all thirty-three preceding ones, so it reuses their notati
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $\mathbb{E}[\cdot]$ | "expectation of" | The average, weighted by probability. In code, the mean over a batch. |
-| $\mathcal{L}$ | "script L" | The loss being minimized. |
-| $\theta$ | "theta" | All of the model's parameters, gathered into one big vector. |
+| $`\mathbb{E}[\cdot]`$ | "expectation of" | The average, weighted by probability. In code, the mean over a batch. |
+| $`\mathcal{L}`$ | "script L" | The loss being minimized. |
+| $`\theta`$ | "theta" | All of the model's parameters, gathered into one big vector. |
 | $`\nabla_\theta \mathcal{L}`$ | "grad theta L" | The slope of the loss with respect to every parameter — which way is uphill. |
-| $\lVert \cdot \rVert$ | "norm of" | Length of a vector. $\lVert g \rVert$ is the size of the gradient. |
-| $`\sigma_j`$ | "sigma j" | The $j$-th singular value — how much a matrix stretches one direction. |
-| $\kappa$ | "kappa" | Condition number, $`\sigma_{\max}/\sigma_{\min}`$ — how lopsided the problem is. |
-| $\lambda$ | "lambda" | Regularization strength, or an eigenvalue. Context decides which. |
-| $\eta$ | "eta" | Learning rate — the step size. |
-| $\gamma$ | "gamma" | Discount factor in reinforcement learning; also a per-leaf cost in XGBoost. |
-| $\beta$ | "beta" | A momentum coefficient, or a KL strength (DPO), or an inverse temperature. |
-| $p(x \mid y)$ | "p of x given y" | Probability of $x$ once $y$ is known. The bar is "given," never "divide." |
-| $x \sim p$ | "x drawn from p" | $x$ is a random sample from the distribution $p$. |
-| $\mathcal{O}(\cdot)$ | "big-O" | How cost grows with problem size, constants ignored. |
-| $\odot$ | "elementwise product" | Multiply matching entries and keep them separate. |
-| $\propto$ | "is proportional to" | Equal up to a constant nobody cares about. |
-| $`\bar\alpha_t`$ | "alpha-bar t" | Diffusion schedule: how much of the clean signal survives by step $t$. |
-| $\rho$ | "rho" | A correlation, or the probability ratio $`\pi_\theta/\pi_{\text{old}}`$ in PPO. |
-| $\Phi(\cdot),\ \Phi^{-1}(\cdot)$ | "Phi, Phi inverse" | The Gaussian cumulative distribution and its inverse (the z-score lookup). |
+| $`\lVert \cdot \rVert`$ | "norm of" | Length of a vector. $`\lVert g \rVert`$ is the size of the gradient. |
+| $`\sigma_j`$ | "sigma j" | The $`j`$-th singular value — how much a matrix stretches one direction. |
+| $`\kappa`$ | "kappa" | Condition number, $`\sigma_{\max}/\sigma_{\min}`$ — how lopsided the problem is. |
+| $`\lambda`$ | "lambda" | Regularization strength, or an eigenvalue. Context decides which. |
+| $`\eta`$ | "eta" | Learning rate — the step size. |
+| $`\gamma`$ | "gamma" | Discount factor in reinforcement learning; also a per-leaf cost in XGBoost. |
+| $`\beta`$ | "beta" | A momentum coefficient, or a KL strength (DPO), or an inverse temperature. |
+| $`p(x \mid y)`$ | "p of x given y" | Probability of $`x`$ once $`y`$ is known. The bar is "given," never "divide." |
+| $`x \sim p`$ | "x drawn from p" | $`x`$ is a random sample from the distribution $`p`$. |
+| $`\mathcal{O}(\cdot)`$ | "big-O" | How cost grows with problem size, constants ignored. |
+| $`\odot`$ | "elementwise product" | Multiply matching entries and keep them separate. |
+| $`\propto`$ | "is proportional to" | Equal up to a constant nobody cares about. |
+| $`\bar\alpha_t`$ | "alpha-bar t" | Diffusion schedule: how much of the clean signal survives by step $`t`$. |
+| $`\rho`$ | "rho" | A correlation, or the probability ratio $`\pi_\theta/\pi_{\text{old}}`$ in PPO. |
+| $`\Phi(\cdot),\ \Phi^{-1}(\cdot)`$ | "Phi, Phi inverse" | The Gaussian cumulative distribution and its inverse (the z-score lookup). |
 | ★ / ★★ | — | Difficulty marks: ★ separates candidates, ★★ is a full derivation. |
 
 ---
@@ -52,42 +52,42 @@ This chapter draws on all thirty-three preceding ones, so it reuses their notati
 ## 34.1 Mathematics & statistics
 
 **1. What does the SVD tell you about a matrix?**
-$A=U\Sigma V^\top$ decomposes any linear map into rotate → scale → rotate. Singular values give the scaling in each direction; the number of nonzero ones is the rank; $`\sigma_1`$ is the operator norm; $`\sigma_1/\sigma_r`$ is the condition number. Truncating gives the optimal rank-$k$ approximation in Frobenius and spectral norm (Eckart–Young). (§1.1)
+$`A=U\Sigma V^\top`$ decomposes any linear map into rotate → scale → rotate. Singular values give the scaling in each direction; the number of nonzero ones is the rank; $`\sigma_1`$ is the operator norm; $`\sigma_1/\sigma_r`$ is the condition number. Truncating gives the optimal rank-$`k`$ approximation in Frobenius and spectral norm (Eckart–Young). (§1.1)
 
 **2. Why is the condition number important in optimization?**
-Gradient descent's convergence rate for a quadratic is $\left(\frac{\kappa-1}{\kappa+1}\right)^t$. Large $\kappa$ means the loss surface is a narrow ravine: the step size is bounded by the steepest direction while progress is limited by the flattest. Momentum improves the dependence to $\sqrt\kappa$. (§4.3–4.5)
+Gradient descent's convergence rate for a quadratic is $`\left(\frac{\kappa-1}{\kappa+1}\right)^t`$. Large $`\kappa`$ means the loss surface is a narrow ravine: the step size is bounded by the steepest direction while progress is limited by the flattest. Momentum improves the dependence to $`\sqrt\kappa`$. (§4.3–4.5)
 
 **3. What is the difference between forward-mode and reverse-mode autodiff, and why does DL use reverse?**
 Forward computes a Jacobian-vector product per input dimension; reverse computes a vector-Jacobian product per output dimension. Cost scales with $`\min(n_{\text{in}}, n_{\text{out}})`$ respectively. A loss has one output and millions of parameters, so reverse mode gets all gradients in one backward pass. (§1.3)
 
 **4. Explain KL divergence, and the difference between forward and reverse KL.** ★
-$`\mathrm{KL}(p\|q)=\mathbb{E}_p[\log p/q]`$ — the extra bits from coding $p$ with a codebook built for $q$. Non-negative, asymmetric, not a metric. **Forward** $\mathrm{KL}(p\|q)$ is mode-covering: $q$ must be positive wherever $p$ is, so it smears. **Reverse** $\mathrm{KL}(q\|p)$ is mode-seeking: $q$ can ignore modes but must not put mass where $p$ has none. Maximum likelihood minimizes forward KL (hence blurry VAEs); variational inference minimizes reverse (hence underestimated posterior variance). (§1.4)
+$`\mathrm{KL}(p\|q)=\mathbb{E}_p[\log p/q]`$ — the extra bits from coding $`p`$ with a codebook built for $`q`$. Non-negative, asymmetric, not a metric. **Forward** $`\mathrm{KL}(p\|q)`$ is mode-covering: $`q`$ must be positive wherever $`p`$ is, so it smears. **Reverse** $`\mathrm{KL}(q\|p)`$ is mode-seeking: $`q`$ can ignore modes but must not put mass where $`p`$ has none. Maximum likelihood minimizes forward KL (hence blurry VAEs); variational inference minimizes reverse (hence underestimated posterior variance). (§1.4)
 
-> **Where this came from.** **Solomon Kullback and Richard Leibler** published *On Information and Sufficiency* in 1951. Both were cryptanalysts — they worked for the U.S. Army's Signal Intelligence Service and later the National Security Agency, and the quantity was built to answer an operational question: given an intercepted message, how much evidence does it provide for one hypothesized cipher over another? A detail worth knowing, because it is exactly what this interview question is about: in their own terminology the word **"divergence" referred to the *symmetric* combination** $\mathrm{KL}(p\|q)+\mathrm{KL}(q\|p)$, while the one-directional quantity we now universally call "the KL divergence" was the *directed* divergence, or the mean information for discrimination. The asymmetry was never an oversight to be apologized for — it was the whole point, because "how surprised am I by your messages" and "how surprised are you by mine" are  different questions. The measure that now trains every large language model on earth was invented for code-breaking.
+> **Where this came from.** **Solomon Kullback and Richard Leibler** published *On Information and Sufficiency* in 1951. Both were cryptanalysts — they worked for the U.S. Army's Signal Intelligence Service and later the National Security Agency, and the quantity was built to answer an operational question: given an intercepted message, how much evidence does it provide for one hypothesized cipher over another? A detail worth knowing, because it is exactly what this interview question is about: in their own terminology the word **"divergence" referred to the *symmetric* combination** $`\mathrm{KL}(p\|q)+\mathrm{KL}(q\|p)`$, while the one-directional quantity we now universally call "the KL divergence" was the *directed* divergence, or the mean information for discrimination. The asymmetry was never an oversight to be apologized for — it was the whole point, because "how surprised am I by your messages" and "how surprised are you by mine" are  different questions. The measure that now trains every large language model on earth was invented for code-breaking.
 
 **5. Derive the ELBO.**
-$`\log p(x) = \log\int p(x,z)dz = \log\mathbb{E}_q\left[\frac{p(x,z)}{q(z)}\right]\ge\mathbb{E}_q\left[\log\frac{p(x,z)}{q(z)}\right]`$ by Jensen. Expanding, the gap is exactly $\mathrm{KL}(q(z)\|p(z|x))$. (§1.4)
+$`\log p(x) = \log\int p(x,z)dz = \log\mathbb{E}_q\left[\frac{p(x,z)}{q(z)}\right]\ge\mathbb{E}_q\left[\log\frac{p(x,z)}{q(z)}\right]`$ by Jensen. Expanding, the gap is exactly $`\mathrm{KL}(q(z)\|p(z|x))`$. (§1.4)
 
 **6. What is the standard error of the mean, and why does it matter?**
-$\sigma/\sqrt n$. Halving error bars needs $4\times$ the data. It governs whether any measured improvement is real. (§1.3, §3.6)
+$`\sigma/\sqrt n`$. Halving error bars needs $`4\times`$ the data. It governs whether any measured improvement is real. (§1.3, §3.6)
 
 **7. Central Limit Theorem — statement and a caveat.**
-The standardized sample mean of i.i.d. finite-variance variables converges to $\mathcal{N}(0,1)$. Caveats: requires finite variance (fails for Cauchy), convergence is slow in the tails, and it says nothing about the maximum — which is why record statistics (§3.6) need a different tool.
+The standardized sample mean of i.i.d. finite-variance variables converges to $`\mathcal{N}(0,1)`$. Caveats: requires finite variance (fails for Cauchy), convergence is slow in the tails, and it says nothing about the maximum — which is why record statistics (§3.6) need a different tool.
 
-> **Common misconception.** *"With enough samples, my data becomes Gaussian."* The Central Limit Theorem says nothing whatever about your data. It says the **sample mean** — one number computed from many — has a sampling distribution that approaches a bell curve. Ten thousand income figures are exactly as skewed at $n=10{,}000$ as a hundred were at $n=100$; it is their *average* that behaves nicely. The belief is tempting because the two claims sound almost identical, and because "normality" gets invoked loosely as a background regularity condition in half the statistics anyone remembers. The practical bite is worth carrying into a room: a comparison of two means on wildly skewed data is usually fine, because it is a statement about means — while a model that assumes Gaussian *residuals* is not rescued at all by collecting more rows.
+> **Common misconception.** *"With enough samples, my data becomes Gaussian."* The Central Limit Theorem says nothing whatever about your data. It says the **sample mean** — one number computed from many — has a sampling distribution that approaches a bell curve. Ten thousand income figures are exactly as skewed at $`n=10{,}000`$ as a hundred were at $`n=100`$; it is their *average* that behaves nicely. The belief is tempting because the two claims sound almost identical, and because "normality" gets invoked loosely as a background regularity condition in half the statistics anyone remembers. The practical bite is worth carrying into a room: a comparison of two means on wildly skewed data is usually fine, because it is a statement about means — while a model that assumes Gaussian *residuals* is not rescued at all by collecting more rows.
 
 **8. Bayes' theorem, and what a prior does.**
-$p(\theta|x)\propto p(x|\theta)p(\theta)$. The prior is a regularizer: $`\ell_2`$ is a Gaussian prior, $`\ell_1`$ a Laplace prior, and MAP estimation is penalized maximum likelihood. (§7.5)
+$`p(\theta|x)\propto p(x|\theta)p(\theta)`$. The prior is a regularizer: $`\ell_2`$ is a Gaussian prior, $`\ell_1`$ a Laplace prior, and MAP estimation is penalized maximum likelihood. (§7.5)
 
 > **Where this came from.** **Thomas Bayes** was an English Presbyterian minister who never published the theorem. It appeared in 1763, two years after his death, when **Richard Price** found it among his papers and sent it to the Royal Society. **Pierre-Simon Laplace** arrived at the same idea independently around 1774 and did far more with it than Bayes had — for most of the nineteenth century the method was known not as Bayes' theorem but as *inverse probability*, and Laplace's name was attached to it more often than Bayes'. It then spent much of the twentieth century in disrepute, attacked by Fisher and others for the apparent arbitrariness of choosing a prior. What kept it alive was that it kept working on problems where nothing else did: Alan Turing's team used sequential Bayesian evidence-weighing against Enigma at Bletchley Park (the unit they used, the *ban*, was named after the town of Banbury where the punched sheets were printed), and in 1968 the U.S. Navy used Bayesian search theory to locate the wreck of the submarine USS *Scorpion* in the open Atlantic. The rehabilitation you see today is largely a consequence of cheap computation making the integrals tractable.
 
 **9. What is mutual information and where does it appear in DL?**
-$I(X;Y)=H(X)-H(X|Y)=\mathrm{KL}(p(x,y)\|p(x)p(y))$. Appears in InfoNCE bounds (§25.3), the information bottleneck, feature selection, and the epistemic-uncertainty decomposition (§33.3).
+$`I(X;Y)=H(X)-H(X|Y)=\mathrm{KL}(p(x,y)\|p(x)p(y))`$. Appears in InfoNCE bounds (§25.3), the information bottleneck, feature selection, and the epistemic-uncertainty decomposition (§33.3).
 
 **10. Explain the Johnson–Lindenstrauss lemma and one place it matters.**
-$n$ points can be embedded into $O(\log n/\epsilon^2)$ dimensions preserving pairwise distances to $1\pm\epsilon$. Underpins random projection, LSH-based deduplication, and — conceptually — superposition, since it implies exponentially many nearly-orthogonal directions exist. (§1.2, §32.2)
+$`n`$ points can be embedded into $`O(\log n/\epsilon^2)`$ dimensions preserving pairwise distances to $`1\pm\epsilon`$. Underpins random projection, LSH-based deduplication, and — conceptually — superposition, since it implies exponentially many nearly-orthogonal directions exist. (§1.2, §32.2)
 
-> **Common misconception.** *"Maximizing the evidence lower bound (ELBO) maximizes the log-likelihood."* It maximizes a *floor* underneath the log-likelihood, and the distance from floor to ceiling is exactly $\mathrm{KL}(q(z)\,\Vert\,p(z\mid x))$ — a quantity that moves during training. So the bound can rise while the thing it bounds falls, provided the approximation gap closed faster than the model degraded. The belief is tempting because in practice the two usually move together, which is precisely what makes the exceptions hard to spot. The habit to take away: when a paper reports "ELBO" and discusses it as though it were the likelihood, nobody has told you how loose the bound is — and a loose bound is an objective that has quietly drifted from the one you wanted.
+> **Common misconception.** *"Maximizing the evidence lower bound (ELBO) maximizes the log-likelihood."* It maximizes a *floor* underneath the log-likelihood, and the distance from floor to ceiling is exactly $`\mathrm{KL}(q(z)\,\Vert\,p(z\mid x))`$ — a quantity that moves during training. So the bound can rise while the thing it bounds falls, provided the approximation gap closed faster than the model degraded. The belief is tempting because in practice the two usually move together, which is precisely what makes the exceptions hard to spot. The habit to take away: when a paper reports "ELBO" and discusses it as though it were the likelihood, nobody has told you how loose the bound is — and a loose bound is an objective that has quietly drifted from the one you wanted.
 
 ### Saying it in plain English — mathematics and statistics
 
@@ -96,7 +96,7 @@ $n$ points can be embedded into $O(\log n/\epsilon^2)$ dimensions preserving pai
 **Q1 — What the SVD tells you about a matrix.**
 Every matrix, however ugly, does the same three things in sequence: it rotates the space, stretches it along a few chosen directions, then rotates it again. The SVD is the receipt for that. The stretch factors are the singular values, and almost everything you want to know is a fact about them. A stretch factor of zero means the matrix flattens that direction out of existence — count the nonzero ones and you have the rank. The largest stretch is the most the matrix can ever amplify anything, which is what "operator norm" means. The ratio of largest to smallest tells you how lopsided the transformation is, which is the condition number and which governs how badly numerical algorithms will behave.
 
-And the part that earns the question a place in interviews: keep only the biggest few stretches and discard the rest, and you get the **best possible** low-rank imitation of the matrix — provably the best, not merely a decent heuristic. That single guarantee is why a seventy-billion-parameter model can be adapted with a rank-8 patch, why PCA is computed the way it is, and why "just take the top-$k$ components" is a defensible thing to do rather than a shrug.
+And the part that earns the question a place in interviews: keep only the biggest few stretches and discard the rest, and you get the **best possible** low-rank imitation of the matrix — provably the best, not merely a decent heuristic. That single guarantee is why a seventy-billion-parameter model can be adapted with a rank-8 patch, why PCA is computed the way it is, and why "just take the top-$`k`$ components" is a defensible thing to do rather than a shrug.
 
 **Q2 — Why the condition number matters in optimization.**
 Picture a valley shaped like a drainage ditch: a hundred metres long, half a metre wide. You want the bottom. The steep side walls force you to take small steps — a big step bounces you off one wall and into the other. But those same small steps are what must carry you down the long, nearly flat length of the ditch. Small steps, long way to go, and the two constraints are set by *different* directions.
@@ -140,29 +140,29 @@ Where it shows up: random projections and sketching, hashing-based near-duplicat
 ## 34.2 Learning theory & evaluation
 
 **11. Derive the bias–variance decomposition.**
-$\mathbb{E}[(y-\hat f)^2] = \big(\mathbb{E}[\hat f]-f\big)^2 + \mathbb{E}\big[(\hat f-\mathbb{E}[\hat f])^2\big] + \sigma^2$. Add and subtract $\mathbb{E}[\hat f]$; the cross term vanishes. (§2.2)
+$`\mathbb{E}[(y-\hat f)^2] = \big(\mathbb{E}[\hat f]-f\big)^2 + \mathbb{E}\big[(\hat f-\mathbb{E}[\hat f])^2\big] + \sigma^2`$. Add and subtract $`\mathbb{E}[\hat f]`$; the cross term vanishes. (§2.2)
 
 **12. Why are VC-dimension bounds useless for deep networks?** ★
-A network with $p$ parameters at 32-bit precision gives $\log|\mathcal{H}|\le22p$; for $p=10^7$, $n=10^5$ the bound exceeds 1 on a loss bounded by 1. It's vacuous. Deeper reason: uniform convergence bounds what the class *could* do; deep nets can fit random labels (Zhang et al.), so any capacity-only bound must be vacuous. The explanation must come from the algorithm's implicit bias. (§2.4, §2.7, §31.2)
+A network with $`p`$ parameters at 32-bit precision gives $`\log|\mathcal{H}|\le22p`$; for $`p=10^7`$, $`n=10^5`$ the bound exceeds 1 on a loss bounded by 1. It's vacuous. Deeper reason: uniform convergence bounds what the class *could* do; deep nets can fit random labels (Zhang et al.), so any capacity-only bound must be vacuous. The explanation must come from the algorithm's implicit bias. (§2.4, §2.7, §31.2)
 
 **13. Explain the bootstrap. When does it fail?**
-Resample with replacement $B$ times, recompute the statistic, use the spread as the sampling distribution. Fails for extremes (max/min — the bootstrap distribution is atomic), for dependent data without block resampling, and for heavy tails with infinite variance. (§3.1)
+Resample with replacement $`B`$ times, recompute the statistic, use the spread as the sampling distribution. Fails for extremes (max/min — the bootstrap distribution is atomic), for dependent data without block resampling, and for heavy tails with infinite variance. (§3.1)
 
 > **Where this came from.** **Bradley Efron** introduced the bootstrap at Stanford in 1979, and named it after the physically impossible feat of lifting yourself by your own bootstraps — the image comes from the Baron Munchausen tales, where the Baron hauls himself out of a swamp by his own hair or bootstraps depending on the telling. The name is a joke about the apparent absurdity of the method: you are using a single sample to estimate how much a *different* sample would have differed, with no new data and no distributional assumptions. What made it more than a curiosity was not new mathematics but cheap computing — resampling a dataset ten thousand times is trivial now and was a  expense in 1979, which is why a technique this simple had to wait until the era of the mainframe to be worth writing down.
 
-**14. Why does $k$-fold CV variance not shrink like $1/k$?**
-The folds share training data, so the fold estimates are correlated: $\mathrm{Var}=\frac{\sigma^2}{k}+\frac{k-1}{k}\rho\sigma^2$. The correlation term doesn't vanish. (§3.3)
+**14. Why does $`k`$-fold CV variance not shrink like $`1/k`$?**
+The folds share training data, so the fold estimates are correlated: $`\mathrm{Var}=\frac{\sigma^2}{k}+\frac{k-1}{k}\rho\sigma^2`$. The correlation term doesn't vanish. (§3.3)
 
 **15. What is nested cross-validation and why do you need it?**
 Outer loop estimates performance; inner loop selects hyperparameters. Tuning and reporting on the same CV gives optimistically biased numbers, with bias growing in the number of configurations tried. (§3.3)
 
-> **Common misconception.** *"Cross-validation gives an unbiased estimate of my model's performance."* Two separate problems, and interviewers probe both. First, $k$-fold estimates the performance of a model trained on $n(1-1/k)$ examples, not on all $n$ — pessimistic, and the gap is material when data is scarce. Second and far worse: the moment you use a cross-validation score to *choose* something — a hyperparameter, a feature set, an architecture — that score has stopped being an estimate and become a selection criterion, and selection criteria are optimistic by construction. The belief is tempting because the *first* number you compute  is close to unbiased. It is the fortieth one, the one you kept because it was the best, that is not. **Nested cross-validation exists to keep the choosing and the reporting in different loops**, and the cost of skipping it grows with how many configurations you tried, not with how big the dataset is.
+> **Common misconception.** *"Cross-validation gives an unbiased estimate of my model's performance."* Two separate problems, and interviewers probe both. First, $`k`$-fold estimates the performance of a model trained on $`n(1-1/k)`$ examples, not on all $`n`$ — pessimistic, and the gap is material when data is scarce. Second and far worse: the moment you use a cross-validation score to *choose* something — a hyperparameter, a feature set, an architecture — that score has stopped being an estimate and become a selection criterion, and selection criteria are optimistic by construction. The belief is tempting because the *first* number you compute  is close to unbiased. It is the fortieth one, the one you kept because it was the best, that is not. **Nested cross-validation exists to keep the choosing and the reporting in different loops**, and the cost of skipping it grows with how many configurations you tried, not with how big the dataset is.
 
 **16. You track the minimum of a noisy metric across 40 epochs. Why is the reported best optimistically biased?** ★
-The minimum of $n$ noisy draws is below the true mean by roughly $\sigma\Phi^{-1}\!\big(1-\frac{1}{n+1}\big)$ — about $2\sigma$ for $n\approx43$. You are reporting a favourable noise draw, not a better model. Fix: re-evaluate the selected checkpoint on a fresh, larger set. (§3.6)
+The minimum of $`n`$ noisy draws is below the true mean by roughly $`\sigma\Phi^{-1}\!\big(1-\frac{1}{n+1}\big)`$ — about $`2\sigma`$ for $`n\approx43`$. You are reporting a favourable noise draw, not a better model. Fix: re-evaluate the selected checkpoint on a fresh, larger set. (§3.6)
 
 **17. A model shows no new best for 13 epochs, then two records back to back. What can you conclude?** ★
-Under a flat-performance null, $`P(\text{no record in epochs }23..35)=\prod_{k=23}^{35}(1-1/k)=22/35=0.63`$ — the dry spell is the *most likely* outcome and carries no information. Back-to-back records at 36 and 37 have probability $\frac{1}{36\cdot37}=7.5\times10^{-4}$ — that's the evidence. **Read the cluster, not the gap.** (§3.6)
+Under a flat-performance null, $`P(\text{no record in epochs }23..35)=\prod_{k=23}^{35}(1-1/k)=22/35=0.63`$ — the dry spell is the *most likely* outcome and carries no information. Back-to-back records at 36 and 37 have probability $`\frac{1}{36\cdot37}=7.5\times10^{-4}`$ — that's the evidence. **Read the cluster, not the gap.** (§3.6)
 
 **18. Precision, recall, F1, ROC-AUC, PR-AUC — when do you use which?**
 Precision = TP/(TP+FP); recall = TP/(TP+FN). ROC-AUC is invariant to class balance, which is a *problem* when positives are rare — it looks good while precision is terrible. PR-AUC is sensitive to the positive rate and is the right choice under heavy imbalance. F1 is their harmonic mean; use $`F_\beta`$ when the costs differ. (§22.6)
@@ -173,7 +173,7 @@ Precision = TP/(TP+FP); recall = TP/(TP+FN). ROC-AUC is invariant to class balan
 Shuffle labels many times, recompute the statistic, and locate the observed value in that null distribution. Assumption-free, exact in principle, and the right tool when you don't trust a parametric null. (§3.4)
 
 **20. What is Monte Carlo standard error and why report it?**
-The uncertainty from your own sampling procedure, $\sigma/\sqrt{B}$. Without it, a "0.3% improvement" from 100 samples is indistinguishable from noise. (§3.5)
+The uncertainty from your own sampling procedure, $`\sigma/\sqrt{B}`$. Without it, a "0.3% improvement" from 100 samples is indistinguishable from noise. (§3.5)
 
 > **Common misconception.** *"Early stopping doesn't train on the validation set, so validation loss is still a clean estimate."* Early stopping fits exactly one parameter — the number of steps — on the validation set. That is fitting, and it contaminates the number in the ordinary way. With forty checkpoints inspected, the reported minimum sits roughly two standard errors below the truth (Q16), and the contamination gets *worse* the more diligently you evaluate. The belief is tempting because one integer feels far too small a thing to bias anything; the arithmetic disagrees, because the bias scales with **how many times you looked**, not with how many parameters you fitted. The same argument indicts learning-rate selection by "best validation loss," checkpoint averaging chosen post hoc, and every leaderboard where the same held-out set has been queried a thousand times.
 
@@ -219,39 +219,39 @@ PR-AUC asks the question the fraud team lives with: of the cases I flagged, how 
 ## 34.3 Optimization
 
 **21. Adam vs SGD — what actually differs, and when do you use each?** ★
-Adam keeps per-parameter first and second moment estimates and normalizes the step by $\sqrt{\hat v}$, making it invariant to per-parameter gradient scale. SGD+momentum generalizes better on vision (its implicit bias is $`\ell_2`$/max-margin, §31.2); Adam is essential for transformers, where gradient scales vary enormously across layers and embedding rows are sparsely updated. (§5.3, §5.6)
+Adam keeps per-parameter first and second moment estimates and normalizes the step by $`\sqrt{\hat v}`$, making it invariant to per-parameter gradient scale. SGD+momentum generalizes better on vision (its implicit bias is $`\ell_2`$/max-margin, §31.2); Adam is essential for transformers, where gradient scales vary enormously across layers and embedding rows are sparsely updated. (§5.3, §5.6)
 
 > **Where this came from.** Stochastic gradient descent is older than machine learning: **Herbert Robbins and Sutton Monro** published *A Stochastic Approximation Method* in 1951, solving a problem in sequential experimentation — how to find the input at which an unknown, noisily-measured function hits a target value, updating your guess after each single noisy observation rather than waiting for a full experiment. Their convergence conditions on the step size (it must shrink, but not too fast) are the ancestors of every learning-rate schedule in this book. Momentum arrived in 1964 from **Boris Polyak**, who called it the *heavy ball* method and meant the analogy literally: give the descending point mass and it stops responding to every local wiggle of the slope. **Yurii Nesterov's** accelerated variant followed in 1983 with a provably optimal rate for smooth convex problems. None of this was about neural networks; the machinery was sitting complete on the shelf for decades before there was anything worth pointing it at.
 
 **22. Derive Adam's bias correction.**
-$`m_t=(1-\beta_1)\sum_{i}\beta_1^{t-i}g_i`$. With $`m_0=0`$ and stationary $g$, $`\mathbb{E}[m_t]=(1-\beta_1^t)\mathbb{E}[g]`$. Divide by $`(1-\beta_1^t)`$. Without it, early steps are biased toward zero — and for $`\beta_2=0.999`$ the $v$ bias persists for ~1000 steps, which would make early steps enormous. (§5.3)
+$`m_t=(1-\beta_1)\sum_{i}\beta_1^{t-i}g_i`$. With $`m_0=0`$ and stationary $`g`$, $`\mathbb{E}[m_t]=(1-\beta_1^t)\mathbb{E}[g]`$. Divide by $`(1-\beta_1^t)`$. Without it, early steps are biased toward zero — and for $`\beta_2=0.999`$ the $`v`$ bias persists for ~1000 steps, which would make early steps enormous. (§5.3)
 
 **23. What's the difference between Adam+L2 and AdamW?** ★
-L2 adds $\lambda\theta$ to the gradient, which then gets divided by $\sqrt{\hat v}$ — so parameters with large historical gradients get *less* decay. AdamW applies $\theta\leftarrow\theta-\eta\lambda\theta$ directly, decoupled from the adaptive scaling. That restores the intended uniform shrinkage, and it's why AdamW is standard. (§5.2)
+L2 adds $`\lambda\theta`$ to the gradient, which then gets divided by $`\sqrt{\hat v}`$ — so parameters with large historical gradients get *less* decay. AdamW applies $`\theta\leftarrow\theta-\eta\lambda\theta`$ directly, decoupled from the adaptive scaling. That restores the intended uniform shrinkage, and it's why AdamW is standard. (§5.2)
 
 > **Where this came from.** Adam was published by **Diederik Kingma and Jimmy Ba** in 2014, both PhD students at the time; the name is not a person's but an abbreviation of *adaptive moment estimation*. Two later corrections are worth knowing, because they show how an algorithm can become universal before it is understood. First, the paper's convergence proof was **wrong**: Reddi, Kale and Kumar exhibited a simple convex problem on which Adam provably fails to converge, published it in 2018, and won a best-paper award for it. By then Adam had already been the default optimizer of the field for three years. Second, **Ilya Loshchilov and Frank Hutter** pointed out in 2017 that essentially every framework's `Adam(weight_decay=...)` was not implementing weight decay at all but $`\ell_2`$ regularization, which is a different thing under an adaptive optimizer — the fix they proposed is AdamW. The pattern to take away: the most-used optimizer in history spent years shipping with a broken proof and a misimplemented regularizer, and worked anyway. Empirical success and theoretical understanding are much more loosely coupled in this field than the papers imply.
 
 **24. Why do transformers need learning-rate warmup?**
-Early gradients are unrepresentative, and Adam's $\hat v$ estimate is high-variance in the first ~$`1/(1-\beta_2)`$ steps, so the effective step can be enormous. Post-LN transformers also have $O(\sqrt L)$ gradient amplification at initialization. Warmup lets the second-moment estimate stabilize. RAdam derives the correction analytically. (§5.4)
+Early gradients are unrepresentative, and Adam's $`\hat v`$ estimate is high-variance in the first ~$`1/(1-\beta_2)`$ steps, so the effective step can be enormous. Post-LN transformers also have $`O(\sqrt L)`$ gradient amplification at initialization. Warmup lets the second-moment estimate stabilize. RAdam derives the correction analytically. (§5.4)
 
 **25. What is the Edge of Stability?**
-GD on neural networks doesn't stay in the regime $`\eta<2/\lambda_{\max}`$; instead $`\lambda_{\max}`$ *rises* until it hits $2/\eta$ and then hovers there, with the loss decreasing non-monotonically. So sharpness is determined by the learning rate, not fixed by the problem. (§5.5)
+GD on neural networks doesn't stay in the regime $`\eta<2/\lambda_{\max}`$; instead $`\lambda_{\max}`$ *rises* until it hits $`2/\eta`$ and then hovers there, with the loss decreasing non-monotonically. So sharpness is determined by the learning rate, not fixed by the problem. (§5.5)
 
 **26. Explain gradient clipping and which variant to use.**
-Rescale $g\leftarrow g\cdot\min(1, c/\|g\|)$ (norm clipping, preserves direction) rather than clipping elementwise (which changes direction). Essential for RNNs and large transformers where rare batches produce huge gradients. (§4.8)
+Rescale $`g\leftarrow g\cdot\min(1, c/\|g\|)`$ (norm clipping, preserves direction) rather than clipping elementwise (which changes direction). Essential for RNNs and large transformers where rare batches produce huge gradients. (§4.8)
 
 > **Common misconception.** *"Clipping is a safety net — it doesn't change what you're optimizing."* It does. A clipped stochastic gradient is a **biased** estimate of the true gradient: on every step where the clip engages you follow a rescaled direction, and averaged over batches that rescaled direction is not the gradient of your loss. In practice the bias is small and the variance reduction is enormous, so the trade is almost always worth making — but if your threshold is active on most steps you are no longer running the algorithm you believe you are running, and the symptom is deceptive: a beautifully smooth loss curve that quietly refuses to improve. Instrument the fraction of steps that clip. A few percent is a safety net. Eighty percent is a learning rate you set by accident.
 
 **27. How should learning rate scale with batch size?**
-Linear scaling ($\eta\propto B$) for SGD, from the gradient-noise argument; square-root scaling ($\eta\propto\sqrt B$) is safer for Adam. Both need warmup at large $B$. (§4.6)
+Linear scaling ($`\eta\propto B`$) for SGD, from the gradient-noise argument; square-root scaling ($`\eta\propto\sqrt B`$) is safer for Adam. Both need warmup at large $`B`$. (§4.6)
 
 **28. Why does SGD generalize better than full-batch GD?**
-Gradient noise acts as a temperature $\propto\eta/B$ in an SDE whose stationary distribution weights basins by *volume*. Wide (flat) basins have exponentially more volume in high dimensions, and flat minima generalize better. Predicts — correctly — that large batch at fixed LR generalizes worse. (§4.6, §31.4)
+Gradient noise acts as a temperature $`\propto\eta/B`$ in an SDE whose stationary distribution weights basins by *volume*. Wide (flat) basins have exponentially more volume in high dimensions, and flat minima generalize better. Predicts — correctly — that large batch at fixed LR generalizes worse. (§4.6, §31.4)
 
 > **Common misconception.** *"Adam reaches a lower training loss faster, so it is the better optimizer."* Speed of descent on the training objective and quality of the final solution are different axes, and this is one of the places an interviewer will check whether you have separated them. Adam's coordinate-wise normalization changes the algorithm's **implicit bias** — which solution it drifts toward when many solutions fit the data equally well — and that bias is measurably worse on vision benchmarks than plain stochastic gradient descent's max-margin drift (Q147, §31.2). The belief is tempting because the training curve is the thing you stare at all day and the test number arrives at the end, once the decision is already made. ▸ **A faster descent into a worse basin is still a faster descent.** The correct framing is that Adam buys robustness to wildly unequal gradient scales, which transformers need and convolutional networks largely do not.
 
 **29. What is natural gradient and how does K-FAC approximate it?**
-Natural gradient is $F^{-1}g$ with $F$ the Fisher information — steepest descent in distribution space rather than parameter space, hence invariant to reparameterization. K-FAC approximates $F$ per layer as a Kronecker product $A\otimes G$ of input and gradient covariances, making the inverse cheap. (§4.7)
+Natural gradient is $`F^{-1}g`$ with $`F`$ the Fisher information — steepest descent in distribution space rather than parameter space, hence invariant to reparameterization. K-FAC approximates $`F`$ per layer as a Kronecker product $`A\otimes G`$ of input and gradient covariances, making the inverse cheap. (§4.7)
 
 **30. What's the point of SAM?**
 Minimize $`\max_{\|\epsilon\|\le\rho}\mathcal{L}(\theta+\epsilon)`$ — the worst loss in a neighbourhood, so the solution is flat. Implemented as two forward-backward passes: ascend to the worst nearby point, take the gradient there, apply it at the original point. ~2× cost, ~1% ImageNet gain. (§5.7)
@@ -298,25 +298,25 @@ Ordinary gradient descent measures distance in *parameter* space: "move each num
 
 Natural gradient replaces the ruler. It measures step size by how much the model's predicted *distribution* moved, not by how much the numbers moved. Two things follow immediately: the algorithm behaves identically no matter how you happened to parameterize the model — rescale a layer and it compensates automatically — and it takes confident strides in directions where the function is insensitive while stepping carefully where it is twitchy.
 
-The catch is cost. The correcting matrix has one row and column per parameter, so for a billion parameters it has $10^{18}$ entries, and you need to invert it. K-FAC's trick is to assume that within a layer, the matrix factors into "something about that layer's inputs" times "something about the gradients arriving at its outputs" — which amounts to claiming those two are statistically independent. They are not, exactly. But the assumption converts one impossible inverse into two small ones, and the approximation is good enough that the resulting steps are  better than plain ones.
+The catch is cost. The correcting matrix has one row and column per parameter, so for a billion parameters it has $`10^{18}`$ entries, and you need to invert it. K-FAC's trick is to assume that within a layer, the matrix factors into "something about that layer's inputs" times "something about the gradients arriving at its outputs" — which amounts to claiming those two are statistically independent. They are not, exactly. But the assumption converts one impossible inverse into two small ones, and the approximation is good enough that the resulting steps are  better than plain ones.
 
 ---
 
 ## 34.4 Neural networks & training
 
 **31. Derive backpropagation for one layer.**
-With $`z=Wa_{\text{prev}}+b`$, $a=\sigma(z)$, $\delta=\frac{\partial\mathcal{L}}{\partial z}$: $\delta^{(l)}=\big(W^{(l+1)\top}\delta^{(l+1)}\big)\odot\sigma'(z^{(l)})$, $\frac{\partial\mathcal{L}}{\partial W^{(l)}}=\delta^{(l)}a^{(l-1)\top}$, $\frac{\partial\mathcal{L}}{\partial b^{(l)}}=\delta^{(l)}$. (§6.3)
+With $`z=Wa_{\text{prev}}+b`$, $`a=\sigma(z)`$, $`\delta=\frac{\partial\mathcal{L}}{\partial z}`$: $`\delta^{(l)}=\big(W^{(l+1)\top}\delta^{(l+1)}\big)\odot\sigma'(z^{(l)})`$, $`\frac{\partial\mathcal{L}}{\partial W^{(l)}}=\delta^{(l)}a^{(l-1)\top}`$, $`\frac{\partial\mathcal{L}}{\partial b^{(l)}}=\delta^{(l)}`$. (§6.3)
 
 **32. Derive He initialization.** ★
-For $z=Wa$ with $n$ inputs, $\mathrm{Var}(z)=n\,\mathrm{Var}(W)\mathrm{Var}(a)$. ReLU zeroes half the units, halving the variance: $`\mathrm{Var}(a)=\frac12\mathrm{Var}(z_{\text{prev}})`$. To keep variance constant, $n\,\mathrm{Var}(W)\cdot\frac12=1$, so $\mathrm{Var}(W)=2/n$. Xavier uses $`2/(n_{\text{in}}+n_{\text{out}})`$ for symmetric activations. (§6.4)
+For $`z=Wa`$ with $`n`$ inputs, $`\mathrm{Var}(z)=n\,\mathrm{Var}(W)\mathrm{Var}(a)`$. ReLU zeroes half the units, halving the variance: $`\mathrm{Var}(a)=\frac12\mathrm{Var}(z_{\text{prev}})`$. To keep variance constant, $`n\,\mathrm{Var}(W)\cdot\frac12=1`$, so $`\mathrm{Var}(W)=2/n`$. Xavier uses $`2/(n_{\text{in}}+n_{\text{out}})`$ for symmetric activations. (§6.4)
 
 > **Where this came from.** These two initializers are named using opposite halves of a person's name, which trips up nearly everyone. **Xavier initialization** comes from the 2010 paper by **Xavier Glorot** and Yoshua Bengio — "Xavier" is a first name, and the scheme is also, more consistently, called Glorot initialization. **He initialization** comes from the 2015 paper by **Kaiming He** and colleagues at Microsoft Research Asia — "He" is a surname. The 2015 paper's actual subject was a new activation function (PReLU); the initialization was a supporting result, and it is the part that survived. The same group published ResNet later that same year, which means one team produced both of the ingredients — a variance-preserving initialization and an identity shortcut — that between them made very deep networks trainable at all. Before 2010 the standard advice was to draw weights from a fixed small uniform range regardless of layer width, which quietly guaranteed that wide layers would shrink the signal and narrow ones would amplify it.
 
 **33. Why does the vanishing gradient problem occur, quantitatively?**
-The gradient through $L$ layers multiplies $L$ Jacobians. With sigmoid, $\max\sigma'=0.25$, so 10 layers gives $\le0.25^{10}\approx10^{-6}$. ReLU (derivative 1 on the positive side) and residual connections (an additive identity path) fix it. (§6.4, §8.2)
+The gradient through $`L`$ layers multiplies $`L`$ Jacobians. With sigmoid, $`\max\sigma'=0.25`$, so 10 layers gives $`\le0.25^{10}\approx10^{-6}`$. ReLU (derivative 1 on the positive side) and residual connections (an additive identity path) fix it. (§6.4, §8.2)
 
 **34. Why do ResNets work? Give three explanations.**
-(a) Gradient highway — $`\frac{\partial x_L}{\partial x_\ell}=1+\sum\frac{\partial F}{\partial x_\ell}`$, so the leading 1 guarantees flow. (b) Ensemble of $2^L$ shallow paths — deleting a block barely hurts. (c) Loss-landscape smoothing. The first is strongest. Note the original problem was *degradation* (higher training error at depth), i.e. optimization, not overfitting. (§8.2)
+(a) Gradient highway — $`\frac{\partial x_L}{\partial x_\ell}=1+\sum\frac{\partial F}{\partial x_\ell}`$, so the leading 1 guarantees flow. (b) Ensemble of $`2^L`$ shallow paths — deleting a block barely hurts. (c) Loss-landscape smoothing. The first is strongest. Note the original problem was *degradation* (higher training error at depth), i.e. optimization, not overfitting. (§8.2)
 
 **35. BatchNorm vs LayerNorm — why do transformers use LN?** ★
 BN normalizes over the batch per channel, so it creates a train/eval discrepancy, breaks with small batches, leaks information across samples, and interacts badly with variable sequence lengths and padding. LN normalizes per sample over features — batch-independent, identical in train and eval, length-agnostic. (§7.2–7.3)
@@ -324,26 +324,26 @@ BN normalizes over the batch per channel, so it creates a train/eval discrepancy
 **36. What is BatchNorm actually doing, if not fixing internal covariate shift?**
 Smoothing the loss landscape (reducing the Lipschitz constants of the loss and its gradient), plus making the layer scale-invariant so the weight norm becomes an inverse effective learning rate. Santurkar et al. disproved the covariate-shift story directly. (§7.1, §7.4)
 
-> **Common misconception.** *"Normalization makes the activations Gaussian."* It fixes two numbers — the mean and the variance — and touches nothing else. A bimodal distribution normalizes to a bimodal distribution with mean 0 and variance 1. A heavy-tailed one normalizes to a heavy-tailed one. And the very next operation is a learned affine, $\gamma x + \beta$, whose explicit purpose is to let the network **undo** the standardization if that serves it. The belief is tempting because "normalize" and "normal" share a root, and because every textbook figure of the operation draws a bell curve going in and a bell curve coming out. What normalization actually buys is a *scale guarantee* — and notice that every  benefit in the answer above follows from scale rather than shape: the loss landscape smooths because gradient magnitudes stop swinging, the layer becomes scale-invariant because the division cancels any rescaling of $W$, and the weight norm turns into an inverse effective learning rate for the same reason.
+> **Common misconception.** *"Normalization makes the activations Gaussian."* It fixes two numbers — the mean and the variance — and touches nothing else. A bimodal distribution normalizes to a bimodal distribution with mean 0 and variance 1. A heavy-tailed one normalizes to a heavy-tailed one. And the very next operation is a learned affine, $`\gamma x + \beta`$, whose explicit purpose is to let the network **undo** the standardization if that serves it. The belief is tempting because "normalize" and "normal" share a root, and because every textbook figure of the operation draws a bell curve going in and a bell curve coming out. What normalization actually buys is a *scale guarantee* — and notice that every  benefit in the answer above follows from scale rather than shape: the loss landscape smooths because gradient magnitudes stop swinging, the layer becomes scale-invariant because the division cancels any rescaling of $`W`$, and the weight norm turns into an inverse effective learning rate for the same reason.
 
 **37. Why should you not apply weight decay to LayerNorm gains and biases?** ★
 Scale-invariance is what makes weight decay a learning-rate control (§7.4). Norm gains and biases are *not* scale-invariant — they directly set the layer's output magnitude — so decaying them shrinks the function for no benefit.
 
 **38. Explain the coupling between learning rate and weight decay in a normalized network.** ★
-With normalization, the function is invariant to $\|W\|$, the gradient is orthogonal to $W$ (so $\|W\|$ grows under SGD), and the angular update scales as $\eta/\|W\|^2$. Weight decay keeps $\|W\|$ small so the effective LR stays high. At equilibrium $`\eta_{\text{eff}}\propto\sqrt{\eta\lambda}`$ — so only the product matters. (§7.4)
+With normalization, the function is invariant to $`\|W\|`$, the gradient is orthogonal to $`W`$ (so $`\|W\|`$ grows under SGD), and the angular update scales as $`\eta/\|W\|^2`$. Weight decay keeps $`\|W\|`$ small so the effective LR stays high. At equilibrium $`\eta_{\text{eff}}\propto\sqrt{\eta\lambda}`$ — so only the product matters. (§7.4)
 
 **39. Three ways to understand dropout.**
-(a) Ensembling $2^n$ weight-sharing subnetworks, approximated at test time by the geometric mean. (b) For linear regression, exactly equivalent to data-dependent $`\ell_2`$. (c) Approximate variational inference — hence MC dropout. Note dropout is absent from LLM pretraining, because with one pass over a huge corpus there is no overfitting to prevent. (§7.5)
+(a) Ensembling $`2^n`$ weight-sharing subnetworks, approximated at test time by the geometric mean. (b) For linear regression, exactly equivalent to data-dependent $`\ell_2`$. (c) Approximate variational inference — hence MC dropout. Note dropout is absent from LLM pretraining, because with one pass over a huge corpus there is no overfitting to prevent. (§7.5)
 
 > **Where this came from.** Dropout was introduced by **Geoffrey Hinton** and colleagues at Toronto in 2012, and written up at length by Srivastava and co-authors in 2014. Two motivations are recorded. The published one is biological: sexual reproduction breaks up sets of co-adapted genes, forcing each gene to be useful in many different genetic backgrounds rather than only in one finely-tuned combination — and dropout does the same thing to units, since a unit cannot rely on a specific partner being present. The other is an anecdote Hinton has told in talks: he noticed that bank tellers were rotated between positions and was told the reason was to make sustained collusion difficult, since a conspiracy requires the same people to stay in place. Whether the bank story is the true origin or a good explanation found afterwards is not something to state with certainty in an interview — but the co-adaptation idea it illustrates is exactly right, and it is a better one-sentence answer than "it adds noise."
 
 > **Common misconception.** *"Dropout is on at inference — that's what makes the model robust."* It is off. At test time you want one deterministic function, so every unit is present and the scale is corrected so that each unit receives the input magnitude it saw during training (in the standard *inverted dropout* implementation the correction was already applied on the training side, which is why the inference path looks like it does nothing). Forget this and you get the classic bug: evaluation accuracy sitting well below training accuracy for no discernible reason, because nobody called `model.eval()`. The belief is tempting because dropout is described as making the network robust to missing units, and it is natural to assume the robustness is exercised at the moment it matters. The one legitimate exception is **Monte Carlo (MC) dropout**, where you deliberately keep it on and run many forward passes precisely *because* you want a spread of predictions to read as uncertainty — a different technique with a different goal, and citing it as evidence that "dropout runs at inference" reverses the causality.
 
 **40. Why is early stopping equivalent to $`\ell_2`$?**
-For a quadratic with eigenvalues $`\lambda_i`$, GD from 0 gives $`\theta_i(t)=(1-(1-\eta\lambda_i)^t)\theta_i^*`$; matching ridge's $`\frac{\lambda_i}{\lambda_i+\lambda}`$ gives $\lambda\approx1/(\eta t)$. Training longer = weaker regularization. (§7.5)
+For a quadratic with eigenvalues $`\lambda_i`$, GD from 0 gives $`\theta_i(t)=(1-(1-\eta\lambda_i)^t)\theta_i^*`$; matching ridge's $`\frac{\lambda_i}{\lambda_i+\lambda}`$ gives $`\lambda\approx1/(\eta t)`$. Training longer = weaker regularization. (§7.5)
 
 **41. Why GELU/SwiGLU over ReLU?**
-GELU $=x\Phi(x)$ is smooth and non-monotone, giving nonzero gradient for small negatives (no dead units) and better empirical results. SwiGLU adds a multiplicative gate: $`W_3(\mathrm{SiLU}(W_1x)\odot W_2x)`$, with $`d_{\text{ff}}=\frac83d`$ to hold parameters constant. ~1% perplexity gain. (§6.5)
+GELU $`=x\Phi(x)`$ is smooth and non-monotone, giving nonzero gradient for small negatives (no dead units) and better empirical results. SwiGLU adds a multiplicative gate: $`W_3(\mathrm{SiLU}(W_1x)\odot W_2x)`$, with $`d_{\text{ff}}=\frac83d`$ to hold parameters constant. ~1% perplexity gain. (§6.5)
 
 **42. Your training loss is NaN. Walk me through debugging.**
 Check for: LR too high (lower it, add warmup); missing gradient clipping; log(0) or division by zero in a custom loss; fp16 overflow (switch to bf16 or check loss scaling); a corrupted batch (log the batch index and inspect); exploding attention logits (add QK-norm); bad initialization. Then bisect: overfit a single batch first — if that fails, the bug is in the model or loss, not the data pipeline. (§6.7, §14.6)
@@ -405,44 +405,44 @@ Do the algebra on a quadratic and the correspondence is quantitative: **training
 ## 34.5 Transformers & LLMs
 
 **45. Why divide by $`\sqrt{d_k}`$ in attention?** ★
-With unit-variance $q,k$, $`\mathrm{Var}(q^\top k)=d_k`$, so scores have SD $`\sqrt{d_k}`$. Large-variance scores saturate the softmax, whose Jacobian $`p_i(\delta_{ij}-p_j)\to0`$ — gradients vanish. Dividing restores unit variance. (§11.2)
+With unit-variance $`q,k`$, $`\mathrm{Var}(q^\top k)=d_k`$, so scores have SD $`\sqrt{d_k}`$. Large-variance scores saturate the softmax, whose Jacobian $`p_i(\delta_{ij}-p_j)\to0`$ — gradients vanish. Dividing restores unit variance. (§11.2)
 
 > **Where this came from.** Attention was not proposed as an architecture. It was a **patch for a bottleneck in machine translation**. In 2014 **Dzmitry Bahdanau**, Kyunghyun Cho and Yoshua Bengio were working on encoder–decoder translation, in which an entire source sentence had to be squeezed into a single fixed-length vector before decoding began. Long sentences degraded badly, for the obvious reason. Their fix was to let the decoder look back at every source position and take a weighted average, with the weights computed on the fly — an *alignment* mechanism, mapping which output word came from which input word, and one whose weights could be visualized and read like a translator's word-by-word correspondence. Three years later the 2017 transformer paper's contribution was to delete everything else: no recurrence, no convolution, attention alone. Its title, *Attention Is All You Need*, is widely reported by the authors to be a nod to the Beatles' "All You Need Is Love," and it started a durable and mostly regrettable convention of "X Is All You Need" paper titles.
 
 **46. Why multiple heads instead of one wide one?**
-One softmax gives one attention distribution per query; the model must commit to one weighting. $h$ heads let a token simultaneously attend to its syntactic head, its antecedent, and the previous token. Also a rank argument: a sum of $h$ low-rank-driven operations is more expressive than one. (§11.3)
+One softmax gives one attention distribution per query; the model must commit to one weighting. $`h`$ heads let a token simultaneously attend to its syntactic head, its antecedent, and the previous token. Also a rank argument: a sum of $`h`$ low-rank-driven operations is more expressive than one. (§11.3)
 
 > **Common misconception.** *"Attention weights show which words the model considers important."* They show where a head **read from**, which is not the same as what influenced the output. Three independent reasons this breaks. What a head *writes* is governed by its output–value (OV) circuit, so a token can be attended to heavily and contribute almost nothing (Q153). Attention composes across heads and layers, so any single map is one factor in a long product. And the residual stream carries information forward without passing through attention at all, so a token can matter enormously while never being attended to. The belief is tempting because attention maps are readable, and on short sentences they often do line up with human intuition — which makes them an excellent hypothesis generator and a poor explanation. ▸ **The causal test is activation patching (Q154), not a heatmap.** Being able to say why an attention visualization is evidence of correlation rather than mechanism is one of the cheapest ways to sound senior on this topic.
 
 **47. Why separate Q, K, and V projections?**
-$Q=K$ forces a symmetric attention matrix and maximal self-attention. Separating them allows asymmetric relations. $V=K$ would force the matching key to equal the transmitted content; separating lets a token be *found* by one property and *contribute* another. (§11.1)
+$`Q=K`$ forces a symmetric attention matrix and maximal self-attention. Separating them allows asymmetric relations. $`V=K`$ would force the matching key to equal the transmitted content; separating lets a token be *found* by one property and *contribute* another. (§11.1)
 
 **48. Give the parameter count and FLOP formula for a transformer.** ★
-$4d^2$ (attention) $+8d^2$ (FFN) $=12d^2$ per layer, so $N\approx12Ld^2$ non-embedding. Training FLOPs $C\approx6ND$. Check: GPT-3, $L=96$, $d=12288$ → 174B. (§11.7)
+$`4d^2`$ (attention) $`+8d^2`$ (FFN) $`=12d^2`$ per layer, so $`N\approx12Ld^2`$ non-embedding. Training FLOPs $`C\approx6ND`$. Check: GPT-3, $`L=96`$, $`d=12288`$ → 174B. (§11.7)
 
 **49. Is attention the compute bottleneck?**
-Not usually. Attention's share is $\frac{4Td}{24d^2+4Td}$, hitting 50% at $T=6d$ — about 25k tokens for $d=4096$. Below that, the FFN and projections dominate. The real bottleneck at inference is the **KV cache**, which is memory. (§11.7, §12.7)
+Not usually. Attention's share is $`\frac{4Td}{24d^2+4Td}`$, hitting 50% at $`T=6d`$ — about 25k tokens for $`d=4096`$. Below that, the FFN and projections dominate. The real bottleneck at inference is the **KV cache**, which is memory. (§11.7, §12.7)
 
 **50. Explain RoPE and why it's better than learned absolute embeddings.** ★
-Rotate $q$ and $k$ by angle $`m\theta_i`$ in $d/2$ 2-D planes. Then $`\langle R_mq, R_nk\rangle = q^\top R_{n-m}k`$ — the score depends only on relative position, achieved with purely absolute operations. No $T\times T$ bias matrix, KV-cache compatible, and extendable by rescaling the base. Learned absolute embeddings have a hard length limit and don't extrapolate. (§12.4)
+Rotate $`q`$ and $`k`$ by angle $`m\theta_i`$ in $`d/2`$ 2-D planes. Then $`\langle R_mq, R_nk\rangle = q^\top R_{n-m}k`$ — the score depends only on relative position, achieved with purely absolute operations. No $`T\times T`$ bias matrix, KV-cache compatible, and extendable by rescaling the base. Learned absolute embeddings have a hard length limit and don't extrapolate. (§12.4)
 
 **51. How would you extend a model's context from 4k to 32k?**
 Options: Position Interpolation (scale positions down — crowds local resolution, needs fine-tuning); NTK-aware base scaling (increase $`\theta_{\text{base}}`$; often works without fine-tuning); **YaRN** (per-dimension: interpolate low frequencies, extrapolate high, plus attention temperature — current best). Then fine-tune on long documents, and verify with RULER, not just needle-in-a-haystack. (§12.4, §12.8)
 
 **52. What does FlashAttention do?** ★
-It recognizes attention is *memory-bound*, not compute-bound. It tiles Q, K, V into SRAM-sized blocks and uses an **online softmax** (running max and sum with rescaling) to compute the exact result without ever materializing the $T\times T$ matrix, recomputing it in the backward pass instead of storing it. Memory $O(T^2)\to O(T)$, 2–4× faster, **numerically exact**.
+It recognizes attention is *memory-bound*, not compute-bound. It tiles Q, K, V into SRAM-sized blocks and uses an **online softmax** (running max and sum with rescaling) to compute the exact result without ever materializing the $`T\times T`$ matrix, recomputing it in the backward pass instead of storing it. Memory $`O(T^2)\to O(T)`$, 2–4× faster, **numerically exact**.
 
 **53. Compute the KV cache size for a 70B model at 4k context.**
-$`2\times L\times T\times h_{kv}\times d_{\text{head}}\times`$ bytes. With $L=80$, $`d_{\text{head}}=128`$, bf16, and **full MHA** ($`h_{kv}=64`$): $2\cdot80\cdot4096\cdot64\cdot128\cdot2=10.7$ GB **per sequence** — 343 GB at batch 32, more than the weights. With **GQA** ($`h_{kv}=8`$, which is what LLaMA-2-70B actually ships) it's 1.34 GB. Quoting both, and explaining that the second is why the first never gets deployed, is the complete answer. (§12.7)
+$`2\times L\times T\times h_{kv}\times d_{\text{head}}\times`$ bytes. With $`L=80`$, $`d_{\text{head}}=128`$, bf16, and **full MHA** ($`h_{kv}=64`$): $`2\cdot80\cdot4096\cdot64\cdot128\cdot2=10.7`$ GB **per sequence** — 343 GB at batch 32, more than the weights. With **GQA** ($`h_{kv}=8`$, which is what LLaMA-2-70B actually ships) it's 1.34 GB. Quoting both, and explaining that the second is why the first never gets deployed, is the complete answer. (§12.7)
 
 **54. MHA vs MQA vs GQA vs MLA.**
-MHA: $h$ K/V heads. MQA: 1 shared K/V head — maximal saving, noticeable quality loss. GQA: $g$ groups (typically 8) — 8× saving at near-MHA quality, the current default. MLA: compress K/V into a low-rank latent and cache only that — >90% reduction with quality better than GQA at matched cache. (§12.7)
+MHA: $`h`$ K/V heads. MQA: 1 shared K/V head — maximal saving, noticeable quality loss. GQA: $`g`$ groups (typically 8) — 8× saving at near-MHA quality, the current default. MLA: compress K/V into a low-rank latent and cache only that — >90% reduction with quality better than GQA at matched cache. (§12.7)
 
 **55. Why did decoder-only beat encoder–decoder for LLMs?**
 Training-signal density (every token is a target vs BERT's 15%), architectural simplicity, natural in-context learning, and the fact that splitting parameters into two pools is wasteful at a fixed budget for open-ended generation. Encoder–decoder still wins with a fixed repeatedly-attended source (translation, ASR). (§11.6, §13.6)
 
 **56. Walk through BPE.**
-Start with characters (or the 256 bytes), count adjacent pairs, merge the most frequent, record the merge, repeat to the target vocabulary. Encoding applies the merges in learned order. Byte-level BPE means no `<UNK>` ever. WordPiece merges by $\frac{c(ab)}{c(a)c(b)}$ (a PMI-like criterion) rather than raw frequency; Unigram runs backwards, pruning from a large candidate set by likelihood loss. (§10.4)
+Start with characters (or the 256 bytes), count adjacent pairs, merge the most frequent, record the merge, repeat to the target vocabulary. Encoding applies the merges in learned order. Byte-level BPE means no `<UNK>` ever. WordPiece merges by $`\frac{c(ab)}{c(a)c(b)}`$ (a PMI-like criterion) rather than raw frequency; Unigram runs backwards, pruning from a large candidate set by likelihood loss. (§10.4)
 
 > **Where this came from.** Byte-Pair Encoding was published in 1994 by **Philip Gage** in *The C Users Journal*, as a **data compression algorithm**. It had nothing to do with language: the idea was that in any byte stream, some adjacent pairs recur often, so you repeatedly replace the most frequent pair with an unused byte value and record the substitution. Simple, fast, and thoroughly ordinary as compression schemes go. In 2016 **Rico Sennrich, Barry Haddow and Alexandra Birch** repurposed it for neural machine translation to solve a different problem — the vocabulary of a language is unbounded, so any fixed word list produces a flood of unknown tokens — and observed that a compression algorithm run over text produces exactly the units you want: whole words where they are common, morpheme-like fragments where they are not. Every frontier language model's tokenizer is a descendant of a 1994 file-compression utility, which is also the reason for its most famous weaknesses (see Q57): a scheme optimized to make text *short* has no reason to make it *countable*.
 
@@ -450,13 +450,13 @@ Start with characters (or the 256 bytes), count adjacent pairs, merge the most f
 Tokenization. "strawberry" is ~3 tokens, not 10 characters — the model can't *see* the letters, only a memorized association. Same root cause as poor arithmetic (inconsistent digit grouping), rhyming, and reversal. (§10.4)
 
 **58. Derive word2vec's negative sampling objective.**
-Replace the $|V|$-way softmax with binary logistic classification: $`-\log\sigma(u_o^\top v_c)-\sum_{i=1}^{k}\mathbb{E}_{w_i\sim P_n}\log\sigma(-u_{w_i}^\top v_c)`$, with $`P_n\propto U(w)^{3/4}`$. Levy & Goldberg showed this implicitly factorizes the shifted PMI matrix. (§10.3)
+Replace the $`|V|`$-way softmax with binary logistic classification: $`-\log\sigma(u_o^\top v_c)-\sum_{i=1}^{k}\mathbb{E}_{w_i\sim P_n}\log\sigma(-u_{w_i}^\top v_c)`$, with $`P_n\propto U(w)^{3/4}`$. Levy & Goldberg showed this implicitly factorizes the shifted PMI matrix. (§10.3)
 
 **59. What is in-context learning and why does it happen?** ★
-Task performance from prompt examples with no weight update. Mechanistically explained by **induction heads**: a previous-token head writes token $t-1$'s identity into position $t$; a later head queries with the current token to find earlier occurrences and copies what followed. Requires ≥2 layers. Evidence: the ability and the heads appear in the same narrow training window, and ablating the heads destroys the ability. Note that randomizing the demonstration *labels* barely hurts — the demonstrations mainly convey format and label space. (§13.3)
+Task performance from prompt examples with no weight update. Mechanistically explained by **induction heads**: a previous-token head writes token $`t-1`$'s identity into position $`t`$; a later head queries with the current token to find earlier occurrences and copies what followed. Requires ≥2 layers. Evidence: the ability and the heads appear in the same narrow training window, and ablating the heads destroys the ability. Note that randomizing the demonstration *labels* barely hurts — the demonstrations mainly convey format and label space. (§13.3)
 
-**60. Nucleus sampling vs top-$k$ — why did top-$p$ win?**
-Top-$k$ uses a fixed count, but the number of plausible next tokens varies enormously by context. Top-$p$ takes the smallest set summing to $p$, adapting to the distribution's entropy. (§13.4)
+**60. Nucleus sampling vs top-$`k`$ — why did top-$`p`$ win?**
+Top-$`k`$ uses a fixed count, but the number of plausible next tokens varies enormously by context. Top-$`p`$ takes the smallest set summing to $`p`$, adapting to the distribution's entropy. (§13.4)
 
 **61. Why is beam search wrong for open-ended generation?**
 Higher sequence probability correlates with worse human-judged quality past a point — the likelihood trap. The highest-probability continuation of most prompts is degenerate repetition. Beam search is right for translation and summarization, where the output is highly constrained by the input. (§13.4)
@@ -465,22 +465,22 @@ Higher sequence probability correlates with worse human-judged quality past a po
 Tokenizer-dependent (compare bits-per-byte instead), data-dependent, invalidated by contamination, and only loosely related to usefulness after post-training — RLHF typically *raises* perplexity while improving preference scores. (§13.5)
 
 **63. Derive the Chinchilla scaling result.** ★
-Fit $L=E+AN^{-\alpha}+BD^{-\beta}$, minimize subject to $C=6ND$. Substituting $D=C/6N$ and setting $dL/dN=0$ gives $N\propto C^{\beta/(\alpha+\beta)}$, $D\propto C^{\alpha/(\alpha+\beta)}$. With $\alpha=0.34,\beta=0.28$: exponents 0.452 and 0.548 — roughly equal scaling, ~20 tokens per parameter. (§15.2)
+Fit $`L=E+AN^{-\alpha}+BD^{-\beta}`$, minimize subject to $`C=6ND`$. Substituting $`D=C/6N`$ and setting $`dL/dN=0`$ gives $`N\propto C^{\beta/(\alpha+\beta)}`$, $`D\propto C^{\alpha/(\alpha+\beta)}`$. With $`\alpha=0.34,\beta=0.28`$: exponents 0.452 and 0.548 — roughly equal scaling, ~20 tokens per parameter. (§15.2)
 
 **64. Why is LLaMA-3-8B trained on 15T tokens when Chinchilla says 160B?**
-Chinchilla optimizes *training* compute only. Inference cost is linear in $N$ and paid forever, so accounting for deployment shifts the optimum strongly toward smaller models trained far longer. A model too large to serve is worthless. (§15.2)
+Chinchilla optimizes *training* compute only. Inference cost is linear in $`N`$ and paid forever, so accounting for deployment shifts the optimum strongly toward smaller models trained far longer. A model too large to serve is worthless. (§15.2)
 
 **65. Is emergence real?** ★
-Partly. Schaeffer et al. showed that discontinuous metrics manufacture discontinuities: if per-token accuracy $p$ improves smoothly and the metric is exact match over $k$ tokens, the measured score $p^k$ looks like a phase transition. Continuous metrics on the same outputs show smooth improvement. But some *mechanistic* transitions (induction-head formation) do appear  sharp. Underlying capability: smooth. User-visible usefulness: can jump. (§15.4)
+Partly. Schaeffer et al. showed that discontinuous metrics manufacture discontinuities: if per-token accuracy $`p`$ improves smoothly and the metric is exact match over $`k`$ tokens, the measured score $`p^k`$ looks like a phase transition. Continuous metrics on the same outputs show smooth improvement. But some *mechanistic* transitions (induction-head formation) do appear  sharp. Underlying capability: smooth. User-visible usefulness: can jump. (§15.4)
 
-**66. What is $\mu$P and why does it matter?**
-A parameterization whose per-layer init and LR scalings keep activations and updates $\Theta(1)$ at any width, so optimal hyperparameters become width-independent and transfer from a small proxy to a large model. It also keeps the model in the feature-learning rather than lazy/NTK regime. (§15.3, §30.2)
+**66. What is $`\mu`$P and why does it matter?**
+A parameterization whose per-layer init and LR scalings keep activations and updates $`\Theta(1)`$ at any width, so optimal hyperparameters become width-independent and transfer from a small proxy to a large model. It also keeps the model in the feature-learning rather than lazy/NTK regime. (§15.3, §30.2)
 
 **67. Explain Mixture of Experts and load balancing.**
-Replace the FFN with $E$ experts and a top-$k$ router; total parameters grow while active FLOPs don't. Left alone the router collapses (rich-get-richer), so add $`\mathcal{L}_{\text{aux}}=\alpha E\sum_i f_iP_i`$, minimized at uniform routing. Alternatives: expert-choice routing, capacity limits, bias-based balancing. (§11.8)
+Replace the FFN with $`E`$ experts and a top-$`k`$ router; total parameters grow while active FLOPs don't. Left alone the router collapses (rich-get-richer), so add $`\mathcal{L}_{\text{aux}}=\alpha E\sum_i f_iP_i`$, minimized at uniform routing. Alternatives: expert-choice routing, capacity limits, bias-based balancing. (§11.8)
 
 **68. Why do transformers need chain of thought for hard problems?** ★
-A fixed-depth transformer has bounded serial computation per forward pass (roughly $\mathsf{TC}^0$). Emitting intermediate tokens provides an external serial scratchpad — each token is another forward pass conditioned on the last. **CoT buys depth with tokens.** (§11.9, §16.7)
+A fixed-depth transformer has bounded serial computation per forward pass (roughly $`\mathsf{TC}^0`$). Emitting intermediate tokens provides an external serial scratchpad — each token is another forward pass conditioned on the last. **CoT buys depth with tokens.** (§11.9, §16.7)
 
 > **Common misconception.** *"Chain of thought (CoT) shows you how the model reached its answer."* It shows you a computation the model performed, and that computation does real work — the answer above is precisely the argument that the emitted tokens buy serial depth the architecture does not otherwise have. What it does not guarantee is **faithfulness**: the stated reasoning need not be the reasoning that determined the conclusion, and a model can produce a fluent, internally valid derivation that rationalizes an answer arrived at some other way. The belief is tempting because a legible artifact feels like a transparent one, and because the text is in your own language and reads like a confession. The framing that lands well in a room: **chain of thought is a capability intervention first and an interpretability artifact a distant second.** Treating the trace as a faithful log is the fastest way to sound naive about it; noting that faithfulness is an open empirical question with its own measurement literature is the opposite.
 
@@ -541,7 +541,7 @@ Writing intermediate steps changes the situation completely, because every emitt
 ## 34.6 Post-training, RAG, inference
 
 **69. Derive DPO.** ★★
-(1) The KL-regularized RLHF objective's optimum is $`\pi^*(y|x)=\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)e^{r(x,y)/\beta}`$ — rewrite the objective as $`-\beta[\mathrm{KL}(\pi\|\pi^*)-\log Z]`$ and note KL is minimized at 0. (2) Invert: $`r=\beta\log\frac{\pi^*}{\pi_{\text{ref}}}+\beta\log Z(x)`$. (3) Substitute into Bradley–Terry, which depends only on the *difference* of rewards, so $\beta\log Z(x)$ cancels. Result: $`\mathcal{L}=-\log\sigma\big(\beta\log\frac{\pi_\theta(y_w)}{\pi_{\text{ref}}(y_w)}-\beta\log\frac{\pi_\theta(y_l)}{\pi_{\text{ref}}(y_l)}\big)`$. (§16.5)
+(1) The KL-regularized RLHF objective's optimum is $`\pi^*(y|x)=\frac{1}{Z(x)}\pi_{\text{ref}}(y|x)e^{r(x,y)/\beta}`$ — rewrite the objective as $`-\beta[\mathrm{KL}(\pi\|\pi^*)-\log Z]`$ and note KL is minimized at 0. (2) Invert: $`r=\beta\log\frac{\pi^*}{\pi_{\text{ref}}}+\beta\log Z(x)`$. (3) Substitute into Bradley–Terry, which depends only on the *difference* of rewards, so $`\beta\log Z(x)`$ cancels. Result: $`\mathcal{L}=-\log\sigma\big(\beta\log\frac{\pi_\theta(y_w)}{\pi_{\text{ref}}(y_w)}-\beta\log\frac{\pi_\theta(y_l)}{\pi_{\text{ref}}(y_l)}\big)`$. (§16.5)
 
 > **Where this came from.** The preference model at the centre of this derivation is the **Bradley–Terry** model, published by Ralph Bradley and Milton Terry in 1952 for the statistics of *paired comparison experiments* — the setting where you cannot measure a quantity directly but you can ask judges which of two items they prefer, as in taste tests of food products. Its assumption is that each item has a hidden strength and the probability of preferring one is a function of the difference of strengths, which is exactly the structure that makes the intractable normalizing term cancel in DPO. Essentially the same model had been written down by **Ernst Zermelo** in 1929 to rate chess players from tournament results, and it is the mathematical ancestor of the Elo rating system. So the machinery underneath modern preference tuning is a chess-rating model, applied to pairs of language-model outputs, with human annotators in the role of tournament results. The other half of the lineage is **Christiano and colleagues in 2017**, who showed that a reinforcement learner could be steered by human preference comparisons alone — training a simulated robot to perform a backflip from a few hundred human judgements of which of two clips looked more backflip-like, a task nobody could write a reward function for.
 
@@ -552,7 +552,7 @@ DPO is offline: its constraint binds only on responses in the dataset, so it can
 It keeps the policy inside the region where the reward model is valid, preserves fluency and pretrained knowledge, and prevents collapse onto a few reward-maximizing degenerate outputs. Without it the policy exploits the reward model. (§16.4)
 
 **72. What is GRPO and why does it work?**
-Replace the value network with the mean reward over a group of $G$ completions for the same prompt. Valid because any action-independent baseline leaves the policy gradient unbiased — the group mean is a Monte-Carlo estimate of $V(x)$. Trades a second large model for more sampling. (§16.6, §27.4)
+Replace the value network with the mean reward over a group of $`G`$ completions for the same prompt. Valid because any action-independent baseline leaves the policy gradient unbiased — the group mean is a Monte-Carlo estimate of $`V(x)`$. Trades a second large model for more sampling. (§16.6, §27.4)
 
 **73. What is RLVR and why did it change reasoning models?**
 Reinforcement learning from *verifiable* rewards — check the math answer or run the unit tests instead of using a learned reward model. It eliminates reward hacking at the source, because you can't fool a compiler. Limited to verifiable domains, and test-exploitation becomes the new failure mode. (§16.6)
@@ -560,7 +560,7 @@ Reinforcement learning from *verifiable* rewards — check the math answer or ru
 > **Common misconception.** *"Reinforcement learning from human feedback (RLHF) teaches the model new facts."* Post-training reshapes which of the model's existing behaviours surface; the knowledge arrived during pretraining. The evidence is sitting in Q62: RLHF typically **raises** perplexity on held-out text while improving human preference scores. A model that has become a worse predictor of raw text and a better assistant has not acquired content — it has reallocated probability mass. The belief is tempting because an aligned model visibly *does things* the base model would not do, and a change in behaviour reads as a change in knowledge. The practical consequence is a hiring-signal-grade one: if the complaint is "the model doesn't know about our product," the levers are pretraining data, continued pretraining, or retrieval — not a preference dataset of thirty thousand comparisons, which is roughly the wrong tool by three orders of magnitude.
 
 **74. Explain speculative decoding and why it's lossless.** ★
-A small draft model proposes $\gamma$ tokens; the target scores all of them in one forward pass (cheap, since decode is memory-bound). Accept token $i$ with probability $`\min(1, p_i/q_i)`$; on rejection, resample from the normalized residual $\max(0,p-q)$. That modified rejection sampling makes the output distribution **exactly** $p$. Expected tokens per round $=\frac{1-\alpha^{\gamma+1}}{1-\alpha}$; typical 2–3× speedup. (§17.3)
+A small draft model proposes $`\gamma`$ tokens; the target scores all of them in one forward pass (cheap, since decode is memory-bound). Accept token $`i`$ with probability $`\min(1, p_i/q_i)`$; on rejection, resample from the normalized residual $`\max(0,p-q)`$. That modified rejection sampling makes the output distribution **exactly** $`p`$. Expected tokens per round $`=\frac{1-\alpha^{\gamma+1}}{1-\alpha}`$; typical 2–3× speedup. (§17.3)
 
 **75. Why is LLM decoding memory-bandwidth-bound?** ★
 At batch 1, producing one token requires reading every parameter. A 70B bf16 model is 140 GB; at 3.35 TB/s that's 42 ms/token = 24 tok/s regardless of compute. Consequence: batching is nearly free, and quantization buys near-linear speedup. (§17.1)
@@ -571,13 +571,13 @@ At batch 1, producing one token requires reading every parameter. A 70B bf16 mod
 Transformers develop systematic outlier channels with magnitudes 10–100× the rest, consistently in the same dimensions. A per-tensor scale set by them crushes everything else. Fixes: LLM.int8() (keep outliers in fp16), SmoothQuant (migrate difficulty to weights), AWQ (protect high-activation channels). (§17.4)
 
 **77. Explain LoRA. What rank and which layers?**
-$`W'=W_0+\frac{\alpha}{r}BA`$ with $B=0$ at init, so training starts exactly at the pretrained model. Apply to **all** linear layers (not just Q,V) — that matters more than the rank. $r=8$–64; higher for new knowledge, lower for style. Merges into $W$ at inference for zero added latency. (§17.7)
+$`W'=W_0+\frac{\alpha}{r}BA`$ with $`B=0`$ at init, so training starts exactly at the pretrained model. Apply to **all** linear layers (not just Q,V) — that matters more than the rank. $`r=8`$–64; higher for new knowledge, lower for style. Merges into $`W`$ at inference for zero added latency. (§17.7)
 
-**78. Why the $\tau^2$ in distillation loss?**
-The gradient of the soft-target term scales as $1/\tau^2$, so multiplying by $\tau^2$ keeps the relative weight of soft and hard targets constant as $\tau$ varies. High $\tau$ matters because a confident teacher at $\tau=1$ carries no more information than the label — the "dark knowledge" is in the ratios among small probabilities. (§17.6)
+**78. Why the $`\tau^2`$ in distillation loss?**
+The gradient of the soft-target term scales as $`1/\tau^2`$, so multiplying by $`\tau^2`$ keeps the relative weight of soft and hard targets constant as $`\tau`$ varies. High $`\tau`$ matters because a confident teacher at $`\tau=1`$ carries no more information than the label — the "dark knowledge" is in the ratios among small probabilities. (§17.6)
 
 **79. Design a RAG system and tell me its failure modes.**
-Chunk structurally (index small, expand to parent), embed with an instruction-prefixed model, hybrid BM25 + dense retrieval fused by **RRF** ($\sum 1/(60+\text{rank})$), cross-encoder rerank top-100 → top-10, place the best material at the start and end of the context, instruct explicit citation and "I don't know." Failures: document never retrieved (chunking/vocabulary — add BM25), retrieved but ignored (buried in the middle), model overriding context with parametric knowledge, multi-hop (needs decomposition), aggregation queries (wrong tool — use SQL). **Evaluate retrieval and generation separately.** (§18.3–18.4)
+Chunk structurally (index small, expand to parent), embed with an instruction-prefixed model, hybrid BM25 + dense retrieval fused by **RRF** ($`\sum 1/(60+\text{rank})`$), cross-encoder rerank top-100 → top-10, place the best material at the start and end of the context, instruct explicit citation and "I don't know." Failures: document never retrieved (chunking/vocabulary — add BM25), retrieved but ignored (buried in the middle), model overriding context with parametric knowledge, multi-hop (needs decomposition), aggregation queries (wrong tool — use SQL). **Evaluate retrieval and generation separately.** (§18.3–18.4)
 
 > **Where this came from.** The lexical half of that hybrid is older than almost anything else in this book that is still in production. **BM25** — the "BM" stands for *Best Matching* — came out of the **Okapi** information retrieval system built at City University London in the 1980s and 1990s, developed principally by **Stephen Robertson** and **Karen Spärck Jones**; the inverse-document-frequency weighting at its heart is Spärck Jones's, from 1972. It is a hand-designed scoring function with a handful of tuned constants and no learning at all, and it remains stubbornly difficult for dense embedding models to beat on queries containing rare exact terms — product codes, error strings, surnames — which is precisely why the modern recommendation is to run both and fuse the rankings rather than to replace one with the other. The term **RAG** itself is much newer: Lewis and colleagues coined it in 2020 for a system that fine-tuned a generator jointly with a retriever. The irony worth noting is that the architecture that made the name famous is not what people build now — today "RAG" almost always means an off-the-shelf retriever bolted to a frozen model, which the original paper would have considered the baseline.
 
@@ -585,7 +585,7 @@ Chunk structurally (index small, expand to parent), embed with an instruction-pr
 Both. Retrieval reduces the haystack; long context reasons over what's left. Feeding 1M tokens when 5k suffice costs 200× more for a quality *decrease* ("lost in the middle"). (§18.5)
 
 **81. Why do agents fail?** ★
-Compounding error: $p^n$. At 95% per-step reliability, 20 steps gives 36%. Improving per-step reliability from 95% to 99% takes you to 82% — worth more than any architectural change. Plus context rot, looping, and prompt injection from tool outputs. (§18.7)
+Compounding error: $`p^n`$. At 95% per-step reliability, 20 steps gives 36%. Improving per-step reliability from 95% to 99% takes you to 82% — worth more than any architectural change. Plus context rot, looping, and prompt injection from tool outputs. (§18.7)
 
 ### Saying it in plain English — post-training, retrieval, and inference
 
@@ -654,13 +654,13 @@ VAE: bounded likelihood, fast, blurry, stable. GAN: no likelihood, fast, sharp, 
 > **Common misconception.** *"Blurriness and mode collapse are both just 'the model didn't learn the data well enough.'"* They are opposite failures, and telling them apart is most of Q4 cashed in. Blurriness is **mode-covering**: the model refuses to leave any part of the data unaccounted for, so it spreads probability across the empty region between two  distinct kinds of image, and samples drawn from that region are the averaged, unreal in-between ones. Mode collapse is **mode-seeking**: the model finds one region it can render convincingly and abandons the rest of the distribution outright. Neither is fixed by more capacity or longer training, because neither is a capacity problem — each is a direct consequence of which direction of the Kullback–Leibler (KL) divergence the objective happens to penalize. The belief is tempting because both look like "bad samples" in a grid of pictures, and the diagnosis requires asking what the model failed to *cover* rather than how good any single image looks.
 
 **84. Explain the reparameterization trick and why it's necessary.**
-Write $z=\mu+\sigma\odot\epsilon$ with $\epsilon\sim\mathcal{N}(0,I)$, so the expectation is over a fixed distribution and the gradient passes inside. The alternative (REINFORCE/score-function) is unbiased but has orders of magnitude higher variance. (§19.3)
+Write $`z=\mu+\sigma\odot\epsilon`$ with $`\epsilon\sim\mathcal{N}(0,I)`$, so the expectation is over a fixed distribution and the gradient passes inside. The alternative (REINFORCE/score-function) is unbiased but has orders of magnitude higher variance. (§19.3)
 
 **85. What is posterior collapse and how do you fix it?**
-If the decoder is powerful enough to model $x$ alone, the optimum sets $q(z|x)=p(z)$, KL$=0$, and the latent is unused. Fixes: KL annealing, free bits (don't penalize KL below a floor per dimension), weaker decoder. (§19.3)
+If the decoder is powerful enough to model $`x`$ alone, the optimum sets $`q(z|x)=p(z)`$, KL$`=0`$, and the latent is unused. Fixes: KL annealing, free bits (don't penalize KL below a floor per dimension), weaker decoder. (§19.3)
 
 **86. Derive the GAN's optimal discriminator and what the generator then minimizes.** ★
-Pointwise maximization of $a\log y+b\log(1-y)$ gives $`D^*=\frac{p_{\text{data}}}{p_{\text{data}}+p_g}`$. Substituting back yields $`-\log 4+2\,\mathrm{JSD}(p_{\text{data}}\|p_g)`$, minimized when $`p_g=p_{\text{data}}`$. **But** when the supports are disjoint — essentially always in high dimensions — JSD is constant at $\log 2$ and its gradient is zero. That's the fundamental instability, and it's why WGAN replaces JSD with the Earth-Mover distance. (§19.4)
+Pointwise maximization of $`a\log y+b\log(1-y)`$ gives $`D^*=\frac{p_{\text{data}}}{p_{\text{data}}+p_g}`$. Substituting back yields $`-\log 4+2\,\mathrm{JSD}(p_{\text{data}}\|p_g)`$, minimized when $`p_g=p_{\text{data}}`$. **But** when the supports are disjoint — essentially always in high dimensions — JSD is constant at $`\log 2`$ and its gradient is zero. That's the fundamental instability, and it's why WGAN replaces JSD with the Earth-Mover distance. (§19.4)
 
 > **Where this came from.** **Ian Goodfellow** conceived the adversarial framing in 2014 in Montreal, during an argument at a bar where colleagues were celebrating a graduation; the account he has given publicly is that he went home the same night and had a working implementation before morning. The paper appeared later that year with Bengio and others. What makes the story instructive rather than merely charming is the shape of the idea: the argument was about how to make a generative model without computing a likelihood, and the answer — let a second network judge, and train the two against each other — sidesteps the intractable integral entirely by replacing "how probable is this sample" with "can anyone tell it apart." The replacement distance in the answer above has a far older pedigree: **Gaspard Monge** posed the optimal transport problem in 1781, asking for the cheapest way to move a pile of soil into a new shape for military earthworks, and **Leonid Kantorovich** generalized it in the 1940s while working on the allocation of scarce resources in the Soviet economy — work for which he shared the 1975 Nobel Memorial Prize in Economics. The distance WGAN uses to stabilize image generation is literally a formula for how much it costs to move dirt.
 
@@ -675,16 +675,16 @@ By induction: $`x_t=\sqrt{\alpha_t}x_{t-1}+\sqrt{\beta_t}\epsilon''`$; substitut
 **89. What is the actual diffusion training loss?**
 $`\mathcal{L}_{\text{simple}}=\mathbb{E}_{t,x_0,\epsilon}\|\epsilon-\epsilon_\theta(\sqrt{\bar\alpha_t}x_0+\sqrt{1-\bar\alpha_t}\epsilon,t)\|^2`$ — plain MSE denoising. It's the VLB with the weighting dropped, which is a worse likelihood objective and a better perceptual one. (§20.4)
 
-**90. Why predict $\epsilon$ rather than $`x_0`$? What is $v$-prediction?**
-At large $t$, $`x_t`$ is nearly noise so $\epsilon$ is well-scaled while $`x_0`$ is nearly unconstrained (high-variance target). At small $t$, the reverse. $`v=\sqrt{\bar\alpha_t}\epsilon-\sqrt{1-\bar\alpha_t}x_0`$ interpolates smoothly and is preferred for distillation and high resolution. (§20.4)
+**90. Why predict $`\epsilon`$ rather than $`x_0`$? What is $`v`$-prediction?**
+At large $`t`$, $`x_t`$ is nearly noise so $`\epsilon`$ is well-scaled while $`x_0`$ is nearly unconstrained (high-variance target). At small $`t`$, the reverse. $`v=\sqrt{\bar\alpha_t}\epsilon-\sqrt{1-\bar\alpha_t}x_0`$ interpolates smoothly and is preferred for distillation and high resolution. (§20.4)
 
 **91. Show that diffusion and score matching are the same.** ★
 $`\nabla_{x_t}\log q(x_t|x_0)=-\frac{x_t-\sqrt{\bar\alpha_t}x_0}{1-\bar\alpha_t}=-\frac{\epsilon}{\sqrt{1-\bar\alpha_t}}`$. So $`s_\theta=-\epsilon_\theta/\sqrt{1-\bar\alpha_t}`$. DDPM and NCSN were developed independently and are the same algorithm. Tweedie's formula adds the third equivalence: the optimal denoiser, the score, and the posterior mean are one object. (§20.6)
 
 **92. Explain classifier-free guidance.** ★
-Train one network with the condition randomly dropped ~10% of the time, then extrapolate at sampling: $`\tilde\epsilon=\epsilon_\varnothing+w(\epsilon_c-\epsilon_\varnothing)`$. Derivable from classifier guidance by substituting the implicit classifier $\nabla\log p(y|x)=\nabla\log p(x|y)-\nabla\log p(x)$. $w>1$ pushes beyond the conditional distribution: higher prompt adherence and fidelity, **lower diversity**, and saturation artifacts at large $w$. (§20.8)
+Train one network with the condition randomly dropped ~10% of the time, then extrapolate at sampling: $`\tilde\epsilon=\epsilon_\varnothing+w(\epsilon_c-\epsilon_\varnothing)`$. Derivable from classifier guidance by substituting the implicit classifier $`\nabla\log p(y|x)=\nabla\log p(x|y)-\nabla\log p(x)`$. $`w>1`$ pushes beyond the conditional distribution: higher prompt adherence and fidelity, **lower diversity**, and saturation artifacts at large $`w`$. (§20.8)
 
-> **Common misconception.** *"Higher guidance means a better model."* At $w>1$, classifier-free guidance samples from a distribution the model was never trained on — a sharpened one, obtained by extrapolating past the conditional prediction rather than toward it. Individual images become more striking and more obedient to the prompt, which is exactly what a person flipping through a grid of samples registers. What that person cannot see, because it is invisible one image at a time, is that **diversity collapses**: the same prompt begins returning the same composition, the same palette, the same pose. Push further and colours blow out and saturation artifacts appear, because the extrapolation has left the region where the network's predictions carry meaning. The belief is tempting because every individual comparison favours more guidance. ▸ **Guidance is a fidelity–diversity dial, not a quality dial** — and volunteering that trade before being asked is a strong signal.
+> **Common misconception.** *"Higher guidance means a better model."* At $`w>1`$, classifier-free guidance samples from a distribution the model was never trained on — a sharpened one, obtained by extrapolating past the conditional prediction rather than toward it. Individual images become more striking and more obedient to the prompt, which is exactly what a person flipping through a grid of samples registers. What that person cannot see, because it is invisible one image at a time, is that **diversity collapses**: the same prompt begins returning the same composition, the same palette, the same pose. Push further and colours blow out and saturation artifacts appear, because the extrapolation has left the region where the network's predictions carry meaning. The belief is tempting because every individual comparison favours more guidance. ▸ **Guidance is a fidelity–diversity dial, not a quality dial** — and volunteering that trade before being asked is a strong signal.
 
 **93. What is DDIM and why does it allow 50 steps instead of 1000?**
 A non-Markovian family with the same marginals and the same trained network; $`\sigma_t=0`$ gives a deterministic first-order discretization of the probability-flow ODE, so you can skip timesteps and apply standard ODE solvers. (§20.7)
@@ -693,13 +693,13 @@ A non-Markovian family with the same marginals and the same trained network; $`\
 Define $`x_t=(1-t)x_{\text{noise}}+t\,x_{\text{data}}`$ and regress the velocity $`v_\theta(x_t,t)`$ onto $`x_{\text{data}}-x_{\text{noise}}`$; sample by integrating the ODE. Straight paths mean far less discretization error, so 10–20 steps without distillation, and there's no noise schedule to tune. Conceptually the same family as diffusion, with a better-chosen path. (§20.10)
 
 **95. Why latent diffusion?**
-Run diffusion in a pretrained autoencoder's latent space: $512^2\times3\to64^2\times4$ is a 48× reduction in elements. The autoencoder handles imperceptible high-frequency detail; the diffusion model handles semantics. The autoencoder is also a hard ceiling — lost fine text and small faces cannot be recovered. (§20.11)
+Run diffusion in a pretrained autoencoder's latent space: $`512^2\times3\to64^2\times4`$ is a 48× reduction in elements. The autoencoder handles imperceptible high-frequency detail; the diffusion model handles semantics. The autoencoder is also a hard ceiling — lost fine text and small faces cannot be recovered. (§20.11)
 
 **96. How does discrete diffusion work?**
 Replace Gaussian noise with a categorical transition matrix $`Q_t`$; the cumulative $`\bar Q_t=\prod Q_s`$ plays the role of $`\bar\alpha_t`$, and the posterior $`q(x_{t-1}|x_t,x_0)`$ is exact and closed-form. The absorbing/masking kernel dominates, and with it the objective reduces to a weighted average of masked-LM losses — **BERT with a continuously varying mask rate.** (§21.2–21.3)
 
 **97. What is AdaLN-Zero and why does it matter?** ★
-Adaptive LayerNorm plus a per-block gate $\alpha(c)$ on the residual branch, with $\alpha$'s producing MLP zero-initialized — so every block starts as the exact identity. Same principle as zero-init residual, Fixup, and ReZero. It beat cross-attention and in-context conditioning by a wide margin at every scale in the DiT ablations. (§21.4)
+Adaptive LayerNorm plus a per-block gate $`\alpha(c)`$ on the residual branch, with $`\alpha`$'s producing MLP zero-initialized — so every block starts as the exact identity. Same principle as zero-init residual, Fixup, and ReZero. It beat cross-attention and in-context conditioning by a wide margin at every scale in the DiT ablations. (§21.4)
 
 ### Saying it in plain English — generative models
 
@@ -763,7 +763,7 @@ The framing that lands well in a room: **diffusion and flow matching are the sam
 In the SVD basis, $`\hat y=\sum_j u_j\frac{\sigma_j^2}{\sigma_j^2+\lambda}u_j^\top y`$. Directions with small $`\sigma_j`$ — poorly determined by the data, hence noisily estimated — are shrunk most. Exactly the right behaviour. (§22.2)
 
 **99. Why does LASSO produce exact zeros and ridge doesn't?**
-The subgradient of $`\lambda|\beta_j|`$ at 0 is the interval $[-\lambda,\lambda]$, so $`\beta_j=0`$ is optimal whenever $`|x_j^\top r|\le\lambda`$. Ridge's penalty gradient $`2\lambda\beta_j\to0`$ as $`\beta_j\to0`$, so it never pins. Geometrically: the $`\ell_1`$ ball has corners on the axes. (§22.3)
+The subgradient of $`\lambda|\beta_j|`$ at 0 is the interval $`[-\lambda,\lambda]`$, so $`\beta_j=0`$ is optimal whenever $`|x_j^\top r|\le\lambda`$. Ridge's penalty gradient $`2\lambda\beta_j\to0`$ as $`\beta_j\to0`$, so it never pins. Geometrically: the $`\ell_1`$ ball has corners on the axes. (§22.3)
 
 **100. When do you use elastic net?**
 Correlated predictors. LASSO arbitrarily selects one of a correlated group and zeros the rest, which is unstable across resamples; the ridge component induces a grouping effect. (§22.3)
@@ -776,22 +776,22 @@ Lagrangian, stationarity gives $`w=\sum_i\alpha_iy_ix_i`$ and $`\sum_i\alpha_iy_
 > **Where this came from.** The linear separating hyperplane with maximum margin goes back to **Vladimir Vapnik and Alexey Chervonenkis** in the Soviet Union in the 1960s. What turned it into the dominant classifier of the 1990s were two later additions, both at **Bell Labs**: the **kernel trick**, contributed by Bernhard Boser, Isabelle Guyon and Vapnik in 1992, and the **soft margin** for non-separable data, from Corinna Cortes and Vapnik in 1995. The kernel insight is the one to appreciate here, because it falls directly out of the dual you just derived — once the data appears only through inner products, you may replace the inner product with any function that behaves like one, and you are silently working in a much richer feature space without ever constructing it. Their first prominent application was reading handwritten digits, in the same lab and on the same problem that produced the convolutional networks that would eventually displace them. It is worth remembering that from roughly 1995 to 2010, "machine learning" meant kernel methods to most researchers, and neural networks were the unfashionable choice.
 
 **102. State the representer theorem and why it matters.**
-For $`\min_f\sum_iL(y_i,f(x_i))+\Omega(\|f\|_\mathcal{H})`$ with $\Omega$ strictly increasing, the minimizer is $`f^*=\sum_i\alpha_ik(x_i,\cdot)`$. Proof: decompose $`f=f_\parallel+f_\perp`$; the reproducing property means $`f_\perp`$ doesn't affect the loss but strictly increases the norm. It's why an infinite-dimensional optimization reduces to $n$ coefficients. (§22.5)
+For $`\min_f\sum_iL(y_i,f(x_i))+\Omega(\|f\|_\mathcal{H})`$ with $`\Omega`$ strictly increasing, the minimizer is $`f^*=\sum_i\alpha_ik(x_i,\cdot)`$. Proof: decompose $`f=f_\parallel+f_\perp`$; the reproducing property means $`f_\perp`$ doesn't affect the loss but strictly increases the norm. It's why an infinite-dimensional optimization reduces to $`n`$ coefficients. (§22.5)
 
 **103. Why does the RBF kernel's infinite dimensionality not cause overfitting?**
-Capacity is controlled by norm, not dimension. The margin/norm-based bounds of Chapter 2 §2.5 don't involve $d$. (§22.5)
+Capacity is controlled by norm, not dimension. The margin/norm-based bounds of Chapter 2 §2.5 don't involve $`d`$. (§22.5)
 
 **104. Why not use misclassification error as a tree splitting criterion?** ★
-It's piecewise linear in $p$, so a split that increases purity without changing the argmax gives zero gain. Gini and entropy are strictly concave, so any purity-increasing split registers. Concavity is what makes greedy search work. (§23.1)
+It's piecewise linear in $`p`$, so a split that increases purity without changing the argmax gives zero gain. Gini and entropy are strictly concave, so any purity-increasing split registers. Concavity is what makes greedy search work. (§23.1)
 
 **105. Why do random forests use random feature subsets?** ★
-Ensemble variance is $\rho\sigma^2+\frac{1-\rho}{B}\sigma^2$. The second term vanishes with more trees; the first does not. So the only way to improve a large ensemble is to reduce the correlation $\rho$ — and random features stop every tree from choosing the same dominant split at the root. (§23.2)
+Ensemble variance is $`\rho\sigma^2+\frac{1-\rho}{B}\sigma^2`$. The second term vanishes with more trees; the first does not. So the only way to improve a large ensemble is to reduce the correlation $`\rho`$ — and random features stop every tree from choosing the same dominant split at the root. (§23.2)
 
 **106. Bagging vs boosting.**
 Bagging averages many low-bias, high-variance deep trees to reduce **variance**. Boosting sums many high-bias, low-variance shallow trees to reduce **bias**. Opposite terms of the same decomposition, which is why the tree depths differ. (§23.3)
 
 **107. Show AdaBoost minimizes exponential loss.** ★
-Forward stagewise: $`\min_{\alpha,G}\sum_iw_i e^{-\alpha y_iG(x_i)}`$ where $`w_i=e^{-y_if_{m-1}(x_i)}`$ — AdaBoost's weight, derived rather than posited. Splitting by correct/incorrect gives $(e^\alpha-e^{-\alpha})\mathrm{err}+e^{-\alpha}$; minimizing over $G$ is minimizing weighted error, and $d/d\alpha=0$ gives $\alpha=\frac12\log\frac{1-\mathrm{err}}{\mathrm{err}}$. (§23.3)
+Forward stagewise: $`\min_{\alpha,G}\sum_iw_i e^{-\alpha y_iG(x_i)}`$ where $`w_i=e^{-y_if_{m-1}(x_i)}`$ — AdaBoost's weight, derived rather than posited. Splitting by correct/incorrect gives $`(e^\alpha-e^{-\alpha})\mathrm{err}+e^{-\alpha}`$; minimizing over $`G`$ is minimizing weighted error, and $`d/d\alpha=0`$ gives $`\alpha=\frac12\log\frac{1-\mathrm{err}}{\mathrm{err}}`$. (§23.3)
 
 > **Where this came from.** AdaBoost began life as the answer to a **yes-or-no theoretical question**. In 1988 Michael Kearns and Leslie Valiant asked whether "weak" learnability and "strong" learnability are the same thing: if you can only build a classifier that is *barely* better than a coin flip, can you always combine such classifiers into one that is arbitrarily accurate? It was posed as an open problem in learning theory, with no algorithm attached and no expectation of practical use. **Robert Schapire** proved the answer was yes in 1990, by construction. **Yoav Freund and Schapire** then produced AdaBoost in the mid-1990s as a far more practical version of that construction, and it won the **Gödel Prize** — a theory award — in 2003. The weights that look so arbitrary when AdaBoost is taught procedurally are not arbitrary at all; as the derivation above shows, they are what falls out of fitting an additive model to exponential loss one term at a time, a connection Friedman, Hastie and Tibshirani made explicit around 2000 and which opened the door to gradient boosting with any loss function you like.
 
@@ -799,25 +799,25 @@ Forward stagewise: $`\min_{\alpha,G}\sum_iw_i e^{-\alpha y_iG(x_i)}`$ where $`w_
 Second-order expansion, grouped by leaf: $`\tilde{\mathcal{L}}=\sum_j[G_jw_j+\frac12(H_j+\lambda)w_j^2]+\gamma T`$. Each leaf is an independent quadratic, so $`w_j^*=-\frac{G_j}{H_j+\lambda}`$ and $`\tilde{\mathcal{L}}^*=-\frac12\sum_j\frac{G_j^2}{H_j+\lambda}+\gamma T`$. Hence $`\mathrm{Gain}=\frac12[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}]-\gamma`$: don't split if negative. (§23.5)
 
 **109. What does LightGBM do differently?**
-Histogram binning (255 bins, $O(\#\text{bins})$ split search), leaf-wise rather than level-wise growth (control with `num_leaves`), GOSS (keep large-gradient instances, subsample the rest with a reweighting that keeps the gain estimate unbiased), and EFB (bundle mutually-exclusive sparse features). (§23.6)
+Histogram binning (255 bins, $`O(\#\text{bins})`$ split search), leaf-wise rather than level-wise growth (control with `num_leaves`), GOSS (keep large-gradient instances, subsample the rest with a reweighting that keeps the gain estimate unbiased), and EFB (bundle mutually-exclusive sparse features). (§23.6)
 
 **110. How does CatBoost avoid target leakage?** ★
 Ordered target statistics: encode a categorical value using only the examples *earlier* in a random permutation. Same idea as out-of-fold target encoding, applied online. Ordered boosting extends it to the residuals themselves. (§23.6)
 
 **111. Derive EM for a GMM and show it monotonically increases the likelihood.** ★
-E-step: $`\gamma_{ik}=\frac{\pi_k\mathcal{N}(x_i|\mu_k,\Sigma_k)}{\sum_j\pi_j\mathcal{N}(x_i|\mu_j,\Sigma_j)}`$. M-step: $`\pi_k=N_k/n`$, $`\mu_k=\frac1{N_k}\sum_i\gamma_{ik}x_i`$, $`\Sigma_k=\frac1{N_k}\sum_i\gamma_{ik}(x_i-\mu_k)(x_i-\mu_k)^\top`$. Monotonicity: the E-step raises the Jensen bound to *equality* with the log-likelihood; the M-step then increases the bound; the log-likelihood is $\ge$ the bound, so it increased too. (§24.4)
+E-step: $`\gamma_{ik}=\frac{\pi_k\mathcal{N}(x_i|\mu_k,\Sigma_k)}{\sum_j\pi_j\mathcal{N}(x_i|\mu_j,\Sigma_j)}`$. M-step: $`\pi_k=N_k/n`$, $`\mu_k=\frac1{N_k}\sum_i\gamma_{ik}x_i`$, $`\Sigma_k=\frac1{N_k}\sum_i\gamma_{ik}(x_i-\mu_k)(x_i-\mu_k)^\top`$. Monotonicity: the E-step raises the Jensen bound to *equality* with the log-likelihood; the M-step then increases the bound; the log-likelihood is $`\ge`$ the bound, so it increased too. (§24.4)
 
 **112. What's the relationship between k-means and GMM?**
-k-means is GMM with isotropic equal-weight shared covariance $\sigma^2I$ in the limit $\sigma^2\to0$, where soft responsibilities become hard assignments. (§24.4)
+k-means is GMM with isotropic equal-weight shared covariance $`\sigma^2I`$ in the limit $`\sigma^2\to0`$, where soft responsibilities become hard assignments. (§24.4)
 
 **113. Why is the GMM likelihood unbounded?**
-A component collapsing onto a single point has $`|\Sigma_k|\to0`$ and likelihood $\to\infty$. Fix with a covariance floor $\epsilon I$ (a MAP prior) or by restarting collapsed components. (§24.4)
+A component collapsing onto a single point has $`|\Sigma_k|\to0`$ and likelihood $`\to\infty`$. Fix with a covariance floor $`\epsilon I`$ (a MAP prior) or by restarting collapsed components. (§24.4)
 
 **114. Give three derivations of PCA.**
-Maximum projected variance (top eigenvector of $\Sigma$), minimum reconstruction error (equivalent, since $\|x\|^2=\|Px\|^2+\|x-Px\|^2$), and the SVD of the centred data matrix. Always compute via SVD, never by forming $X^\top X$. (§24.1)
+Maximum projected variance (top eigenvector of $`\Sigma`$), minimum reconstruction error (equivalent, since $`\|x\|^2=\|Px\|^2+\|x-Px\|^2`$), and the SVD of the centred data matrix. Always compute via SVD, never by forming $`X^\top X`$. (§24.1)
 
-**115. Why does t-SNE use a Student-$t$ in the low-dimensional space?** ★
-The crowding problem: ball volume grows as $r^d$, so a point in 50-D has far more roughly-equidistant neighbours than can be placed at similar distance in 2-D. A Gaussian would over-penalize moderate distances and collapse everything; the heavy tail lets moderately-dissimilar points sit far apart cheaply. (§24.3)
+**115. Why does t-SNE use a Student-$`t`$ in the low-dimensional space?** ★
+The crowding problem: ball volume grows as $`r^d`$, so a point in 50-D has far more roughly-equidistant neighbours than can be placed at similar distance in 2-D. A Gaussian would over-penalize moderate distances and collapse everything; the heavy tail lets moderately-dissimilar points sit far apart cheaply. (§24.3)
 
 **116. What can you not read off a t-SNE plot?**
 Cluster sizes (density is equalized), distances between clusters, and — at low perplexity — the existence of clusters at all (it will cluster pure noise). Also: never cluster on t-SNE coordinates and report the clusters as findings. (§24.3)
@@ -828,7 +828,7 @@ In order: use the right metric (PR-AUC, not accuracy or ROC-AUC); class weights;
 > **Common misconception.** *"Class imbalance means you have to resample."* Resampling is fourth on the list above, and the ordering is the answer. The first three fixes — choose a metric that responds to the positive rate, weight the classes in the loss, and **tune the decision threshold on validation** — are cheaper, more stable, and very often the entire solution. Threshold tuning in particular gets skipped constantly: results are reported at 0.5 as though it were a law of nature rather than the arbitrary default of a library. Oversampling also has a real cost that people rarely price in — it changes the base rate the model implicitly learns, so its output probabilities are no longer calibrated to the world you deploy into, and you have traded a ranking problem for a calibration problem. And the operational rule that catches people in interviews: resample **inside** the cross-validation loop. Duplicate a minority example before splitting and the same row lands in train and test, and the score you report is fiction.
 
 **118. Explain the curse of dimensionality concretely.**
-To capture a fraction $r$ of the volume in $d$ dimensions, a hypercube neighbourhood needs edge length $r^{1/d}$: for $d=10$, $r=0.01$, that's 63% of every feature's range. "Local" isn't local. And $`\frac{d_{\max}-d_{\min}}{d_{\min}}\to0`$, so all points become equidistant. (§22.6)
+To capture a fraction $`r`$ of the volume in $`d`$ dimensions, a hypercube neighbourhood needs edge length $`r^{1/d}`$: for $`d=10`$, $`r=0.01`$, that's 63% of every feature's range. "Local" isn't local. And $`\frac{d_{\max}-d_{\min}}{d_{\min}}\to0`$, so all points become equidistant. (§22.6)
 
 ### Saying it in plain English — classical machine learning
 
@@ -883,15 +883,15 @@ The direct consequence — and the follow-up question you should expect, because
 ## 34.9 Reinforcement learning
 
 **119. Prove the Bellman operator is a contraction.** ★
-$`\|\mathcal{T}V-\mathcal{T}W\|_\infty\le\max_{s,a}\gamma\sum_{s'}P(s'|s,a)|V(s')-W(s')|\le\gamma\|V-W\|_\infty`$, using $`|\max_af-\max_ag|\le\max_a|f-g|`$ and $\sum P=1$. Banach then gives a unique fixed point and geometric convergence at rate $\gamma^k$. (§26.4)
+$`\|\mathcal{T}V-\mathcal{T}W\|_\infty\le\max_{s,a}\gamma\sum_{s'}P(s'|s,a)|V(s')-W(s')|\le\gamma\|V-W\|_\infty`$, using $`|\max_af-\max_ag|\le\max_a|f-g|`$ and $`\sum P=1`$. Banach then gives a unique fixed point and geometric convergence at rate $`\gamma^k`$. (§26.4)
 
-**120. Why does $\gamma$ exist?**
-Convergence of the infinite sum, equivalence to a per-step termination probability, and variance reduction. Effective horizon $\frac{1}{1-\gamma}$. Higher $\gamma$ is more farsighted and provably slower to converge. (§26.2)
+**120. Why does $`\gamma`$ exist?**
+Convergence of the infinite sum, equivalence to a per-step termination probability, and variance reduction. Effective horizon $`\frac{1}{1-\gamma}`$. Higher $`\gamma`$ is more farsighted and provably slower to converge. (§26.2)
 
 > **Where this came from.** **Richard Bellman** developed dynamic programming at the RAND Corporation in the early 1950s, and in his autobiography he explains the name as an act of camouflage. His funding came through the Air Force and the Secretary of Defense at the time, Charles Wilson, was — by Bellman's account — actively hostile to anything that looked like mathematical research. So Bellman chose a name that was impossible to object to and conveyed nothing: "programming" in the wartime sense of scheduling and planning rather than computer code, and "dynamic" because it sounded impressive and could not be used pejoratively. The story comes to us from Bellman himself and is very likely polished in the retelling, but the naming convention it produced is real and still confuses people who expect "programming" to mean code. The fixed-point argument in the previous question is not Bellman's: it is **Stefan Banach's** contraction mapping theorem, published in 1922 in his doctoral work on functional analysis, three decades before anyone thought about sequential decisions. Bellman supplied the recursion; Banach supplied the guarantee that iterating it converges.
 
 **121. SARSA vs Q-learning — explain with Cliff Walking.** ★
-SARSA's target uses the action actually taken next, so it learns the value of the $\epsilon$-greedy policy *including* exploration and picks a safe path away from the cliff. Q-learning's $\max$ learns the greedy policy's value and takes the optimal cliff-edge path — better asymptotic policy, worse online return because it occasionally explores off the edge. (§26.6)
+SARSA's target uses the action actually taken next, so it learns the value of the $`\epsilon`$-greedy policy *including* exploration and picks a safe path away from the cliff. Q-learning's $`\max`$ learns the greedy policy's value and takes the optimal cliff-edge path — better asymptotic policy, worse online return because it occasionally explores off the edge. (§26.6)
 
 **122. What is maximization bias and how is it fixed?**
 $`\mathbb{E}[\max_a\hat Q]\ge\max_a\mathbb{E}[\hat Q]`$ by Jensen — the max of noisy estimates is too large, and Q-learning uses the same values to select and evaluate. Double Q-learning decouples: one estimator picks the action, the other scores it. Double DQN applies this with the online and target networks. (§26.6, §27.3)
@@ -900,30 +900,30 @@ $`\mathbb{E}[\max_a\hat Q]\ge\max_a\mathbb{E}[\hat Q]`$ by Jensen — the max of
 Function approximation + bootstrapping + off-policy training. Any two are safe; all three can diverge (Baird's counterexample). Every stabilizer in deep RL — target networks, replay, trust regions, conservative updates — is a partial countermeasure. (§26.7)
 
 **124. Why is a target network necessary in DQN?**
-Without it the regression target depends on the parameters being updated, so raising $Q(s,a)$ raises the target for $Q(s',a')$ — a positive feedback loop. Freezing the target turns RL back into a sequence of ordinary supervised regressions. (§27.2)
+Without it the regression target depends on the parameters being updated, so raising $`Q(s,a)`$ raises the target for $`Q(s',a')`$ — a positive feedback loop. Freezing the target turns RL back into a sequence of ordinary supervised regressions. (§27.2)
 
 **125. Derive the policy gradient theorem.** ★
-Log-derivative trick: $`\nabla_\theta\mathbb{E}[R]=\mathbb{E}[R\nabla_\theta\log p_\theta(\tau)]`$. Expanding $`\log p_\theta(\tau)`$, the transition dynamics and initial distribution don't depend on $\theta$ and vanish, leaving $`\mathbb{E}[\sum_t\nabla_\theta\log\pi_\theta(a_t|s_t)\Psi_t]`$. **The environment dropping out is what makes it model-free.** (§27.4)
+Log-derivative trick: $`\nabla_\theta\mathbb{E}[R]=\mathbb{E}[R\nabla_\theta\log p_\theta(\tau)]`$. Expanding $`\log p_\theta(\tau)`$, the transition dynamics and initial distribution don't depend on $`\theta`$ and vanish, leaving $`\mathbb{E}[\sum_t\nabla_\theta\log\pi_\theta(a_t|s_t)\Psi_t]`$. **The environment dropping out is what makes it model-free.** (§27.4)
 
 > **Where this came from.** The estimator this theorem justifies was introduced by **Ronald Williams** in 1992 under the name **REINFORCE**, which is a  acronym and not a pun: *REward Increment = Nonnegative Factor × Offset Reinforcement × Characteristic Eligibility*. Each capitalized fragment names a piece of the update — the step size, the reward relative to a baseline, and the gradient of the log-probability of the action taken. The theorem itself, in the form used today, was stated and proved by **Richard Sutton, David McAllester, Satinder Singh and Yishay Mansour** in 2000, which is what made policy gradients respectable with function approximation rather than a heuristic that happened to work. The underlying identity — that the derivative of an expectation can be rewritten as an expectation involving the derivative of a log-probability — is older still and is known in the simulation and operations-research literature as the *likelihood ratio* or *score function* method. As with so much of this book, the machinery was borrowed rather than invented.
 
 **126. Prove a baseline doesn't bias the policy gradient.**
-$`\mathbb{E}_a[\nabla\log\pi_\theta(a|s)b(s)]=b(s)\nabla\sum_a\pi_\theta(a|s)=b(s)\nabla 1=0`$. Any state-dependent baseline is free; the variance-minimizing one is near $V^\pi(s)$, giving the advantage. (§27.4)
+$`\mathbb{E}_a[\nabla\log\pi_\theta(a|s)b(s)]=b(s)\nabla\sum_a\pi_\theta(a|s)=b(s)\nabla 1=0`$. Any state-dependent baseline is free; the variance-minimizing one is near $`V^\pi(s)`$, giving the advantage. (§27.4)
 
-**127. Derive GAE and explain $\lambda$ vs $\gamma$.**
-$`\hat A^{\mathrm{GAE}}_t=\sum_l(\gamma\lambda)^l\delta_{t+l}`$ — an exponentially weighted average of all $k$-step advantage estimators. $\lambda=0$ gives $`\delta_t`$ (max bias, min variance); $\lambda=1$ gives Monte Carlo (unbiased, max variance). **$\gamma$ defines the objective; $\lambda$ is purely an estimator knob.** (§27.6)
+**127. Derive GAE and explain $`\lambda`$ vs $`\gamma`$.**
+$`\hat A^{\mathrm{GAE}}_t=\sum_l(\gamma\lambda)^l\delta_{t+l}`$ — an exponentially weighted average of all $`k`$-step advantage estimators. $`\lambda=0`$ gives $`\delta_t`$ (max bias, min variance); $`\lambda=1`$ gives Monte Carlo (unbiased, max variance). **$`\gamma`$ defines the objective; $`\lambda`$ is purely an estimator knob.** (§27.6)
 
 **128. Explain PPO's clipped objective, including the sign asymmetry.** ★
-$\mathcal{L}=\mathbb{E}[\min(\rho\hat A, \mathrm{clip}(\rho,1\pm\epsilon)\hat A)]$. For $\hat A>0$ the $\min$ caps the reward at $\rho=1+\epsilon$, removing incentive to move further. For $\hat A<0$ the $\min$ picks the more negative term, so there's no ceiling on pushing a bad action down until $\rho<1-\epsilon$. The $\min$ makes it a pessimistic lower bound on the surrogate — which is what makes multiple epochs on the same batch safe. (§27.7)
+$`\mathcal{L}=\mathbb{E}[\min(\rho\hat A, \mathrm{clip}(\rho,1\pm\epsilon)\hat A)]`$. For $`\hat A>0`$ the $`\min`$ caps the reward at $`\rho=1+\epsilon`$, removing incentive to move further. For $`\hat A<0`$ the $`\min`$ picks the more negative term, so there's no ceiling on pushing a bad action down until $`\rho<1-\epsilon`$. The $`\min`$ makes it a pessimistic lower bound on the surrogate — which is what makes multiple epochs on the same batch safe. (§27.7)
 
 **129. What is SAC's objective and how does it relate to RLHF?** ★
 Maximize reward plus policy entropy. The optimal policy is Boltzmann: $`\pi^*\propto\exp(Q/\alpha)`$ — **exactly the KL-regularized optimum from DPO's derivation with a uniform reference policy.** SAC's entropy bonus and RLHF's KL-to-reference are the same mathematical object. (§27.8, §16.5)
 
 **130. What is the core problem in offline RL?**
-Distributional shift on **actions**: the policy proposes actions absent from the data, $Q$ is unconstrained there, and the $\max$ systematically overestimates them — with no environment feedback to correct it. More gradient steps make it worse. Fixes: policy constraints (TD3+BC), conservative values (CQL), in-sample learning (IQL), or sequence modelling (Decision Transformer, which loses trajectory stitching). (§27.10)
+Distributional shift on **actions**: the policy proposes actions absent from the data, $`Q`$ is unconstrained there, and the $`\max`$ systematically overestimates them — with no environment feedback to correct it. More gradient steps make it worse. Fixes: policy constraints (TD3+BC), conservative values (CQL), in-sample learning (IQL), or sequence modelling (Decision Transformer, which loses trajectory stitching). (§27.10)
 
 **131. State the reward-shaping theorem.**
-Adding $F(s,a,s')=\gamma\Phi(s')-\Phi(s)$ leaves the optimal policy unchanged for any $\Phi$. Any non-potential-based shaping can change the optimum, usually badly. (§26.9)
+Adding $`F(s,a,s')=\gamma\Phi(s')-\Phi(s)`$ leaves the optimal policy unchanged for any $`\Phi`$. Any non-potential-based shaping can change the optimum, usually badly. (§26.9)
 
 > **Common misconception.** *"The reward function tells the agent what you want it to do."* The reward tells the agent what gets reinforced, which is a statement about a **measurement**, not about your intention. Every gap between the two is an opportunity, and optimization is precisely the process of discovering opportunities. The canonical demonstration is a boat-racing agent that found it could score more by circling a lagoon striking regenerating targets than by finishing the course — behaving flawlessly, by the only definition it had been given, while never completing a race. The belief is tempting because writing the reward *feels* like stating the goal; the words in your head are about winning the race, and the number in the code is about points. This is also why the theorem above matters more than it looks: a well-meant bonus for behaviour you consider good will change the optimal policy unless it is potential-based. **A bonus paid whenever the agent moves closer to the goal, with no matching penalty for moving away, is a bonus for oscillating** — and an agent will find that out long before you do.
 
@@ -995,13 +995,13 @@ Now look at the RLHF objective: maximize reward while staying close, in KL terms
 ## 34.10 Vision, graphs, and the science of DL
 
 **133. Two 3×3 convs vs one 5×5?**
-Same receptive field, $18C^2$ vs $25C^2$ parameters, and two nonlinearities instead of one. The whole VGG argument. (§8.6)
+Same receptive field, $`18C^2`$ vs $`25C^2`$ parameters, and two nonlinearities instead of one. The whole VGG argument. (§8.6)
 
 **134. What does a 1×1 convolution do?**
 Channel dimensionality reduction, cross-channel mixing, and cheap added nonlinearity. It's a per-position dense layer. (§8.1)
 
 **135. Why is the effective receptive field smaller than the theoretical one?**
-Paths from the centre to the output vastly outnumber paths from the edge, so influence is a random-walk convolution — approximately Gaussian with radius $\propto\sqrt L$ rather than $L$. Assume roughly the square root of the formula. (§8.1)
+Paths from the centre to the output vastly outnumber paths from the edge, so influence is a random-walk convolution — approximately Gaussian with radius $`\propto\sqrt L`$ rather than $`L`$. Assume roughly the square root of the formula. (§8.1)
 
 **136. What causes checkerboard artifacts?**
 Transposed convolution with a stride that doesn't divide the kernel size, giving uneven overlap. Fix: nearest/bilinear upsample followed by a normal conv. (§8.1)
@@ -1010,13 +1010,13 @@ Transposed convolution with a stride that doesn't divide the kernel size, giving
 A CNN's locality/translation prior is correct but restrictive. When data is scarce, a correct prior substitutes for data; when data is abundant, it becomes a ceiling. Probing shows large-data ViTs *rediscover* convolution-like early layers. (§28.1)
 
 **138. Explain CLIP's objective and one known weakness.**
-Symmetric InfoNCE over a batch: an $N$-way "which caption belongs to this image" classification in both directions, with a learned temperature. Weakness: it behaves substantially like a bag of concepts — "a horse riding an astronaut" embeds near "an astronaut riding a horse" (ARO benchmark). Also weak at counting, spatial relations, and negation. (§28.2)
+Symmetric InfoNCE over a batch: an $`N`$-way "which caption belongs to this image" classification in both directions, with a learned temperature. Weakness: it behaves substantially like a bag of concepts — "a horse riding an astronaut" embeds near "an astronaut riding a horse" (ARO benchmark). Also weak at counting, spatial relations, and negation. (§28.2)
 
 **139. Why SigLIP over CLIP?**
 The softmax needs a global normalization over the batch, forcing an expensive all-gather. A pairwise sigmoid loss is decomposable per pair, so it works at small batch sizes and scales without the communication cost. (§28.2)
 
 **140. What limits GNN depth?** ★
-Over-smoothing: repeated neighbourhood averaging is diffusion; $\hat A^L$ converges to a rank-one projection, so all node representations collapse, exponentially in $L$. Over-squashing pushes the other way: an exponentially large receptive field compressed into a fixed vector, bounded by the graph's spectral gap. Hence 2–4 layers, and hence graph transformers. (§29.5)
+Over-smoothing: repeated neighbourhood averaging is diffusion; $`\hat A^L`$ converges to a rank-one projection, so all node representations collapse, exponentially in $`L`$. Over-squashing pushes the other way: an exponentially large receptive field compressed into a fixed vector, bounded by the graph's spectral gap. Hence 2–4 layers, and hence graph transformers. (§29.5)
 
 **141. State the WL expressivity bound.** ★
 Message-passing GNNs are at most as powerful as the 1-WL test, because a layer computes a function of (node feature, multiset of neighbour features) — structurally a WL refinement round. Consequence: they cannot count triangles, detect cycles, or distinguish two 3-regular graphs of the same size. GIN reaches the bound by using **sum** aggregation (injective on multisets — mean and max are not) plus an MLP. (§29.4)
@@ -1025,25 +1025,25 @@ Message-passing GNNs are at most as powerful as the 1-WL test, because a layer c
 It's a hard constraint, so the model never spends capacity learning that physics is rotation-invariant, and it generalizes perfectly to unseen orientations. ~10× data efficiency on molecular property prediction. (§29.8)
 
 **143. Explain double descent.** ★
-Test error peaks at the interpolation threshold ($p\approx n$) because the design matrix is generically near-singular there (Marchenko–Pastur), so the minimum-norm interpolant's norm blows up. Past it, the solution space grows and the minimum-norm element gets smaller and smoother. Model-wise, epoch-wise, and sample-wise variants all exist — and more data can hurt. Explicit regularization removes the peak. (§30.1)
+Test error peaks at the interpolation threshold ($`p\approx n`$) because the design matrix is generically near-singular there (Marchenko–Pastur), so the minimum-norm interpolant's norm blows up. Past it, the solution space grows and the minimum-norm element gets smaller and smoother. Model-wise, epoch-wise, and sample-wise variants all exist — and more data can hurt. Explicit regularization removes the peak. (§30.1)
 
 **144. What is the NTK and what does it fail to explain?** ★
-At infinite width, the tangent kernel $`\Theta(x,x')=\langle\nabla_\theta f(x),\nabla_\theta f(x')\rangle`$ is deterministic and constant during training, so the network is exactly kernel regression with a fixed feature map. Explains convergence to global minima and spectral bias (smooth functions fit first). Fails because features never change — so it cannot explain transfer learning or representation learning, and finite networks beat their NTK. Real networks are deliberately kept in the feature-learning regime, which is what $\mu$P preserves. (§30.2)
+At infinite width, the tangent kernel $`\Theta(x,x')=\langle\nabla_\theta f(x),\nabla_\theta f(x')\rangle`$ is deterministic and constant during training, so the network is exactly kernel regression with a fixed feature map. Explains convergence to global minima and spectral bias (smooth functions fit first). Fails because features never change — so it cannot explain transfer learning or representation learning, and finite networks beat their NTK. Real networks are deliberately kept in the feature-learning regime, which is what $`\mu`$P preserves. (§30.2)
 
 **145. Explain grokking.** ★
-Delayed generalization: 100% train accuracy at step $10^3$, test accuracy jumps at $10^5$. A memorizing circuit is found first; a generalizing one has smaller weight norm. Once training loss is ~0, the CE gradient vanishes and **weight decay becomes the dominant force**, slowly drifting the model along the zero-loss manifold to the minimum-norm (generalizing) solution. For modular addition the circuit was fully reverse-engineered as a discrete Fourier transform. Continuous progress measures show smooth formation — the discontinuity is in the metric. (§30.3)
+Delayed generalization: 100% train accuracy at step $`10^3`$, test accuracy jumps at $`10^5`$. A memorizing circuit is found first; a generalizing one has smaller weight norm. Once training loss is ~0, the CE gradient vanishes and **weight decay becomes the dominant force**, slowly drifting the model along the zero-loss manifold to the minimum-norm (generalizing) solution. For modular addition the circuit was fully reverse-engineered as a discrete Fourier transform. Continuous progress measures show smooth formation — the discontinuity is in the metric. (§30.3)
 
 **146. What is neural collapse?** ★
-In the terminal phase of training: within-class variability →0 (NC1), class means form a simplex ETF with pairwise cosine $-\frac{1}{C-1}$ (NC2), classifier weights align with class means (NC3), and classification reduces to nearest class centre (NC4). It's the global optimum of the unconstrained-features problem. NC1 destroys within-class information, which is a quantitative account of why over-training a classifier gives worse transfer features.  (§31.1)
+In the terminal phase of training: within-class variability →0 (NC1), class means form a simplex ETF with pairwise cosine $`-\frac{1}{C-1}`$ (NC2), classifier weights align with class means (NC3), and classification reduces to nearest class centre (NC4). It's the global optimum of the unconstrained-features problem. NC1 destroys within-class information, which is a quantitative account of why over-training a classifier gives worse transfer features.  (§31.1)
 
 **147. What is the implicit bias of gradient descent?** ★
-On separable data with logistic loss, $w(t)/\|w(t)\|$ converges to the max-margin SVM direction — at rate $O(1/\log t)$, which is why training long past zero error still helps. On least squares from zero init it converges to the minimum $`\ell_2`$-norm interpolant. Adam's coordinate-wise normalization gives a different ($`\ell_\infty`$-geometry / $`\ell_1`$-margin) bias, which is the real explanation for the Adam generalization gap. (§31.2)
+On separable data with logistic loss, $`w(t)/\|w(t)\|`$ converges to the max-margin SVM direction — at rate $`O(1/\log t)`$, which is why training long past zero error still helps. On least squares from zero init it converges to the minimum $`\ell_2`$-norm interpolant. Adam's coordinate-wise normalization gives a different ($`\ell_\infty`$-geometry / $`\ell_1`$-margin) bias, which is the real explanation for the Adam generalization gap. (§31.2)
 
 **148. What's wrong with "flat minima generalize better"?**
-Sharpness isn't reparameterization-invariant: $`(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)`$ leaves a ReLU network's function unchanged while scaling Hessian eigenvalues by $\alpha^{\pm2}$ (Dinh et al.). So any minimum can be made arbitrarily sharp. Responses: scale-invariant sharpness measures, the observation that such reparameterizations aren't visited in practice, and SAM's empirical success. (§31.3)
+Sharpness isn't reparameterization-invariant: $`(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)`$ leaves a ReLU network's function unchanged while scaling Hessian eigenvalues by $`\alpha^{\pm2}`$ (Dinh et al.). So any minimum can be made arbitrarily sharp. Responses: scale-invariant sharpness measures, the observation that such reparameterizations aren't visited in practice, and SAM's empirical success. (§31.3)
 
 **149. State the Lottery Ticket Hypothesis and the correction to it.** ★
-A dense random network contains a sparse subnetwork that, trained *from the original initialization*, matches full accuracy. Found by iterative magnitude pruning with weight **resetting** — reinitializing the same mask randomly fails, so the ticket is (mask, init). The correction: at ImageNet scale you must **rewind** to $`\theta_k`$ for small $k$ rather than $`\theta_0`$ — the ticket forms in the first few hundred steps, at the point of linear mode connectivity. (§31.4)
+A dense random network contains a sparse subnetwork that, trained *from the original initialization*, matches full accuracy. Found by iterative magnitude pruning with weight **resetting** — reinitializing the same mask randomly fails, so the ticket is (mask, init). The correction: at ImageNet scale you must **rewind** to $`\theta_k`$ for small $`k`$ rather than $`\theta_0`$ — the ticket forms in the first few hundred steps, at the point of linear mode connectivity. (§31.4)
 
 **150. Why does model merging work?** ★
 Models fine-tuned from a shared base stay in the same loss basin, so task vectors $`\tau=\theta_{\text{FT}}-\theta_{\text{pre}}`$ add meaningfully (and negate to remove behaviours). Models from *different* seeds are in the same basin only up to **permutation symmetry** of hidden units — align the units first (Git Re-Basin) and the interpolation barrier largely disappears. (§17.8, §31.5)
@@ -1052,7 +1052,7 @@ Models fine-tuned from a shared base stay in the same loss basin, so task vector
 A model represents more features than it has dimensions by using nearly-orthogonal directions, tolerating interference because features are sparse and rarely co-active — and a ReLU suppresses the small crosstalk. JL guarantees exponentially many such directions exist. Consequence: individual neurons are polysemantic, so "what does neuron 1432 do" is the wrong question. In the toy model, sparsity drives a phase transition from orthogonal representation to antipodal pairs to tetrahedra and other sphere packings. (§32.2)
 
 **152. What is a sparse autoencoder and what are its problems?**
-An overcomplete ($m\approx 8$–256$\times d$) autoencoder with an $`\ell_1`$ penalty, trained to reconstruct activations from a sparse code. Problems: $`\ell_1`$ shrinkage biases all magnitudes toward zero (fixed by TopK/JumpReLU), dead features, **feature splitting with no canonical granularity**, and circular evaluation. Strongest evidence for their validity is causal: clamping a feature steers behaviour. (§32.3)
+An overcomplete ($`m\approx 8`$–256$`\times d`$) autoencoder with an $`\ell_1`$ penalty, trained to reconstruct activations from a sparse code. Problems: $`\ell_1`$ shrinkage biases all magnitudes toward zero (fixed by TopK/JumpReLU), dead features, **feature splitting with no canonical granularity**, and circular evaluation. Strongest evidence for their validity is causal: clamping a feature steers behaviour. (§32.3)
 
 **153. What are QK and OV circuits?**
 An attention head factorizes into $`W_{QK}=W_Q^\top W_K`$, which decides *where* to read, and $`W_{OV}=W_OW_V`$, which decides *what* to write. Independently analyzable low-rank operations in the residual-stream basis. (§32.4)
@@ -1067,13 +1067,13 @@ Likelihood in high dimensions is dominated by low-level statistics, not semantic
 Capacity plus reduced regularization: the model drives training NLL toward zero, pushing probabilities to 1 long after accuracy saturates. Fix with **temperature scaling** — one scalar fitted on validation NLL, which cannot change accuracy and often reduces ECE 10×. Caveat: it calibrates in-distribution only. (§33.1–33.2)
 
 **157. Explain conformal prediction and prove the coverage guarantee.** ★★
-Split off a calibration set, compute nonconformity scores, take the $\lceil(n+1)(1-\alpha)\rceil/n$ quantile $\hat q$, and predict $\{y: s(x,y)\le\hat q\}$. Proof: under exchangeability the new score's rank among $n+1$ scores is uniform, so $`P(s_{\text{new}}\le s_{(\lceil(n+1)(1-\alpha)\rceil)})\ge1-\alpha`$. Requires nothing of the model. **But coverage is marginal, not conditional** — 90% overall can hide 40% on a subgroup; use group-conditional calibration. (§33.5)
+Split off a calibration set, compute nonconformity scores, take the $`\lceil(n+1)(1-\alpha)\rceil/n`$ quantile $`\hat q`$, and predict $`\{y: s(x,y)\le\hat q\}`$. Proof: under exchangeability the new score's rank among $`n+1`$ scores is uniform, so $`P(s_{\text{new}}\le s_{(\lceil(n+1)(1-\alpha)\rceil)})\ge1-\alpha`$. Requires nothing of the model. **But coverage is marginal, not conditional** — 90% overall can hide 40% on a subgroup; use group-conditional calibration. (§33.5)
 
 **158. Aleatoric vs epistemic uncertainty, and why do ensembles beat MC dropout?**
 Aleatoric is irreducible data noise; epistemic is model uncertainty, reducible with data, and equals the *disagreement* among plausible models. Ensembles beat MC dropout and variational methods because different initializations land in  different loss basins, giving functional diversity; single-mode methods only explore one basin's neighbourhood. (§33.3–33.4)
 
 **159. Why do adversarial examples exist?** ★
-Locally, $w^\top\delta$ with $\delta=\epsilon\,\mathrm{sign}(w)$ gives a change of $`\epsilon\|w\|_1`$, which grows with dimension — many tiny coordinated changes sum to a large logit change. Deeper: Ilyas et al. showed they arise from **non-robust features that are  predictive** — a dataset labelled only by non-robust features yields good clean test accuracy. Vulnerability is a property of the data the model faithfully learned, not a bug.  (§33.8)
+Locally, $`w^\top\delta`$ with $`\delta=\epsilon\,\mathrm{sign}(w)`$ gives a change of $`\epsilon\|w\|_1`$, which grows with dimension — many tiny coordinated changes sum to a large logit change. Deeper: Ilyas et al. showed they arise from **non-robust features that are  predictive** — a dataset labelled only by non-robust features yields good clean test accuracy. Vulnerability is a property of the data the model faithfully learned, not a bug.  (§33.8)
 
 **160. How do you evaluate an adversarial defence honestly?**
 AutoAttack plus adaptive attacks designed against your specific defence. Watch for gradient masking: black-box beating white-box, unbounded attacks failing to reach 0%, or one-step beating iterative. Most published defences were broken this way. (§33.8)
@@ -1130,7 +1130,7 @@ Train a good density model on CIFAR-10 — small photographs of animals and vehi
 
 The explanation is that likelihood in high dimensions is dominated by the boring statistics. Predicting an image pixel by pixel, the overwhelming majority of your score comes from getting local smoothness right — this pixel resembles its neighbour — and house-number photographs are much smoother and flatter than photographs of animals. Easy to predict means high likelihood. Nothing in the objective ever asked "is this the *kind* of thing I was trained on."
 
-The idea that makes this click, and that is worth stating in exactly these words: **likelihood is not typicality.** In high dimensions, the region where samples actually land is not the region of highest density. Draw from a five-hundred-dimensional standard Gaussian and you will essentially never land near the origin, even though the origin is the single most probable point — because the volume out at radius $\sqrt{d}$ is overwhelming. So the most probable point is not a typical point, and "high likelihood" and "looks like my training data" come apart. Practical fixes therefore stop asking "is this likely?" and start asking "is this likelier under my model than under a generic background model?" — a likelihood *ratio*, which cancels the low-level statistics that were doing all the damage.
+The idea that makes this click, and that is worth stating in exactly these words: **likelihood is not typicality.** In high dimensions, the region where samples actually land is not the region of highest density. Draw from a five-hundred-dimensional standard Gaussian and you will essentially never land near the origin, even though the origin is the single most probable point — because the volume out at radius $`\sqrt{d}`$ is overwhelming. So the most probable point is not a typical point, and "high likelihood" and "looks like my training data" come apart. Practical fixes therefore stop asking "is this likely?" and start asking "is this likelier under my model than under a generic background model?" — a likelihood *ratio*, which cancels the low-level statistics that were doing all the damage.
 
 **Q157 — Conformal prediction.**
 You have a trained model of unknown quality and you want a set of predictions that provably contains the truth ninety percent of the time. No assumption about the model, no assumption about the data distribution.
@@ -1155,19 +1155,19 @@ If you internalize only ten things, make it these.
 
 1. **Why VC bounds are vacuous for deep nets, and what replaces them.** The bound is on what the class *could* do; deep nets fit random labels, so any capacity-only bound must be vacuous. The explanation is the optimizer's implicit bias. (Q12, §2.7, §31.2)
 
-2. **The $\eta\lambda$ coupling in normalized networks.** Normalization makes the layer scale-invariant, the gradient orthogonal to $W$, and the effective LR $\eta/\|W\|^2$. Weight decay is a learning-rate control, and only the product matters. (Q38, §7.4)
+2. **The $`\eta\lambda`$ coupling in normalized networks.** Normalization makes the layer scale-invariant, the gradient orthogonal to $`W`$, and the effective LR $`\eta/\|W\|^2`$. Weight decay is a learning-rate control, and only the product matters. (Q38, §7.4)
 
-3. **The full DPO derivation.** Gibbs optimum → invert → $Z(x)$ cancels in the Bradley–Terry difference. (Q69, §16.5)
+3. **The full DPO derivation.** Gibbs optimum → invert → $`Z(x)`$ cancels in the Bradley–Terry difference. (Q69, §16.5)
 
-4. **$C=6ND$ and Chinchilla, derived rather than recited** — including why nobody follows it (inference cost). (Q48, Q63, Q64)
+4. **$`C=6ND`$ and Chinchilla, derived rather than recited** — including why nobody follows it (inference cost). (Q48, Q63, Q64)
 
 5. **Why decode is memory-bound**, and the three consequences: batching is nearly free, quantization is near-linear, and the KV cache is the real constraint. (Q75, Q49, Q53)
 
 6. **Speculative decoding is lossless**, with the modified-rejection-sampling reason. (Q74)
 
-7. **XGBoost's gain formula, derived.** Second-order expansion → $`w^*=-G/(H+\lambda)`$ → gain with a $\gamma$ per-leaf cost, which is principled pruning. (Q108)
+7. **XGBoost's gain formula, derived.** Second-order expansion → $`w^*=-G/(H+\lambda)`$ → gain with a $`\gamma`$ per-leaf cost, which is principled pruning. (Q108)
 
-8. **The variance formula $\rho\sigma^2+\frac{1-\rho}{B}\sigma^2$** and the fact that it *is* the design rationale for random forests. (Q105)
+8. **The variance formula $`\rho\sigma^2+\frac{1-\rho}{B}\sigma^2`$** and the fact that it *is* the design rationale for random forests. (Q105)
 
 9. **Why the emergence debate has two correct sides.** Underlying capability improves smoothly; discontinuous metrics manufacture cliffs; mechanistic transitions are nonetheless real. (Q65, §15.4, §30.3)
 
@@ -1216,7 +1216,7 @@ The gap between a passing answer and a strong one is rarely knowledge. It is str
 |---|---|
 | *"Explain KL divergence"* | Gives the coding interpretation first, **then** the formula, then names the asymmetry and what it does to samples |
 | *"Why is backprop reverse-mode?"* | Says "many parameters, one loss" — a statement about **shape**, not about neural networks |
-| *"Is this improvement real?"* | Asks for the error bar before answering. $\sigma/\sqrt{n}$ against the observed delta |
+| *"Is this improvement real?"* | Asks for the error bar before answering. $`\sigma/\sqrt{n}`$ against the observed delta |
 | *"Why does BatchNorm work?"* | States that the original internal-covariate-shift explanation is now disputed, and gives the smoothing account |
 | *"Explain LoRA"* | Says the **update** is low-rank, not the weights — and connects it to Eckart–Young |
 

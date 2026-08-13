@@ -2,25 +2,25 @@
 
 > **Prerequisites:** Ch. 2, Ch. 4, Ch. 30.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\langle\cdot,\cdot\rangle$, $\propto$, $\to$, or $\arg\min$ are unfamiliar — or if you have ever wondered why $\sigma$ seems to mean four different things — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\langle\cdot,\cdot\rangle`$, $`\propto`$, $`\to`$, or $`\arg\min`$ are unfamiliar — or if you have ever wondered why $`\sigma`$ seems to mean four different things — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $`h_{i,c}`$ | "h-i-c" | The **feature vector** of example $i$ from class $c$, taken from the second-to-last layer |
-| $`\mu_c`$ | "mu-c" | The **class mean** — average feature vector of class $c$ |
+| $`h_{i,c}`$ | "h-i-c" | The **feature vector** of example $`i`$ from class $`c`$, taken from the second-to-last layer |
+| $`\mu_c`$ | "mu-c" | The **class mean** — average feature vector of class $`c`$ |
 | $`\mu_G`$ | "mu-G" | The **global mean** — average over everything |
 | $`\tilde\mu_c`$ | "mu-c tilde" | The **centred** class mean, $`\mu_c - \mu_G`$ |
 | $`\Sigma_W`$ | "Sigma-W" | **Within-class scatter** — how spread out one class's features are |
-| $`w_c`$ | "w-c" | The classifier's **weight vector** for class $c$ |
-| $C$ | "C" | The **number of classes** |
-| $\langle a,b\rangle$ | "inner product" | Dot product — a similarity/alignment score |
-| $\vartheta$ | "theta" | The **angle** between two class means |
+| $`w_c`$ | "w-c" | The classifier's **weight vector** for class $`c`$ |
+| $`C`$ | "C" | The **number of classes** |
+| $`\langle a,b\rangle`$ | "inner product" | Dot product — a similarity/alignment score |
+| $`\vartheta`$ | "theta" | The **angle** between two class means |
 | $`\hat w_{\text{SVM}}`$ | "w-hat SVM" | The **max-margin** solution a support vector machine would find |
-| $\frac{w(t)}{\|w(t)\|}$ | "w over norm w" | The **direction** of the weights, with length divided out |
+| $`\frac{w(t)}{\|w(t)\|}`$ | "w over norm w" | The **direction** of the weights, with length divided out |
 | $`\theta_0`$ | "theta-zero" | The **initialization** — weights before any training |
-| $O(1/\log t)$ | "order one over log t" | A **very** slow rate — see below |
+| $`O(1/\log t)`$ | "order one over log t" | A **very** slow rate — see below |
 
 ### Abbreviations used in this chapter
 
@@ -49,22 +49,22 @@ Keep training a classifier *past* the point where training error hits zero — i
 
 ### The four properties
 
-Let $`h_{i,c}`$ be the penultimate-layer feature of the $i$-th example of class $c$, $`\mu_c`$ the class mean, $`\mu_G`$ the global mean, and $`w_c`$ the classifier weight vector for class $c$.
+Let $`h_{i,c}`$ be the penultimate-layer feature of the $`i`$-th example of class $`c`$, $`\mu_c`$ the class mean, $`\mu_G`$ the global mean, and $`w_c`$ the classifier weight vector for class $`c`$.
 
-▸ **NC1 — Variability collapse.** Within-class scatter $\to0$: $`\Sigma_W\to0`$, so every example of a class maps to *the same point*.
+▸ **NC1 — Variability collapse.** Within-class scatter $`\to0`$: $`\Sigma_W\to0`$, so every example of a class maps to *the same point*.
 
 ▸ **NC2 — Simplex ETF.** The centred class means $`\tilde\mu_c=\mu_c-\mu_G`$ become equinorm and equiangular, forming a **simplex equiangular tight frame**:
 $$\frac{\langle\tilde\mu_c,\tilde\mu_{c'}\rangle}{\|\tilde\mu_c\|\|\tilde\mu_{c'}\|} \to \begin{cases}1 & c=c'\\[2pt] -\dfrac{1}{C-1} & c\ne c'\end{cases}$$
 
-▸ **NC3 — Self-duality.** The classifier weights align with the class means: $W\propto \tilde M^\top$. The classifier and the features become the same object.
+▸ **NC3 — Self-duality.** The classifier weights align with the class means: $`W\propto \tilde M^\top`$. The classifier and the features become the same object.
 
 ▸ **NC4 — Simplification to nearest class centre.** The network's decision reduces to $`\arg\min_c\|h-\mu_c\|`$ — a nearest-centroid classifier.
 
-### Why $-\frac{1}{C-1}$
+### Why $`-\frac{1}{C-1}`$
 
-▸ It is the **maximally separated** configuration for $C$ points on a sphere in $\ge C-1$ dimensions. Proof: if $`\sum_c\tilde\mu_c=0`$ (which centring enforces) and all have equal norm, then
+▸ It is the **maximally separated** configuration for $`C`$ points on a sphere in $`\ge C-1`$ dimensions. Proof: if $`\sum_c\tilde\mu_c=0`$ (which centring enforces) and all have equal norm, then
 $$0 = \Big\|\sum_c\tilde\mu_c\Big\|^2 = C\|\tilde\mu\|^2 + C(C-1)\|\tilde\mu\|^2\cos\vartheta \implies \cos\vartheta = -\frac{1}{C-1}$$
-∎ For $C=3$ this is $-1/2$, i.e. 120° apart — an equilateral triangle. For large $C$, nearly orthogonal.
+∎ For $`C=3`$ this is $`-1/2`$, i.e. 120° apart — an equilateral triangle. For large $`C`$, nearly orthogonal.
 
 ### Why it happens
 
@@ -74,7 +74,7 @@ The **unconstrained features model**: treat the penultimate features as free var
 
 ### Why it matters practically
 
-- **Explains why the last layer can be frozen at a fixed ETF** with no loss of accuracy, saving parameters at large $C$.
+- **Explains why the last layer can be frozen at a fixed ETF** with no loss of accuracy, saving parameters at large $`C`$.
 - **Explains label smoothing's effect** — it accelerates collapse (Ch. 7 §7.5).
 - ▸ **NC1 is a form of information destruction.** Collapsing all within-class variability discards exactly the information needed for transfer, fine-grained distinctions, and OOD detection. **This is a quantitative account of why training a classifier too long produces worse features for downstream use**, and it is an argument for using self-supervised features (Ch. 25) instead.
 - Under class imbalance, collapse becomes **minority collapse**: minority class means converge toward each other and become indistinguishable — a precise characterization of what imbalance does to representations.
@@ -96,18 +96,18 @@ The four properties, stated without notation:
 
 > **Analogy.** A parade forming up. Early on, everyone mills around loosely near their group. As the drill sergeant keeps calling, each group compresses into a single tight cluster (NC1), and the clusters space themselves as far apart as the parade ground permits (NC2). Ask "which group is that person in?" and you simply find the nearest cluster (NC4).
 
-**Why $-\frac{1}{C-1}$ is the magic number.** It's the cosine of the angle between class means, and it says: *"be as far apart as possible while summing to zero."*
+**Why $`-\frac{1}{C-1}`$ is the magic number.** It's the cosine of the angle between class means, and it says: *"be as far apart as possible while summing to zero."*
 
 Work the small cases:
 
-| $C$ | $-\frac{1}{C-1}$ | Angle | Shape |
+| $`C`$ | $`-\frac{1}{C-1}`$ | Angle | Shape |
 |---|---|---|---|
-| 2 | $-1$ | 180° | Opposite ends of a line |
-| 3 | $-0.5$ | 120° | Equilateral triangle |
-| 4 | $-0.33$ | 109.5° | Tetrahedron |
-| 1000 | $-0.001$ | ≈90° | Essentially orthogonal |
+| 2 | $`-1`$ | 180° | Opposite ends of a line |
+| 3 | $`-0.5`$ | 120° | Equilateral triangle |
+| 4 | $`-0.33`$ | 109.5° | Tetrahedron |
+| 1000 | $`-0.001`$ | ≈90° | Essentially orthogonal |
 
-▸ **A "simplex" is just the generalization of triangle/tetrahedron to any dimension**, and an "equiangular tight frame" means all pairs are the same angle apart, spread as evenly as possible. **At large $C$ the angle approaches 90°** — which connects straight back to Chapter 1 §1.1.5: in high dimensions, near-orthogonal is the natural resting state, and there is room for many such directions.
+▸ **A "simplex" is just the generalization of triangle/tetrahedron to any dimension**, and an "equiangular tight frame" means all pairs are the same angle apart, spread as evenly as possible. **At large $`C`$ the angle approaches 90°** — which connects straight back to Chapter 1 §1.1.5: in high dimensions, near-orthogonal is the natural resting state, and there is room for many such directions.
 
 **Why the negative sign?** Because the centred means must sum to zero (that's what centring does). Vectors summing to zero must, on average, point away from one another — you cannot have three vectors that all agree and still cancel.
 
@@ -148,18 +148,18 @@ The answer cannot be capacity (Ch. 2 showed those bounds are vacuous; Ch. 30 sho
 
 ### The linear case, solved
 
-**Separable logistic regression** (Soudry, Hoffer & Srebro, 2018). The loss $`\sum_i\log(1+e^{-y_i w^\top x_i})`$ has no finite minimizer — $\|w\|\to\infty$. But the *direction* converges:
+**Separable logistic regression** (Soudry, Hoffer & Srebro, 2018). The loss $`\sum_i\log(1+e^{-y_i w^\top x_i})`$ has no finite minimizer — $`\|w\|\to\infty`$. But the *direction* converges:
 
 ▸ $$\frac{w(t)}{\|w(t)\|}\ \longrightarrow\ \frac{\hat w_{\text{SVM}}}{\|\hat w_{\text{SVM}}\|}$$
 
 **Gradient descent on logistic loss converges in direction to the max-margin (hard-margin SVM) solution.** No regularization required, no early stopping.
 
-▸ **The rate is $O(1/\log t)$ — extraordinarily slow.** Consequences worth stating:
+▸ **The rate is $`O(1/\log t)`$ — extraordinarily slow.** Consequences worth stating:
 1. **The loss keeps improving long after training error is zero**, and the margin keeps growing. This is what "training past convergence" is doing.
 2. **The margin at any finite time is far from optimal.** So the implicit bias is real but weak, and explicit regularization still helps.
 3. It gives a principled reason to train longer than the loss curve suggests.
 
-**Other cases:** gradient descent on **least squares** from $`\theta_0=0`$ converges to the **minimum $`\ell_2`$-norm** interpolant (it stays in the row space of $X$, which is the smallest-norm solution). Deep *linear* networks bias toward low-rank / low nuclear norm. Matrix factorization with small initialization biases toward low rank.
+**Other cases:** gradient descent on **least squares** from $`\theta_0=0`$ converges to the **minimum $`\ell_2`$-norm** interpolant (it stays in the row space of $`X`$, which is the smallest-norm solution). Deep *linear* networks bias toward low-rank / low nuclear norm. Matrix factorization with small initialization biases toward low rank.
 
 ### Nonlinear networks
 
@@ -176,19 +176,19 @@ Fully rigorous results are limited to special cases, but the established picture
 
 > **Analogy.** You ask a contractor to build a house meeting a list of code requirements. Thousands of designs satisfy the code, and they differ enormously in quality. Two contractors given the identical spec produce different houses because each has habits the spec never mentioned. **Gradient descent is a contractor with good habits, and we are trying to write down what those habits are.**
 
-**Reading the max-margin result.** For separable logistic regression, the weights grow without bound — $\|w\|\to\infty$ — because the loss can always be reduced a little more by becoming more confident. So the weight *vector* doesn't converge. But its **direction** does, and it converges to the max-margin solution: the boundary that leaves the widest possible gap between the classes.
+**Reading the max-margin result.** For separable logistic regression, the weights grow without bound — $`\|w\|\to\infty`$ — because the loss can always be reduced a little more by becoming more confident. So the weight *vector* doesn't converge. But its **direction** does, and it converges to the max-margin solution: the boundary that leaves the widest possible gap between the classes.
 
 ▸ **That is a striking result.** Nobody added a margin term. Nobody regularized. Plain gradient descent on plain logistic loss ends up solving the same problem a support vector machine solves explicitly. **The optimizer smuggled in a preference for wide margins for free.**
 
-**Why $O(1/\log t)$ is the important detail.** This is a  brutal rate. Put numbers on it:
+**Why $`O(1/\log t)`$ is the important detail.** This is a  brutal rate. Put numbers on it:
 
-| Steps $t$ | $1/\log t$ |
+| Steps $`t`$ | $`1/\log t`$ |
 |---|---|
-| $10^3$ | $0.145$ |
-| $10^6$ | $0.072$ |
-| $10^{12}$ | $0.036$ |
+| $`10^3`$ | $`0.145`$ |
+| $`10^6`$ | $`0.072`$ |
+| $`10^{12}`$ | $`0.036`$ |
 
-**A billion-fold increase in training halves the gap.** Compare with a typical $O(1/t)$ rate, where a billion-fold increase improves things a billion-fold.
+**A billion-fold increase in training halves the gap.** Compare with a typical $`O(1/t)`$ rate, where a billion-fold increase improves things a billion-fold.
 
 ▸ **Three consequences, all practical:**
 1. The loss keeps improving long after training accuracy hits 100% — **that is not wasted computation**, it is margin still growing.
@@ -230,7 +230,7 @@ Fully rigorous results are limited to special cases, but the established picture
 
 **This is the explanation for the persistent Adam-generalization gap** (Ch. 5 §5.6): Adam converges faster but often to a worse-generalizing solution on vision tasks, while being essential for transformers. It is a  difference in what the optimizer prefers, not merely a tuning artifact.
 
-▸ **This is also the correct reason to prefer AdamW over Adam+L2** (Ch. 5 §5.2). With Adam's preconditioner, an $`\ell_2`$ term added to the loss gets divided by $\sqrt{\hat v}$, so the effective decay differs per coordinate and no longer corresponds to any clean norm penalty. Decoupling restores it.
+▸ **This is also the correct reason to prefer AdamW over Adam+L2** (Ch. 5 §5.2). With Adam's preconditioner, an $`\ell_2`$ term added to the loss gets divided by $`\sqrt{\hat v}`$, so the effective decay differs per coordinate and no longer corresponds to any clean norm penalty. Decoupling restores it.
 
 ---
 
@@ -242,13 +242,13 @@ Flat minima generalize better than sharp ones, because a flat minimum's loss is 
 
 **Measures of sharpness:**
 - $`\lambda_{\max}(\nabla^2\mathcal{L})`$ — the top Hessian eigenvalue (Ch. 5 §5.5's Edge of Stability quantity).
-- $\mathrm{tr}(H)$ — average curvature.
+- $`\mathrm{tr}(H)`$ — average curvature.
 - $`\max_{\|\epsilon\|\le\rho}\mathcal{L}(\theta+\epsilon)-\mathcal{L}(\theta)`$ — worst-case within a ball; this is SAM's objective.
 - The PAC-Bayes / MDL argument: a flat minimum needs fewer bits to specify to a given loss tolerance, and Chapter 2 §2.6 showed description length bounds generalization.
 
 ### The objection you must know
 
-▸ **Dinh et al. (2017): sharpness is not reparameterization-invariant.** For a ReLU network, the map $`(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)`$ leaves the function *exactly* unchanged, but scales the Hessian eigenvalues by $\alpha^{\pm2}$. **So any minimum can be made arbitrarily sharp or flat without changing the function at all.**
+▸ **Dinh et al. (2017): sharpness is not reparameterization-invariant.** For a ReLU network, the map $`(W_1,W_2)\to(\alpha W_1,\alpha^{-1}W_2)`$ leaves the function *exactly* unchanged, but scales the Hessian eigenvalues by $`\alpha^{\pm2}`$. **So any minimum can be made arbitrarily sharp or flat without changing the function at all.**
 
 Therefore naive sharpness cannot, by itself, explain generalization.
 
@@ -256,9 +256,9 @@ Therefore naive sharpness cannot, by itself, explain generalization.
 
 ### Why SGD finds flat minima
 
-▸ **The SDE temperature argument** (Ch. 4 §4.6): SGD approximates a stochastic differential equation with temperature $T\propto\eta/B$. In a Gibbs-like stationary distribution $\propto e^{-\mathcal{L}/T}$, the probability of occupying a basin scales with its **volume**, not merely its depth. Wide basins have exponentially more volume in high dimensions. **So SGD's noise selects for flat minima automatically**, and this predicts — correctly — that large batch sizes (low temperature) find sharper minima and generalize worse, unless the learning rate is raised to compensate.
+▸ **The SDE temperature argument** (Ch. 4 §4.6): SGD approximates a stochastic differential equation with temperature $`T\propto\eta/B`$. In a Gibbs-like stationary distribution $`\propto e^{-\mathcal{L}/T}`$, the probability of occupying a basin scales with its **volume**, not merely its depth. Wide basins have exponentially more volume in high dimensions. **So SGD's noise selects for flat minima automatically**, and this predicts — correctly — that large batch sizes (low temperature) find sharper minima and generalize worse, unless the learning rate is raised to compensate.
 
-This is one of the more satisfying explanations in the field: a single parameter $\eta/B$ predicts a real, reproducible generalization effect.
+This is one of the more satisfying explanations in the field: a single parameter $`\eta/B`$ predicts a real, reproducible generalization effect.
 
 ---
 
@@ -284,7 +284,7 @@ Typically 20% pruned per round, 15–30 rounds, reaching 90–99% sparsity.
 
 ### Rewinding — the necessary correction
 
-At ImageNet scale, resetting to $`\theta_0`$ **does not work**. The fix (Frankle et al., 2020): reset to $`\theta_k`$ for a small $k$ (0.1–7% of training) rather than to $`\theta_0`$.
+At ImageNet scale, resetting to $`\theta_0`$ **does not work**. The fix (Frankle et al., 2020): reset to $`\theta_k`$ for a small $`k`$ (0.1–7% of training) rather than to $`\theta_0`$.
 
 ▸ **"Weight rewinding" implies the ticket is not present at initialization but forms in the first few hundred steps.** Frankle called this the point of **linear mode connectivity** — the moment after which the network's trajectory becomes stable to SGD noise. Two runs branched before it end up in different basins; two runs branched after it end up in the same one. **The unstated qualification of the original LTH is that "initialization" means "shortly after initialization" for any realistic model.**
 
@@ -353,7 +353,7 @@ At ImageNet scale, resetting to $`\theta_0`$ **does not work**. The fix (Frankle
 
 - **A trained deep network's last layer becomes a nearest-centroid classifier.** After all that architecture, neural collapse (NC4) shows the final decision reduces to "which class prototype is closest?" — the simplest classifier there is.
 
-- **The magic angle in neural collapse is 120° for three classes** and approaches 90° as the number of classes grows. It is the most spread-out arrangement possible for points that must sum to zero — an equilateral triangle for $C=3$, a tetrahedron for $C=4$.
+- **The magic angle in neural collapse is 120° for three classes** and approaches 90° as the number of classes grows. It is the most spread-out arrangement possible for points that must sum to zero — an equilateral triangle for $`C=3`$, a tetrahedron for $`C=4`$.
 
 - **This book contains four different "collapses" and they are unrelated.** Neural collapse (a success state), posterior collapse (a VAE failure), mode collapse (a GAN failure), and representational collapse (a self-supervised learning failure). The shared vocabulary causes  confusion.
 
@@ -361,7 +361,7 @@ At ImageNet scale, resetting to $`\theta_0`$ **does not work**. The fix (Frankle
 
 - **Plain gradient descent secretly solves the support vector machine problem.** On separable logistic regression it converges in direction to the max-margin solution, with no regularization and no early stopping. Nobody asked for a margin; the optimizer supplies one.
 
-- **That convergence rate is $O(1/\log t)$** — increasing training a *billion-fold* only halves the gap to optimal. It is one of the slowest meaningful rates in the field, and it explains why explicit regularization still helps despite the implicit bias being real.
+- **That convergence rate is $`O(1/\log t)`$** — increasing training a *billion-fold* only halves the gap to optimal. It is one of the slowest meaningful rates in the field, and it explains why explicit regularization still helps despite the implicit bias being real.
 
 - **The 2016 finding that networks can perfectly memorize random labels broke classical learning theory.** If a model can fit pure noise, no capacity-based bound can explain why it generalizes on real data. The entire implicit-bias research programme is the field's response.
 
@@ -426,19 +426,19 @@ Two networks trained from the *same* initialization with different data order ar
 
 ## Check for Understanding
 
-**Because overparameterized networks have infinitely many zero-loss solutions, generalization is determined by which one the optimizer selects — gradient descent provably converges to the max-margin direction on separable data (at a $1/\log t$ rate, which is why training past zero loss helps), Adam's different geometry gives it a different and often worse bias, SGD's noise temperature $\eta/B$ selects high-volume flat basins, and the lottery-ticket and mode-connectivity results together suggest that the solution set is one basin viewed through the permutation symmetry of hidden units.**
+**Because overparameterized networks have infinitely many zero-loss solutions, generalization is determined by which one the optimizer selects — gradient descent provably converges to the max-margin direction on separable data (at a $`1/\log t`$ rate, which is why training past zero loss helps), Adam's different geometry gives it a different and often worse bias, SGD's noise temperature $`\eta/B`$ selects high-volume flat basins, and the lottery-ticket and mode-connectivity results together suggest that the solution set is one basin viewed through the permutation symmetry of hidden units.**
 
 ### Can you explain these out loud?
 
 The test of understanding is conversational: could you explain each of these to a colleague, without notation, in under a minute?
 
 1. **What are the four neural collapse properties**, stated without any notation? (The parade-ground analogy.)
-2. **Why is the angle between class means $-1/(C-1)$?** What shape is that for 3 classes?
+2. **Why is the angle between class means $`-1/(C-1)`$?** What shape is that for 3 classes?
 3. **Why does neural collapse make a classifier *worse* as a feature extractor**, even as it gets better at classifying?
 4. **Distinguish the four "collapses" in this book** — neural, posterior, mode, and representational. Which one is a success?
 5. **State the implicit bias puzzle**: why is it strange that gradient descent finds a solution that generalizes? (The contractor analogy.)
 6. **Why does plain gradient descent end up solving the support vector machine problem** without being asked?
-7. **Why does an $O(1/\log t)$ rate mean explicit regularization still matters**, even though the implicit bias is real?
+7. **Why does an $`O(1/\log t)`$ rate mean explicit regularization still matters**, even though the implicit bias is real?
 8. **Why is training past 100% training accuracy not wasted computation?**
 9. **Why is initialization *scale* a regularization choice** and not merely a numerical-stability one?
 10. **Why is a winning ticket the pair (mask, initialization) rather than the mask alone?** What happens with fresh random values?

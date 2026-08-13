@@ -2,25 +2,25 @@
 
 > **Prerequisites:** Ch. 1 (§1.4 mutual information), Ch. 7, Ch. 10.
 
-> **New to the notation?** If symbols like $\in$, $\sum$, $\mathbb{E}$, $\nabla$, $\propto$, or $\leftarrow$ are unfamiliar — or if you have ever wondered why $\sigma$ seems to mean four different things — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
+> **New to the notation?** If symbols like $`\in`$, $`\sum`$, $`\mathbb{E}`$, $`\nabla`$, $`\propto`$, or $`\leftarrow`$ are unfamiliar — or if you have ever wondered why $`\sigma`$ seems to mean four different things — read **[Chapter 0 — How to Read the Mathematics in This Book](00-notation-and-math-primer.md)** first. It decodes every symbol used here, and includes a full-forms glossary for every abbreviation in this book.
 
 ### Symbols introduced in this chapter
 
 | Symbol | Read aloud | Plain meaning |
 |---|---|---|
-| $x^+$ | "x-plus" | A **positive** — a second view of the *same* thing |
+| $`x^+`$ | "x-plus" | A **positive** — a second view of the *same* thing |
 | $`x_j`$ | "x-j" | A **negative** — a view of a *different* thing |
-| $z$ | "z" | The **embedding**: the vector a network produces for an input |
-| $\mathrm{sim}(a,b)$ | "similarity" | Usually **cosine similarity** — alignment, ignoring length |
-| $\tau$ | "tau" | **Temperature** — divides scores before the softmax; small $\tau$ = sharper |
-| $N$ | "N" | How many candidates the model chooses among (batch size, roughly) |
-| $I(x;x^+)$ | "mutual information" | How much knowing one view tells you about the other |
-| $f$ | "f" | The **encoder** — the network you actually keep |
-| $g$ | "g" | The **projection head** — a small network thrown away after training |
+| $`z`$ | "z" | The **embedding**: the vector a network produces for an input |
+| $`\mathrm{sim}(a,b)`$ | "similarity" | Usually **cosine similarity** — alignment, ignoring length |
+| $`\tau`$ | "tau" | **Temperature** — divides scores before the softmax; small $`\tau`$ = sharper |
+| $`N`$ | "N" | How many candidates the model chooses among (batch size, roughly) |
+| $`I(x;x^+)`$ | "mutual information" | How much knowing one view tells you about the other |
+| $`f`$ | "f" | The **encoder** — the network you actually keep |
+| $`g`$ | "g" | The **projection head** — a small network thrown away after training |
 | $`\theta_k,\ \theta_q`$ | "theta-k, theta-q" | Weights of the **key** (target) and **query** (online) encoders |
-| $m$ | "m" | **Momentum** for the EMA update, typically 0.999 |
-| $\leftarrow$ | "is assigned" | An **update**, i.e. a line of code — not an equation |
-| $\lvert P(i)\rvert$ | "size of P of i" | How many positives example $i$ has |
+| $`m`$ | "m" | **Momentum** for the EMA update, typically 0.999 |
+| $`\leftarrow`$ | "is assigned" | An **update**, i.e. a line of code — not an equation |
+| $`\lvert P(i)\rvert`$ | "size of P of i" | How many positives example $`i`$ has |
 
 ### Abbreviations used in this chapter
 
@@ -136,23 +136,23 @@ The terms in this area are used loosely, so let's pin them down.
 
 ### The objective
 
-Given an anchor $x$, a positive $x^+$, and $N-1$ negatives:
+Given an anchor $`x`$, a positive $`x^+`$, and $`N-1`$ negatives:
 
 ▸ $$\mathcal{L}_{\text{InfoNCE}} = -\log\frac{\exp\big(\mathrm{sim}(z,z^+)/\tau\big)}{\sum_{j=1}^{N}\exp\big(\mathrm{sim}(z,z_j)/\tau\big)}$$
 
-**This is cross-entropy over an $N$-way classification problem: "which of these $N$ items is the true partner?"** Recognizing that immediately demystifies it.
+**This is cross-entropy over an $`N`$-way classification problem: "which of these $`N`$ items is the true partner?"** Recognizing that immediately demystifies it.
 
 ### The mutual-information bound — derive it
 
 **Claim:** $`I(x;x^+)\ \ge\ \log N - \mathcal{L}_{\text{InfoNCE}}`$.
 
-Sketch: the optimal critic for the $N$-way classification task is $f(x,x^+)\propto\frac{p(x^+\mid x)}{p(x^+)}$ (the density ratio). Substituting the optimal critic into the loss and taking expectations yields
+Sketch: the optimal critic for the $`N`$-way classification task is $`f(x,x^+)\propto\frac{p(x^+\mid x)}{p(x^+)}`$ (the density ratio). Substituting the optimal critic into the loss and taking expectations yields
 $$\mathcal{L}^{\text{opt}} = -\mathbb{E}\left[\log\frac{\frac{p(x^+|x)}{p(x^+)}}{\frac{p(x^+|x)}{p(x^+)} + \sum_{j\ne +}\frac{p(x_j|x)}{p(x_j)}}\right] \approx \log N - I(x;x^+)$$
 where the approximation uses $`\sum_{j\ne+}\frac{p(x_j|x)}{p(x_j)}\approx (N-1)\,\mathbb{E}_{x_j}\!\left[\frac{p(x_j|x)}{p(x_j)}\right] = N-1`$. Rearranging gives the bound. ∎
 
 ▸ **Two consequences that are frequently asked about:**
 1. **More negatives ⇒ a tighter bound**, which is the theoretical case for large batches.
-2. **The bound saturates at $\log N$.** With $N=256$, $\log N = 5.5$ nats — so InfoNCE *cannot certify* more than 5.5 nats of mutual information no matter how good the representation is.
+2. **The bound saturates at $`\log N`$.** With $`N=256`$, $`\log N = 5.5`$ nats — so InfoNCE *cannot certify* more than 5.5 nats of mutual information no matter how good the representation is.
 
 ▸ **The honest caveat you should state:** the empirical success of contrastive learning is **not** well explained by the MI bound. Tighter MI estimators give *worse* representations, and the bound is loose exactly where performance is best. The better explanation is §25.6's alignment/uniformity decomposition, plus the specific inductive bias of the augmentations. Saying this distinguishes someone who read the paper from someone who read the abstract.
 
@@ -166,22 +166,22 @@ Compare with softmax cross-entropy from §1.3.4: $`-\log\frac{e^{z_y}}{\sum_j e^
 
 So the model is being asked, for each anchor:
 
-> *"Here are $N$ candidates. Exactly one is another view of you. Which is it?"*
+> *"Here are $`N`$ candidates. Exactly one is another view of you. Which is it?"*
 
 - **Numerator** — the score for the true partner. Push it up.
 - **Denominator** — scores for all candidates including the true one. Push the rest down.
-- **$\tau$** — the temperature, exactly as in §1.3.4. Small $\tau$ makes the softmax sharper.
+- **$`\tau`$** — the temperature, exactly as in §1.3.4. Small $`\tau`$ makes the softmax sharper.
 
 ▸ **Recognizing this collapses the mystery.** There is no exotic new objective — it's the classifier loss you already know, applied to a quiz the data generates for free. A batch of 256 images is a 256-way classification problem constructed at zero labelling cost.
 
-> **Analogy.** A police lineup. The witness (the anchor) must pick their acquaintance from $N$ people. Getting it right requires actually knowing what the person looks like — not memorizing a name. And crucially, **the difficulty depends on the lineup**: if the other $N-1$ people look nothing alike, the task is trivial and teaches nothing. This is exactly why hard negatives and large $N$ matter.
+> **Analogy.** A police lineup. The witness (the anchor) must pick their acquaintance from $`N`$ people. Getting it right requires actually knowing what the person looks like — not memorizing a name. And crucially, **the difficulty depends on the lineup**: if the other $`N-1`$ people look nothing alike, the task is trivial and teaches nothing. This is exactly why hard negatives and large $`N`$ matter.
 
-**Reading the mutual-information bound.** The claim $I(x;x^+)\ \ge\ \log N - \mathcal{L}$ says: *"solve this quiz well and you have proved your representation captures at least this much shared information between the two views."*
+**Reading the mutual-information bound.** The claim $`I(x;x^+)\ \ge\ \log N - \mathcal{L}`$ says: *"solve this quiz well and you have proved your representation captures at least this much shared information between the two views."*
 
 Put numbers on the two consequences:
 
-- More negatives → tighter bound. With $N=256$, $\log 256 = 5.55$ nats. With $N=65{,}536$ (MoCo's queue), $\log N = 11.1$ nats.
-- **The ceiling is $\log N$.** Even a perfect model ($\mathcal{L}=0$) certifies only $\log N$ nats. With a batch of 256 you *cannot* demonstrate more than 5.55 nats of mutual information, however good the representation truly is.
+- More negatives → tighter bound. With $`N=256`$, $`\log 256 = 5.55`$ nats. With $`N=65{,}536`$ (MoCo's queue), $`\log N = 11.1`$ nats.
+- **The ceiling is $`\log N`$.** Even a perfect model ($`\mathcal{L}=0`$) certifies only $`\log N`$ nats. With a batch of 256 you *cannot* demonstrate more than 5.55 nats of mutual information, however good the representation truly is.
 
 ▸ **This ceiling is the crux of the honest caveat.** Real images share far more than 5.55 nats of information, so the bound is enormously loose in exactly the regime where these methods work best. If mutual information were the mechanism, tighter estimators should give better representations — and experiments found the opposite. **The bound is a valid theorem that turns out not to be the explanation.** Being able to say that cleanly is  the difference between having read the paper and having read the abstract.
 
@@ -212,7 +212,7 @@ The augmentations *are* the method — they define what the representation is to
 
 > **Common misconception.** *"The projection head is just an extra layer for capacity."* It is a **sacrificial layer**. The contrastive loss demands invariance to the augmentations, which means throwing away colour and orientation — but downstream tasks may need those. The head absorbs the invariance requirement so that the encoder beneath it can stay richer, and you **discard the head after training**. Keeping it and using its output costs 10–15% linear-probe accuracy. This is one of the most transferable and least intuitive findings in the field.
 
-> **Common misconception.** *"Bigger batches help because of better gradient estimates."* In contrastive learning the batch **is the task** — every other item in the batch is a negative, so batch size sets the number of choices in the quiz and hence $\log N$, the difficulty. That is a qualitatively different reason from ordinary supervised training, and it's why MoCo's queue (decoupling negative count from batch size) was such a useful idea for people without large GPU clusters.
+> **Common misconception.** *"Bigger batches help because of better gradient estimates."* In contrastive learning the batch **is the task** — every other item in the batch is a negative, so batch size sets the number of choices in the quiz and hence $`\log N`$, the difficulty. That is a qualitatively different reason from ordinary supervised training, and it's why MoCo's queue (decoupling negative count from batch size) was such a useful idea for people without large GPU clusters.
 
 > **Where this came from.** **InfoNCE** was introduced by Aaron van den Oord, Yazhe Li, and Oriol Vinyals in the 2018 paper *Representation Learning with Contrastive Predictive Coding*; "NCE" refers to noise-contrastive estimation, a technique Michael Gutmann and Aapo Hyvärinen developed in 2010 for estimating unnormalized models — the same partition-function dodge that motivated score matching (Ch. 19 §19.6). **SimCLR** came from Ting Chen and colleagues at Google Brain in 2020, and its contribution was largely negative-result clearing: it showed that no exotic architecture was needed, only the right augmentations, a big batch, a projection head, and long training. **MoCo**, from Kaiming He's group at Facebook AI Research, appeared at nearly the same time with a different answer to the batch-size problem. He is also the first author on ResNet (Ch. 8), one of the most-cited papers in all of science.
 
@@ -220,10 +220,10 @@ The augmentations *are* the method — they define what the representation is to
 
 The recipe, stripped to essentials:
 1. Two augmented views of each image → positives. All other images in the batch → negatives.
-2. Encoder $f$ (ResNet/ViT) → **projection head** $g$ (2-layer MLP) → normalize → InfoNCE on $z=g(f(x))$.
-3. **Discard $g$ after training; use $f$'s output.**
+2. Encoder $`f`$ (ResNet/ViT) → **projection head** $`g`$ (2-layer MLP) → normalize → InfoNCE on $`z=g(f(x))`$.
+3. **Discard $`g`$ after training; use $`f`$'s output.**
 
-▸ **Why the projection head matters so much (a +10–15% linear-probe effect):** the contrastive loss forces $z$ to be invariant to the augmentations, which means *discarding* colour, orientation, and crop information. But that information is useful downstream. The projection head absorbs the invariance requirement, leaving $f$'s representation richer. **The head is a sacrificial layer.** This is one of the most transferable findings in SSL.
+▸ **Why the projection head matters so much (a +10–15% linear-probe effect):** the contrastive loss forces $`z`$ to be invariant to the augmentations, which means *discarding* colour, orientation, and crop information. But that information is useful downstream. The projection head absorbs the invariance requirement, leaving $`f`$'s representation richer. **The head is a sacrificial layer.** This is one of the most transferable findings in SSL.
 
 **What actually drives performance, in order:**
 1. **Augmentation composition.** Random crop + colour jitter is the critical pair. Crop alone is solved by matching colour histograms — the model cheats. **The augmentations define what the representation is invariant to, which means they define the representation.**
@@ -234,11 +234,11 @@ The recipe, stripped to essentials:
 
 ### Temperature
 
-▸ $\tau$ controls the sharpness of the negative-weighting. The gradient with respect to a negative is proportional to its softmax weight, so:
-- **Small $\tau$ (0.05–0.1):** almost all the gradient goes to the *hardest* negatives. Learns fine-grained separation, but is sensitive to false negatives.
-- **Large $\tau$ (0.5+):** uniform treatment; tolerant of noise; blurrier representation.
+▸ $`\tau`$ controls the sharpness of the negative-weighting. The gradient with respect to a negative is proportional to its softmax weight, so:
+- **Small $`\tau`$ (0.05–0.1):** almost all the gradient goes to the *hardest* negatives. Learns fine-grained separation, but is sensitive to false negatives.
+- **Large $`\tau`$ (0.5+):** uniform treatment; tolerant of noise; blurrier representation.
 
-There is a real tension here (Wang & Liu, 2021): hard negatives are the most informative *and* the most likely to be false negatives (a different photo of the same class). Standard $\tau\approx0.1$ for images, $\approx0.02$–0.05 for text retrieval.
+There is a real tension here (Wang & Liu, 2021): hard negatives are the most informative *and* the most likely to be false negatives (a different photo of the same class). Standard $`\tau\approx0.1`$ for images, $`\approx0.02`$–0.05 for text retrieval.
 
 ### MoCo
 
@@ -295,7 +295,7 @@ Three explicit terms: **V**ariance (hinge loss keeping each dimension's std abov
 
 ### DINO
 
-Self-**di**stillation with **no** labels: a student matches a momentum teacher's output distribution over $K$ prototypes, with the teacher's outputs **centred** (subtract an EMA of the mean, preventing one dimension dominating) and **sharpened** (low temperature, preventing uniform collapse). ▸ **Centering and sharpening are opposing forces, and their balance is what avoids both collapse modes.**
+Self-**di**stillation with **no** labels: a student matches a momentum teacher's output distribution over $`K`$ prototypes, with the teacher's outputs **centred** (subtract an EMA of the mean, preventing one dimension dominating) and **sharpened** (low temperature, preventing uniform collapse). ▸ **Centering and sharpening are opposing forces, and their balance is what avoids both collapse modes.**
 
 **The famous result:** DINO's ViT attention maps segment objects without any segmentation supervision — the `[CLS]` token's attention delineates object boundaries. This was the first strong evidence that self-supervised ViTs learn semantic structure that supervised ViTs do not.
 
@@ -355,9 +355,9 @@ BYOL removed negatives entirely, which by the reasoning of §25.1 should collaps
 
 ▸ **The intuition:** the constant solution *is* a fixed point, but the asymmetric architecture makes it **unstable** rather than attractive. The online network is always chasing a slightly stale copy of itself, and the predictor means it must model *how the target differs from itself* — a task with no content if everything is constant. Gradient descent doesn't find the collapse because the path there isn't downhill.
 
-**Reading the EMA update.** $`\theta_k \leftarrow m\theta_k + (1-m)\theta_q`$ with $m = 0.999$ means: *"keep 99.9% of the old target, mix in 0.1% of the current online weights."* The arrow is an **assignment**, not an equation (§0.11).
+**Reading the EMA update.** $`\theta_k \leftarrow m\theta_k + (1-m)\theta_q`$ with $`m = 0.999`$ means: *"keep 99.9% of the old target, mix in 0.1% of the current online weights."* The arrow is an **assignment**, not an equation (§0.11).
 
-Put a number on it: with $m=0.999$, the target's effective memory is about $1/(1-m) = 1000$ steps. It reflects roughly where the online network was a thousand steps ago — recent enough to be relevant, stale enough to be a stable target.
+Put a number on it: with $`m=0.999`$, the target's effective memory is about $`1/(1-m) = 1000`$ steps. It reflects roughly where the online network was a thousand steps ago — recent enough to be relevant, stale enough to be a stable target.
 
 > **Analogy.** Learning to sing in tune by matching a recording of yourself from last week. If you matched yourself *live*, you'd drift anywhere and still "match" perfectly — that's collapse. The lag is what makes it a real target.
 
@@ -408,7 +408,7 @@ Put a number on it: with $m=0.999$, the target's effective memory is about $1/(1
 
 - **VICReg simply writes down the three requirements every SSL method must satisfy** — variance, invariance, covariance — instead of achieving them implicitly through architecture tricks. This makes it the clearest method to learn from even where it isn't the strongest.
 
-- **The InfoNCE mutual-information bound caps out at $\log N$.** With a batch of 256 you cannot certify more than 5.55 nats of mutual information no matter how good your representation is — and real image pairs share far more than that. The bound is a valid theorem that turns out not to explain why the method works.
+- **The InfoNCE mutual-information bound caps out at $`\log N`$.** With a batch of 256 you cannot certify more than 5.55 nats of mutual information no matter how good your representation is — and real image pairs share far more than that. The bound is a valid theorem that turns out not to explain why the method works.
 
 - **Tighter mutual-information estimators produce *worse* representations.** If maximizing mutual information were the mechanism, this should be impossible. It is one of the clearer cases in modern machine learning of a beautiful theoretical justification being, empirically, the wrong explanation.
 
@@ -443,7 +443,7 @@ The test of understanding is conversational: could you explain each of these to 
 2. **What is representational collapse, and why is "output a constant" a perfect score on a naive objective?**
 3. **How do contrastive and non-contrastive methods each prevent collapse?** (One sentence per family.)
 4. **Why is InfoNCE just cross-entropy?** What is the multiple-choice quiz being posed? (The police lineup.)
-5. **Why does the mutual-information bound cap at $\log N$, and why is that a problem for the theory?**
+5. **Why does the mutual-information bound cap at $`\log N`$, and why is that a problem for the theory?**
 6. **Why do tighter mutual-information estimators give worse representations, and what does that tell you about the MI explanation?**
 7. **Why is the projection head thrown away, and why does keeping it hurt?**
 8. **Why does SimCLR need colour jitter as well as cropping?** What does the model do if you only crop?
